@@ -1,0 +1,27 @@
+package net.feedbacky.app.service.board.webhook;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+
+import net.feedbacky.app.rest.data.board.dto.webhook.FetchWebhookDto;
+import net.feedbacky.app.rest.data.board.dto.webhook.PatchWebhookDto;
+import net.feedbacky.app.rest.data.board.dto.webhook.PostWebhookDto;
+import net.feedbacky.app.service.FeedbackyService;
+
+/**
+ * @author Plajer
+ * <p>
+ * Created at 26.10.2019
+ */
+public interface WebhookService extends FeedbackyService {
+
+  List<FetchWebhookDto> getAll(String discriminator);
+
+  ResponseEntity<FetchWebhookDto> post(String discriminator, PostWebhookDto dto);
+
+  FetchWebhookDto patch(long id, PatchWebhookDto dto);
+
+  ResponseEntity delete(long id);
+
+}

@@ -1,0 +1,60 @@
+package net.feedbacky.app.rest.data.tag;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import net.feedbacky.app.rest.data.tag.dto.FetchTagDto;
+
+import org.modelmapper.ModelMapper;
+
+import net.feedbacky.app.rest.data.board.Board;
+
+/**
+ * @author Plajer
+ * <p>
+ * Created at 13.10.2019
+ */
+@Entity
+@Table(name = "boards_tags")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Tag implements Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @EqualsAndHashCode.Include private Long id;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "board_id")
+  private Board board;
+  private String name;
+  private String color;
+
+  public FetchTagDto convertToDto() {
+    return new ModelMapper().map(this, FetchTagDto.class);
+  }
+
+  public String getHtmlDisplay() {
+    return "<span class='badge' style='background-color: " + color + "'>" + name + "</span>";
+  }
+
+}

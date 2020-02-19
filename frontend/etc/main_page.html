@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Feedbacky - Collect Ideas for Your Projects Easily</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <meta name="keywords" content="feedback collect, ideas, voting, opinion, easy collect, feedback system, user feedback, feedback software, feedback solution">
+    <meta name="author" content="Plajer">
+    <meta name="description" content="Collect users' feedback and ideas for your projects easily with Feedbacky web service.">
+
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Feedbacky - Collect Ideas for Your Projects Easily"/>
+    <meta property="og:site_name" content="Feedbacky by Plajer"/>
+    <meta property="og:url" content="https://feedbacky.net"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="Collect users' feedback and ideas for your projects easily with Feedbacky web service."/>
+    <meta property="og:image" content="https://cdn.feedbacky.net/static/img/og-banner.png"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    <meta property="twitter:card" content="summary_large_image"/>
+    <meta property="twitter:title" content="Feedbacky - Collect Ideas for Your Projects Easily"/>
+    <meta property="twitter:description" content="Collect users' feedback and ideas for your projects easily with Feedbacky web service."/>
+    <meta property="twitter:image" content="https://cdn.feedbacky.net/static/img/og-banner.png"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.8/css/mdb.min.css" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+    <link rel="icon" sizes="192x192" href="https://cdn.feedbacky.net/static/img/logo-mobile.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.feedbacky.net/static/img/favicon.ico">
+    <link rel="apple-touch-icon" href="https://cdn.feedbacky.net/static/img/logo-mobile.png">
+    <meta name="theme-color" content="#0994f6">
+    <meta name="msapplication-TileColor" content="#0994f6">
+
+    <style>
+        body {
+            font-family: "Roboto", "Roboto Light", sans-serif;
+            background: url("https://cdn.feedbacky.net/static/img/main-background.png"), url("https://cdn.feedbacky.net/static/img/main-background.png"), url("https://cdn.feedbacky.net/static/img/main-background.png") center bottom, center top, right top;
+            min-width: 280px;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .navbar-no-shadow {
+            box-shadow: none;
+        }
+
+        .scroll-navbar {
+            -webkit-transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+            -o-transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+            transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+        }
+
+        button {
+            text-transform: none !important;
+        }
+
+        #main-content {
+            padding-top: 10%;
+            padding-top: 10vh;
+
+            min-height: 60%; /* Fallback for browsers do NOT support vh unit */
+            min-height: 60vh; /* These two lines are counted as one :-)       */
+
+            display: flex;
+            align-items: center;
+        }
+
+        .slider {
+            fill: #f8f9fa;
+        }
+
+        #features .card {
+            text-align: center !important;
+            max-width: 300px !important;
+            min-width: 250px !important;
+        }
+
+        #pricing .card {
+            text-align: center !important;
+            max-width: 250px !important;
+            min-width: 200px !important;
+        }
+
+        .card-deck {
+            column-count: 3 !important;
+        }
+
+        .bg-orange {
+            background-color: #ffa500;
+        }
+
+        button a {
+            color: white;
+            text-decoration: none !important;
+        }
+
+        .modal a {
+            color: black;
+        }
+
+        button a:hover {
+            color: white;
+        }
+
+        .display-5 {
+            font-size: 3rem;
+            line-height: 1.2;
+            font-weight: 300;
+        }
+
+        .bg-bluecharcoal-condensed {
+            background-color: #202428;
+        }
+
+        .charcoal-condensed {
+            color: #202428;
+        }
+
+        #features .card {
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
+        }
+
+        .h6-responsive {
+            font-size: 1.1rem;
+        }
+
+        .text-white-75 {
+            color: rgba(255, 255, 255, .75) !important;
+        }
+
+        .rounded-half {
+            border-radius: 25px;
+        }
+
+        .card {
+            border: none !important;
+        }
+
+        .justify-content-center {
+            justify-content: center !important;
+        }
+
+        .card-deck {
+            flex-flow: row wrap;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        a.fa-icon {
+            text-decoration: none !important;
+        }
+
+        a.card {
+            text-decoration: none;
+        }
+
+        .text-black-60 {
+            color: rgba(0, 0, 0, .6) !important;
+        }
+
+        .close {
+            opacity: 1 !important;
+        }
+
+        .social-icon {
+            background-color: #0994f6;
+            border-radius: .25rem;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
+
+        .social-icon .fa-icon {
+            transform: rotate(5deg);
+            padding: .8rem;
+        }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125019877-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-125019877-2');
+    </script>
+</head>
+<body data-spy="scroll" data-target=".navbar">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-no-shadow fixed-nav-index fixed-top scroll-navbar">
+    <div class="container px-0">
+        <div class="navbar-brand mr-0">
+            <img src="https://cdn.feedbacky.net/static/img/product-brand.png" width="150" class="img-fluid" alt="Product Brand">
+            <span class="badge bg-orange font-weight-light" style="font-size: .5em; transform: translate(-4px, -2px)">Beta</span>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#myModal" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://discord.gg/6qCnKh5" target="_blank"><i class="fab fa-discord mr-1"></i> Discord Server</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link smooth-scroll" href="#features"><i class="fas fa-check mr-1"></i> Features</a>
+                </li>
+                <li class="nav-item mr-2">
+                    <a class="nav-link" href="https://app.feedbacky.net" target="_blank"><i class="fas fa-user mr-1"></i> My Account</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link smooth-scroll" href="https://app.feedbacky.net/create"><i class="fas fa-plus mr-1"></i> Create Board</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Navbar modal content -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 5px">
+            <div class="modal-header bg-bluecharcoal-condensed" style="border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom: none">
+                <div class="navbar-brand">
+                    <img src="https://cdn.feedbacky.net/static/img/product-brand.png" width="150" class="img-fluid" alt="Product Brand">
+                    <span class="badge bg-orange font-weight-light" style="font-size: .5em; transform: translate(-4px, -2px)">Beta</span>
+                </div>
+                <button class="close pr-4" type="button" data-dismiss="modal" style="margin-top: -.5rem">
+                    <img alt="Close" src="svg/close.svg" height="16px" width="16px">
+                </button>
+            </div>
+            <div class="modal-body mx-0 px-0" style="font-weight: 300">
+                <a class="nav-link" href="https://discord.gg/6qCnKh5" target="_blank"><i class="fab fa-discord mr-1 charcoal-condensed"></i> Discord Server</a>
+                <a class="nav-link smooth-scroll" href="#features"><i class="fas fa-check mr-1 charcoal-condensed"></i> Features</a>
+                <a class="nav-link smooth-scroll" href="https://app.feedbacky.net/p/feedbacky-demo"><i class="fas fa-info-circle mr-1 charcoal-condensed"></i> View Demo</a>
+                <a class="nav-link smooth-scroll" href="https://app.feedbacky.net/"><i class="fas fa-user mr-1 charcoal-condensed"></i> My Account</a>
+                <a class="nav-link smooth-scroll" href="https://app.feedbacky.net/create"><i class="fas fa-plus mr-1 charcoal-condensed"></i> Create Board</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Navbar modal content -->
+<div class="container">
+    <div id="main-content">
+        <div class="row justify-content-center vertical-center">
+            <div class="col-lg-5 col-12 mb-4 px-lg-0 px-3 pt-xl-5 pt-4">
+                <h1 class="display-5 text-white font-weight-light">
+                    Collect <span class="font-weight-bold">Ideas</span> for
+                    Your Projects Easily
+                </h1>
+                <h3 class="h5-responsive text-white font-weight-light">
+                    Get feedback from users for Game Servers, Websites, Communities and more.
+                </h3>
+                <a href="https://app.feedbacky.net/create"><button type="button" class="btn btn-lg text-white m-0 mt-3 px-3 mr-2" style="background-color: #0994f6;"><span class="h5">Create Board</span></button></a>
+                <a href="https://discord.gg/6qCnKh5"><img src="https://discordapp.com/api/guilds/614568773940150288/widget.png?style=banner2" width="250" class="img-fluid rounded align-bottom mt-2"></a>
+            </div>
+            <div class="col-lg-6 col-7 offset-1 d-none d-xl-block">
+                <img src="https://cdn.feedbacky.net/static/img/main_banner.png" alt="Project Banner" height="370" style="transform: rotate(1deg)">
+            </div>
+            <div class="col-lg-6 col-7 d-none d-lg-block d-xl-none">
+                <img src="https://cdn.feedbacky.net/static/img/main_banner.png" alt="Project Banner" height="270" style="transform: rotate(1deg)">
+            </div>
+            <div class="col-md-10 col-12 d-lg-none mb-4 px-1">
+                <img class="img-fluid px-sm-0 px-1" src="https://cdn.feedbacky.net/static/img/main_banner.png" alt="Project Banner" height="220">
+            </div>
+            <div class="col-md-2 d-lg-none"></div>
+        </div>
+    </div>
+</div>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+     viewBox="0 0 1440 85" style="enable-background:new 0 0 1440 126;" xml:space="preserve">
+    <path class="slider" d="M685.6,38.8C418.7-11.1,170.2,9.9,0,30v96h1440V30C1252.7,52.2,1010,99.4,685.6,38.8z"/>
+</svg>
+<div class="container-fluid bg-light pb-4">
+    <div class="container" id="features">
+        <div class="row justify-content-center mb-lg-5 mb-4 pb-lg-3 pt-md-0 pt-3">
+            <div class="col-12 mb-5">
+                <h2 class="display-3 text-center mb-4">Features</h2>
+
+                <div class="card-deck justify-content-center" id="current-features-group">
+                    <div class="card m-2">
+                        <!-- Card image -->
+                        <div class="view overlay">
+                            <img class="card-img-top" src="/svg/idea.svg" width="75" height="75" alt="Gather ideas">
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h4 class="card-title">Gather Ideas</h4>
+                            <!-- Text -->
+                            <p class="card-text text-black-60">Getting feedback from your users is easy and fast with easy to understand pages.</p>
+                        </div>
+                    </div>
+
+                    <div class="card m-2">
+                        <!-- Card image -->
+                        <div class="view overlay">
+                            <img class="card-img-top" src="/svg/moderate_tools.svg" width="75" height="75" alt="Moderating tools">
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h4 class="card-title">Moderating Tools</h4>
+                            <!-- Text -->
+                            <p class="card-text text-black-60">Filter unwanted content with help of moderating tools and manage everything without any problem.</p>
+                        </div>
+                    </div>
+
+                    <div class="card m-2">
+                        <!-- Card image -->
+                        <div class="view overlay">
+                            <img class="card-img-top" src="/svg/webhooks.svg" width="75" height="75" alt="Webhooks">
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h4 class="card-title">Webhooks</h4>
+                            <!-- Text -->
+                            <p class="card-text text-black-60">Set up webhooks to listen for changes in board, for example with Discord notifications.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 d-lg-block d-none"></div>
+
+                    <div class="card m-2">
+                        <!-- Card image -->
+                        <div class="view overlay">
+                            <img class="card-img-top" src="/svg/private.svg" width="75" height="75" alt="Private Boards" loading="lazy">
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h4 class="card-title">Private Boards</h4>
+                            <!-- Text -->
+                            <p class="card-text text-black-60">Restrict who can see and access your board and how they can be invited to it via admin panel.</p>
+                        </div>
+                    </div>
+
+                    <div class="card m-2">
+                        <!-- Card image -->
+                        <div class="view overlay">
+                            <img class="card-img-top" src="/svg/foss.svg" width="75" height="75" alt="Free and Open Source">
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h4 class="card-title">Free & Open Source
+                                <span class="badge bg-orange font-weight-light" style="font-size: .5em; transform: translateY(-4px)">Soon</span>
+                            </h4>
+                            <!-- Text -->
+                            <p class="card-text text-black-60">Feedbacky is a fully free project that will be open source on GitHub in upcoming weeks.</p>
+                        </div>
+                    </div>
+
+                    <div class="card m-2">
+                        <!-- Card image -->
+                        <div class="view overlay">
+                            <img class="card-img-top" src="/svg/api.svg" width="75" height="75" alt="Public API" loading="lazy">
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h4 class="card-title">Public API <span class="badge bg-orange font-weight-light" style="font-size: .5em; transform: translateY(-4px)">Soon</span></h4>
+                            <!-- Text -->
+                            <p class="card-text text-black-60">Utilize Feedbacky using our public RESTful API and unlock even more potential of the service.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-12 mb-4 px-lg-0 px-2 pt-xl-5">
+                <h2 class="display-5 font-weight-light">
+                    Simple and <br/>
+                    <span class="font-weight-bold">Intuitive</span> Page
+                </h2>
+                <h3 class="h6-responsive font-weight-light">
+                    Your users will find the page simple to use and give you more feedback.
+                    With Markdown support feedback can be more descriptive and of higher quality.
+                </h3>
+                <a href="https://app.feedbacky.net/p/feedbacky-demo">
+                    <button type="button" class="btn btn-lg text-white m-0 mt-3 px-4" style="background-color: #f39c12;"><span class="h5">View Demo</span></button>
+                </a>
+            </div>
+            <div class="col-lg-6 col-7 offset-1 d-none d-xl-block">
+                <img src="https://cdn.feedbacky.net/static/img/main_banner_ideas.png" alt="Project Banner" height="370">
+            </div>
+            <div class="col-lg-6 col-7 d-none d-lg-block d-xl-none">
+                <img src="https://cdn.feedbacky.net/static/img/main_banner_ideas.png" alt="Project Banner" height="270">
+            </div>
+            <div class="col-md-10 col-12 d-lg-none mb-4 px-0">
+                <img class="img-fluid" src="https://cdn.feedbacky.net/static/img/main_banner_ideas.png" alt="Project Banner" height="220">
+            </div>
+            <div class="col-md-2 d-lg-none"></div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid pb-4 bg-white">
+    <div class="row justify-content-center" style="height: 2.5rem">
+        <img alt="Logo" style="transform: translateY(-37px)" class="bg-white rounded-circle" src="https://cdn.feedbacky.net/static/img/logo-centered.png" height="75" width="75">
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <h2 class="display-3 mb-4">Pricing</h2>
+            <div class="col-12 card-deck justify-content-center" id="pricing">
+                <div class="card m-4 bg-light" style="box-shadow: 0 4px 6px 0 hsla(0,0%,0%,.2) !important;">
+                    <!-- Card image -->
+                    <div class="view overlay">
+                        <img class="card-img-top mt-5" src="/svg/free_tier.svg" width="60" height="60" alt="Demo Tier" loading="lazy">
+                    </div>
+
+                    <!-- Card content -->
+                    <div class="card-body mb-4">
+                        <!-- Title -->
+                        <h4 class="card-title mb-0">Free Tier</h4>
+                        <!-- Text -->
+                        <p class="card-text text-black-60">
+                            Free forever hosted at official server.
+                        </p>
+                        <ul class="p-0 card-text text-black-60">
+                            <li>5 Boards Limit</li>
+                            <li>Powered by Feedbacky Attribution</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card m-4 bg-bluecharcoal-condensed" style="box-shadow: 0 4px 6px 0 hsla(0,0%,0%,.2) !important;">
+                    <!-- Card image -->
+                    <div class="view overlay">
+                        <img class="card-img-top mt-5" src="/svg/plus_tier.svg" width="60" height="60" alt="Selfhosted" loading="lazy">
+                    </div>
+
+                    <!-- Card content -->
+                    <div class="card-body mb-4">
+                        <!-- Title -->
+                        <h4 class="card-title mb-0 text-white">Selfhosted <span class="badge bg-orange font-weight-light" style="font-size: .5em; transform: translateY(-4px)">Soon</span></h4>
+                        <!-- Text -->
+                        <p class="card-text text-white-75">
+                            Feedbacky selfhosted that can be customized for your needs.
+                        </p>
+                        <ul class="p-0 card-text text-white-75">
+                            <li>Your Own Limits</li>
+                            <li>Removable Attribution</li>
+                            <li>Customize for Your Needs</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center" id="start-now">
+            <div class="col-lg-8 col-md-9 col-12 card rounded-half mt-lg-5 mt-4 z-depth-2" style="box-shadow: 0 8px 12px 0 hsla(0,0%,0%,.2) !important;">
+                <div class="row px-md-5 px-3 py-4">
+                    <div class="col-sm-7 col-12">
+                        <strong style="font-size: 2rem; font-weight: 300">Are You Ready to Start?</strong>
+                        <div class="small text-muted">
+                            Create board for free and try it out.
+                            Let your users share feedback better.
+                        </div>
+                    </div>
+                    <div class="col-sm-5 pt-sm-0 pt-3 col-12 my-auto">
+                        <a href="https://app.feedbacky.net/create">
+                            <button type="button" class="btn btn-lg text-white float-sm-right bg-orange my-auto mx-0">
+                                <span class="h6">Create Board</span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid bg-white p-0">
+    <!-- some custom svg i made in gimp xd -->
+    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+
+         style="enable-background:new 0 0 1920 130;"
+         viewBox="0 0 1920 130">
+        <path id=""
+              fill="#202428"
+              d="M 1920.00,132.00
+           C 1920.00,132.00 -0.67,131.67 -0.67,131.67
+             -0.67,131.67 -144.00,201.00 -144.00,201.00
+             -144.00,201.00 16.26,56.22 228.00,42.00
+             439.74,27.78 584.99,123.95 768.00,105.00
+             951.01,86.05 1137.69,15.85 1296.00,30.00
+             1454.31,44.15 1640.07,130.06 1797.00,105.00
+             1953.93,79.94 2028.00,36.00 2028.00,36.00
+             2028.00,36.00 1920.00,132.00 1920.00,132.00 Z" xml:space="preserve"/>
+    </svg>
+</div>
+
+<footer class="page-footer font-small bg-bluecharcoal-condensed">
+    <div class="container">
+        <div class="row pt-3 pb-5">
+            <div class="col-sm-4 col-md-5 col-lg-6 col-6 float-left text-white-75">
+                <div>
+                    <img src="https://cdn.feedbacky.net/static/img/product-brand.png" width="150" class="img-fluid" alt="Product Brand">
+                </div>
+                <div class="ml-2">
+                    Created with <span class="text-white">❤️</span>
+                    <br/>
+                    by <img src="https://static.plajer.xyz/img/logo.png" width="18" height="18" alt="Logo"><a href="https://plajer.xyz" class="text-white">Plajer</a>
+                </div>
+            </div>
+            <div class="col-sm-3 col-6 pt-1">
+                <a href="https://feedbacky.net/terms_of_service" target="_blank">ToS and Privacy Policy</a>
+                <br/>
+                <a href="https://status.feedbacky.net/" target="_blank">Server Status</a>
+                <br/>
+                <a href="https://docs.feedbacky.net/" target="_blank">Knowledge Base (soon)</a>
+            </div>
+            <div class="col-sm-5 col-md-4 col-lg-3 col-12 pt-sm-1 pt-3">
+                <a class="social-icon m-1" href="mailto:plajer.xyz@gmail.com"><i class="fa-icon far fa-lg fa-envelope"></i></a>
+                <a class="social-icon m-1" href="https://discord.gg/6qCnKh5"><i class="fa-icon fab fa-lg fa-discord"></i></a>
+                <a class="social-icon m-1" href="https://twitter.com/FeedbackyNet"><i class="fa-icon fab fa-lg fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src='https://static.plajer.xyz/js/jquery-3.2.1.slim.min.js'></script>
+<script src="https://static.plajer.xyz/js/popper-1.14.7.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $('body').scrollspy({target: ".navbar"});
+    $('#myModal').modal("hide");
+    $(function () {
+        $(document).scroll(function () {
+            var $nav = $(".navbar");
+            $nav.toggleClass('bg-bluecharcoal-condensed', $(this).scrollTop() >= $("#features").position().top - 540);
+        });
+    });
+    $(function () {
+        var SCROLLING_NAVBAR_OFFSET_TOP = 540;
+        $(window).on('scroll', function () {
+            var $navbar = $('.navbar');
+
+            if ($navbar.length) {
+                if ($navbar.offset().top > SCROLLING_NAVBAR_OFFSET_TOP) {
+                    $('.scroll-navbar').addClass('top-nav-collapse');
+                } else {
+                    $('.scroll-navbar').removeClass('top-nav-collapse');
+                }
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

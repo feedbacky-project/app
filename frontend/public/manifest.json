@@ -1,0 +1,27 @@
+{
+  "short_name": "Feedbacky",
+  "name": "Feedbacky Ideas Collecting Service",
+  "keywords": ["feedback collect", "ideas", "voting", "opinion", "easy collect", "feedback system", "user feedback", "feedback software", "feedback solution"],
+  "author": "Plajer",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#008cff",
+  "background_color": "#f8f9fa"
+}

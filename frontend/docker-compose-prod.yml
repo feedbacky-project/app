@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  feedbacky:
+    container_name: feedbacky
+    build:
+      context: .
+      dockerfile: Dockerfile-prod
+    ports:
+      - '80:80'

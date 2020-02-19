@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico"/>
+    <link rel="icon" type="image/png" href="/logo192.png" sizes="196x196">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="author" content="Plajer"/>
+    <meta name="keywords" content="feedback collect, ideas, voting, opinion, easy collect, feedback system, user feedback, feedback software, feedback solution"/>
+    <meta name="theme-color" content="#0994f6"/>
+    <meta name="msapplication-TileColor" content="#0994f6"/>
+    <meta name="description" content="Collect users' feedback and ideas for your projects easily with Feedbacky web service."/>
+    <link rel="apple-touch-icon" href="logo192.png"/>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
+    <meta property="og:title" content="Feedbacky - Collect Ideas for Your Projects Easily"/>
+    <meta property="og:site_name" content="Feedbacky by Plajer"/>
+    <meta property="og:url" content="https://feedbacky.net"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="Collect users' feedback and ideas for your projects easily with Feedbacky web service."/>
+    <meta property="og:image" content="https://cdn.feedbacky.net/static/img/og-banner.png"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    <meta property="twitter:card" content="summary_large_image"/>
+    <meta property="twitter:title" content="Feedbacky - Collect Ideas for Your Projects Easily"/>
+    <meta property="twitter:description" content="Collect users' feedback and ideas for your projects easily with Feedbacky web service."/>
+    <meta property="twitter:image" content="https://cdn.feedbacky.net/static/img/og-banner.png"/>
+    <title>Feedbacky - Collect Ideas for Your Projects Easily</title>
+
+    <style>
+        .bg-main {
+            background-color: #f8f9fa;
+        }
+
+        @font-face {
+            font-family: 'Roboto', sans-serif;
+            font-display: swap;
+        }
+
+        .vertical-center {
+            min-height: 100%;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+        }
+
+        .load-spinner {
+            width: 40px;
+            height: 40px;
+            margin: 100px auto;
+            background-color: #0994f6;
+
+            border-radius: 100%;
+            -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+            animation: sk-scaleout 1.0s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes sk-scaleout {
+            0% { -webkit-transform: scale(0) }
+            100% {
+                -webkit-transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sk-scaleout {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+            } 100% {
+                  -webkit-transform: scale(1.0);
+                  transform: scale(1.0);
+                  opacity: 0;
+              }
+        }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125019877-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-125019877-2');
+    </script>
+</head>
+<body class="bg-main">
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"><div class="vertical-center"><div class="load-spinner"></div></div>
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
+
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
+
+  To begin the development, run `npm start` or `yarn start`.
+  To create a production bundle, use `npm run build` or `yarn build`.
+-->
+</body>
+</html>
