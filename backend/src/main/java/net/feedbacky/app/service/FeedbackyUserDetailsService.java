@@ -1,14 +1,14 @@
 package net.feedbacky.app.service;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.rest.data.user.User;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.rest.data.user.User;
+import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * @author Plajer
@@ -16,13 +16,14 @@ import net.feedbacky.app.rest.data.user.User;
  * Created at 01.10.2019
  */
 @Service
+@RequiredArgsConstructor
 public class FeedbackyUserDetailsService {
 
-  @Autowired private UserRepository userRepository;
+  private UserRepository userRepository;
 
   public ServiceUser loadUserByEmail(String email) throws UsernameNotFoundException {
     Optional<User> optional = userRepository.findByEmail(email);
-    if (!optional.isPresent()) {
+    if(!optional.isPresent()) {
       throw new UsernameNotFoundException("User not found with email: " + email);
     }
     User user = optional.get();

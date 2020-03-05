@@ -1,15 +1,11 @@
 package net.feedbacky.app.rest.controllers.board;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.rest.data.board.dto.webhook.FetchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PatchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PostWebhookDto;
 import net.feedbacky.app.service.board.webhook.WebhookService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
+import java.util.List;
+
 /**
  * @author Plajer
  * <p>
@@ -27,9 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 public class BoardWebhooksRestController {
 
-  @Autowired private WebhookService webhookService;
+  private WebhookService webhookService;
 
   @GetMapping("v1/boards/{discriminator}/webhooks")
   public List<FetchWebhookDto> getAll(@PathVariable String discriminator) {

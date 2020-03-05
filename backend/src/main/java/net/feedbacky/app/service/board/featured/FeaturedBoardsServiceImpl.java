@@ -1,18 +1,16 @@
 package net.feedbacky.app.service.board.featured;
 
+import net.feedbacky.app.repository.board.BoardRepository;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import net.feedbacky.app.repository.board.BoardRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 
 /**
  * @author Plajer
@@ -23,7 +21,11 @@ import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 public class FeaturedBoardsServiceImpl implements FeaturedBoardsService {
 
   private List<Long> featuredBoards = new ArrayList<>();
-  @Autowired private BoardRepository boardRepository;
+  private BoardRepository boardRepository;
+
+  public FeaturedBoardsServiceImpl(BoardRepository boardRepository) {
+    this.boardRepository = boardRepository;
+  }
 
   @Scheduled(fixedDelay = 86_400_000)
   public void scheduleFeaturedBoardsSelectionTask() {
@@ -31,10 +33,10 @@ public class FeaturedBoardsServiceImpl implements FeaturedBoardsService {
     List<Board> boards = boardRepository.findByPrivatePageFalse();
     Collections.shuffle(boards);
     int i = 6;
-    for (Board board : boards) {
+    for(Board board : boards) {
       featuredBoards.add(board.getId());
       i--;
-      if (i <= 0) {
+      if(i <= 0) {
         return;
       }
     }
@@ -43,10 +45,10 @@ public class FeaturedBoardsServiceImpl implements FeaturedBoardsService {
   @Override
   public List<FetchBoardDto> getAll() {
     List<FetchBoardDto> boards = new ArrayList<>();
-    for (Long id : featuredBoards) {
+    for(Long id : featuredBoards) {
       Optional<Board> board = boardRepository.findById(id);
       //someone deleted board, reschedule and load again.
-      if (!board.isPresent()) {
+      if(!board.isPresent()) {
         scheduleFeaturedBoardsSelectionTask();
         return getAll();
       }

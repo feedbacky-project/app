@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
  * Created at 24.10.2019
  */
 @Component
+//todo this class can be with static methods
 public class Base64Utils {
 
   public double calculateBase64DataSizeInKb(String base64String) {

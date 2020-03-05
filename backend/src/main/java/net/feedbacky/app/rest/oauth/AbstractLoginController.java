@@ -20,6 +20,7 @@ public interface AbstractLoginController {
 
   ResponseEntity handle(HttpServletResponse response, HttpServletRequest request, String code) throws IOException;
 
+  @Deprecated //todo remove
   default Cookie getLoginCookie(String jwt) {
     Cookie cookie = new Cookie("SESSION", jwt);
     cookie.setPath("/");

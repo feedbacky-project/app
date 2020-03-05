@@ -1,10 +1,12 @@
 package net.feedbacky.app.rest.controllers;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import net.feedbacky.app.rest.data.board.dto.moderator.FetchUserPermissionDto;
+import net.feedbacky.app.rest.data.user.dto.FetchConnectedAccount;
+import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
+import net.feedbacky.app.rest.data.user.dto.PatchUserDto;
+import net.feedbacky.app.service.user.UserService;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,12 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.feedbacky.app.rest.data.board.dto.moderator.FetchUserPermissionDto;
-import net.feedbacky.app.rest.data.user.ConnectedAccount;
-import net.feedbacky.app.rest.data.user.dto.FetchConnectedAccount;
-import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
-import net.feedbacky.app.rest.data.user.dto.PatchUserDto;
-import net.feedbacky.app.service.user.UserService;
+import javax.validation.Valid;
+
+import java.util.List;
 
 /**
  * @author Plajer
@@ -28,9 +27,10 @@ import net.feedbacky.app.service.user.UserService;
  */
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 public class UserRestController {
 
-  @Autowired private UserService userService;
+  private UserService userService;
 
   @GetMapping("v1/users/@me/connectedAccounts")
   public List<FetchConnectedAccount> getSelfConnectedAccounts() {

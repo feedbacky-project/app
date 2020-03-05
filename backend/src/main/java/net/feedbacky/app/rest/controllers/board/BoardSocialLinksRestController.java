@@ -1,10 +1,10 @@
 package net.feedbacky.app.rest.controllers.board;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
+import net.feedbacky.app.rest.data.board.dto.social.PostSocialLinkDto;
+import net.feedbacky.app.service.board.social.BoardSocialLinksService;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
-import net.feedbacky.app.rest.data.board.dto.social.PostSocialLinkDto;
-import net.feedbacky.app.service.board.social.BoardSocialLinksService;
+import javax.validation.Valid;
+
+import java.util.List;
 
 /**
  * @author Plajer
@@ -25,9 +25,10 @@ import net.feedbacky.app.service.board.social.BoardSocialLinksService;
  */
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class BoardSocialLinksRestController {
 
-  @Autowired private BoardSocialLinksService socialLinksService;
+  private BoardSocialLinksService socialLinksService;
 
   @GetMapping("v1/boards/{discriminator}/socialLinks")
   public List<FetchSocialLinkDto> getAll(@PathVariable String discriminator) {

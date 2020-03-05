@@ -1,39 +1,21 @@
 package net.feedbacky.app.service.comment;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.exception.types.ResourceNotFoundException;
-import net.feedbacky.app.rest.data.idea.Idea;
-import net.feedbacky.app.rest.data.board.moderator.Moderator;
-import net.feedbacky.app.rest.data.board.webhook.Webhook;
-
-import org.apache.commons.text.StringEscapeUtils;
-import org.modelmapper.Conditions;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Service;
-
+import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
+import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.idea.CommentRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
+import net.feedbacky.app.rest.data.board.moderator.Moderator;
+import net.feedbacky.app.rest.data.board.webhook.Webhook;
+import net.feedbacky.app.rest.data.board.webhook.WebhookDataBuilder;
+import net.feedbacky.app.rest.data.idea.Idea;
 import net.feedbacky.app.rest.data.idea.comment.Comment;
 import net.feedbacky.app.rest.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.rest.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.rest.data.idea.dto.comment.PostCommentDto;
-import net.feedbacky.app.rest.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.ServiceUser;
@@ -41,29 +23,46 @@ import net.feedbacky.app.utils.EmojiFilter;
 import net.feedbacky.app.utils.PaginableRequest;
 import net.feedbacky.app.utils.RequestValidator;
 
+import org.apache.commons.text.StringEscapeUtils;
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author Plajer
  * <p>
  * Created at 14.10.2019
  */
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-  @Autowired private CommentRepository commentRepository;
-  @Autowired private IdeaRepository ideaRepository;
-  @Autowired private UserRepository userRepository;
-  @Autowired private EmojiFilter emojiFilter;
-  @Autowired private RequestValidator requestValidator;
+  private CommentRepository commentRepository;
+  private IdeaRepository ideaRepository;
+  private UserRepository userRepository;
+  private EmojiFilter emojiFilter;
+  private RequestValidator requestValidator;
 
   @Override
   public PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize) {
     User user = null;
-    if (SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
+    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
       UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Idea idea = ideaRepository.findById(ideaId)
-        .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + ideaId + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + ideaId + " does not exist."));
     if(!idea.getBoard().canView(user)) {
       return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, 0, pageSize), new ArrayList<>());
     }
@@ -72,18 +71,18 @@ public class CommentServiceImpl implements CommentService {
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     final User finalUser = user;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
-        comments.stream().map(comment -> comment.convertToDto(finalUser)).collect(Collectors.toList()));
+            comments.stream().map(comment -> comment.convertToDto(finalUser)).collect(Collectors.toList()));
   }
 
   @Override
   public FetchCommentDto getOne(long id) {
     User user = null;
-    if (SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
+    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
       UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Comment comment = commentRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
     if(!comment.getIdea().getBoard().canView(user)) {
       FetchCommentDto dto = new FetchCommentDto();
       dto.setId(id);
@@ -96,9 +95,9 @@ public class CommentServiceImpl implements CommentService {
   public ResponseEntity<FetchCommentDto> post(PostCommentDto dto) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(dto.getIdeaId())
-        .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + dto.getIdeaId() + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + dto.getIdeaId() + " does not exist."));
     if(!idea.getBoard().canView(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment to this idea.");
     }
@@ -112,7 +111,7 @@ public class CommentServiceImpl implements CommentService {
     comment.setSpecialType(Comment.SpecialType.LEGACY);
     comment.setDescription(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(dto.getDescription())));
 
-    if (commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
+    if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Message with the same content posted by you already exist in this idea.");
     }
     commentRepository.save(comment);
@@ -145,11 +144,11 @@ public class CommentServiceImpl implements CommentService {
   public FetchCommentDto patch(long id, PatchCommentDto dto) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
     Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found."));
-    if (!comment.getCreator().getId().equals(user.getId()) && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+    if(!comment.getCreator().getId().equals(user.getId()) && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to patch comment with id " + id + ".");
     }
 
@@ -166,10 +165,10 @@ public class CommentServiceImpl implements CommentService {
   public ResponseEntity delete(long id) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Comment comment = commentRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
-    if (!comment.getCreator().equals(user) && !hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+    if(!comment.getCreator().equals(user) && !hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to delete comment with id " + id + ".");
     }
     commentRepository.delete(comment);

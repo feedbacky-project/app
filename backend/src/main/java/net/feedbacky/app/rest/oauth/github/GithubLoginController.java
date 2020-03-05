@@ -45,11 +45,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GithubLoginController implements AbstractLoginController {
 
-  @Value("${oauth.github.redirect-uri}") private String redirectUri;
-  @Value("${oauth.github.client-id}") private String clientId;
-  @Value("${oauth.github.client-secret}") private String clientSecret;
-  @Autowired private UserRepository userRepository;
-  @Autowired private JwtTokenUtil jwtTokenUtil;
+  private String redirectUri;
+  private String clientId;
+  private String clientSecret;
+  private UserRepository userRepository;
+  private JwtTokenUtil jwtTokenUtil;
+
+  public GithubLoginController(@Value("${oauth.github.redirect-uri}") String redirectUri, @Value("${oauth.github.client-id}") String clientId,
+                               @Value("${oauth.github.client-secret}") String clientSecret, UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
+    this.redirectUri = redirectUri;
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    this.userRepository = userRepository;
+    this.jwtTokenUtil = jwtTokenUtil;
+  }
 
   @Override
   @GetMapping("/service/v1/github")

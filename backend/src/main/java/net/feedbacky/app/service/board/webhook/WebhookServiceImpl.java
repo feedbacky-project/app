@@ -1,33 +1,32 @@
 package net.feedbacky.app.service.board.webhook;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
+import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.repository.board.BoardRepository;
+import net.feedbacky.app.repository.board.WebhookRepository;
+import net.feedbacky.app.rest.data.board.Board;
 import net.feedbacky.app.rest.data.board.dto.webhook.FetchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PatchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PostWebhookDto;
 import net.feedbacky.app.rest.data.board.moderator.Moderator;
 import net.feedbacky.app.rest.data.board.webhook.Webhook;
+import net.feedbacky.app.rest.data.board.webhook.WebhookDataBuilder;
+import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.service.ServiceUser;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import net.feedbacky.app.config.UserAuthenticationToken;
-import net.feedbacky.app.exception.types.InvalidAuthenticationException;
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.repository.board.BoardRepository;
-import net.feedbacky.app.repository.board.WebhookRepository;
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.webhook.WebhookDataBuilder;
-import net.feedbacky.app.rest.data.user.User;
-import net.feedbacky.app.service.ServiceUser;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -35,19 +34,20 @@ import net.feedbacky.app.service.ServiceUser;
  * Created at 26.10.2019
  */
 @Service
+@RequiredArgsConstructor
 public class WebhookServiceImpl implements WebhookService {
 
-  @Autowired private BoardRepository boardRepository;
-  @Autowired private WebhookRepository webhookRepository;
-  @Autowired private UserRepository userRepository;
+  private BoardRepository boardRepository;
+  private WebhookRepository webhookRepository;
+  private UserRepository userRepository;
 
   @Override
   public List<FetchWebhookDto> getAll(String discriminator) {
     UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
-        .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to view webhooks of this board.");
     }
@@ -58,9 +58,9 @@ public class WebhookServiceImpl implements WebhookService {
   public ResponseEntity<FetchWebhookDto> post(String discriminator, PostWebhookDto dto) {
     UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
-        .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
+            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to post webhooks to this board.");
     }
@@ -83,9 +83,9 @@ public class WebhookServiceImpl implements WebhookService {
   public FetchWebhookDto patch(long id, PatchWebhookDto dto) {
     UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Webhook webhook = webhookRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Webhook with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException("Webhook with id " + id + " does not exist."));
     Board board = webhook.getBoard();
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to patch webhooks to this board.");
@@ -100,14 +100,14 @@ public class WebhookServiceImpl implements WebhookService {
   public ResponseEntity delete(long id) {
     UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Webhook webhook = webhookRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Webhook with id " + id + " does not exist."));
-    if (!hasPermission(webhook.getBoard(), Moderator.Role.OWNER, user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Webhook with id " + id + " does not exist."));
+    if(!hasPermission(webhook.getBoard(), Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to delete webhook of this board.");
     }
     Board board = webhook.getBoard();
-    if (!board.getWebhooks().contains(webhook)) {
+    if(!board.getWebhooks().contains(webhook)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Webhook with id " + id + " does not belong to this board.");
     }
     board.getWebhooks().remove(webhook);

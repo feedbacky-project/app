@@ -1,12 +1,14 @@
 package net.feedbacky.app.rest.controllers.idea;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import net.feedbacky.app.rest.data.idea.dto.comment.FetchCommentDto;
+import net.feedbacky.app.rest.data.idea.dto.comment.PatchCommentDto;
+import net.feedbacky.app.rest.data.idea.dto.comment.PostCommentDto;
+import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
+import net.feedbacky.app.service.comment.CommentService;
+import net.feedbacky.app.utils.PaginableRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,12 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.feedbacky.app.rest.data.idea.dto.comment.FetchCommentDto;
-import net.feedbacky.app.rest.data.idea.dto.comment.PatchCommentDto;
-import net.feedbacky.app.rest.data.idea.dto.comment.PostCommentDto;
-import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
-import net.feedbacky.app.service.comment.CommentService;
-import net.feedbacky.app.utils.PaginableRequest;
+import javax.validation.Valid;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -32,24 +32,25 @@ import net.feedbacky.app.utils.PaginableRequest;
  */
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 public class CommentRestController {
 
-  @Autowired private CommentService commentService;
+  private CommentService commentService;
 
   @GetMapping("v1/ideas/{ideaId}/comments")
   public PaginableRequest<List<FetchCommentDto>> getAllForIdea(@PathVariable long ideaId, @RequestParam Map<String, String> requestParams) {
     //todo can it be shorter
     int page = 0;
-    if (requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
+    if(requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
       page = Integer.parseInt(requestParams.get("page"));
-      if (page < 0) {
+      if(page < 0) {
         page = 0;
       }
     }
     int pageSize = 20;
-    if (requestParams.containsKey("pageSize") && NumberUtils.isDigits(requestParams.get("pageSize"))) {
+    if(requestParams.containsKey("pageSize") && NumberUtils.isDigits(requestParams.get("pageSize"))) {
       pageSize = Integer.parseInt(requestParams.get("pageSize"));
-      if (pageSize < 1) {
+      if(pageSize < 1) {
         pageSize = 1;
       }
     }

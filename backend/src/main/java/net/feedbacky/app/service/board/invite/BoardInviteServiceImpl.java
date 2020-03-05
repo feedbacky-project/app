@@ -1,35 +1,34 @@
 package net.feedbacky.app.service.board.invite;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
+import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.repository.board.BoardRepository;
+import net.feedbacky.app.repository.board.InvitationRepository;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.rest.data.board.dto.invite.PostInviteDto;
 import net.feedbacky.app.rest.data.board.invite.Invitation;
 import net.feedbacky.app.rest.data.board.moderator.Moderator;
+import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
+import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.utils.MailgunEmailHelper;
+import net.feedbacky.app.utils.RequestValidator;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import net.feedbacky.app.config.UserAuthenticationToken;
-import net.feedbacky.app.exception.types.InvalidAuthenticationException;
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.repository.board.InvitationRepository;
-import net.feedbacky.app.repository.board.BoardRepository;
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
-import net.feedbacky.app.rest.data.user.User;
-import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
-import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.utils.RequestValidator;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -37,22 +36,23 @@ import net.feedbacky.app.utils.RequestValidator;
  * Created at 29.11.2019
  */
 @Service
+@RequiredArgsConstructor
 public class BoardInviteServiceImpl implements BoardInviteService {
 
-  @Autowired private BoardRepository boardRepository;
-  @Autowired private UserRepository userRepository;
-  @Autowired private InvitationRepository invitationRepository;
-  @Autowired private MailgunEmailHelper mailgunEmailHelper;
-  @Autowired private RequestValidator requestValidator;
+  private BoardRepository boardRepository;
+  private UserRepository userRepository;
+  private InvitationRepository invitationRepository;
+  private MailgunEmailHelper mailgunEmailHelper;
+  private RequestValidator requestValidator;
 
   @Override
   public List<FetchSimpleUserDto> getAllInvited(String discriminator) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
-        .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if (!hasPermission(board, Moderator.Role.OWNER, user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
+    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to view invited users of this board.");
     }
     return board.getInvitedUsers().stream().map(usr -> usr.convertToDto().exposeSensitiveData(false).convertToSimpleDto()).collect(Collectors.toList());
@@ -62,10 +62,10 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   public List<FetchInviteDto> getAll(String discriminator) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
-        .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if (!hasPermission(board, Moderator.Role.OWNER, user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
+    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to view invitations of this board.");
     }
     return invitationRepository.findByBoard(board).stream().map(Invitation::convertToDto).collect(Collectors.toList());
@@ -75,10 +75,10 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   public FetchBoardDto postAccept(String code) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Invitation invitation = invitationRepository.findByCode(code)
-        .orElseThrow(() -> new ResourceNotFoundException("Invalid invitation link."));
-    if (!invitation.getUser().equals(user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Invalid invitation link."));
+    if(!invitation.getUser().equals(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invitation link belongs to someone else.");
     }
     Board board = invitation.getBoard();
@@ -92,15 +92,15 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   public ResponseEntity<FetchInviteDto> post(String discriminator, PostInviteDto dto) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
-        .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
-    if (!hasPermission(board, Moderator.Role.OWNER, user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
+    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to post invitations to this board.");
     }
     User eventUser = userRepository.findByEmail(dto.getUserEmail())
-        .orElseThrow(() -> new ResourceNotFoundException("User with email " + dto.getUserEmail() + " does not exist."));
-    if (board.getInvitedUsers().contains(eventUser) || invitationRepository.findByBoardAndUser(board, user).isPresent()) {
+            .orElseThrow(() -> new ResourceNotFoundException("User with email " + dto.getUserEmail() + " does not exist."));
+    if(board.getInvitedUsers().contains(eventUser) || invitationRepository.findByBoardAndUser(board, user).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "User is already invited in this board.");
     }
     if(user.equals(eventUser)) {
@@ -115,7 +115,7 @@ public class BoardInviteServiceImpl implements BoardInviteService {
     CompletableFuture.runAsync(() -> {
       try {
         mailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.BOARD_INVITATION, invitation, dto.getUserEmail());
-      } catch (UnirestException e) {
+      } catch(UnirestException e) {
         e.printStackTrace();
       }
     });
@@ -126,14 +126,14 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   public ResponseEntity delete(long id) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Invitation invitation = invitationRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Invitation with id " + id + " does not exist."));
-    if (!hasPermission(invitation.getBoard(), Moderator.Role.OWNER, user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Invitation with id " + id + " does not exist."));
+    if(!hasPermission(invitation.getBoard(), Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to delete invitations from this board.");
     }
     Board board = invitation.getBoard();
-    if (!board.getInvitations().contains(invitation)) {
+    if(!board.getInvitations().contains(invitation)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invitation with id " + id + " does not belong to this board.");
     }
     board.getInvitations().remove(invitation);
@@ -146,15 +146,15 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   public ResponseEntity deleteInvited(String discriminator, long id) {
     UserAuthenticationToken auth = requestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-        .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
-        .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
-    if (!hasPermission(board, Moderator.Role.OWNER, user)) {
+            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
+    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to delete invited users from this board.");
     }
     User eventUser = userRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " does not exist."));
-    if (!board.getInvitedUsers().contains(eventUser)) {
+            .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " does not exist."));
+    if(!board.getInvitedUsers().contains(eventUser)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "User with id " + id + " does not belong to this board.");
     }
     board.getInvitedUsers().remove(eventUser);

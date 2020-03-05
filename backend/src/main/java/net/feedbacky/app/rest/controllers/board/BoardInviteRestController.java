@@ -1,14 +1,12 @@
 package net.feedbacky.app.rest.controllers.board;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import lombok.RequiredArgsConstructor;
+import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.rest.data.board.dto.invite.PostInviteDto;
+import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.service.board.invite.BoardInviteService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,8 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
-import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
+import javax.validation.Valid;
+
+import java.util.List;
 
 /**
  * @author Plajer
@@ -28,9 +27,10 @@ import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
  */
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 public class BoardInviteRestController {
 
-  @Autowired private BoardInviteService boardInviteService;
+  private BoardInviteService boardInviteService;
 
   @GetMapping("v1/boards/{discriminator}/invitedUsers")
   public List<FetchSimpleUserDto> getAllInvited(@PathVariable String discriminator) {

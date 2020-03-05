@@ -1,5 +1,6 @@
 package net.feedbacky.app.service.idea;
 
+import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -40,7 +41,6 @@ import net.feedbacky.app.utils.objectstorage.ObjectStorage;
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -62,19 +62,21 @@ import java.util.stream.Collectors;
  * Created at 11.10.2019
  */
 @Service
+@RequiredArgsConstructor
+//todo class too big
 public class IdeaServiceImpl implements IdeaService {
 
-  @Autowired private IdeaRepository ideaRepository;
-  @Autowired private BoardRepository boardRepository;
-  @Autowired private UserRepository userRepository;
-  @Autowired private TagRepository tagRepository;
-  @Autowired private CommentRepository commentRepository;
-  @Autowired private AttachmentRepository attachmentRepository;
-  @Autowired private SortFilterResolver resolver;
-  @Autowired private EmojiFilter emojiFilter;
-  @Autowired private RequestValidator requestValidator;
-  @Autowired private ObjectStorage objectStorage;
-  @Autowired private Base64Utils base64Utils;
+  private IdeaRepository ideaRepository;
+  private BoardRepository boardRepository;
+  private UserRepository userRepository;
+  private TagRepository tagRepository;
+  private CommentRepository commentRepository;
+  private AttachmentRepository attachmentRepository;
+  private SortFilterResolver resolver;
+  private EmojiFilter emojiFilter;
+  private RequestValidator requestValidator;
+  private ObjectStorage objectStorage;
+  private Base64Utils base64Utils;
 
   @Override
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort) {

@@ -1,5 +1,6 @@
 package net.feedbacky.app.rest.controllers.idea;
 
+import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.rest.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.rest.data.idea.dto.PatchIdeaDto;
 import net.feedbacky.app.rest.data.idea.dto.PostIdeaDto;
@@ -10,7 +11,6 @@ import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.utils.PaginableRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,9 +34,10 @@ import java.util.Map;
  */
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 public class IdeaRestController {
 
-  @Autowired private IdeaService ideaService;
+  private IdeaService ideaService;
 
   @GetMapping("v1/boards/{discriminator}/ideas")
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
