@@ -15,4 +15,4 @@
 </p>
 
 ## License
-Feedbacky is free and open source software under the MIT License //todo rel to license.
+Feedbacky is free and open source software under the [MIT License](https://github.com/Plajer/feedbacky-project/blob/master/LICENSE.md).
