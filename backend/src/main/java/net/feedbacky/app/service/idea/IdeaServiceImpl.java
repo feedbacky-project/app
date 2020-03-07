@@ -32,7 +32,6 @@ import net.feedbacky.app.utils.Base64Utils;
 import net.feedbacky.app.utils.CommentBuilder;
 import net.feedbacky.app.utils.EmojiFilter;
 import net.feedbacky.app.utils.PaginableRequest;
-import net.feedbacky.app.utils.Pair;
 import net.feedbacky.app.utils.RequestValidator;
 import net.feedbacky.app.utils.SortFilterResolver;
 import net.feedbacky.app.utils.objectstorage.ObjectStorage;
@@ -417,8 +416,8 @@ public class IdeaServiceImpl implements IdeaService {
     if(tags.isEmpty()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No changes made to idea.");
     }
-    //key - added tags, value - removed tags
-    Pair<List<Tag>, List<Tag>> tagsUpdated = new Pair<>(new ArrayList<>(), new ArrayList<>());
+    List<Tag> addedTags = new ArrayList<>();
+    List<Tag> removedTags = new ArrayList<>();
     for(PatchTagRequestDto preTag : tags) {
       Tag tag = tagRepository.findByBoardAndName(idea.getBoard(), preTag.getName())
               .orElseThrow(() -> new ResourceNotFoundException("Tag with name " + preTag + " does not exist."));
@@ -427,39 +426,39 @@ public class IdeaServiceImpl implements IdeaService {
           continue;
         }
         if(preTag.getApply() && !idea.getTags().contains(tag)) {
-          tagsUpdated.getKey().add(tag);
+          addedTags.add(tag);
         } else if(!preTag.getApply() && idea.getTags().contains(tag)) {
-          tagsUpdated.getValue().add(tag);
+          removedTags.add(tag);
         }
       }
     }
-    if(tagsUpdated.getValue().isEmpty() && tagsUpdated.getKey().isEmpty()) {
+    if(removedTags.isEmpty() && addedTags.isEmpty()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No changes made to idea.");
     }
-    Comment comment = prepareTagsPatchComment(user, idea, tagsUpdated);
+    Comment comment = prepareTagsPatchComment(user, idea, addedTags, removedTags);
     idea.getComments().add(comment);
     commentRepository.save(comment);
     ideaRepository.save(idea);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea())
-            .withTagsChangedData(prepareTagChangeMessage(user, idea, tagsUpdated, false));
+            .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
     idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_TAG_CHANGE, builder.build());
     return idea.getTags().stream().map(Tag::convertToDto).collect(Collectors.toList());
   }
 
-  private Comment prepareTagsPatchComment(User user, Idea idea, Pair<List<Tag>, List<Tag>> tagsUpdated) {
+  private Comment prepareTagsPatchComment(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags) {
     return new CommentBuilder()
             .of(idea)
             .by(user)
             .type(Comment.SpecialType.TAGS_MANAGED)
-            .message(prepareTagChangeMessage(user, idea, tagsUpdated, true))
+            .message(prepareTagChangeMessage(user, idea, addedTags, removedTags, true))
             .build();
   }
 
-  private String prepareTagChangeMessage(User user, Idea idea, Pair<List<Tag>, List<Tag>> tagsUpdated, boolean htmlDisplay) {
+  private String prepareTagChangeMessage(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean htmlDisplay) {
     StringBuilder builder = new StringBuilder(user.getUsername() + " has ");
-    if(!tagsUpdated.getKey().isEmpty()) {
+    if(!addedTags.isEmpty()) {
       builder.append("added");
-      for(Tag tag : tagsUpdated.getKey()) {
+      for(Tag tag : addedTags) {
         idea.getTags().add(tag);
         builder.append(" ");
         if(htmlDisplay) {
@@ -469,19 +468,19 @@ public class IdeaServiceImpl implements IdeaService {
         }
         builder.append(" ");
       }
-      if(tagsUpdated.getKey().size() == 1) {
+      if(addedTags.size() == 1) {
         builder.append("tag");
       } else {
         builder.append("tags");
       }
     }
-    if(!tagsUpdated.getValue().isEmpty()) {
+    if(!removedTags.isEmpty()) {
       //tags were added
       if(!builder.toString().endsWith("has ")) {
         builder.append(" and ");
       }
       builder.append("removed");
-      for(Tag tag : tagsUpdated.getValue()) {
+      for(Tag tag : removedTags) {
         idea.getTags().remove(tag);
         builder.append(" ");
         if(htmlDisplay) {
@@ -491,7 +490,7 @@ public class IdeaServiceImpl implements IdeaService {
         }
         builder.append(" ");
       }
-      if(tagsUpdated.getValue().size() == 1) {
+      if(removedTags.size() == 1) {
         builder.append("tag");
       } else {
         builder.append("tags");
