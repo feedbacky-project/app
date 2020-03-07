@@ -1,7 +1,7 @@
 import React from "react";
 
 const AppContext = React.createContext({
-    apiRoute: "https://app.feedbacky.net/v1/",
+    apiRoute: "",
     user: {
         data: [], loggedIn: false, session: "", darkMode: false,
         onLogOut: () => {},

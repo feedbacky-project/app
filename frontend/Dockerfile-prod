@@ -4,6 +4,10 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 RUN npm install --silent
 COPY . /app
+ARG REACT_APP_SERVER_IP_ADDRESS
+ARG REACT_APP_PUBLIC_API_PORT
+ENV REACT_APP_SERVER_IP_ADDRESS=${REACT_APP_SERVER_IP_ADDRESS}
+ENV REACT_APP_PUBLIC_API_PORT=${REACT_APP_PUBLIC_API_PORT}
 RUN npm run build
 
 FROM nginx:1.16.0-alpine

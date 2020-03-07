@@ -46,7 +46,7 @@ class App extends Component {
         error: false,
         moderatingDataLoaded: false,
         theme: "#343a40",
-        apiRoute: "https://panic.feedbacky.net/v1",
+        apiRoute: process.env.REACT_APP_SERVER_IP_ADDRESS + ":" + process.env.REACT_APP_PUBLIC_API_PORT + "/v1",
     };
 
     componentDidMount() {
