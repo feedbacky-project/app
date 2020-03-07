@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.user;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
@@ -37,12 +36,18 @@ import java.util.stream.Collectors;
  * Created at 10.10.2019
  */
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
   private RequestValidator requestValidator;
   private MailgunEmailHelper mailgunEmailHelper;
+
+  @Autowired
+  public UserServiceImpl(UserRepository userRepository, RequestValidator requestValidator, MailgunEmailHelper mailgunEmailHelper) {
+    this.userRepository = userRepository;
+    this.requestValidator = requestValidator;
+    this.mailgunEmailHelper = mailgunEmailHelper;
+  }
 
   @Override
   public FetchUserDto getSelf() {

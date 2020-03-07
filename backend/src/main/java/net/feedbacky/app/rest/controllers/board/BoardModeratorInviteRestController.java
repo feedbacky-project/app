@@ -1,12 +1,12 @@
 package net.feedbacky.app.rest.controllers.board;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.rest.data.board.dto.invite.PostInviteDto;
 import net.feedbacky.app.rest.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.service.board.moderator.BoardModeratorService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,10 +27,14 @@ import java.util.List;
  */
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 public class BoardModeratorInviteRestController {
 
   private BoardModeratorService boardModeratorService;
+
+  @Autowired
+  public BoardModeratorInviteRestController(BoardModeratorService boardModeratorService) {
+    this.boardModeratorService = boardModeratorService;
+  }
 
   @GetMapping("v1/boards/{discriminator}/moderators")
   public List<FetchModeratorDto> getAll(@PathVariable String discriminator) {

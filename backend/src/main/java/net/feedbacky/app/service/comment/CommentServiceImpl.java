@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.comment;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -26,6 +25,7 @@ import net.feedbacky.app.utils.RequestValidator;
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
  * Created at 14.10.2019
  */
 @Service
-@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
   private CommentRepository commentRepository;
@@ -53,6 +52,15 @@ public class CommentServiceImpl implements CommentService {
   private UserRepository userRepository;
   private EmojiFilter emojiFilter;
   private RequestValidator requestValidator;
+
+  @Autowired
+  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, EmojiFilter emojiFilter, RequestValidator requestValidator) {
+    this.commentRepository = commentRepository;
+    this.ideaRepository = ideaRepository;
+    this.userRepository = userRepository;
+    this.emojiFilter = emojiFilter;
+    this.requestValidator = requestValidator;
+  }
 
   @Override
   public PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize) {

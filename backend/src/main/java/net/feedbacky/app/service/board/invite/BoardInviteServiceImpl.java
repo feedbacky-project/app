@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.board.invite;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -22,6 +21,7 @@ import net.feedbacky.app.utils.RequestValidator;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
  * Created at 29.11.2019
  */
 @Service
-@RequiredArgsConstructor
 public class BoardInviteServiceImpl implements BoardInviteService {
 
   private BoardRepository boardRepository;
@@ -44,6 +43,15 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   private InvitationRepository invitationRepository;
   private MailgunEmailHelper mailgunEmailHelper;
   private RequestValidator requestValidator;
+
+  @Autowired
+  public BoardInviteServiceImpl(BoardRepository boardRepository, UserRepository userRepository, InvitationRepository invitationRepository, MailgunEmailHelper mailgunEmailHelper, RequestValidator requestValidator) {
+    this.boardRepository = boardRepository;
+    this.userRepository = userRepository;
+    this.invitationRepository = invitationRepository;
+    this.mailgunEmailHelper = mailgunEmailHelper;
+    this.requestValidator = requestValidator;
+  }
 
   @Override
   public List<FetchSimpleUserDto> getAllInvited(String discriminator) {

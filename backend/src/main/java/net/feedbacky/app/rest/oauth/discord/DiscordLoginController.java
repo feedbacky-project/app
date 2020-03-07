@@ -1,25 +1,7 @@
 package net.feedbacky.app.rest.oauth.discord;
 
-import net.feedbacky.app.exception.types.LoginFailedException;
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.rest.data.user.ConnectedAccount;
-import net.feedbacky.app.rest.data.user.User;
-import net.feedbacky.app.rest.oauth.AbstractLoginController;
-import net.feedbacky.app.rest.oauth.AuthGrant;
-import net.feedbacky.app.utils.JwtTokenUtil;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,6 +15,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import net.feedbacky.app.exception.types.LoginFailedException;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.rest.data.user.ConnectedAccount;
+import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.rest.oauth.AbstractLoginController;
+import net.feedbacky.app.rest.oauth.AuthGrant;
+import net.feedbacky.app.utils.JwtTokenUtil;
+
 /**
  * @author Plajer
  * <p>
@@ -41,20 +42,11 @@ import java.util.Set;
 @RestController
 public class DiscordLoginController implements AbstractLoginController {
 
-  private String redirectUri;
-  private String clientId;
-  private String clientSecret;
-  private UserRepository userRepository;
-  private JwtTokenUtil jwtTokenUtil;
-
-  public DiscordLoginController(@Value("${oauth.discord.redirect-uri}") String redirectUri, @Value("${oauth.discord.client-id}") String clientId,
-                                @Value("${oauth.discord.client-secret}") String clientSecret, UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
-    this.redirectUri = redirectUri;
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
-    this.userRepository = userRepository;
-    this.jwtTokenUtil = jwtTokenUtil;
-  }
+  @Value("${oauth.discord.redirect-uri}") private String redirectUri;
+  @Value("${oauth.discord.client-id}") private String clientId;
+  @Value("${oauth.discord.client-secret}") private String clientSecret;
+  @Autowired private UserRepository userRepository;
+  @Autowired private JwtTokenUtil jwtTokenUtil;
 
   @Override
   @GetMapping("/service/v1/discord")
@@ -68,12 +60,12 @@ public class DiscordLoginController implements AbstractLoginController {
 
     OutputStream os = conn.getOutputStream();
     os.write(("grant_type=authorization_code&client_id=" + clientId + "&client_secret=" + clientSecret
-            + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&code=" + code).getBytes(StandardCharsets.UTF_8));
+        + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&code=" + code).getBytes(StandardCharsets.UTF_8));
     os.flush();
     os.close();
 
     int responseCode = conn.getResponseCode();
-    if(responseCode != HttpURLConnection.HTTP_OK) {
+    if (responseCode != HttpURLConnection.HTTP_OK) {
       throw new LoginFailedException("Failed to log in via Discord! Code: " + responseCode + ". Message: " + conn.getResponseMessage());
     }
 
@@ -85,7 +77,6 @@ public class DiscordLoginController implements AbstractLoginController {
     String jwtToken = jwtTokenUtil.generateToken(user.getEmail());
     json.put("token", jwtToken);
     json.put("user", user.convertToDto().exposeSensitiveData(true));
-    response.addCookie(getLoginCookie(jwtToken));
     return ResponseEntity.ok().body(json);
   }
 
@@ -98,7 +89,7 @@ public class DiscordLoginController implements AbstractLoginController {
     conn.setDoOutput(true);
 
     DiscordUser discordUser = new ObjectMapper().readValue(getResponse(conn.getInputStream()), DiscordUser.class);
-    if(discordUser.getEmail() == null) {
+    if (discordUser.getEmail() == null) {
       throw new LoginFailedException("Email for this Discord user is not valid.");
     }
     if(!discordUser.getVerified()) {
@@ -106,7 +97,7 @@ public class DiscordLoginController implements AbstractLoginController {
     }
 
     Optional<User> optional = userRepository.findByEmail(discordUser.getEmail());
-    if(!optional.isPresent()) {
+    if (!optional.isPresent()) {
       optional = Optional.of(new User());
       User user = optional.get();
       user.setEmail(discordUser.getEmail());
@@ -118,7 +109,7 @@ public class DiscordLoginController implements AbstractLoginController {
       userRepository.save(user);
     } else {
       User user = optional.get();
-      if(user.getConnectedAccounts().stream().noneMatch(acc -> acc.getType() == ConnectedAccount.AccountType.DISCORD)) {
+      if (user.getConnectedAccounts().stream().noneMatch(acc -> acc.getType() == ConnectedAccount.AccountType.DISCORD)) {
         Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
         accounts.add(generateConnectedAccount(discordUser, user));
         user.setConnectedAccounts(accounts);
@@ -142,7 +133,7 @@ public class DiscordLoginController implements AbstractLoginController {
     data.put("EMAIL", discordUser.getEmail());
     try {
       account.setData(new ObjectMapper().writeValueAsString(data));
-    } catch(JsonProcessingException e) {
+    } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
     return account;

@@ -45,20 +45,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GithubLoginController implements AbstractLoginController {
 
-  private String redirectUri;
-  private String clientId;
-  private String clientSecret;
-  private UserRepository userRepository;
-  private JwtTokenUtil jwtTokenUtil;
-
-  public GithubLoginController(@Value("${oauth.github.redirect-uri}") String redirectUri, @Value("${oauth.github.client-id}") String clientId,
-                               @Value("${oauth.github.client-secret}") String clientSecret, UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
-    this.redirectUri = redirectUri;
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
-    this.userRepository = userRepository;
-    this.jwtTokenUtil = jwtTokenUtil;
-  }
+  @Value("${oauth.github.redirect-uri}") private String redirectUri;
+  @Value("${oauth.github.client-id}") private String clientId;
+  @Value("${oauth.github.client-secret}") private String clientSecret;
+  @Autowired private UserRepository userRepository;
+  @Autowired private JwtTokenUtil jwtTokenUtil;
 
   @Override
   @GetMapping("/service/v1/github")
@@ -90,7 +81,6 @@ public class GithubLoginController implements AbstractLoginController {
     String jwtToken = jwtTokenUtil.generateToken(user.getEmail());
     json.put("token", jwtToken);
     json.put("user", user.convertToDto().exposeSensitiveData(true));
-    response.addCookie(getLoginCookie(jwtToken));
     return ResponseEntity.ok().body(json);
   }
 

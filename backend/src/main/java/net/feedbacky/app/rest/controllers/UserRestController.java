@@ -1,12 +1,12 @@
 package net.feedbacky.app.rest.controllers;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.rest.data.board.dto.moderator.FetchUserPermissionDto;
 import net.feedbacky.app.rest.data.user.dto.FetchConnectedAccount;
 import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
 import net.feedbacky.app.rest.data.user.dto.PatchUserDto;
 import net.feedbacky.app.service.user.UserService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,10 +27,14 @@ import java.util.List;
  */
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 public class UserRestController {
 
   private UserService userService;
+
+  @Autowired
+  public UserRestController(UserService userService) {
+    this.userService = userService;
+  }
 
   @GetMapping("v1/users/@me/connectedAccounts")
   public List<FetchConnectedAccount> getSelfConnectedAccounts() {

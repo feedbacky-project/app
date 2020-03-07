@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.idea;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -41,6 +40,7 @@ import net.feedbacky.app.utils.objectstorage.ObjectStorage;
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -62,8 +62,6 @@ import java.util.stream.Collectors;
  * Created at 11.10.2019
  */
 @Service
-@RequiredArgsConstructor
-//todo class too big
 public class IdeaServiceImpl implements IdeaService {
 
   private IdeaRepository ideaRepository;
@@ -77,6 +75,22 @@ public class IdeaServiceImpl implements IdeaService {
   private RequestValidator requestValidator;
   private ObjectStorage objectStorage;
   private Base64Utils base64Utils;
+
+  @Autowired
+  //todo too big constructor
+  public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, SortFilterResolver resolver, EmojiFilter emojiFilter, RequestValidator requestValidator, ObjectStorage objectStorage, Base64Utils base64Utils) {
+    this.ideaRepository = ideaRepository;
+    this.boardRepository = boardRepository;
+    this.userRepository = userRepository;
+    this.tagRepository = tagRepository;
+    this.commentRepository = commentRepository;
+    this.attachmentRepository = attachmentRepository;
+    this.resolver = resolver;
+    this.emojiFilter = emojiFilter;
+    this.requestValidator = requestValidator;
+    this.objectStorage = objectStorage;
+    this.base64Utils = base64Utils;
+  }
 
   @Override
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort) {

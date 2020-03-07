@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.board.webhook;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -20,6 +19,7 @@ import net.feedbacky.app.service.ServiceUser;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,12 +34,18 @@ import java.util.stream.Collectors;
  * Created at 26.10.2019
  */
 @Service
-@RequiredArgsConstructor
 public class WebhookServiceImpl implements WebhookService {
 
   private BoardRepository boardRepository;
   private WebhookRepository webhookRepository;
   private UserRepository userRepository;
+
+  @Autowired
+  public WebhookServiceImpl(BoardRepository boardRepository, WebhookRepository webhookRepository, UserRepository userRepository) {
+    this.boardRepository = boardRepository;
+    this.webhookRepository = webhookRepository;
+    this.userRepository = userRepository;
+  }
 
   @Override
   public List<FetchWebhookDto> getAll(String discriminator) {

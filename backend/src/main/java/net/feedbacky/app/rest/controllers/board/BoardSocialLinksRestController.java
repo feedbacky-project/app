@@ -1,10 +1,10 @@
 package net.feedbacky.app.rest.controllers.board;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.rest.data.board.dto.social.PostSocialLinkDto;
 import net.feedbacky.app.service.board.social.BoardSocialLinksService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,10 +25,14 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
-@RequiredArgsConstructor
 public class BoardSocialLinksRestController {
 
   private BoardSocialLinksService socialLinksService;
+
+  @Autowired
+  public BoardSocialLinksRestController(BoardSocialLinksService socialLinksService) {
+    this.socialLinksService = socialLinksService;
+  }
 
   @GetMapping("v1/boards/{discriminator}/socialLinks")
   public List<FetchSocialLinkDto> getAll(@PathVariable String discriminator) {

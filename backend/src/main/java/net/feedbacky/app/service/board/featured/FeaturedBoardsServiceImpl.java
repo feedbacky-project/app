@@ -4,6 +4,7 @@ import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.rest.data.board.Board;
 import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class FeaturedBoardsServiceImpl implements FeaturedBoardsService {
   private List<Long> featuredBoards = new ArrayList<>();
   private BoardRepository boardRepository;
 
+  @Autowired
   public FeaturedBoardsServiceImpl(BoardRepository boardRepository) {
     this.boardRepository = boardRepository;
   }

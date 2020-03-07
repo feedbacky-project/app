@@ -24,6 +24,7 @@ import net.feedbacky.app.utils.Base64Utils;
  */
 @CrossOrigin
 @Controller
+@Deprecated //todo remove me
 public class TemporaryImageController {
 
   @GetMapping(value = "temp/data/{type}/{id}", produces = {"image/png", "image/jpeg"})

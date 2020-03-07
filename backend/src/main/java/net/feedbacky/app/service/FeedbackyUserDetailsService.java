@@ -1,9 +1,9 @@
 package net.feedbacky.app.service;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.rest.data.user.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,14 @@ import java.util.Optional;
  * Created at 01.10.2019
  */
 @Service
-@RequiredArgsConstructor
 public class FeedbackyUserDetailsService {
 
   private UserRepository userRepository;
+
+  @Autowired
+  public FeedbackyUserDetailsService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   public ServiceUser loadUserByEmail(String email) throws UsernameNotFoundException {
     Optional<User> optional = userRepository.findByEmail(email);

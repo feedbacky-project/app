@@ -1,11 +1,11 @@
 package net.feedbacky.app.rest.controllers.board;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.rest.data.board.dto.webhook.FetchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PatchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PostWebhookDto;
 import net.feedbacky.app.service.board.webhook.WebhookService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,10 +27,14 @@ import java.util.List;
  */
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 public class BoardWebhooksRestController {
 
   private WebhookService webhookService;
+
+  @Autowired
+  public BoardWebhooksRestController(WebhookService webhookService) {
+    this.webhookService = webhookService;
+  }
 
   @GetMapping("v1/boards/{discriminator}/webhooks")
   public List<FetchWebhookDto> getAll(@PathVariable String discriminator) {

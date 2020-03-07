@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.board;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -34,6 +33,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -50,8 +50,6 @@ import java.util.stream.Collectors;
  * Created at 10.10.2019
  */
 @Service
-@RequiredArgsConstructor
-//todo class too big
 public class BoardServiceImpl implements BoardService {
 
   private BoardRepository boardRepository;
@@ -64,6 +62,21 @@ public class BoardServiceImpl implements BoardService {
   private ObjectStorage objectStorage;
   private MailgunEmailHelper emailHelper;
   private FeaturedBoardsServiceImpl featuredBoardsServiceImpl;
+
+  @Autowired
+  //todo too big constuctor
+  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository, EmojiFilter emojiFilter, RequestValidator requestValidator, ImageUtils imageUtils, ObjectStorage objectStorage, MailgunEmailHelper emailHelper, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
+    this.boardRepository = boardRepository;
+    this.userRepository = userRepository;
+    this.ideaRepository = ideaRepository;
+    this.tagRepository = tagRepository;
+    this.emojiFilter = emojiFilter;
+    this.requestValidator = requestValidator;
+    this.imageUtils = imageUtils;
+    this.objectStorage = objectStorage;
+    this.emailHelper = emailHelper;
+    this.featuredBoardsServiceImpl = featuredBoardsServiceImpl;
+  }
 
   @Override
   public PaginableRequest<List<FetchBoardDto>> getAll(int page, int pageSize) {

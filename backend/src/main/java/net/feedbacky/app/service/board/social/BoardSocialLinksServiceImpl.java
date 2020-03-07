@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.board.social;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -20,6 +19,7 @@ import net.feedbacky.app.utils.Constants;
 import net.feedbacky.app.utils.RequestValidator;
 import net.feedbacky.app.utils.objectstorage.ObjectStorage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
  * Created at 23.12.2019
  */
 @Service
-@RequiredArgsConstructor
 public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
   private BoardRepository boardRepository;
@@ -43,6 +42,16 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
   private RequestValidator requestValidator;
   private ObjectStorage objectStorage;
   private Base64Utils base64Utils;
+
+  @Autowired
+  public BoardSocialLinksServiceImpl(BoardRepository boardRepository, SocialLinksRepository socialLinksRepository, UserRepository userRepository, RequestValidator requestValidator, ObjectStorage objectStorage, Base64Utils base64Utils) {
+    this.boardRepository = boardRepository;
+    this.socialLinksRepository = socialLinksRepository;
+    this.userRepository = userRepository;
+    this.requestValidator = requestValidator;
+    this.objectStorage = objectStorage;
+    this.base64Utils = base64Utils;
+  }
 
   @Override
   public List<FetchSocialLinkDto> getAll(String discriminator) {

@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.board.moderator;
 
-import lombok.RequiredArgsConstructor;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -23,6 +22,7 @@ import net.feedbacky.app.utils.RequestValidator;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
  * Created at 03.12.2019
  */
 @Service
-@RequiredArgsConstructor
 public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   private BoardRepository boardRepository;
@@ -47,6 +46,16 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   private RequestValidator requestValidator;
   private InvitationRepository invitationRepository;
   private MailgunEmailHelper mailgunEmailHelper;
+
+  @Autowired
+  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository, RequestValidator requestValidator, InvitationRepository invitationRepository, MailgunEmailHelper mailgunEmailHelper) {
+    this.boardRepository = boardRepository;
+    this.moderatorRepository = moderatorRepository;
+    this.userRepository = userRepository;
+    this.requestValidator = requestValidator;
+    this.invitationRepository = invitationRepository;
+    this.mailgunEmailHelper = mailgunEmailHelper;
+  }
 
   @Override
   public List<FetchModeratorDto> getAll(String discriminator) {
