@@ -1,27 +1,25 @@
 package net.feedbacky.app.rest.data.board.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import net.feedbacky.app.annotation.alphanumeric.Alphanumeric;
 import net.feedbacky.app.annotation.base64.Base64;
 import net.feedbacky.app.annotation.hex.HexValue;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.utils.ImageUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.ModelMapper;
 
-import net.feedbacky.app.annotation.alphanumeric.Alphanumeric;
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.utils.ImageUtils;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 
 /**
  * @author Plajer

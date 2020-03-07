@@ -1,11 +1,11 @@
 package net.feedbacky.app.config;
 
-import java.util.Collection;
-
 import lombok.EqualsAndHashCode;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 /**
  * @author Plajer

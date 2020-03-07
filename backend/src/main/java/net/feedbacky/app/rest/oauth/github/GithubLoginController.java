@@ -1,8 +1,28 @@
 package net.feedbacky.app.rest.oauth.github;
 
+import net.feedbacky.app.exception.types.LoginFailedException;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.rest.data.user.ConnectedAccount;
+import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.rest.oauth.AbstractLoginController;
+import net.feedbacky.app.rest.oauth.AuthGrant;
+import net.feedbacky.app.utils.JwtTokenUtil;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,26 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.feedbacky.app.exception.types.LoginFailedException;
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.rest.data.user.ConnectedAccount;
-import net.feedbacky.app.rest.data.user.User;
-import net.feedbacky.app.rest.oauth.AbstractLoginController;
-import net.feedbacky.app.rest.oauth.AuthGrant;
-import net.feedbacky.app.utils.JwtTokenUtil;
-
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Plajer

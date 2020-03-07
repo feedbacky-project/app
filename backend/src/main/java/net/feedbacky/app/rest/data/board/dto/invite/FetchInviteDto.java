@@ -1,14 +1,13 @@
 package net.feedbacky.app.rest.data.board.dto.invite;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Plajer

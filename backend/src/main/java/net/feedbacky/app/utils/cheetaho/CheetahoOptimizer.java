@@ -1,5 +1,8 @@
 package net.feedbacky.app.utils.cheetaho;
 
+import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.utils.Base64Utils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mashape.unirest.http.HttpResponse;
@@ -7,20 +10,16 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
-import net.feedbacky.app.exception.FeedbackyRestException;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
-import net.feedbacky.app.utils.Base64Utils;
 
 /**
  * @author Plajer

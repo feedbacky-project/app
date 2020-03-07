@@ -1,13 +1,12 @@
 package net.feedbacky.app.rest.data.idea.dto.attachment;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import net.feedbacky.app.annotation.base64.Base64;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Plajer

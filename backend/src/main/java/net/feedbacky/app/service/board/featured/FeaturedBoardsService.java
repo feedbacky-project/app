@@ -1,8 +1,8 @@
 package net.feedbacky.app.service.board.featured;
 
-import java.util.List;
-
 import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
+
+import java.util.List;
 
 /**
  * @author Plajer

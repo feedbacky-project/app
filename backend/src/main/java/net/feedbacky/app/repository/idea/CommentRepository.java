@@ -1,16 +1,15 @@
 package net.feedbacky.app.repository.idea;
 
-import java.util.Optional;
-
 import net.feedbacky.app.rest.data.idea.Idea;
+import net.feedbacky.app.rest.data.idea.comment.Comment;
+import net.feedbacky.app.rest.data.user.User;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import net.feedbacky.app.rest.data.idea.comment.Comment;
-import net.feedbacky.app.rest.data.user.User;
+import java.util.Optional;
 
 /**
  * @author Plajer

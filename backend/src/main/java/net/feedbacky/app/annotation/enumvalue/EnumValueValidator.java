@@ -1,10 +1,10 @@
 package net.feedbacky.app.annotation.enumvalue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Plajer

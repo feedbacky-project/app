@@ -1,15 +1,14 @@
 package net.feedbacky.app.rest.data.board.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.feedbacky.app.annotation.base64.Base64;
 import net.feedbacky.app.annotation.hex.HexValue;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.validation.constraints.Size;
 
 /**
  * @author Plajer

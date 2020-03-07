@@ -1,6 +1,14 @@
 package net.feedbacky.app.rest.data.board.invite;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
+import net.feedbacky.app.rest.data.user.User;
+
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,17 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
-
-import org.modelmapper.ModelMapper;
-
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.user.User;
+import java.io.Serializable;
 
 /**
  * @author Plajer

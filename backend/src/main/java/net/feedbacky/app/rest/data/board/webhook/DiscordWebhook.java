@@ -1,5 +1,7 @@
 package net.feedbacky.app.rest.data.board.webhook;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Class used to ezxecute Discord Webhooks with low effort

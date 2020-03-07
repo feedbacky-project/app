@@ -1,10 +1,10 @@
 package net.feedbacky.app.annotation.hex;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Plajer

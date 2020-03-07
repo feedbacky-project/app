@@ -1,9 +1,5 @@
 package net.feedbacky.app.service.board;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-
 import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.rest.data.board.dto.PatchBoardDto;
 import net.feedbacky.app.rest.data.board.dto.PostBoardDto;
@@ -12,6 +8,10 @@ import net.feedbacky.app.rest.data.tag.dto.PatchTagDto;
 import net.feedbacky.app.rest.data.tag.dto.PostTagDto;
 import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.utils.PaginableRequest;
+
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 /**
  * @author Plajer

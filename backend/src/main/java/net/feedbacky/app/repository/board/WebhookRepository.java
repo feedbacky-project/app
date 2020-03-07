@@ -1,14 +1,13 @@
 package net.feedbacky.app.repository.board;
 
-import java.util.List;
-import java.util.Optional;
-
+import net.feedbacky.app.rest.data.board.Board;
 import net.feedbacky.app.rest.data.board.webhook.Webhook;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import net.feedbacky.app.rest.data.board.Board;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Plajer

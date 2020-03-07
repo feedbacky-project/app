@@ -1,17 +1,16 @@
 package net.feedbacky.app.rest.data.idea.dto;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import net.feedbacky.app.rest.data.idea.dto.attachment.FetchAttachmentDto;
 import net.feedbacky.app.rest.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Plajer

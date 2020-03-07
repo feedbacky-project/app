@@ -1,8 +1,8 @@
 package net.feedbacky.app.exception.types;
 
-import org.springframework.http.HttpStatus;
-
 import net.feedbacky.app.exception.FeedbackyRestException;
+
+import org.springframework.http.HttpStatus;
 
 /**
  * @author Plajer

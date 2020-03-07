@@ -1,6 +1,13 @@
 package net.feedbacky.app.rest.data.board.social;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
+
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,15 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import org.modelmapper.ModelMapper;
-
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
+import java.io.Serializable;
 
 /**
  * @author Plajer

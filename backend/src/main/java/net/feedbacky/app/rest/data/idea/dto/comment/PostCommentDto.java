@@ -1,17 +1,17 @@
 package net.feedbacky.app.rest.data.idea.dto.comment;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Plajer

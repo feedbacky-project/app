@@ -1,13 +1,12 @@
 package net.feedbacky.app.repository.board;
 
-import java.util.List;
-
+import net.feedbacky.app.rest.data.board.Board;
 import net.feedbacky.app.rest.data.board.social.SocialLink;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import net.feedbacky.app.rest.data.board.Board;
+import java.util.List;
 
 /**
  * @author Plajer

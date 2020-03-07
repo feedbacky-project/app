@@ -1,6 +1,13 @@
 package net.feedbacky.app.rest.data.user;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.feedbacky.app.rest.data.user.dto.FetchConnectedAccount;
+
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,14 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import net.feedbacky.app.rest.data.user.dto.FetchConnectedAccount;
-
-import org.modelmapper.ModelMapper;
+import java.io.Serializable;
 
 /**
  * @author Plajer

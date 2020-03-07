@@ -1,24 +1,22 @@
 package net.feedbacky.app.rest.data.board.dto.webhook;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.feedbacky.app.annotation.enumvalue.EnumValue;
+import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.board.webhook.Webhook;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.URL;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 
-import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.webhook.Webhook;
+import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 /**
  * @author Plajer

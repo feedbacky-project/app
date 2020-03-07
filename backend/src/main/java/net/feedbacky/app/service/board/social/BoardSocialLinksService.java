@@ -1,12 +1,12 @@
 package net.feedbacky.app.service.board.social;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-
 import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.rest.data.board.dto.social.PostSocialLinkDto;
 import net.feedbacky.app.service.FeedbackyService;
+
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 /**
  * @author Plajer

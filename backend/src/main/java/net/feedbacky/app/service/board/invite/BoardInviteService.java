@@ -1,14 +1,14 @@
 package net.feedbacky.app.service.board.invite;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-
 import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.rest.data.board.dto.invite.PostInviteDto;
 import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.service.FeedbackyService;
+
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 /**
  * @author Plajer

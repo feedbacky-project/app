@@ -1,12 +1,12 @@
 package net.feedbacky.app.exception.types;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import net.feedbacky.app.exception.FeedbackyRestException;
 
 import org.springframework.http.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Plajer

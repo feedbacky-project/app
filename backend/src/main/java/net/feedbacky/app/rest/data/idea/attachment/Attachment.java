@@ -1,6 +1,14 @@
 package net.feedbacky.app.rest.data.idea.attachment;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.feedbacky.app.rest.data.idea.Idea;
+import net.feedbacky.app.rest.data.idea.dto.attachment.FetchAttachmentDto;
+
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,16 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-import org.modelmapper.ModelMapper;
-
-import net.feedbacky.app.rest.data.idea.Idea;
-import net.feedbacky.app.rest.data.idea.dto.attachment.FetchAttachmentDto;
+import java.io.Serializable;
 
 /**
  * @author Plajer

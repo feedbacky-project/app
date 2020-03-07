@@ -1,20 +1,18 @@
 package net.feedbacky.app.rest.data.board.dto.moderator;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.feedbacky.app.annotation.enumvalue.EnumValue;
+import net.feedbacky.app.rest.data.board.Board;
 import net.feedbacky.app.rest.data.board.moderator.Moderator;
+import net.feedbacky.app.rest.data.user.User;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.modelmapper.ModelMapper;
 
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.user.User;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Plajer

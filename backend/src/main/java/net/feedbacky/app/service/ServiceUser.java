@@ -1,5 +1,10 @@
 package net.feedbacky.app.service;
 
+import org.springframework.security.core.CredentialsContainer;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,11 +12,6 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.springframework.security.core.CredentialsContainer;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.Assert;
 
 /**
  * @author Plajer

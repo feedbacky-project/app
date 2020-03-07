@@ -1,22 +1,21 @@
 package net.feedbacky.app.utils;
 
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.board.invite.Invitation;
+import net.feedbacky.app.rest.data.user.User;
+
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
-
-import net.feedbacky.app.rest.data.board.invite.Invitation;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.user.User;
 
 /**
  * @author Plajer

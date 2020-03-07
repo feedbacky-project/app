@@ -1,17 +1,16 @@
 package net.feedbacky.app.rest.data.idea.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.annotation.base64.Base64;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
 
-import net.feedbacky.app.annotation.base64.Base64;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Plajer

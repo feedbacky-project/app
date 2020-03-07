@@ -1,9 +1,15 @@
 package net.feedbacky.app.rest.data.user;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.feedbacky.app.rest.data.board.moderator.Moderator;
+import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,18 +20,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import net.feedbacky.app.rest.data.board.moderator.Moderator;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.modelmapper.ModelMapper;
-
-import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Plajer

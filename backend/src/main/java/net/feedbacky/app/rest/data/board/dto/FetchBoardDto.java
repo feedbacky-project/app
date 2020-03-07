@@ -1,17 +1,16 @@
 package net.feedbacky.app.rest.data.board.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.Date;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Plajer

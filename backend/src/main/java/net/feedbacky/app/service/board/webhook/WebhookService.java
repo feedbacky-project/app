@@ -1,13 +1,13 @@
 package net.feedbacky.app.service.board.webhook;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-
 import net.feedbacky.app.rest.data.board.dto.webhook.FetchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PatchWebhookDto;
 import net.feedbacky.app.rest.data.board.dto.webhook.PostWebhookDto;
 import net.feedbacky.app.service.FeedbackyService;
+
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 /**
  * @author Plajer

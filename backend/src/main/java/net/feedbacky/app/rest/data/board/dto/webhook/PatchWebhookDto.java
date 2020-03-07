@@ -1,18 +1,16 @@
 package net.feedbacky.app.rest.data.board.dto.webhook;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.feedbacky.app.annotation.enumvalue.EnumValue;
+import net.feedbacky.app.rest.data.board.webhook.Webhook;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.URL;
 
-import net.feedbacky.app.rest.data.board.webhook.Webhook;
+import java.util.List;
 
 /**
  * @author Plajer

@@ -1,7 +1,6 @@
 package net.feedbacky.app.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Plajer

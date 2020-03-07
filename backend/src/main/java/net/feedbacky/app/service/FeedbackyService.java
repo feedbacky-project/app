@@ -1,7 +1,7 @@
 package net.feedbacky.app.service;
 
-import net.feedbacky.app.rest.data.board.moderator.Moderator;
 import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.board.moderator.Moderator;
 import net.feedbacky.app.rest.data.user.User;
 
 /**

@@ -1,7 +1,6 @@
 package net.feedbacky.app.service.board.moderator;
 
-import java.util.List;
-
+import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.rest.data.board.dto.invite.PostInviteDto;
 import net.feedbacky.app.rest.data.board.dto.moderator.FetchModeratorDto;
@@ -9,7 +8,7 @@ import net.feedbacky.app.service.FeedbackyService;
 
 import org.springframework.http.ResponseEntity;
 
-import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
+import java.util.List;
 
 /**
  * @author Plajer

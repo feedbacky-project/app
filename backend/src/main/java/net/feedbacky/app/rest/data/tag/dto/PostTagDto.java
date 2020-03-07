@@ -1,20 +1,18 @@
 package net.feedbacky.app.rest.data.tag.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.feedbacky.app.annotation.hex.HexValue;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.rest.data.tag.Tag;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
 
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.tag.Tag;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Plajer
