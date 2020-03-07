@@ -22,7 +22,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -44,18 +46,16 @@ public class ObjectStorage {
     BufferedImage img = ImageIO.read(bis);
 
     String fileName = idea.getId() + "_" + RandomStringUtils.randomAlphanumeric(6);
-
-    File output = new File(System.getProperty("user.dir").replace("\\", "/") + "/tmp/"
-            + type.getName() + "/" + fileName + "." + type.getExtension());
+    File output = new File("storage-data" + File.separator + type.getName() + File.separator + fileName + "." + type.getExtension());
+    output.mkdirs();
     ImageIO.write(img, "png", output);
     try {
-      cheetahoOptimizer.compressFile(type, fileName);
-      bunnyCdnStorage.uploadObject(output, type.getName() + "/" + fileName + "." + type.getExtension());
-      output.delete();
+
+
       return "https://cdn.feedbacky.net/" + type.getName() + "/" + fileName + "." + type.getExtension();
     } catch(Exception e) {
       e.printStackTrace();
-      output.delete();
+
       return null;
     }
   }
@@ -75,23 +75,24 @@ public class ObjectStorage {
 
     String fileName = board.getId() + "_" + RandomStringUtils.randomAlphanumeric(6);
 
-    File output = new File(System.getProperty("user.dir").replace("\\", "/") + "/tmp/"
-            + type.getName() + "/" + fileName + "." + type.getExtension());
+    File output = new File("storage-data" + File.separator + type.getName() + File.separator + fileName + "." + type.getExtension());
+    output.mkdirs();
     ImageIO.write(newImg, "png", output);
     try {
       cheetahoOptimizer.compressFile(type, fileName);
       if(type == Base64Utils.ImageType.ATTACHMENT || type == Base64Utils.ImageType.SOCIAL_ICON) {
-        bunnyCdnStorage.uploadObject(output, type.getName() + "/" + fileName + "." + type.getExtension());
-        output.delete();
+
         return "https://cdn.feedbacky.net/" + type.getName() + "/" + fileName + "." + type.getExtension();
       }
-      bunnyCdnStorage.uploadObject(output, "projects/" + type.getName() + "/" + fileName + "." + type.getExtension());
-
       output.delete();
+      File newFile = new File( "data" + File.separator + type.getName() + File.separator + "projects" + File.separator + type.getName() + File.separator + fileName + "." + type.getExtension());
+      newFile.createNewFile();
+      ImageIO.write(newImg, "png", newFile);
+
       return "https://cdn.feedbacky.net/projects/" + type.getName() + "/" + fileName + "." + type.getExtension();
     } catch(Exception e) {
       e.printStackTrace();
-      output.delete();
+
       return null;
     }
   }

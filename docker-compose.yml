@@ -9,18 +9,18 @@ services:
     ports:
       - '80:80'
     volumes:
-      - feedbacky-data:/data
+      - feedbacky-data:/storage-data
   feedbacky-server:
     container_name: feedbacky-server
     build:
       context: backend
       dockerfile: ${PWD}/backend/Dockerfile
     ports:
-      - '8080:8081'
+      - '8095:8080'
     links:
       - feedbacky-client
     volumes:
-      - feedbacky-data:/data
+      - feedbacky-data:/storage-data
 
 volumes:
   feedbacky-data:
