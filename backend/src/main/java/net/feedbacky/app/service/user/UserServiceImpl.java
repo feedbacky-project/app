@@ -39,19 +39,17 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
-  private RequestValidator requestValidator;
   private MailgunEmailHelper mailgunEmailHelper;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, RequestValidator requestValidator, MailgunEmailHelper mailgunEmailHelper) {
+  public UserServiceImpl(UserRepository userRepository, MailgunEmailHelper mailgunEmailHelper) {
     this.userRepository = userRepository;
-    this.requestValidator = requestValidator;
     this.mailgunEmailHelper = mailgunEmailHelper;
   }
 
   @Override
   public FetchUserDto getSelf() {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     return user.convertToDto().exposeSensitiveData(true);
@@ -59,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<FetchConnectedAccount> getSelfConnectedAccounts() {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     return user.getConnectedAccounts().stream().map(ConnectedAccount::convertToDto).collect(Collectors.toList());
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<FetchUserPermissionDto> getSelfPermissions() {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     return user.getPermissions().stream().map(Moderator::convertToUserPermissionDto).collect(Collectors.toList());
@@ -88,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public FetchUserDto patchSelf(PatchUserDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
 
@@ -101,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public ResponseEntity deactivateSelf() {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     //better to run sync now

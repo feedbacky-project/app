@@ -50,16 +50,12 @@ public class CommentServiceImpl implements CommentService {
   private CommentRepository commentRepository;
   private IdeaRepository ideaRepository;
   private UserRepository userRepository;
-  private EmojiFilter emojiFilter;
-  private RequestValidator requestValidator;
 
   @Autowired
-  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, EmojiFilter emojiFilter, RequestValidator requestValidator) {
+  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository) {
     this.commentRepository = commentRepository;
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
-    this.emojiFilter = emojiFilter;
-    this.requestValidator = requestValidator;
   }
 
   @Override
@@ -101,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public ResponseEntity<FetchCommentDto> post(PostCommentDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(dto.getIdeaId())
@@ -117,7 +113,7 @@ public class CommentServiceImpl implements CommentService {
     comment.setLikers(new HashSet<>());
     comment.setSpecial(false);
     comment.setSpecialType(Comment.SpecialType.LEGACY);
-    comment.setDescription(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(dto.getDescription())));
+    comment.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(dto.getDescription())));
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Message with the same content posted by you already exist in this idea.");
@@ -131,7 +127,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public FetchUserDto postLike(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Comment comment = commentRepository.findById(id)
@@ -150,7 +146,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public FetchCommentDto patch(long id, PatchCommentDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
@@ -164,14 +160,14 @@ public class CommentServiceImpl implements CommentService {
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, comment);
 
-    comment.setDescription(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(comment.getDescription())));
+    comment.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(comment.getDescription())));
     commentRepository.save(comment);
     return comment.convertToDto(user);
   }
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Comment comment = commentRepository.findById(id)
@@ -187,7 +183,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public ResponseEntity deleteLike(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Comment comment = commentRepository.findById(id)

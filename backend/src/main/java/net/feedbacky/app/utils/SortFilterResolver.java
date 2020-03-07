@@ -3,17 +3,18 @@ package net.feedbacky.app.utils;
 import net.feedbacky.app.service.idea.IdeaService;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Plajer
  * <p>
  * Created at 19.11.2019
  */
-@Component
 public class SortFilterResolver {
 
-  public Sort resolveSorting(IdeaService.SortType sortType) {
+  private SortFilterResolver() {
+  }
+
+  public static Sort resolveSorting(IdeaService.SortType sortType) {
     switch(sortType) {
       case NEWEST:
         return Sort.by(Sort.Direction.DESC, "creationDate");

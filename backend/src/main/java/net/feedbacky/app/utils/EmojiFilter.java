@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
  * <p>
  * Created at 20.11.2019
  */
-@Component
 public class EmojiFilter {
 
-  public String replaceEmojisPreSanitized(String preSanitizedMessage) {
+  private EmojiFilter() {
+  }
+
+  public static String replaceEmojisPreSanitized(String preSanitizedMessage) {
     preSanitizedMessage = StringUtils.replace(preSanitizedMessage, ":)", "\uD83D\uDE04");
     preSanitizedMessage = StringUtils.replace(preSanitizedMessage, ";)", "\uD83D\uDE09");
     preSanitizedMessage = StringUtils.replace(preSanitizedMessage, "<3", "\uD83D\uDE0D");

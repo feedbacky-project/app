@@ -1,44 +1,46 @@
 package net.feedbacky.app.utils;
 
-import java.io.File;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Plajer
  * <p>
  * Created at 24.10.2019
  */
-@Component
 public class Base64Utils {
 
-  public double calculateBase64DataSizeInKb(String base64String) {
+  private Base64Utils() {
+  }
+
+  public static double calculateBase64DataSizeInKb(String base64String) {
     double result = -1.0;
-    if (StringUtils.isNotEmpty(base64String)) {
+    if(StringUtils.isNotEmpty(base64String)) {
       int padding = 0;
-      if (base64String.endsWith("==")) {
+      if(base64String.endsWith("==")) {
         padding = 2;
       } else {
-        if (base64String.endsWith("=")) { padding = 1; }
+        if(base64String.endsWith("=")) {
+          padding = 1;
+        }
       }
       result = (Math.ceil(base64String.length() / 4) * 3) - padding;
     }
     return result / 1000;
   }
 
-  public String extractMimeType(final String encoded) {
+  public static String extractMimeType(final String encoded) {
     final Pattern mime = Pattern.compile("^data:([a-zA-Z0-9]+/[a-zA-Z0-9-]+).*,.*");
     final Matcher matcher = mime.matcher(encoded);
-    if (!matcher.find()) {
+    if(!matcher.find()) {
       return "";
     }
     return matcher.group(1).toLowerCase();
   }
 
-  public String extractBase64Data(String encoded) {
+  public static String extractBase64Data(String encoded) {
     return encoded.split(";base64,")[1];
   }
 

@@ -70,26 +70,18 @@ public class IdeaServiceImpl implements IdeaService {
   private TagRepository tagRepository;
   private CommentRepository commentRepository;
   private AttachmentRepository attachmentRepository;
-  private SortFilterResolver resolver;
-  private EmojiFilter emojiFilter;
-  private RequestValidator requestValidator;
   private ObjectStorage objectStorage;
-  private Base64Utils base64Utils;
 
   @Autowired
   //todo too big constructor
-  public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, SortFilterResolver resolver, EmojiFilter emojiFilter, RequestValidator requestValidator, ObjectStorage objectStorage, Base64Utils base64Utils) {
+  public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.tagRepository = tagRepository;
     this.commentRepository = commentRepository;
     this.attachmentRepository = attachmentRepository;
-    this.resolver = resolver;
-    this.emojiFilter = emojiFilter;
-    this.requestValidator = requestValidator;
     this.objectStorage = objectStorage;
-    this.base64Utils = base64Utils;
   }
 
   @Override
@@ -108,13 +100,13 @@ public class IdeaServiceImpl implements IdeaService {
     Page<Idea> pageData;
     switch(filter) {
       case OPENED:
-        pageData = ideaRepository.findByBoardAndStatus(board, Idea.IdeaStatus.OPENED, PageRequest.of(page, pageSize, resolver.resolveSorting(sort)));
+        pageData = ideaRepository.findByBoardAndStatus(board, Idea.IdeaStatus.OPENED, PageRequest.of(page, pageSize, SortFilterResolver.resolveSorting(sort)));
         break;
       case CLOSED:
-        pageData = ideaRepository.findByBoardAndStatus(board, Idea.IdeaStatus.CLOSED, PageRequest.of(page, pageSize, resolver.resolveSorting(sort)));
+        pageData = ideaRepository.findByBoardAndStatus(board, Idea.IdeaStatus.CLOSED, PageRequest.of(page, pageSize, SortFilterResolver.resolveSorting(sort)));
         break;
       case ALL:
-        pageData = ideaRepository.findByBoard(board, PageRequest.of(page, pageSize, resolver.resolveSorting(sort)));
+        pageData = ideaRepository.findByBoard(board, PageRequest.of(page, pageSize, SortFilterResolver.resolveSorting(sort)));
         break;
       default:
         throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid filter type.");
@@ -180,7 +172,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity<FetchIdeaDto> post(PostIdeaDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(dto.getDiscriminator())
@@ -201,14 +193,14 @@ public class IdeaServiceImpl implements IdeaService {
     set.add(user);
     idea.setVoters(set);
     idea.setStatus(Idea.IdeaStatus.OPENED);
-    idea.setDescription(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(idea.getDescription())));
+    idea.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(idea.getDescription())));
     idea = ideaRepository.save(idea);
 
     //must save idea first in order to apply and save attachment
     Set<Attachment> attachments = new HashSet<>();
     if(dto.getAttachment() != null) {
       try {
-        String link = objectStorage.storeEncodedAttachment(idea, Base64Utils.ImageType.ATTACHMENT, base64Utils.extractBase64Data(dto.getAttachment()));
+        String link = objectStorage.storeEncodedAttachment(idea, Base64Utils.ImageType.ATTACHMENT, Base64Utils.extractBase64Data(dto.getAttachment()));
         Attachment attachment = new Attachment();
         attachment.setIdea(idea);
         attachment.setUrl(link);
@@ -230,7 +222,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity<FetchAttachmentDto> postAttachment(long id, PostAttachmentDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
@@ -244,7 +236,7 @@ public class IdeaServiceImpl implements IdeaService {
     Attachment attachment = new Attachment();
     attachment.setIdea(idea);
     try {
-      attachment.setUrl(objectStorage.storeEncodedImage(idea.getBoard(), Base64Utils.ImageType.ATTACHMENT, base64Utils.extractBase64Data(dto.getData())));
+      attachment.setUrl(objectStorage.storeEncodedImage(idea.getBoard(), Base64Utils.ImageType.ATTACHMENT, Base64Utils.extractBase64Data(dto.getData())));
     } catch(IOException e) {
       e.printStackTrace();
       throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload attachment.");
@@ -257,7 +249,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public FetchIdeaDto patch(long id, PatchIdeaDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
@@ -270,7 +262,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     boolean edited = false;
-    if(dto.getDescription() != null && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(dto.getDescription())))) {
+    if(dto.getDescription() != null && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(dto.getDescription())))) {
       edited = true;
       idea.setEdited(true);
     }
@@ -312,7 +304,7 @@ public class IdeaServiceImpl implements IdeaService {
     if(dto.getOpen() != null) {
       idea.setStatus(Idea.IdeaStatus.toIdeaStatus(dto.getOpen()));
     }
-    idea.setDescription(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(idea.getDescription())));
+    idea.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(idea.getDescription())));
     if(comment != null) {
       idea.getComments().add(comment);
       commentRepository.save(comment);
@@ -323,7 +315,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
@@ -340,7 +332,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity deleteAttachment(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Attachment attachment = attachmentRepository.findById(id)
@@ -373,7 +365,7 @@ public class IdeaServiceImpl implements IdeaService {
   @Override
   public FetchUserDto postUpvote(long id) {
     //todo X-User-Id vote on behalf
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
@@ -394,7 +386,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity deleteUpvote(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
@@ -414,7 +406,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)

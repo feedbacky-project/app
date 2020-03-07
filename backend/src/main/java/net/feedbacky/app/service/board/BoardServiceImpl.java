@@ -56,8 +56,6 @@ public class BoardServiceImpl implements BoardService {
   private UserRepository userRepository;
   private IdeaRepository ideaRepository;
   private TagRepository tagRepository;
-  private EmojiFilter emojiFilter;
-  private RequestValidator requestValidator;
   private ImageUtils imageUtils;
   private ObjectStorage objectStorage;
   private MailgunEmailHelper emailHelper;
@@ -65,13 +63,11 @@ public class BoardServiceImpl implements BoardService {
 
   @Autowired
   //todo too big constuctor
-  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository, EmojiFilter emojiFilter, RequestValidator requestValidator, ImageUtils imageUtils, ObjectStorage objectStorage, MailgunEmailHelper emailHelper, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
+  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository, ImageUtils imageUtils, ObjectStorage objectStorage, MailgunEmailHelper emailHelper, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.ideaRepository = ideaRepository;
     this.tagRepository = tagRepository;
-    this.emojiFilter = emojiFilter;
-    this.requestValidator = requestValidator;
     this.imageUtils = imageUtils;
     this.objectStorage = objectStorage;
     this.emailHelper = emailHelper;
@@ -108,7 +104,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public ResponseEntity<FetchBoardDto> post(PostBoardDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token."));
     long ownedBoards = user.getPermissions().stream().map(node -> node.getRole() == Moderator.Role.OWNER).count();
@@ -122,7 +118,7 @@ public class BoardServiceImpl implements BoardService {
 
     //sanitize
     board.setShortDescription(StringEscapeUtils.escapeHtml4(dto.getShortDescription()));
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(dto.getFullDescription())));
+    board.setFullDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(dto.getFullDescription())));
 
     board.setCreator(user);
     board = boardRepository.save(board);
@@ -159,7 +155,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public FetchBoardDto patch(String discriminator, PatchBoardDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -189,7 +185,7 @@ public class BoardServiceImpl implements BoardService {
 
     //sanitize
     board.setShortDescription(StringEscapeUtils.escapeHtml4(board.getShortDescription()));
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(emojiFilter.replaceEmojisPreSanitized(board.getFullDescription())));
+    board.setFullDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(board.getFullDescription())));
 
     boardRepository.save(board);
     return board.convertToDto().ensureViewExplicit();
@@ -197,7 +193,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public ResponseEntity delete(String discriminator) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -243,7 +239,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public ResponseEntity<FetchTagDto> postTag(String discriminator, PostTagDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -264,7 +260,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public FetchTagDto patchTag(String discriminator, String name, PatchTagDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -285,7 +281,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public ResponseEntity deleteTag(String discriminator, String name) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)

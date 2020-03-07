@@ -43,16 +43,14 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   private BoardRepository boardRepository;
   private ModeratorRepository moderatorRepository;
   private UserRepository userRepository;
-  private RequestValidator requestValidator;
   private InvitationRepository invitationRepository;
   private MailgunEmailHelper mailgunEmailHelper;
 
   @Autowired
-  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository, RequestValidator requestValidator, InvitationRepository invitationRepository, MailgunEmailHelper mailgunEmailHelper) {
+  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository, InvitationRepository invitationRepository, MailgunEmailHelper mailgunEmailHelper) {
     this.boardRepository = boardRepository;
     this.moderatorRepository = moderatorRepository;
     this.userRepository = userRepository;
-    this.requestValidator = requestValidator;
     this.invitationRepository = invitationRepository;
     this.mailgunEmailHelper = mailgunEmailHelper;
   }
@@ -66,7 +64,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   @Override
   public List<FetchInviteDto> getAllInvited(String discriminator) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -79,7 +77,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   @Override
   public FetchBoardDto postAccept(String code) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Invitation invitation = invitationRepository.findByCode(code)
@@ -100,7 +98,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   @Override
   public ResponseEntity<FetchInviteDto> post(String discriminator, PostInviteDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -131,7 +129,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   @Override
   public ResponseEntity deleteInvitation(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Invitation invitation = invitationRepository.findById(id)
@@ -151,7 +149,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   @Override
   public ResponseEntity delete(String discriminator, long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)

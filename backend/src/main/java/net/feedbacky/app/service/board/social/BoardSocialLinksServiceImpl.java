@@ -39,18 +39,14 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
   private BoardRepository boardRepository;
   private SocialLinksRepository socialLinksRepository;
   private UserRepository userRepository;
-  private RequestValidator requestValidator;
   private ObjectStorage objectStorage;
-  private Base64Utils base64Utils;
 
   @Autowired
-  public BoardSocialLinksServiceImpl(BoardRepository boardRepository, SocialLinksRepository socialLinksRepository, UserRepository userRepository, RequestValidator requestValidator, ObjectStorage objectStorage, Base64Utils base64Utils) {
+  public BoardSocialLinksServiceImpl(BoardRepository boardRepository, SocialLinksRepository socialLinksRepository, UserRepository userRepository, ObjectStorage objectStorage) {
     this.boardRepository = boardRepository;
     this.socialLinksRepository = socialLinksRepository;
     this.userRepository = userRepository;
-    this.requestValidator = requestValidator;
     this.objectStorage = objectStorage;
-    this.base64Utils = base64Utils;
   }
 
   @Override
@@ -62,7 +58,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
   @Override
   public ResponseEntity<FetchSocialLinkDto> post(String discriminator, PostSocialLinkDto dto) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -75,7 +71,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     }
     SocialLink socialLink = new SocialLink();
 
-    String data = base64Utils.extractBase64Data(dto.getIconData());
+    String data = Base64Utils.extractBase64Data(dto.getIconData());
     if(!Constants.DEFAULT_ICONS.keySet().contains(data)) {
       try {
         socialLink.setLogoUrl(objectStorage.storeEncodedImage(board, Base64Utils.ImageType.SOCIAL_ICON, data));
@@ -96,7 +92,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = requestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     SocialLink socialLink = socialLinksRepository.findById(id)

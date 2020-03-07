@@ -1,15 +1,13 @@
 package net.feedbacky.app.annotation.base64;
 
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.feedbacky.app.utils.Base64Utils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import net.feedbacky.app.utils.Base64Utils;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Plajer
@@ -18,7 +16,6 @@ import net.feedbacky.app.utils.Base64Utils;
  */
 public class Base64ValueValidator implements ConstraintValidator<Base64, String> {
 
-  @Autowired private Base64Utils base64Utils;
   private Pattern base64Pattern = Pattern.compile("^(.*?)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
   private Base64 annotation;
 
@@ -29,15 +26,15 @@ public class Base64ValueValidator implements ConstraintValidator<Base64, String>
 
   @Override
   public boolean isValid(String field, ConstraintValidatorContext context) {
-    if (field == null) {
+    if(field == null) {
       return annotation.allowEmpty();
     }
     Matcher m = base64Pattern.matcher(field);
-    if (!m.matches()) {
+    if(!m.matches()) {
       return false;
     }
-    if (!Arrays.asList(annotation.mimeType()).contains(base64Utils.extractMimeType(field)) ||
-        base64Utils.calculateBase64DataSizeInKb(base64Utils.extractBase64Data(field)) > annotation.maximumKbSize()) {
+    if(!Arrays.asList(annotation.mimeType()).contains(Base64Utils.extractMimeType(field)) ||
+            Base64Utils.calculateBase64DataSizeInKb(Base64Utils.extractBase64Data(field)) > annotation.maximumKbSize()) {
       return false;
     }
     return true;

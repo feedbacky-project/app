@@ -21,7 +21,6 @@ public class ImageUtils {
 
   public static final String DEFAULT_BANNER_URL = "https://cdn.feedbacky.net/projects/banners/default-banner.jpg";
   public static final String DEFAULT_LOGO_URL = "https://cdn.feedbacky.net/projects/logos/default-logo.png";
-  @Autowired private Base64Utils base64Utils;
   @Autowired private ObjectStorage objectStorage;
 
   public String updateBoardBanner(Board board, String preData) {
@@ -44,7 +43,7 @@ public class ImageUtils {
     }
     if(!deleteOld) {
       try {
-        return objectStorage.storeEncodedImage(board, type, base64Utils.extractBase64Data(preData));
+        return objectStorage.storeEncodedImage(board, type, Base64Utils.extractBase64Data(preData));
       } catch(IOException e) {
         e.printStackTrace();
         return null;
@@ -65,7 +64,7 @@ public class ImageUtils {
       Logger.getLogger("Failed to delete file with path " + path);
     }
     try {
-      return objectStorage.storeEncodedImage(board, type, base64Utils.extractBase64Data(preData));
+      return objectStorage.storeEncodedImage(board, type, Base64Utils.extractBase64Data(preData));
     } catch(IOException e) {
       e.printStackTrace();
       return null;
