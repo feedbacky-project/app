@@ -1,6 +1,6 @@
-frontend/node_modules
-frontend/build
-backend/build
-backend/.gradle
+client/node_modules
+client/build
+server/build
+server/.gradle
 /.idea
 *.iml
