@@ -1,15 +1,15 @@
 package net.feedbacky.app.utils;
 
-import java.io.IOException;
-import java.util.logging.Logger;
+import net.feedbacky.app.rest.data.board.Board;
+import net.feedbacky.app.utils.objectstorage.ObjectStorage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.utils.bunnycdn.BCDNStorage;
-import net.feedbacky.app.utils.objectstorage.ObjectStorage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -22,7 +22,6 @@ public class ImageUtils {
   public static final String DEFAULT_BANNER_URL = "https://cdn.feedbacky.net/projects/banners/default-banner.jpg";
   public static final String DEFAULT_LOGO_URL = "https://cdn.feedbacky.net/projects/logos/default-logo.png";
   @Autowired private Base64Utils base64Utils;
-  @Autowired private BCDNStorage bunnyCdnStorage;
   @Autowired private ObjectStorage objectStorage;
 
   public String updateBoardBanner(Board board, String preData) {
@@ -35,7 +34,7 @@ public class ImageUtils {
 
   private String updateImage(Board board, String preData, Base64Utils.ImageType type) {
     boolean deleteOld = true;
-    switch (type) {
+    switch(type) {
       case BANNER:
         deleteOld = !board.getBanner().equals(DEFAULT_BANNER_URL);
         break;
@@ -43,16 +42,16 @@ public class ImageUtils {
         deleteOld = !board.getLogo().equals(DEFAULT_LOGO_URL);
         break;
     }
-    if (!deleteOld) {
+    if(!deleteOld) {
       try {
         return objectStorage.storeEncodedImage(board, type, base64Utils.extractBase64Data(preData));
-      } catch (IOException e) {
+      } catch(IOException e) {
         e.printStackTrace();
         return null;
       }
     }
     String text = "";
-    switch (type) {
+    switch(type) {
       case BANNER:
         text = board.getBanner();
         break;
@@ -61,14 +60,13 @@ public class ImageUtils {
         break;
     }
     String path = StringUtils.remove(text, "https://cdn.feedbacky.net/");
-    try {
-      bunnyCdnStorage.deleteObject(path);
-    } catch (Exception e) {
-      Logger.getLogger("Old " + type.getName() + " deletion failed for url " + text + " thus is ignored");
+    File target = new File("storage-data" + File.separator + path);
+    if(!target.delete()) {
+      Logger.getLogger("Failed to delete file with path " + path);
     }
     try {
       return objectStorage.storeEncodedImage(board, type, base64Utils.extractBase64Data(preData));
-    } catch (IOException e) {
+    } catch(IOException e) {
       e.printStackTrace();
       return null;
     }

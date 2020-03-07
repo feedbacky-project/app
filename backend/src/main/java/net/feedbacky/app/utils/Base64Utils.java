@@ -1,5 +1,6 @@
 package net.feedbacky.app.utils;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
  * Created at 24.10.2019
  */
 @Component
-//todo this class can be with static methods
 public class Base64Utils {
 
   public double calculateBase64DataSizeInKb(String base64String) {
@@ -43,8 +43,10 @@ public class Base64Utils {
   }
 
   public enum ImageType {
-    BANNER("banners", "png", 1120, 400), LOGO("logos", "png", 100, 100),
-    ATTACHMENT("attachments", "png", -1, -1), SOCIAL_ICON("social", "png", 32, 32);
+    BANNER("projects/banners", "png", 1120, 400),
+    LOGO("projects/logos", "png", 100, 100),
+    ATTACHMENT("attachments", "png", -1, -1),
+    SOCIAL_ICON("projects/social", "png", 32, 32);
 
     private String name;
     private String extension;
