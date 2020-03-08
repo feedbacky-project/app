@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * Created at 09.12.2019
  */
 @Component
+@Deprecated
 public class ImageUtils {
 
   public static final String DEFAULT_BANNER_URL = "https://cdn.feedbacky.net/projects/banners/default-banner.jpg";
@@ -58,7 +59,7 @@ public class ImageUtils {
         text = board.getLogo();
         break;
     }
-    String path = StringUtils.remove(text, "https://cdn.feedbacky.net/");
+    String path = StringUtils.remove(text, Constants.IMAGE_HOST);
     File target = new File("storage-data" + File.separator + path);
     if(!target.delete()) {
       Logger.getLogger("Failed to delete file with path " + path);
