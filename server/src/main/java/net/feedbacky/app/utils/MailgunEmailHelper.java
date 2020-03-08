@@ -8,7 +8,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -25,29 +24,29 @@ import java.util.stream.Stream;
 @Component
 public class MailgunEmailHelper {
 
-  @Value("${mailgun.api-key}") private String apiKey;
-  @Value("${mailgun.api-base-url}") private String baseUrl;
+  private String apiKey = System.getenv("SERVER_MAILGUN_API_KEY");
+  private String baseUrl = System.getenv("SERVER_MAILGUN_API_BASE_URL");
 
   public void sendEmail(EmailTemplate template, Invitation invitation, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
-        .basicAuth("api", apiKey)
-        .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
-        .queryString("to", to)
-        .queryString("subject", parsePlaceholders(template, template.getSubject(), invitation))
-        .queryString("text", parsePlaceholders(template, template.getLegacyText(), invitation))
-        .queryString("html", parsePlaceholders(template, template.getHtml(), invitation))
-        .asJson();
+            .basicAuth("api", apiKey)
+            .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
+            .queryString("to", to)
+            .queryString("subject", parsePlaceholders(template, template.getSubject(), invitation))
+            .queryString("text", parsePlaceholders(template, template.getLegacyText(), invitation))
+            .queryString("html", parsePlaceholders(template, template.getHtml(), invitation))
+            .asJson();
   }
 
   public void sendEmail(EmailTemplate template, Board board, User user, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
-        .basicAuth("api", apiKey)
-        .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
-        .queryString("to", to)
-        .queryString("subject", parsePlaceholders(template.getSubject(), board, user))
-        .queryString("text", parsePlaceholders(template.getLegacyText(), board, user))
-        .queryString("html", parsePlaceholders(template.getHtml(), board, user))
-        .asJson();
+            .basicAuth("api", apiKey)
+            .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
+            .queryString("to", to)
+            .queryString("subject", parsePlaceholders(template.getSubject(), board, user))
+            .queryString("text", parsePlaceholders(template.getLegacyText(), board, user))
+            .queryString("html", parsePlaceholders(template.getHtml(), board, user))
+            .asJson();
   }
 
   public void sendEmail(EmailTemplate template, User user, String to) throws UnirestException {
@@ -85,13 +84,13 @@ public class MailgunEmailHelper {
 
   public enum EmailTemplate {
     BOARD_INVITATION("mail_templates/invitation_join.html", "https://app.feedbacky.net/invitation/", "${board.name} - Invitation",
-        "You've been invited to private ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
+            "You've been invited to private ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
     MODERATOR_INVITATION("mail_templates/moderator_invitation.html", "https://app.feedbacky.net/moderator_invitation/", "${board.name} - Moderator Invitation",
-        "You've been invited to moderate ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
+            "You've been invited to moderate ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
     MODERATOR_KICKED("mail_templates/moderator_kicked.html", "", "${board.name} - Moderator Privileges Revoked",
-        "Your moderator privileges from board ${board.name} were revoked. (HTML not supported, default message sent)"),
+            "Your moderator privileges from board ${board.name} were revoked. (HTML not supported, default message sent)"),
     BOARD_DELETED("mail_templates/board_deleted.html", "", "${board.name} - Board Removal Initiated",
-        "You requested to remove board ${board.name} and your request was proceeded and executed. (HTML not supported, default message sent)"),
+            "You requested to remove board ${board.name} and your request was proceeded and executed. (HTML not supported, default message sent)"),
     ACCOUNT_DEACTIVATED("mail_templates/account_deactivated.html", "", "${username} - Account Deactivated",
             "You requested to deactivate your ${username} account and we executed the request, your account was anonymized. (HTML not supported, default message sent)");
 
@@ -125,9 +124,9 @@ public class MailgunEmailHelper {
 
     private String readLineByLine(String filePath) {
       StringBuilder contentBuilder = new StringBuilder();
-      try (Stream<String> stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {
+      try(Stream<String> stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {
         stream.forEach(s -> contentBuilder.append(s).append("\n"));
-      } catch (IOException e) {
+      } catch(IOException e) {
         e.printStackTrace();
       }
       return contentBuilder.toString();

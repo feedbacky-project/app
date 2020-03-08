@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,15 +44,25 @@ import java.util.Set;
 @RestController
 public class GithubLoginController implements AbstractLoginController {
 
-  @Value("${oauth.github.redirect-uri}") private String redirectUri;
-  @Value("${oauth.github.client-id}") private String clientId;
-  @Value("${oauth.github.client-secret}") private String clientSecret;
-  @Autowired private UserRepository userRepository;
-  @Autowired private JwtTokenUtil jwtTokenUtil;
+  private String redirectUri = System.getenv("SERVER_OAUTH_GITHUB_REDIRECT_URI");
+  private String clientId = System.getenv("SERVER_OAUTH_GITHUB_CLIENT_ID");
+  private String clientSecret = System.getenv("SERVER_OAUTH_GITHUB_CLIENT_SECRET");
+  private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_GITHUB_ENABLED"));
+  private UserRepository userRepository;
+  private JwtTokenUtil jwtTokenUtil;
+
+  @Autowired
+  public GithubLoginController(UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
+    this.userRepository = userRepository;
+    this.jwtTokenUtil = jwtTokenUtil;
+  }
 
   @Override
   @GetMapping("/service/v1/github")
   public ResponseEntity handle(HttpServletResponse response, HttpServletRequest request, @RequestParam(name = "code") String code) throws IOException {
+    if(!enabled) {
+      throw new LoginFailedException("GitHub login support is disabled.");
+    }
     //todo dry
     URL url = new URL("https://github.com/login/oauth/access_token");
     HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -64,12 +73,12 @@ public class GithubLoginController implements AbstractLoginController {
 
     OutputStream os = conn.getOutputStream();
     os.write(("client_id=" + clientId + "&client_secret=" + clientSecret
-        + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&code=" + code).getBytes(StandardCharsets.UTF_8));
+            + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&code=" + code).getBytes(StandardCharsets.UTF_8));
     os.flush();
     os.close();
 
     int responseCode = conn.getResponseCode();
-    if (responseCode != HttpURLConnection.HTTP_OK) {
+    if(responseCode != HttpURLConnection.HTTP_OK) {
       throw new LoginFailedException("Failed to log in via GitHub! Code: " + responseCode + ". Message: " + conn.getResponseMessage());
     }
 
@@ -94,7 +103,7 @@ public class GithubLoginController implements AbstractLoginController {
 
     GithubUser githubUser = new ObjectMapper().readValue(getResponse(conn.getInputStream()), GithubUser.class);
     //email can be private thus we need to get all emails from separate api call
-    if (githubUser.getEmail() == null) {
+    if(githubUser.getEmail() == null) {
       URL emailsUrl = new URL("https://api.github.com/user/emails");
       HttpsURLConnection emailsConn = (HttpsURLConnection) emailsUrl.openConnection();
       emailsConn.setRequestProperty("User-Agent", "Feedbacky Login Finalizer/1.1");
@@ -106,9 +115,9 @@ public class GithubLoginController implements AbstractLoginController {
       emailsConn.disconnect();
       GithubEmail connectedEmail = findSimilarEmails(emails);
       //user didn't connect to our services before, take primary email and register
-      if (connectedEmail == null) {
+      if(connectedEmail == null) {
         GithubEmail primaryEmail = emails.stream().filter(GithubEmail::isPrimary).findFirst().orElse(null);
-        if (primaryEmail == null) {
+        if(primaryEmail == null) {
           return null;
         }
         githubUser.setEmail(primaryEmail.getEmail());
@@ -118,7 +127,7 @@ public class GithubLoginController implements AbstractLoginController {
     }
 
     Optional<User> optional = userRepository.findByEmail(githubUser.getEmail());
-    if (!optional.isPresent()) {
+    if(!optional.isPresent()) {
       optional = Optional.of(new User());
       User user = optional.get();
       user.setEmail(githubUser.getEmail());
@@ -130,7 +139,7 @@ public class GithubLoginController implements AbstractLoginController {
       userRepository.save(user);
     } else {
       User user = optional.get();
-      if (user.getConnectedAccounts().stream().noneMatch(acc -> acc.getType() == ConnectedAccount.AccountType.GITHUB)) {
+      if(user.getConnectedAccounts().stream().noneMatch(acc -> acc.getType() == ConnectedAccount.AccountType.GITHUB)) {
         Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
         accounts.add(generateConnectedAccount(githubUser, user));
         user.setConnectedAccounts(accounts);
@@ -152,7 +161,7 @@ public class GithubLoginController implements AbstractLoginController {
     data.put("AVATAR", githubUser.getAvatar());
     try {
       account.setData(new ObjectMapper().writeValueAsString(data));
-    } catch (JsonProcessingException e) {
+    } catch(JsonProcessingException e) {
       e.printStackTrace();
     }
     return account;
@@ -160,9 +169,9 @@ public class GithubLoginController implements AbstractLoginController {
 
   @Nullable
   private GithubEmail findSimilarEmails(List<GithubEmail> emails) {
-    for (GithubEmail email : emails) {
+    for(GithubEmail email : emails) {
       Optional<User> user = userRepository.findByEmail(email.getEmail());
-      if (user.isPresent()) {
+      if(user.isPresent()) {
         return email;
       }
     }

@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -23,8 +22,7 @@ public class JwtTokenUtil {
 
   public static final long JWT_TOKEN_VALIDITY_DAYS = 14;
 
-  @Value("${jwt.secret}")
-  private String secret;
+  private String secret = System.getenv("SERVER_JWT_SECRET");
 
   public String getEmailFromToken(String token) {
     return getClaimFromToken(token, Claims::getSubject);

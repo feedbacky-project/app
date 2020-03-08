@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,15 +41,25 @@ import java.util.Set;
 @RestController
 public class DiscordLoginController implements AbstractLoginController {
 
-  @Value("${oauth.discord.redirect-uri}") private String redirectUri;
-  @Value("${oauth.discord.client-id}") private String clientId;
-  @Value("${oauth.discord.client-secret}") private String clientSecret;
-  @Autowired private UserRepository userRepository;
-  @Autowired private JwtTokenUtil jwtTokenUtil;
+  private String redirectUri = System.getenv("SERVER_OAUTH_DISCORD_REDIRECT_URI");
+  private String clientId = System.getenv("SERVER_OAUTH_DISCORD_CLIENT_ID");
+  private String clientSecret = System.getenv("SERVER_OAUTH_DISCORD_CLIENT_SECRET");
+  private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_DISCORD_ENABLED"));
+  private UserRepository userRepository;
+  private JwtTokenUtil jwtTokenUtil;
+
+  @Autowired
+  public DiscordLoginController(UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
+    this.userRepository = userRepository;
+    this.jwtTokenUtil = jwtTokenUtil;
+  }
 
   @Override
   @GetMapping("/service/v1/discord")
   public ResponseEntity handle(HttpServletResponse response, HttpServletRequest request, @RequestParam(name = "code") String code) throws IOException {
+    if(!enabled) {
+      throw new LoginFailedException("Discord login support is disabled.");
+    }
     //todo dry
     URL url = new URL("https://discordapp.com/api/oauth2/token");
     HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -60,12 +69,12 @@ public class DiscordLoginController implements AbstractLoginController {
 
     OutputStream os = conn.getOutputStream();
     os.write(("grant_type=authorization_code&client_id=" + clientId + "&client_secret=" + clientSecret
-        + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&code=" + code).getBytes(StandardCharsets.UTF_8));
+            + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&code=" + code).getBytes(StandardCharsets.UTF_8));
     os.flush();
     os.close();
 
     int responseCode = conn.getResponseCode();
-    if (responseCode != HttpURLConnection.HTTP_OK) {
+    if(responseCode != HttpURLConnection.HTTP_OK) {
       throw new LoginFailedException("Failed to log in via Discord! Code: " + responseCode + ". Message: " + conn.getResponseMessage());
     }
 
@@ -89,7 +98,7 @@ public class DiscordLoginController implements AbstractLoginController {
     conn.setDoOutput(true);
 
     DiscordUser discordUser = new ObjectMapper().readValue(getResponse(conn.getInputStream()), DiscordUser.class);
-    if (discordUser.getEmail() == null) {
+    if(discordUser.getEmail() == null) {
       throw new LoginFailedException("Email for this Discord user is not valid.");
     }
     if(!discordUser.getVerified()) {
@@ -97,7 +106,7 @@ public class DiscordLoginController implements AbstractLoginController {
     }
 
     Optional<User> optional = userRepository.findByEmail(discordUser.getEmail());
-    if (!optional.isPresent()) {
+    if(!optional.isPresent()) {
       optional = Optional.of(new User());
       User user = optional.get();
       user.setEmail(discordUser.getEmail());
@@ -109,7 +118,7 @@ public class DiscordLoginController implements AbstractLoginController {
       userRepository.save(user);
     } else {
       User user = optional.get();
-      if (user.getConnectedAccounts().stream().noneMatch(acc -> acc.getType() == ConnectedAccount.AccountType.DISCORD)) {
+      if(user.getConnectedAccounts().stream().noneMatch(acc -> acc.getType() == ConnectedAccount.AccountType.DISCORD)) {
         Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
         accounts.add(generateConnectedAccount(discordUser, user));
         user.setConnectedAccounts(accounts);
@@ -133,7 +142,7 @@ public class DiscordLoginController implements AbstractLoginController {
     data.put("EMAIL", discordUser.getEmail());
     try {
       account.setData(new ObjectMapper().writeValueAsString(data));
-    } catch (JsonProcessingException e) {
+    } catch(JsonProcessingException e) {
       e.printStackTrace();
     }
     return account;
