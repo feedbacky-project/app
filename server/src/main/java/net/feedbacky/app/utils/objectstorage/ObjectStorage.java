@@ -93,7 +93,7 @@ public class ObjectStorage {
     if(Constants.DEFAULT_ICONS.containsValue(link.getLogoUrl())) {
       return;
     }
-    String path = StringUtils.remove(link.getLogoUrl(), "https://cdn.feedbacky.net/");
+    String path = StringUtils.remove(link.getLogoUrl(), Constants.IMAGE_HOST);
     File target = new File("storage-data" + File.separator + path);
     if(!target.delete()) {
       Logger.getLogger("Failed to delete file with path " + path);
@@ -101,7 +101,7 @@ public class ObjectStorage {
   }
 
   public void deleteAttachment(Attachment attachment) {
-    String path = StringUtils.remove(attachment.getUrl(), "https://cdn.feedbacky.net/");
+    String path = StringUtils.remove(attachment.getUrl(), Constants.IMAGE_HOST);
     File target = new File("storage-data" + File.separator + path);
     if(!target.delete()) {
       Logger.getLogger("Failed to delete file with path " + path);
@@ -121,7 +121,7 @@ public class ObjectStorage {
     if(url.equals(ImageUtils.DEFAULT_LOGO_URL) || url.equals(ImageUtils.DEFAULT_BANNER_URL)) {
       return;
     }
-    String path = StringUtils.remove(url, "https://cdn.feedbacky.net/");
+    String path = StringUtils.remove(url, Constants.IMAGE_HOST);
     File target = new File("storage-data" + File.separator + path);
     if(!target.delete()) {
       Logger.getLogger("Failed to delete file with path " + path);
