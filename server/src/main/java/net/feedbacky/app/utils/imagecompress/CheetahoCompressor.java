@@ -1,7 +1,7 @@
-package net.feedbacky.app.utils.cheetaho;
+package net.feedbacky.app.utils.imagecompress;
 
 import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.utils.Base64Utils;
+import net.feedbacky.app.utils.Constants;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,7 +10,6 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +19,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -27,35 +28,38 @@ import java.nio.file.StandardCopyOption;
  * Created at 18.12.2019
  */
 @Component
-public class CheetahoOptimizer {
+public class CheetahoCompressor implements Compressor {
 
-  @Value("${cheetaho.api-key}")
-  private String apiKey;
-  @Value("${cheetaho.enabled}")
-  private boolean enabled;
+  private String apiKey = System.getenv("SERVER_IMAGE_COMPRESSION_CHEETAHO_API_KEY");
   private String baseUrl = "http://api.cheetaho.com/api/v1/media";
 
-  public void compressFile(Base64Utils.ImageType type, String id) throws IOException, UnirestException {
-    if(!enabled) {
-      return;
+  @Override
+  public void compressFile(String localPath) {
+    try {
+      doCompressFile(localPath);
+    } catch(IOException | UnirestException e) {
+      Logger.getAnonymousLogger().log(Level.SEVERE, "Cheetaho compression failed.");
+      e.printStackTrace();
     }
+  }
+
+  private void doCompressFile(String localPath) throws IOException, UnirestException {
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode node = mapper.createObjectNode();
     node.put("key", apiKey);
-    node.put("url", "https://api.feedbacky.net/temp/data/" + type.getName() + "/" + id + "." + type.getExtension());
+    node.put("url", Constants.IMAGE_HOST + localPath);
     node.put("lossy", 0);
     HttpResponse<JsonNode> request = Unirest.post(baseUrl)
-        .header("Content-Type", "application/json")
-        .body(mapper.writeValueAsString(node))
-        .asJson();
+            .header("Content-Type", "application/json")
+            .body(mapper.writeValueAsString(node))
+            .asJson();
 
-    if (request.getStatus() == HttpStatus.OK.value()) {
-      try (InputStream in = new URL(request.getBody().getObject().getJSONObject("data").getString("destURL")).openStream()) {
-        Files.copy(in, Paths.get(System.getProperty("user.dir").replace("\\", "/") + "/tmp/"
-            + type.getName() + "/" + id + "." + type.getExtension()), StandardCopyOption.REPLACE_EXISTING);
+    if(request.getStatus() == HttpStatus.OK.value()) {
+      try(InputStream in = new URL(request.getBody().getObject().getJSONObject("data").getString("destURL")).openStream()) {
+        Files.copy(in, Paths.get("storage-data/" + localPath), StandardCopyOption.REPLACE_EXISTING);
       }
     } else {
-      switch (request.getStatus()) {
+      switch(request.getStatus()) {
         case 304:
           throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Temporary file not available.");
         case 400:

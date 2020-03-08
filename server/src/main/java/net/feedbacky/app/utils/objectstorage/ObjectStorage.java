@@ -7,7 +7,8 @@ import net.feedbacky.app.rest.data.idea.attachment.Attachment;
 import net.feedbacky.app.utils.Base64Utils;
 import net.feedbacky.app.utils.Constants;
 import net.feedbacky.app.utils.ImageUtils;
-import net.feedbacky.app.utils.cheetaho.CheetahoOptimizer;
+import net.feedbacky.app.utils.imagecompress.CheetahoCompressor;
+import net.feedbacky.app.utils.imagecompress.ImageCompressor;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +35,12 @@ import java.util.logging.Logger;
 @Deprecated
 public class ObjectStorage {
 
-  @Autowired private CheetahoOptimizer cheetahoOptimizer;
+  private ImageCompressor imageCompressor;
+
+  @Autowired
+  public ObjectStorage(ImageCompressor imageCompressor) {
+    this.imageCompressor = imageCompressor;
+  }
 
   public String storeEncodedAttachment(Idea idea, Base64Utils.ImageType type, String encoded) throws IOException {
     byte[] data = Base64.getDecoder().decode(encoded);
@@ -42,16 +48,15 @@ public class ObjectStorage {
     BufferedImage img = ImageIO.read(bis);
 
     String fileName = idea.getId() + "_" + RandomStringUtils.randomAlphanumeric(6);
-    File output = new File("storage-data" + File.separator + type.getName() + File.separator + fileName + "." + type.getExtension());
+    String path = type.getName() + File.separator + fileName + "." + type.getExtension();
+    File output = new File("storage-data" + File.separator + path);
     output.mkdirs();
     ImageIO.write(img, "png", output);
     try {
-
-
-      return "https://cdn.feedbacky.net/" + type.getName() + "/" + fileName + "." + type.getExtension();
+      imageCompressor.getCompressor().compressFile(path);
+      return Constants.IMAGE_HOST + path;
     } catch(Exception e) {
       e.printStackTrace();
-
       return null;
     }
   }
@@ -70,16 +75,16 @@ public class ObjectStorage {
     }
 
     String fileName = board.getId() + "_" + RandomStringUtils.randomAlphanumeric(6);
+    String path = type.getName() + File.separator + fileName + "." + type.getExtension();
 
-    File output = new File("storage-data" + File.separator + type.getName() + File.separator + fileName + "." + type.getExtension());
+    File output = new File("storage-data" + File.separator + path);
     output.mkdirs();
     ImageIO.write(newImg, "png", output);
     try {
-      cheetahoOptimizer.compressFile(type, fileName);
-      return "https://cdn.feedbacky.net/" + type.getName() + "/" + fileName + "." + type.getExtension();
+      imageCompressor.getCompressor().compressFile(path);
+      return Constants.IMAGE_HOST + path;
     } catch(Exception e) {
       e.printStackTrace();
-
       return null;
     }
   }
