@@ -44,15 +44,13 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   private ModeratorRepository moderatorRepository;
   private UserRepository userRepository;
   private InvitationRepository invitationRepository;
-  private MailgunEmailHelper mailgunEmailHelper;
 
   @Autowired
-  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository, InvitationRepository invitationRepository, MailgunEmailHelper mailgunEmailHelper) {
+  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository, InvitationRepository invitationRepository) {
     this.boardRepository = boardRepository;
     this.moderatorRepository = moderatorRepository;
     this.userRepository = userRepository;
     this.invitationRepository = invitationRepository;
-    this.mailgunEmailHelper = mailgunEmailHelper;
   }
 
   @Override
@@ -119,7 +117,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     invitationRepository.save(invitation);
     CompletableFuture.runAsync(() -> {
       try {
-        mailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.MODERATOR_INVITATION, invitation, dto.getUserEmail());
+        MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.MODERATOR_INVITATION, invitation, dto.getUserEmail());
       } catch(UnirestException e) {
         e.printStackTrace();
       }
@@ -172,7 +170,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     moderatorRepository.delete(moderator);
     CompletableFuture.runAsync(() -> {
       try {
-        mailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.MODERATOR_KICKED, board, eventUser, eventUser.getEmail());
+        MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.MODERATOR_KICKED, board, eventUser, eventUser.getEmail());
       } catch(UnirestException e) {
         e.printStackTrace();
       }

@@ -28,8 +28,12 @@ import java.io.IOException;
 @Component
 public class RequestFilter extends OncePerRequestFilter {
 
-  @Autowired private JwtTokenUtil jwtTokenUtil;
-  @Autowired private FeedbackyUserDetailsService userDetailsService;
+  private FeedbackyUserDetailsService userDetailsService;
+
+  @Autowired
+  public RequestFilter(FeedbackyUserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -42,26 +46,27 @@ public class RequestFilter extends OncePerRequestFilter {
     String tokenHeader = request.getHeader("Authorization");
 
     response.setContentType("application/json");
-    if (tokenHeader == null) {
+    if(tokenHeader == null) {
       chain.doFilter(request, response);
       return;
     }
-    if (tokenHeader.startsWith("Bearer ")) {
+    if(tokenHeader.startsWith("Bearer ")) {
       String jwtToken = tokenHeader.substring(7);
       String email = getEmailFromToken(jwtToken);
       //don't reply with errors, just ignore broken bearer because it's Feedbacky UI component
       //API keys would require clear message with error instead
-      if (email == null) {
+      if(email == null) {
         chain.doFilter(request, response);
         return;
       }
-      if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken && jwtTokenUtil.validateToken(jwtToken, email)) {
+      if(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken
+              && JwtTokenUtil.validateToken(jwtToken, email)) {
         ServiceUser serviceUser = userDetailsService.loadUserByEmail(email);
         UserAuthenticationToken userAuthenticationToken = new UserAuthenticationToken(serviceUser, null, serviceUser.getAuthorities());
         userAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(userAuthenticationToken);
       }
-    } else if (tokenHeader.startsWith("Apikey ")) {
+    } else if(tokenHeader.startsWith("Apikey ")) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Apikeys not yet supported.");
       return;
     }
@@ -70,8 +75,8 @@ public class RequestFilter extends OncePerRequestFilter {
 
   private String getEmailFromToken(String jwtToken) {
     try {
-      return jwtTokenUtil.getEmailFromToken(jwtToken);
-    } catch (IllegalArgumentException | MalformedJwtException | ExpiredJwtException ex) {
+      return JwtTokenUtil.getEmailFromToken(jwtToken);
+    } catch(IllegalArgumentException | MalformedJwtException | ExpiredJwtException ex) {
       return null;
     }
   }

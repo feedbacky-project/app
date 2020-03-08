@@ -46,12 +46,10 @@ public class DiscordLoginController implements AbstractLoginController {
   private String clientSecret = System.getenv("SERVER_OAUTH_DISCORD_CLIENT_SECRET");
   private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_DISCORD_ENABLED"));
   private UserRepository userRepository;
-  private JwtTokenUtil jwtTokenUtil;
 
   @Autowired
-  public DiscordLoginController(UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
+  public DiscordLoginController(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.jwtTokenUtil = jwtTokenUtil;
   }
 
   @Override
@@ -83,7 +81,7 @@ public class DiscordLoginController implements AbstractLoginController {
     conn.disconnect();
 
     Map<String, Object> json = new HashMap<>();
-    String jwtToken = jwtTokenUtil.generateToken(user.getEmail());
+    String jwtToken = JwtTokenUtil.generateToken(user.getEmail());
     json.put("token", jwtToken);
     json.put("user", user.convertToDto().exposeSensitiveData(true));
     return ResponseEntity.ok().body(json);

@@ -41,14 +41,12 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   private BoardRepository boardRepository;
   private UserRepository userRepository;
   private InvitationRepository invitationRepository;
-  private MailgunEmailHelper mailgunEmailHelper;
 
   @Autowired
-  public BoardInviteServiceImpl(BoardRepository boardRepository, UserRepository userRepository, InvitationRepository invitationRepository, MailgunEmailHelper mailgunEmailHelper) {
+  public BoardInviteServiceImpl(BoardRepository boardRepository, UserRepository userRepository, InvitationRepository invitationRepository) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.invitationRepository = invitationRepository;
-    this.mailgunEmailHelper = mailgunEmailHelper;
   }
 
   @Override
@@ -120,7 +118,7 @@ public class BoardInviteServiceImpl implements BoardInviteService {
     invitationRepository.save(invitation);
     CompletableFuture.runAsync(() -> {
       try {
-        mailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.BOARD_INVITATION, invitation, dto.getUserEmail());
+        MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.BOARD_INVITATION, invitation, dto.getUserEmail());
       } catch(UnirestException e) {
         e.printStackTrace();
       }

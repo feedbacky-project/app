@@ -8,7 +8,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -21,13 +20,15 @@ import java.util.stream.Stream;
  * <p>
  * Created at 29.11.2019
  */
-@Component
 public class MailgunEmailHelper {
 
-  private String apiKey = System.getenv("SERVER_MAILGUN_API_KEY");
-  private String baseUrl = System.getenv("SERVER_MAILGUN_API_BASE_URL");
+  private static String apiKey = System.getenv("SERVER_MAILGUN_API_KEY");
+  private static String baseUrl = System.getenv("SERVER_MAILGUN_API_BASE_URL");
 
-  public void sendEmail(EmailTemplate template, Invitation invitation, String to) throws UnirestException {
+  private MailgunEmailHelper() {
+  }
+
+  public static void sendEmail(EmailTemplate template, Invitation invitation, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
             .basicAuth("api", apiKey)
             .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
@@ -38,7 +39,7 @@ public class MailgunEmailHelper {
             .asJson();
   }
 
-  public void sendEmail(EmailTemplate template, Board board, User user, String to) throws UnirestException {
+  public static void sendEmail(EmailTemplate template, Board board, User user, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
             .basicAuth("api", apiKey)
             .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
@@ -49,7 +50,7 @@ public class MailgunEmailHelper {
             .asJson();
   }
 
-  public void sendEmail(EmailTemplate template, User user, String to) throws UnirestException {
+  public static void sendEmail(EmailTemplate template, User user, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
             .basicAuth("api", apiKey)
             .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
@@ -60,7 +61,7 @@ public class MailgunEmailHelper {
             .asJson();
   }
 
-  private String parsePlaceholders(EmailTemplate template, String html, Invitation invitation) {
+  private static String parsePlaceholders(EmailTemplate template, String html, Invitation invitation) {
     html = StringUtils.replace(html, "${board.logo}", invitation.getBoard().getBanner());
     html = StringUtils.replace(html, "${board.name}", invitation.getBoard().getName());
     html = StringUtils.replace(html, "${board.owner}", invitation.getBoard().getCreator().getUsername());
@@ -69,7 +70,7 @@ public class MailgunEmailHelper {
     return html;
   }
 
-  private String parsePlaceholders(String html, Board board, User user) {
+  private static String parsePlaceholders(String html, Board board, User user) {
     html = StringUtils.replace(html, "${board.logo}", board.getBanner());
     html = StringUtils.replace(html, "${board.name}", board.getName());
     html = StringUtils.replace(html, "${board.owner}", board.getCreator().getUsername());
@@ -77,7 +78,7 @@ public class MailgunEmailHelper {
     return html;
   }
 
-  private String parsePlaceholders(String html, User user) {
+  private static String parsePlaceholders(String html, User user) {
     html = StringUtils.replace(html, "${username}", user.getUsername());
     return html;
   }

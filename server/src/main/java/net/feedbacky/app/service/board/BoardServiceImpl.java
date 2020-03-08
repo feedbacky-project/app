@@ -58,19 +58,17 @@ public class BoardServiceImpl implements BoardService {
   private TagRepository tagRepository;
   private ImageUtils imageUtils;
   private ObjectStorage objectStorage;
-  private MailgunEmailHelper emailHelper;
   private FeaturedBoardsServiceImpl featuredBoardsServiceImpl;
 
   @Autowired
   //todo too big constuctor
-  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository, ImageUtils imageUtils, ObjectStorage objectStorage, MailgunEmailHelper emailHelper, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
+  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository, ImageUtils imageUtils, ObjectStorage objectStorage, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.ideaRepository = ideaRepository;
     this.tagRepository = tagRepository;
     this.imageUtils = imageUtils;
     this.objectStorage = objectStorage;
-    this.emailHelper = emailHelper;
     this.featuredBoardsServiceImpl = featuredBoardsServiceImpl;
   }
 
@@ -202,7 +200,7 @@ public class BoardServiceImpl implements BoardService {
       throw new InvalidAuthenticationException("No permission to delete board with discriminator " + discriminator + ".");
     }
     try {
-      emailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.BOARD_DELETED, board, board.getCreator(), board.getCreator().getEmail());
+      MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.BOARD_DELETED, board, board.getCreator(), board.getCreator().getEmail());
     } catch(UnirestException e) {
       e.printStackTrace();
     }

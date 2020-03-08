@@ -46,12 +46,10 @@ public class GoogleLoginController implements AbstractLoginController {
   private String clientSecret = System.getenv("SERVER_OAUTH_GOOGLE_CLIENT_SECRET");
   private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_GOOGLE_ENABLED"));
   private UserRepository userRepository;
-  private JwtTokenUtil jwtTokenUtil;
 
   @Autowired
-  public GoogleLoginController(UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
+  public GoogleLoginController(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.jwtTokenUtil = jwtTokenUtil;
   }
 
   @Override
@@ -83,7 +81,7 @@ public class GoogleLoginController implements AbstractLoginController {
     conn.disconnect();
 
     Map<String, Object> json = new HashMap<>();
-    String jwtToken = jwtTokenUtil.generateToken(user.getEmail());
+    String jwtToken = JwtTokenUtil.generateToken(user.getEmail());
     json.put("token", jwtToken);
     json.put("user", user.convertToDto().exposeSensitiveData(true));
     return ResponseEntity.ok().body(json);

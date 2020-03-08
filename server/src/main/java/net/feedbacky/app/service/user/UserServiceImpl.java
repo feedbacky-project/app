@@ -39,12 +39,10 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
-  private MailgunEmailHelper mailgunEmailHelper;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, MailgunEmailHelper mailgunEmailHelper) {
+  public UserServiceImpl(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.mailgunEmailHelper = mailgunEmailHelper;
   }
 
   @Override
@@ -104,7 +102,7 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     //better to run sync now
     try {
-      mailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.ACCOUNT_DEACTIVATED, user, user.getEmail());
+      MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.ACCOUNT_DEACTIVATED, user, user.getEmail());
     } catch(UnirestException e) {
       e.printStackTrace();
     }
