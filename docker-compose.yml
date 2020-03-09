@@ -11,6 +11,8 @@ services:
         - REACT_APP_PUBLIC_API_PORT=${REACT_APP_PUBLIC_API_PORT}
     ports:
       - '80:80'
+    links:
+      - feedbacky-server
     volumes:
       - feedbacky-data:/storage-data
   feedbacky-server:
@@ -20,8 +22,6 @@ services:
       dockerfile: ${PWD}/server/Dockerfile
     ports:
       - '8095:8080'
-    links:
-      - feedbacky-client
     volumes:
       - feedbacky-data:/storage-data
     env_file:

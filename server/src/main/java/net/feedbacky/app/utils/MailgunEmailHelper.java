@@ -24,6 +24,8 @@ public class MailgunEmailHelper {
 
   private static String apiKey = System.getenv("SERVER_MAILGUN_API_KEY");
   private static String baseUrl = System.getenv("SERVER_MAILGUN_API_BASE_URL");
+  private static String hostAddress = System.getenv("REACT_APP_SERVER_IP_ADDRESS");
+  private static String mailSender = System.getenv("SERVER_MAIL_SENDER");
 
   private MailgunEmailHelper() {
   }
@@ -31,7 +33,7 @@ public class MailgunEmailHelper {
   public static void sendEmail(EmailTemplate template, Invitation invitation, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
             .basicAuth("api", apiKey)
-            .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
+            .queryString("from", mailSender)
             .queryString("to", to)
             .queryString("subject", parsePlaceholders(template, template.getSubject(), invitation))
             .queryString("text", parsePlaceholders(template, template.getLegacyText(), invitation))
@@ -42,7 +44,7 @@ public class MailgunEmailHelper {
   public static void sendEmail(EmailTemplate template, Board board, User user, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
             .basicAuth("api", apiKey)
-            .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
+            .queryString("from", mailSender)
             .queryString("to", to)
             .queryString("subject", parsePlaceholders(template.getSubject(), board, user))
             .queryString("text", parsePlaceholders(template.getLegacyText(), board, user))
@@ -53,7 +55,7 @@ public class MailgunEmailHelper {
   public static void sendEmail(EmailTemplate template, User user, String to) throws UnirestException {
     Unirest.post(baseUrl + "/messages")
             .basicAuth("api", apiKey)
-            .queryString("from", "Feedbacky <no-reply@feedbacky.net>")
+            .queryString("from", mailSender)
             .queryString("to", to)
             .queryString("subject", parsePlaceholders(template.getSubject(), user))
             .queryString("text", parsePlaceholders(template.getLegacyText(), user))
@@ -66,6 +68,7 @@ public class MailgunEmailHelper {
     html = StringUtils.replace(html, "${board.name}", invitation.getBoard().getName());
     html = StringUtils.replace(html, "${board.owner}", invitation.getBoard().getCreator().getUsername());
     html = StringUtils.replace(html, "${username}", invitation.getUser().getUsername());
+    html = StringUtils.replace(html, "${host.address}", hostAddress);
     html = StringUtils.replace(html, "${invite.link}", template.getInviteLink() + invitation.getCode());
     return html;
   }
@@ -74,19 +77,21 @@ public class MailgunEmailHelper {
     html = StringUtils.replace(html, "${board.logo}", board.getBanner());
     html = StringUtils.replace(html, "${board.name}", board.getName());
     html = StringUtils.replace(html, "${board.owner}", board.getCreator().getUsername());
+    html = StringUtils.replace(html, "${host.address}", hostAddress);
     html = StringUtils.replace(html, "${username}", user.getUsername());
     return html;
   }
 
   private static String parsePlaceholders(String html, User user) {
+    html = StringUtils.replace(html, "${host.address}", hostAddress);
     html = StringUtils.replace(html, "${username}", user.getUsername());
     return html;
   }
 
   public enum EmailTemplate {
-    BOARD_INVITATION("mail_templates/invitation_join.html", "https://app.feedbacky.net/invitation/", "${board.name} - Invitation",
+    BOARD_INVITATION("mail_templates/invitation_join.html", hostAddress + "/invitation/", "${board.name} - Invitation",
             "You've been invited to private ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
-    MODERATOR_INVITATION("mail_templates/moderator_invitation.html", "https://app.feedbacky.net/moderator_invitation/", "${board.name} - Moderator Invitation",
+    MODERATOR_INVITATION("mail_templates/moderator_invitation.html", hostAddress + "/moderator_invitation/", "${board.name} - Moderator Invitation",
             "You've been invited to moderate ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
     MODERATOR_KICKED("mail_templates/moderator_kicked.html", "", "${board.name} - Moderator Privileges Revoked",
             "Your moderator privileges from board ${board.name} were revoked. (HTML not supported, default message sent)"),
