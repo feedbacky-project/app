@@ -38,13 +38,13 @@ public class CheetahoCompressor implements Compressor {
   public void compressFile(String localPath) {
     try {
       doCompressFile(localPath);
-    } catch(IOException | UnirestException e) {
+    } catch(IOException e) {
       Logger.getAnonymousLogger().log(Level.SEVERE, "Cheetaho compression failed.");
       e.printStackTrace();
     }
   }
 
-  private void doCompressFile(String localPath) throws IOException, UnirestException {
+  private void doCompressFile(String localPath) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode node = mapper.createObjectNode();
     node.put("key", apiKey);
