@@ -1,11 +1,13 @@
-package net.feedbacky.app.rest.oauth.discord;
+package net.feedbacky.app.rest.oauth.providers.discord;
 
 import net.feedbacky.app.exception.types.LoginFailedException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.rest.data.user.ConnectedAccount;
 import net.feedbacky.app.rest.data.user.User;
-import net.feedbacky.app.rest.oauth.AbstractLoginController;
-import net.feedbacky.app.rest.oauth.AuthGrant;
+import net.feedbacky.app.rest.oauth.providers.AbstractLoginProvider;
+import net.feedbacky.app.rest.oauth.providers.AuthGrant;
+import net.feedbacky.app.rest.oauth.LoginProviderRegistry;
+import net.feedbacky.app.rest.oauth.providers.AuthProviderData;
 import net.feedbacky.app.utils.JwtTokenUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -39,21 +42,40 @@ import java.util.Set;
  * Created at 01.10.2019
  */
 @RestController
-public class DiscordLoginController implements AbstractLoginController {
+public class DiscordLoginController implements AbstractLoginProvider {
 
   private String redirectUri = System.getenv("SERVER_OAUTH_DISCORD_REDIRECT_URI");
   private String clientId = System.getenv("SERVER_OAUTH_DISCORD_CLIENT_ID");
   private String clientSecret = System.getenv("SERVER_OAUTH_DISCORD_CLIENT_SECRET");
   private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_DISCORD_ENABLED"));
   private UserRepository userRepository;
+  private AuthProviderData providerData;
 
   @Autowired
-  public DiscordLoginController(UserRepository userRepository) {
+  public DiscordLoginController(UserRepository userRepository, LoginProviderRegistry loginProviderRegistry) {
     this.userRepository = userRepository;
+    if(enabled) {
+      loginProviderRegistry.registerProvider(this);
+      //todo change icon path later
+      providerData = new AuthProviderData("Discord", getOauthLoginLink(), "https://static.plajer.xyz/svg/login-discord.svg", "#7289da");
+    }
+  }
+
+  private String getOauthLoginLink() {
+    try {
+      return "https://discordapp.com/api/oauth2/authorize?client_id=" + clientId + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&response_type=code&scope=identify%20email&state=";
+    } catch(UnsupportedEncodingException e) {
+      return "";
+    }
   }
 
   @Override
-  @GetMapping("/service/v1/discord")
+  public AuthProviderData getProviderData() {
+    return providerData;
+  }
+
+  @Override
+  @GetMapping("/v1/service/discord")
   public ResponseEntity handle(HttpServletResponse response, HttpServletRequest request, @RequestParam(name = "code") String code) throws IOException {
     if(!enabled) {
       throw new LoginFailedException("Discord login support is disabled.");

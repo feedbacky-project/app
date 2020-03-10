@@ -38,6 +38,8 @@ class App extends Component {
             filter: localStorage.getItem("feedbacky_v1_filter"),
             sort: localStorage.getItem("feedbacky_v1_sort"),
         },
+        loginProvidersData: [],
+        loginProvidersLoaded: false,
         user: [],
         darkMode: (localStorage.getItem("feedbacky_v1_dark_mode") === 'true'),
         moderates: [],
@@ -60,9 +62,12 @@ class App extends Component {
             document.body.classList.add("dark");
             localStorage.setItem("feedbacky_v1_dark_mode", "true");
         }
-        if (this.state.loaded && this.state.moderatingDataLoaded) {
+        if (this.state.loaded && this.state.moderatingDataLoaded && this.state.loginProvidersLoaded) {
             return;
         }
+        axios.get(this.state.apiRoute + "/service/providers").then(res => {
+           this.setState({loginProvidersData: res.data, loginProvidersLoaded: true})
+        });
         if (this.state.session == null) {
             this.setState({loaded: true, moderatingDataLoaded: true});
             return;
@@ -154,7 +159,7 @@ class App extends Component {
             return <BrowserRouter><ErrorView iconMd={<FaDizzy style={{fontSize: 250, color: "#2c3e50"}}/>}
                                              iconSm={<FaDizzy style={{fontSize: 180, color: "#2c3e50"}}/>} message="Service Is Unavailable, try again in a while"/></BrowserRouter>
         }
-        if (!this.state.loaded || !this.state.moderatingDataLoaded) {
+        if (!this.state.loaded || !this.state.moderatingDataLoaded || !this.state.loginProvidersLoaded) {
             return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
         }
         return <AppContext.Provider value={{
@@ -163,6 +168,7 @@ class App extends Component {
                 data: this.state.user, loggedIn: this.state.loggedIn, session: this.state.session, moderates: this.state.moderates,
                 searchPreferences: this.state.search, darkMode: this.state.darkMode, onLogOut: this.onLogOut,
             },
+            loginProviders: this.state.loginProvidersData,
             onFilteringUpdate: this.onFilteringUpdate, onSortingUpdate: this.onSortingUpdate, onDarkModeToggle: this.onDarkModeToggle,
             theme: this.state.theme, onThemeChange: theme => this.setState({theme}),
         }}>
@@ -203,12 +209,8 @@ class App extends Component {
                             }}/>}/>
                         <Route path="/i/:id" render={(props) =>
                             <Idea {...props}/>}/>
-                        <Route path="/auth/discord" render={(props) =>
-                            <OauthReceiver provider="discord" onLogin={this.onLogin}  {...props}/>}/>
-                        <Route path="/auth/google" render={(props) =>
-                            <OauthReceiver provider="google" onLogin={this.onLogin}  {...props}/>}/>
-                        <Route path="/auth/github" render={(props) =>
-                            <OauthReceiver provider="github" onLogin={this.onLogin} {...props}/>}/>
+                        <Route path="/auth/:provider" render={(props) =>
+                            <OauthReceiver onLogin={this.onLogin} {...props}/>}/>
                         <Route render={() =>
                             <ErrorView iconMd={<FaExclamationCircle style={{fontSize: 250, color: "#c0392b"}}/>}
                                        iconSm={<FaExclamationCircle style={{fontSize: 180, color: "#c0392b"}}/>} message="Content Not Found"/>}/>

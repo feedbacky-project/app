@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
-import PropTypes from "prop-types";
+import React, {useState, useContext} from 'react';
 import LoadingSpinner from "../components/util/LoadingSpinner";
 import qs from "querystringify";
 import axios from "axios";
-import {Redirect, useLocation} from "react-router-dom";
+import {Redirect, useLocation, useParams} from "react-router-dom";
 import ErrorView from "../views/errors/ErrorView";
 import {FaTimes} from "react-icons/fa";
 import Cookies from "js-cookie";
+import AppContext from "../context/AppContext";
 
 const OauthReceiver = (props) => {
+    const context = useContext(AppContext);
+    const {provider} = useParams();
     const location = useLocation();
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
@@ -21,8 +23,7 @@ const OauthReceiver = (props) => {
         if ("error" in qsData) {
             setError(true);
         }
-        //todo global variable
-        axios.get("https://api.feedbacky.net/service/v1/" + props.provider + "?code=" + qsData.code)
+        axios.get(context.apiRoute + "/" + provider + "?code=" + qsData.code)
             .then(res => {
                 if (res.status !== 200) {
                     console.log("Failed to connect " + res.error.message);
@@ -55,11 +56,7 @@ const OauthReceiver = (props) => {
             <LoadingSpinner/>
         </div>
     }
-    return <Redirect from={"/auth/" + props.provider} to={"/" + qs.parse(location.search).state}/>
-};
-
-OauthReceiver.propTypes = {
-    provider: PropTypes.string
+    return <Redirect from={"/auth/" + provider} to={"/" + qs.parse(location.search).state}/>
 };
 
 export default OauthReceiver;

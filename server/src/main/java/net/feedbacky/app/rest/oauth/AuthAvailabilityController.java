@@ -1,11 +1,14 @@
 package net.feedbacky.app.rest.oauth;
 
+import net.feedbacky.app.rest.oauth.providers.AbstractLoginProvider;
+import net.feedbacky.app.rest.oauth.providers.AuthProviderData;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -15,17 +18,15 @@ import java.util.Map;
 @RestController
 public class AuthAvailabilityController {
 
-  private boolean googleEnabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_GOOGLE_ENABLED"));
-  private boolean discordEnabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_DISCORD_ENABLED"));
-  private boolean githubEnabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_GITHUB_ENABLED"));
+  private LoginProviderRegistry loginProviderRegistry;
 
-  @GetMapping("/service/v1/availability")
-  public ResponseEntity handle() {
-    Map<String, Boolean> data = new HashMap<>();
-    data.put("discord", discordEnabled);
-    data.put("google", googleEnabled);
-    data.put("github", githubEnabled);
-    return ResponseEntity.ok(data);
+  public AuthAvailabilityController(LoginProviderRegistry loginProviderRegistry) {
+    this.loginProviderRegistry = loginProviderRegistry;
+  }
+
+  @GetMapping("/v1/service/providers")
+  public ResponseEntity<List<AuthProviderData>> handle() {
+    return ResponseEntity.ok(loginProviderRegistry.getRegisteredProviders().stream().map(AbstractLoginProvider::getProviderData).collect(Collectors.toList()));
   }
 
 }

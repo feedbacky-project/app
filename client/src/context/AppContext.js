@@ -6,6 +6,7 @@ const AppContext = React.createContext({
         data: [], loggedIn: false, session: "", darkMode: false,
         onLogOut: () => {},
     },
+    loginProviders: [],
     onFilteringUpdate: () => {},
     onSortingUpdate: () => {},
     onDarkModeToggle: () => {},

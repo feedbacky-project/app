@@ -1,4 +1,4 @@
-package net.feedbacky.app.rest.oauth.github;
+package net.feedbacky.app.rest.oauth.providers.github;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

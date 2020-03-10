@@ -1,4 +1,4 @@
-package net.feedbacky.app.rest.oauth.discord;
+package net.feedbacky.app.rest.oauth.providers.discord;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

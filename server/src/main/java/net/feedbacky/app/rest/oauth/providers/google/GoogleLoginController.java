@@ -1,11 +1,13 @@
-package net.feedbacky.app.rest.oauth.google;
+package net.feedbacky.app.rest.oauth.providers.google;
 
 import net.feedbacky.app.exception.types.LoginFailedException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.rest.data.user.ConnectedAccount;
 import net.feedbacky.app.rest.data.user.User;
-import net.feedbacky.app.rest.oauth.AbstractLoginController;
-import net.feedbacky.app.rest.oauth.AuthGrant;
+import net.feedbacky.app.rest.oauth.providers.AbstractLoginProvider;
+import net.feedbacky.app.rest.oauth.providers.AuthGrant;
+import net.feedbacky.app.rest.oauth.LoginProviderRegistry;
+import net.feedbacky.app.rest.oauth.providers.AuthProviderData;
 import net.feedbacky.app.utils.JwtTokenUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -39,21 +42,40 @@ import java.util.Set;
  * Created at 05.10.2019
  */
 @RestController
-public class GoogleLoginController implements AbstractLoginController {
+public class GoogleLoginController implements AbstractLoginProvider {
 
   private String redirectUri = System.getenv("SERVER_OAUTH_GOOGLE_REDIRECT_URI");
   private String clientId = System.getenv("SERVER_OAUTH_GOOGLE_CLIENT_ID");
   private String clientSecret = System.getenv("SERVER_OAUTH_GOOGLE_CLIENT_SECRET");
   private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_GOOGLE_ENABLED"));
   private UserRepository userRepository;
+  private AuthProviderData providerData;
 
   @Autowired
-  public GoogleLoginController(UserRepository userRepository) {
+  public GoogleLoginController(UserRepository userRepository, LoginProviderRegistry loginProviderRegistry) {
     this.userRepository = userRepository;
+    if(enabled) {
+      loginProviderRegistry.registerProvider(this);
+      providerData = new AuthProviderData("Google", getOauthLoginLink(), "https://static.plajer.xyz/svg/login-google.svg", "#db4437");
+    }
+  }
+
+  private String getOauthLoginLink() {
+    try {
+      return "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + clientId + "&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&redirect_uri="
+              + URLEncoder.encode(redirectUri, "UTF-8") + "&state=";
+    } catch(UnsupportedEncodingException e) {
+      return "";
+    }
   }
 
   @Override
-  @GetMapping("/service/v1/google")
+  public AuthProviderData getProviderData() {
+    return providerData;
+  }
+
+  @Override
+  @GetMapping("/v1/service/google")
   public ResponseEntity handle(HttpServletResponse response, HttpServletRequest request, @RequestParam(name = "code") String code) throws IOException {
     if(!enabled) {
       throw new LoginFailedException("Google login support is disabled.");

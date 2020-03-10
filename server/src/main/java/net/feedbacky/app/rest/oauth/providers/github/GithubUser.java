@@ -1,4 +1,4 @@
-package net.feedbacky.app.rest.oauth.google;
+package net.feedbacky.app.rest.oauth.providers.github;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,14 +18,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GoogleUser {
+public class GithubUser {
 
   private String id;
-  private String email;
-  private String name;
-  @JsonProperty("picture")
+  @JsonProperty("login")
+  private String username;
+  @JsonProperty("avatar_url")
   private String avatar;
-  @JsonProperty("email_verified")
-  private Boolean emailVerified;
+  private String email;
 
 }

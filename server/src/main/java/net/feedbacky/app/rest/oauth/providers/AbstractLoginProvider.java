@@ -1,4 +1,4 @@
-package net.feedbacky.app.rest.oauth;
+package net.feedbacky.app.rest.oauth.providers;
 
 import org.springframework.http.ResponseEntity;
 
@@ -15,9 +15,11 @@ import java.io.InputStreamReader;
  * <p>
  * Created at 01.10.2019
  */
-public interface AbstractLoginController {
+public interface AbstractLoginProvider {
 
   ResponseEntity handle(HttpServletResponse response, HttpServletRequest request, String code) throws IOException;
+
+  AuthProviderData getProviderData();
 
   default String getResponse(InputStream inputStream) throws IOException {
     BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));

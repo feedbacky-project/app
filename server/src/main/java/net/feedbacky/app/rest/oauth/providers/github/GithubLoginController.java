@@ -1,11 +1,13 @@
-package net.feedbacky.app.rest.oauth.github;
+package net.feedbacky.app.rest.oauth.providers.github;
 
 import net.feedbacky.app.exception.types.LoginFailedException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.rest.data.user.ConnectedAccount;
 import net.feedbacky.app.rest.data.user.User;
-import net.feedbacky.app.rest.oauth.AbstractLoginController;
-import net.feedbacky.app.rest.oauth.AuthGrant;
+import net.feedbacky.app.rest.oauth.LoginProviderRegistry;
+import net.feedbacky.app.rest.oauth.providers.AbstractLoginProvider;
+import net.feedbacky.app.rest.oauth.providers.AuthGrant;
+import net.feedbacky.app.rest.oauth.providers.AuthProviderData;
 import net.feedbacky.app.utils.JwtTokenUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -42,21 +45,39 @@ import java.util.Set;
  * Created at 05.10.2019
  */
 @RestController
-public class GithubLoginController implements AbstractLoginController {
+public class GithubLoginController implements AbstractLoginProvider {
 
   private String redirectUri = System.getenv("SERVER_OAUTH_GITHUB_REDIRECT_URI");
   private String clientId = System.getenv("SERVER_OAUTH_GITHUB_CLIENT_ID");
   private String clientSecret = System.getenv("SERVER_OAUTH_GITHUB_CLIENT_SECRET");
   private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_GITHUB_ENABLED"));
   private UserRepository userRepository;
+  private AuthProviderData providerData;
 
   @Autowired
-  public GithubLoginController(UserRepository userRepository) {
+  public GithubLoginController(UserRepository userRepository, LoginProviderRegistry loginProviderRegistry) {
     this.userRepository = userRepository;
+    if(enabled) {
+      loginProviderRegistry.registerProvider(this);
+      providerData = new AuthProviderData("GitHub", getOauthLoginLink(), "https://static.plajer.xyz/svg/login-github.svg", "#333333");
+    }
+  }
+
+  private String getOauthLoginLink() {
+    try {
+      return "https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&scope=read%3Auser%20user%3Aemail&state=";
+    } catch(UnsupportedEncodingException e) {
+      return "";
+    }
   }
 
   @Override
-  @GetMapping("/service/v1/github")
+  public AuthProviderData getProviderData() {
+    return providerData;
+  }
+
+  @Override
+  @GetMapping("/v1/service/github")
   public ResponseEntity handle(HttpServletResponse response, HttpServletRequest request, @RequestParam(name = "code") String code) throws IOException {
     if(!enabled) {
       throw new LoginFailedException("GitHub login support is disabled.");

@@ -1,4 +1,4 @@
-package net.feedbacky.app.rest.oauth;
+package net.feedbacky.app.rest.oauth.providers.google;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,16 +11,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author Plajer
  * <p>
- * Created at 01.10.2019
+ * Created at 05.10.2019
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthGrant {
+public class GoogleUser {
 
-  @JsonProperty("access_token")
-  private String accessToken;
+  private String id;
+  private String email;
+  private String name;
+  @JsonProperty("picture")
+  private String avatar;
+  @JsonProperty("email_verified")
+  private Boolean emailVerified;
 
 }

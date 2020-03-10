@@ -163,25 +163,6 @@ footer p {
     font-size: .9rem;
 }
 
-.btn-social:hover {
-    color: #fff;
-}
-
-.btn-git {
-    color: #fff;
-    background-color: #333 !important;
-}
-
-.btn-discord {
-    color: #fff;
-    background-color: #7289da !important;
-}
-
-.btn-google {
-    color: #fff;
-    background-color: #DB4437 !important;
-}
-
 .display-5 {
     font-size: 2.5rem;
     font-weight: 300;
