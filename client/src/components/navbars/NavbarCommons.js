@@ -39,9 +39,7 @@ export const renderLogIn = (onNotLoggedClick, context) => {
                 </DropdownItem>
                 {renderModeratedBoards(context)}
                 <div className="my-1"/>
-                <DropdownItem as={Link} to="/create" style={{fontWeight: 500}}>
-                    Create Own Board
-                </DropdownItem>
+                {renderCreateBoardSection(context)}
             </DropdownMenu>
         </Dropdown>
     </NavItem>
@@ -62,4 +60,13 @@ const renderModeratedBoards = (context) => {
             return <DropdownItem key={"moderated_" + data.boardDiscriminator} as={Link} to={"/brdr/" + data.boardDiscriminator}>{data.boardName}</DropdownItem>
         })}
     </React.Fragment>
+};
+
+const renderCreateBoardSection = (context) => {
+    if(!context.serviceData.boardsCreatingAllowed) {
+        return <React.Fragment/>
+    }
+    return <DropdownItem as={Link} to="/create" style={{fontWeight: 500}}>
+        Create Own Board
+    </DropdownItem>
 };

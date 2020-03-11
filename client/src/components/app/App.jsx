@@ -38,8 +38,8 @@ class App extends Component {
             filter: localStorage.getItem("feedbacky_v1_filter"),
             sort: localStorage.getItem("feedbacky_v1_sort"),
         },
-        loginProvidersData: [],
-        loginProvidersLoaded: false,
+        serviceData: [],
+        serviceDataLoaded: false,
         user: [],
         darkMode: (localStorage.getItem("feedbacky_v1_dark_mode") === 'true'),
         moderates: [],
@@ -62,11 +62,11 @@ class App extends Component {
             document.body.classList.add("dark");
             localStorage.setItem("feedbacky_v1_dark_mode", "true");
         }
-        if (this.state.loaded && this.state.moderatingDataLoaded && this.state.loginProvidersLoaded) {
+        if (this.state.loaded && this.state.moderatingDataLoaded && this.state.serviceDataLoaded) {
             return;
         }
-        axios.get(this.state.apiRoute + "/service/providers").then(res => {
-           this.setState({loginProvidersData: res.data, loginProvidersLoaded: true})
+        axios.get(this.state.apiRoute + "/service/about").then(res => {
+           this.setState({serviceData: res.data, serviceDataLoaded: true})
         });
         if (this.state.session == null) {
             this.setState({loaded: true, moderatingDataLoaded: true});
@@ -168,7 +168,7 @@ class App extends Component {
                 data: this.state.user, loggedIn: this.state.loggedIn, session: this.state.session, moderates: this.state.moderates,
                 searchPreferences: this.state.search, darkMode: this.state.darkMode, onLogOut: this.onLogOut,
             },
-            loginProviders: this.state.loginProvidersData,
+            serviceData: this.state.serviceData,
             onFilteringUpdate: this.onFilteringUpdate, onSortingUpdate: this.onSortingUpdate, onDarkModeToggle: this.onDarkModeToggle,
             theme: this.state.theme, onThemeChange: theme => this.setState({theme}),
         }}>

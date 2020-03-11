@@ -33,6 +33,11 @@ class CreateBoard extends Component {
     }
 
     render() {
+        if(!this.context.serviceData.boardsCreatingAllowed) {
+            this.props.history.push("/me");
+            toastWarning("Boards creator was disabled by administrator.");
+            return <React.Fragment/>
+        }
         if (!this.context.user.loggedIn) {
             this.props.history.push("/me");
             toastWarning("Please log in to create a board.");
