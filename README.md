@@ -7,6 +7,9 @@
 <p align="center">
     Web service dedicated to collect users feedback in a friendly and easy way.
 </p>
+<strong align="center">
+    Feedbacky is in beta and it's still under development, self hosted open source version will be improving by the time.
+</strong>
 
 <p align="center">
     <h3 align="center"><a href="https://feedbacky.net">Website</a> | <a href="https://app.feedbacky.net">Try demo</a></h3>
