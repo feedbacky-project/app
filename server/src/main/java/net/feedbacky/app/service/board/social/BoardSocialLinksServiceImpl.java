@@ -24,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,12 +72,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
     String data = Base64Utils.extractBase64Data(dto.getIconData());
     if(!Constants.DEFAULT_ICONS.keySet().contains(data)) {
-      try {
-        socialLink.setLogoUrl(objectStorage.storeEncodedImage(board, Base64Utils.ImageType.SOCIAL_ICON, data));
-      } catch(IOException e) {
-        e.printStackTrace();
-        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload social icon.");
-      }
+      socialLink.setLogoUrl(objectStorage.storeImage(data, ObjectStorage.ImageType.PROJECT_SOCIAL_ICON));
     } else {
       socialLink.setLogoUrl(Constants.DEFAULT_ICONS.get(data));
     }
@@ -101,7 +95,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to delete social links from this board.");
     }
-    objectStorage.deleteSocialIcon(socialLink);
+    objectStorage.deleteImage(socialLink.getLogoUrl());
     board.getSocialLinks().remove(socialLink);
     socialLinksRepository.delete(socialLink);
     boardRepository.save(board);

@@ -47,7 +47,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -198,17 +197,12 @@ public class IdeaServiceImpl implements IdeaService {
     //must save idea first in order to apply and save attachment
     Set<Attachment> attachments = new HashSet<>();
     if(dto.getAttachment() != null) {
-      try {
-        String link = objectStorage.storeEncodedAttachment(idea, Base64Utils.ImageType.ATTACHMENT, Base64Utils.extractBase64Data(dto.getAttachment()));
-        Attachment attachment = new Attachment();
-        attachment.setIdea(idea);
-        attachment.setUrl(link);
-        attachment = attachmentRepository.save(attachment);
-        attachments.add(attachment);
-      } catch(IOException e) {
-        e.printStackTrace();
-        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload attachment for idea.");
-      }
+      String link = objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getAttachment()), ObjectStorage.ImageType.ATTACHMENT);
+      Attachment attachment = new Attachment();
+      attachment.setIdea(idea);
+      attachment.setUrl(link);
+      attachment = attachmentRepository.save(attachment);
+      attachments.add(attachment);
     }
     idea.setAttachments(attachments);
     ideaRepository.save(idea);
@@ -234,12 +228,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Attachment attachment = new Attachment();
     attachment.setIdea(idea);
-    try {
-      attachment.setUrl(objectStorage.storeEncodedImage(idea.getBoard(), Base64Utils.ImageType.ATTACHMENT, Base64Utils.extractBase64Data(dto.getData())));
-    } catch(IOException e) {
-      e.printStackTrace();
-      throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload attachment.");
-    }
+    attachment.setUrl(objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getData()), ObjectStorage.ImageType.ATTACHMENT));
     attachment = attachmentRepository.save(attachment);
     idea.getAttachments().add(attachment);
     ideaRepository.save(idea);
@@ -322,7 +311,7 @@ public class IdeaServiceImpl implements IdeaService {
     if(!idea.getCreator().equals(user) && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to delete idea with id " + id + ".");
     }
-    idea.getAttachments().forEach(attachment -> objectStorage.deleteAttachment(attachment));
+    idea.getAttachments().forEach(attachment -> objectStorage.deleteImage(attachment.getUrl()));
     ideaRepository.delete(idea);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
     idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_DELETE, builder.build());
@@ -340,7 +329,7 @@ public class IdeaServiceImpl implements IdeaService {
     if(!idea.getCreator().equals(user) && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to delete attachment with id " + id + ".");
     }
-    objectStorage.deleteAttachment(attachment);
+    objectStorage.deleteImage(attachment.getUrl());
     idea.getAttachments().remove(attachment);
     attachmentRepository.delete(attachment);
     return ResponseEntity.noContent().build();

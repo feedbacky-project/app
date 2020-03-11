@@ -7,7 +7,7 @@ import net.feedbacky.app.annotation.alphanumeric.Alphanumeric;
 import net.feedbacky.app.annotation.base64.Base64;
 import net.feedbacky.app.annotation.hex.HexValue;
 import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.utils.ImageUtils;
+import net.feedbacky.app.utils.Constants;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -62,8 +62,8 @@ public class PostBoardDto {
     board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
     board.setIdeas(new HashSet<>());
     board.setCreationDate(creationDate);
-    board.setBanner(ImageUtils.DEFAULT_BANNER_URL);
-    board.setLogo(ImageUtils.DEFAULT_LOGO_URL);
+    board.setBanner(Constants.DEFAULT_BANNER_URL);
+    board.setLogo(Constants.DEFAULT_LOGO_URL);
     return board;
   }
 
