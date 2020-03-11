@@ -26,7 +26,7 @@ public class FeaturedBoardsRestController {
     this.featuredBoardsService = featuredBoardsService;
   }
 
-  @GetMapping("v1/featured_boards")
+  @GetMapping("v1/featuredBoards")
   public List<FetchBoardDto> getAll() {
     return featuredBoardsService.getAll();
   }

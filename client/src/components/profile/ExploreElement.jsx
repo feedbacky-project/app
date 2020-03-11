@@ -18,7 +18,7 @@ const ExploreElement = () => {
             setLoaded(true);
             return;
         }
-        axios.get(context.apiRoute + "/featured_boards")
+        axios.get(context.apiRoute + "/featuredBoards")
             .then(res => {
                 const data = res.data;
                 sessionStorage.setItem("featuredBoards", JSON.stringify(data));
