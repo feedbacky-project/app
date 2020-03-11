@@ -20,13 +20,13 @@ import net.feedbacky.app.rest.data.tag.dto.PostTagDto;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.service.board.featured.FeaturedBoardsServiceImpl;
-import net.feedbacky.app.utils.Base64Utils;
-import net.feedbacky.app.utils.Constants;
-import net.feedbacky.app.utils.EmojiFilter;
-import net.feedbacky.app.utils.MailgunEmailHelper;
-import net.feedbacky.app.utils.PaginableRequest;
-import net.feedbacky.app.utils.RequestValidator;
-import net.feedbacky.app.utils.objectstorage.ObjectStorage;
+import net.feedbacky.app.util.Base64Util;
+import net.feedbacky.app.util.Constants;
+import net.feedbacky.app.util.EmojiFilter;
+import net.feedbacky.app.util.MailgunEmailHelper;
+import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -121,7 +121,7 @@ public class BoardServiceImpl implements BoardService {
 
     //after save board id is set, so now we can set banners and logos that require board id
     if(dto.getLogo() != null) {
-      String logoUrl = objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getLogo()), ObjectStorage.ImageType.PROJECT_LOGO);
+      String logoUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getLogo()), ObjectStorage.ImageType.PROJECT_LOGO);
       if(logoUrl.equals("")) {
         throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board logo due to server side error.");
       }
@@ -130,7 +130,7 @@ public class BoardServiceImpl implements BoardService {
       board.setLogo(Constants.DEFAULT_LOGO_URL);
     }
     if(dto.getBanner() != null) {
-      String bannerUrl = objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getBanner()), ObjectStorage.ImageType.PROJECT_BANNER);
+      String bannerUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getBanner()), ObjectStorage.ImageType.PROJECT_BANNER);
       if(bannerUrl.equals("")) {
         throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board banner due to server side error.");
       }
@@ -164,7 +164,7 @@ public class BoardServiceImpl implements BoardService {
     if(dto.getBanner() != null) {
       //delete old banner if necessary
       objectStorage.deleteImage(board.getBanner());
-      String bannerUrl = objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getBanner()), ObjectStorage.ImageType.PROJECT_BANNER);
+      String bannerUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getBanner()), ObjectStorage.ImageType.PROJECT_BANNER);
       if(bannerUrl.equals("")) {
         throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board banner due to server side error.");
       }
@@ -173,7 +173,7 @@ public class BoardServiceImpl implements BoardService {
     if(dto.getLogo() != null) {
       //delete old logo if necessary
       objectStorage.deleteImage(board.getLogo());
-      String logoUrl = objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getLogo()), ObjectStorage.ImageType.PROJECT_LOGO);
+      String logoUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getLogo()), ObjectStorage.ImageType.PROJECT_LOGO);
       if(logoUrl.equals("")) {
         throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board logo due to server side error.");
       }

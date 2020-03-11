@@ -18,9 +18,9 @@ import net.feedbacky.app.rest.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.utils.EmojiFilter;
-import net.feedbacky.app.utils.PaginableRequest;
-import net.feedbacky.app.utils.RequestValidator;
+import net.feedbacky.app.util.EmojiFilter;
+import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RequestValidator;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;

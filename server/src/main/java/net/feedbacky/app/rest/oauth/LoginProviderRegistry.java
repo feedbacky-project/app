@@ -1,6 +1,6 @@
 package net.feedbacky.app.rest.oauth;
 
-import net.feedbacky.app.rest.oauth.providers.AbstractLoginProvider;
+import net.feedbacky.app.rest.oauth.provider.AbstractLoginProvider;
 
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package net.feedbacky.app.annotation.base64;
 
-import net.feedbacky.app.utils.Base64Utils;
+import net.feedbacky.app.util.Base64Util;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,8 +33,8 @@ public class Base64ValueValidator implements ConstraintValidator<Base64, String>
     if(!m.matches()) {
       return false;
     }
-    if(!Arrays.asList(annotation.mimeType()).contains(Base64Utils.extractMimeType(field)) ||
-            Base64Utils.calculateBase64DataSizeInKb(Base64Utils.extractBase64Data(field)) > annotation.maximumKbSize()) {
+    if(!Arrays.asList(annotation.mimeType()).contains(Base64Util.extractMimeType(field)) ||
+            Base64Util.calculateBase64DataSizeInKb(Base64Util.extractBase64Data(field)) > annotation.maximumKbSize()) {
       return false;
     }
     return true;

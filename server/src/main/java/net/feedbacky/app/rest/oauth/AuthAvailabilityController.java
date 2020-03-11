@@ -1,7 +1,7 @@
 package net.feedbacky.app.rest.oauth;
 
-import net.feedbacky.app.rest.oauth.providers.AbstractLoginProvider;
-import net.feedbacky.app.rest.oauth.providers.AuthProviderData;
+import net.feedbacky.app.rest.oauth.provider.AbstractLoginProvider;
+import net.feedbacky.app.rest.oauth.provider.AuthProviderData;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -28,13 +28,13 @@ import net.feedbacky.app.rest.data.tag.dto.PatchTagRequestDto;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.utils.Base64Utils;
-import net.feedbacky.app.utils.CommentBuilder;
-import net.feedbacky.app.utils.EmojiFilter;
-import net.feedbacky.app.utils.PaginableRequest;
-import net.feedbacky.app.utils.RequestValidator;
-import net.feedbacky.app.utils.SortFilterResolver;
-import net.feedbacky.app.utils.objectstorage.ObjectStorage;
+import net.feedbacky.app.util.Base64Util;
+import net.feedbacky.app.util.CommentBuilder;
+import net.feedbacky.app.util.EmojiFilter;
+import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.SortFilterResolver;
+import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
@@ -197,7 +197,7 @@ public class IdeaServiceImpl implements IdeaService {
     //must save idea first in order to apply and save attachment
     Set<Attachment> attachments = new HashSet<>();
     if(dto.getAttachment() != null) {
-      String link = objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getAttachment()), ObjectStorage.ImageType.ATTACHMENT);
+      String link = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getAttachment()), ObjectStorage.ImageType.ATTACHMENT);
       Attachment attachment = new Attachment();
       attachment.setIdea(idea);
       attachment.setUrl(link);
@@ -228,7 +228,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Attachment attachment = new Attachment();
     attachment.setIdea(idea);
-    attachment.setUrl(objectStorage.storeImage(Base64Utils.extractBase64Data(dto.getData()), ObjectStorage.ImageType.ATTACHMENT));
+    attachment.setUrl(objectStorage.storeImage(Base64Util.extractBase64Data(dto.getData()), ObjectStorage.ImageType.ATTACHMENT));
     attachment = attachmentRepository.save(attachment);
     idea.getAttachments().add(attachment);
     ideaRepository.save(idea);

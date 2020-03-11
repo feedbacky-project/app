@@ -7,7 +7,7 @@ import net.feedbacky.app.rest.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.rest.data.tag.dto.PatchTagDto;
 import net.feedbacky.app.rest.data.tag.dto.PostTagDto;
 import net.feedbacky.app.service.FeedbackyService;
-import net.feedbacky.app.utils.PaginableRequest;
+import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
 

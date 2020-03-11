@@ -17,8 +17,8 @@ import net.feedbacky.app.rest.data.board.invite.Invitation;
 import net.feedbacky.app.rest.data.board.moderator.Moderator;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.utils.MailgunEmailHelper;
-import net.feedbacky.app.utils.RequestValidator;
+import net.feedbacky.app.util.MailgunEmailHelper;
+import net.feedbacky.app.util.RequestValidator;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 

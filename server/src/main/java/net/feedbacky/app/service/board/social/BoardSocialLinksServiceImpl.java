@@ -14,10 +14,10 @@ import net.feedbacky.app.rest.data.board.moderator.Moderator;
 import net.feedbacky.app.rest.data.board.social.SocialLink;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.utils.Base64Utils;
-import net.feedbacky.app.utils.Constants;
-import net.feedbacky.app.utils.RequestValidator;
-import net.feedbacky.app.utils.objectstorage.ObjectStorage;
+import net.feedbacky.app.util.Base64Util;
+import net.feedbacky.app.util.Constants;
+import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,7 +70,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     }
     SocialLink socialLink = new SocialLink();
 
-    String data = Base64Utils.extractBase64Data(dto.getIconData());
+    String data = Base64Util.extractBase64Data(dto.getIconData());
     if(!Constants.DEFAULT_ICONS.keySet().contains(data)) {
       socialLink.setLogoUrl(objectStorage.storeImage(data, ObjectStorage.ImageType.PROJECT_SOCIAL_ICON));
     } else {

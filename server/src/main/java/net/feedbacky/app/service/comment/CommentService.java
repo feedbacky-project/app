@@ -5,7 +5,7 @@ import net.feedbacky.app.rest.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.rest.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.FeedbackyService;
-import net.feedbacky.app.utils.PaginableRequest;
+import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
 

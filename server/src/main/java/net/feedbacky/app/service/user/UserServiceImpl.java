@@ -12,8 +12,8 @@ import net.feedbacky.app.rest.data.user.dto.FetchConnectedAccount;
 import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
 import net.feedbacky.app.rest.data.user.dto.PatchUserDto;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.utils.MailgunEmailHelper;
-import net.feedbacky.app.utils.RequestValidator;
+import net.feedbacky.app.util.MailgunEmailHelper;
+import net.feedbacky.app.util.RequestValidator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.exceptions.UnirestException;

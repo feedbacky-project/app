@@ -4,7 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import net.feedbacky.app.service.FeedbackyUserDetailsService;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.utils.JwtTokenUtil;
+import net.feedbacky.app.util.JwtTokenUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
