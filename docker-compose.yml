@@ -5,7 +5,7 @@ services:
     container_name: feedbacky-client
     build:
       context: client
-      dockerfile: ${PWD}/client/Dockerfile-prod
+      dockerfile: ${PWD}/client/Dockerfile
       args:
         - REACT_APP_SERVER_IP_ADDRESS=${REACT_APP_SERVER_IP_ADDRESS}
         - REACT_APP_PUBLIC_API_PORT=${REACT_APP_PUBLIC_API_PORT}
