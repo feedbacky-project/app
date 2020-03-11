@@ -32,7 +32,7 @@ const Profile = () => {
     return <React.Fragment>
         <LoginModal open={loginModalOpen} onLoginModalClose={() => setLoginModalOpen(false)}
                     image="https://cdn.feedbacky.net/static/img/login-logo.png"
-                    boardName="Feedbacky" redirectUrl="me"/>
+                    boardName={process.env.REACT_APP_SERVICE_NAME} redirectUrl="me"/>
         <ProfileNavbar onNotLoggedClick={onNotLoggedClick}/>
         <Container>
             <Row className="justify-content-center pb-4">
