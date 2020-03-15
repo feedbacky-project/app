@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://feedbacky.net">
-        <img src="https://static.plajer.xyz/feedbacky/img/beta-banner.png">
+        <img src="https://static.plajer.xyz/feedbacky/img/banner-beta.png">
     </a>
 </p>
 <p align="center">
