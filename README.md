@@ -1,8 +1,7 @@
 <p align="center">
     <a href="https://feedbacky.net">
-        <img src="https://cdn.feedbacky.net/static/img/logo.png" width="130" height="130">
+        <img src="https://static.plajer.xyz/feedbacky/img/beta-banner.png">
     </a>
-    <h1 align="center">Feedbacky</h1>
 </p>
 <p align="center">
     Web service dedicated to collect users feedback in a friendly and easy way.
