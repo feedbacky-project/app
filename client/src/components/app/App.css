@@ -17,6 +17,14 @@ body {
     text-transform: none !important;
 }
 
+.btn:not(.btn-link) {
+    box-shadow: 0 1px 3px rgba(50,50,93,.25),0 1px 0 rgba(0,0,0,.02);
+}
+
+.btn:not(.btn-link):hover {
+    box-shadow: 0 3px 5px rgba(50,50,93,.35),0 1px 0 rgba(0,0,0,.02);
+}
+
 .block-hover a:hover {
     color: white !important;
 }
