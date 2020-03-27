@@ -17,5 +17,6 @@ public class AboutFeedbackyData {
 
   private List<AbstractLoginProvider> loginProviders;
   private boolean boardsCreatingAllowed;
+  private boolean initialInstallation;
 
 }

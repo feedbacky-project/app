@@ -15,7 +15,7 @@ const AvatarSelectionModal = (props) => {
             if (data.AVATAR === undefined) {
                 return <React.Fragment key={"connAcc" + i}/>
             }
-            return <Col key={"connAcc" + i} xs={6} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose(data.AVATAR)}>
+            return <Col key={"connAcc" + i} xs={5} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose(data.AVATAR)}>
                 <img src={data.AVATAR} alt={prettifyEnum(conn.accountType) + " Avatar"} width={100} className="img-fluid img-thumbnail"/>
                 <div className="mt-1">{prettifyEnum(conn.accountType)}</div>
             </Col>
@@ -26,13 +26,13 @@ const AvatarSelectionModal = (props) => {
             <Modal.Title><h5 className="modal-title">Choose Avatar</h5></Modal.Title>
         </Modal.Header>
         <Modal.Body className="py-1">
-            <Row className="mt-3">
-                <Col xs={6} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose("https://cdn.feedbacky.net/static/img/default_avatar.png")}>
+            <Row className="mt-3 justify-content-center">
+                <Col xs={5} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose("https://cdn.feedbacky.net/static/img/default_avatar.png")}>
                     <img src={"https://cdn.feedbacky.net/static/img/default_avatar.png"}
                          alt="Default Avatar" width={100} className="img-fluid img-thumbnail"/>
                     <div className="mt-1">Default</div>
                 </Col>
-                <Col xs={6} sm={3} className="cursor-click text-center"
+                <Col xs={5} sm={3} className="cursor-click text-center"
                      onClick={() => props.onAvatarChoose("https://www.gravatar.com/avatar/" + md5(context.user.data.email) + ".jpg?s=100?d=https://cdn.feedbacky.net/static/img/default_avatar.png")}>
                     <img src={"https://www.gravatar.com/avatar/" + md5(context.user.data.email) + ".jpg?s=100?d=https://cdn.feedbacky.net/static/img/default_avatar.png"}
                          alt="Gravatar Avatar" width={100} className="img-fluid img-thumbnail"/>

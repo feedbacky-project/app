@@ -129,7 +129,7 @@ const SettingsView = (props) => {
                     <Col xs={12} lg={6} className="order-lg-2 order-1">
                         <Form.Label className="mr-1 text-black-60">Avatar</Form.Label>
                         <br/>
-                        <img src={avatar} className="img-fluid img-thumbnail" width={100}/>
+                        <img src={avatar} className="img-fluid rounded" width={100}/>
                         <Button variant="success" className="align-top mx-3 my-0" onClick={() => setModalOpened(true)}>Change</Button>
                     </Col>
                     <Col xs={12} lg={6} className="order-3">

@@ -1,17 +1,13 @@
 package net.feedbacky.app.rest.controller;
 
+import net.feedbacky.app.config.LocalConfiguration;
 import net.feedbacky.app.rest.data.AboutFeedbackyData;
 import net.feedbacky.app.rest.oauth.LoginProviderRegistry;
-import net.feedbacky.app.rest.oauth.provider.AbstractLoginProvider;
-import net.feedbacky.app.rest.oauth.provider.AuthProviderData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -22,19 +18,23 @@ import java.util.stream.Collectors;
 public class AboutRestController {
 
   private LoginProviderRegistry loginProviderRegistry;
+  private LocalConfiguration localConfiguration;
   private AboutFeedbackyData aboutFeedbackyData = null;
 
   @Autowired
-  public AboutRestController(LoginProviderRegistry loginProviderRegistry) {
+  public AboutRestController(LoginProviderRegistry loginProviderRegistry, LocalConfiguration localConfiguration) {
     this.loginProviderRegistry = loginProviderRegistry;
+    this.localConfiguration = localConfiguration;
   }
 
   @GetMapping("/v1/service/about")
-  public ResponseEntity<List<AuthProviderData>> handle() {
+  public ResponseEntity<AboutFeedbackyData> handle() {
     if(this.aboutFeedbackyData == null) {
-      this.aboutFeedbackyData = new AboutFeedbackyData(loginProviderRegistry.getRegisteredProviders(), Boolean.parseBoolean(System.getenv("SERVER_SETTINGS_PUBLIC_BOARDS_CREATION")));
+      this.aboutFeedbackyData = new AboutFeedbackyData(loginProviderRegistry.getRegisteredProviders(),
+              localConfiguration.getConfiguration().getBoolean(LocalConfiguration.Settings.PUBLIC_BOARDS_CREATION.name()),
+              localConfiguration.getConfiguration().getBoolean(LocalConfiguration.Settings.INITIAL_INSTALLATION.name()));
     }
-    return ResponseEntity.ok(loginProviderRegistry.getRegisteredProviders().stream().map(AbstractLoginProvider::getProviderData).collect(Collectors.toList()));
+    return ResponseEntity.ok(aboutFeedbackyData);
   }
 
 }

@@ -57,11 +57,9 @@ class CreateBoard extends Component {
         if (this.calculateOwnedBoards() >= 5) {
             return <Col xs={12} className="mt-4 text-center">
                 <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_project_limit.svg" className="my-2" width={150} height={150}/>
-                <h2 className="text-danger">Free Boards Limit Reached</h2>
+                <h2 className="text-danger">Boards Limit Reached</h2>
                 <span className="text-black-60">
-                    Cannot create more than 5 boards on feedbacky.net.
-                    <br/>
-                    Check out <kbd>Selfhosted Version</kbd> to have unlimited boards.
+                    Cannot create any more boards.
                 </span>
             </Col>
         }

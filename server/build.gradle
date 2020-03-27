@@ -54,6 +54,7 @@ dependencies {
     compile 'org.projectlombok:lombok:1.18.10'
     compile 'org.modelmapper:modelmapper:2.3.2'
     compile 'commons-validator:commons-validator:1.4.0'
+    compile 'commons-configuration:commons-configuration:1.10'
     compile 'org.apache.commons:commons-text:1.8'
     compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'org.jetbrains:annotations:16.0.1'

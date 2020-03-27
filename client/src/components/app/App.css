@@ -111,7 +111,7 @@ body {
 }
 
 /* fixes mobile minimum width */
-body {
+body, .modal {
     min-width: 280px;
 }
 
@@ -527,4 +527,13 @@ body {
 
 .cursor-click {
     cursor: pointer;
+}
+
+.swal2-input, .swal2-textarea {
+    box-shadow: 0 1px 3px rgba(50,50,93,.25),0 1px 0 rgba(0,0,0,.02) !important;
+    border: none !important;
+}
+
+.swal2-input:focus, .swal2-textarea:focus {
+    border: none;
 }

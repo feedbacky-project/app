@@ -159,7 +159,7 @@ class App extends Component {
             return <BrowserRouter><ErrorView iconMd={<FaDizzy style={{fontSize: 250, color: "#2c3e50"}}/>}
                                              iconSm={<FaDizzy style={{fontSize: 180, color: "#2c3e50"}}/>} message="Service Is Unavailable, try again in a while"/></BrowserRouter>
         }
-        if (!this.state.loaded || !this.state.moderatingDataLoaded || !this.state.loginProvidersLoaded) {
+        if (!this.state.loaded || !this.state.moderatingDataLoaded || !this.state.serviceDataLoaded) {
             return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
         }
         return <AppContext.Provider value={{
