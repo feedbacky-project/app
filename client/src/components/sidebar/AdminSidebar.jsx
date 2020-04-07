@@ -1,14 +1,10 @@
 import React, {useContext} from 'react';
 import {Col} from "react-bootstrap";
-import {TiCogOutline, TiMail, TiSocialAtCircular, TiTags} from "react-icons/ti";
-import {AiOutlineUnorderedList, AiOutlineUser} from "react-icons/ai";
-import {GoCommentDiscussion} from "react-icons/go";
-import {IoIosHelpCircleOutline} from "react-icons/io";
 import {FaDiscord} from "react-icons/fa";
-import {MdWeb} from "react-icons/md";
 import Attribution from "../util/Attribution";
 import {increaseBrightness, isHexDark} from "../util/Utils";
 import AppContext from "../../context/AppContext";
+import {FaAt, FaColumns, FaQuestionCircle, FaRegCommentDots, FaRegEnvelope, FaSlidersH, FaTags, FaUsersCog} from "react-icons/all";
 
 const AdminSidebar = (props) => {
     const context = useContext(AppContext);
@@ -31,48 +27,48 @@ const AdminSidebar = (props) => {
         <ul className="pl-0 mb-1" style={{listStyle: "none", fontSize: "1.1rem", fontWeight: 500, lineHeight: "2rem"}}>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("general")} style={general}>
-                    <TiCogOutline className="fa-md mr-1 move-top-2px" style={generalIcon}/> General
+                    <FaSlidersH className="fa-sm mr-1 move-top-2px" style={generalIcon}/> General
                 </a>
             </li>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("tags")} style={tags}>
-                    <TiTags className="fa-md mr-1 move-top-2px" style={tagsIcon}/> Tags
+                    <FaTags className="fa-sm mr-1 move-top-2px" style={tagsIcon}/> Tags
                 </a>
             </li>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("social")} style={social}>
-                    <TiSocialAtCircular className="fa-md mr-1 move-top-2px" style={socialIcon}/> Social Links
+                    <FaAt className="fa-sm mr-1 move-top-2px" style={socialIcon}/> Social Links
                 </a>
             </li>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("webhooks")} style={webhooks}>
-                    <MdWeb className="fa-md mr-1 move-top-2px" style={webhooksIcon}/> Webhooks
+                    <FaColumns className="fa-sm mr-1 move-top-2px" style={webhooksIcon}/> Webhooks
                 </a>
             </li>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("moderators")} style={moderators}>
-                    <AiOutlineUser className="fa-md mr-1 move-top-2px" style={moderatorsIcon}/> Moderators
+                    <FaUsersCog className="fa-sm mr-1 move-top-2px" style={moderatorsIcon}/> Moderators
                 </a>
             </li>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("invitations")} style={invitations}>
-                    <TiMail className="fa-md mr-1 move-top-2px" style={invitationsIcon}/> Invitations
+                    <FaRegEnvelope className="fa-sm mr-1 move-top-2px" style={invitationsIcon}/> Invitations
                 </a>
             </li>
             <li className="my-4"/>
             <li>
                 <a href="https://app.feedbacky.net/b/feedbacky-official">
-                    <GoCommentDiscussion className="fa-md mr-1 text-black-50 move-top-2px"/> Feedback
+                    <FaRegCommentDots className="fa-sm mr-1 text-black-50 move-top-2px"/> Feedback
                 </a>
             </li>
             <li>
                 <a href="https://docs.feedbacky.net">
-                    <IoIosHelpCircleOutline className="fa-md mr-1 text-black-50 move-top-2px"/> FAQ
+                    <FaQuestionCircle className="fa-sm mr-1 text-black-50 move-top-2px"/> FAQ
                 </a>
             </li>
             <li>
                 <a href="https://discordapp.com/invite/6qCnKh5">
-                    <FaDiscord className="fa-md mr-1 text-black-50 move-top-2px"/> Discord Support
+                    <FaDiscord className="fa-sm mr-1 text-black-50 move-top-2px"/> Discord Support
                 </a>
             </li>
         </ul>

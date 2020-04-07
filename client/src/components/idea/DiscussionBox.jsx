@@ -11,8 +11,7 @@ import {ReactSVG} from "react-svg";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
 import {popupSwal} from "../util/SwalUtils";
-import {AiFillHeart, AiOutlineHeart} from "react-icons/ai";
-import {FiTrash2} from "react-icons/fi";
+import {FaHeart, FaRegHeart, FaTrashAlt} from "react-icons/all";
 
 class DiscussionBox extends Component {
 
@@ -108,15 +107,15 @@ class DiscussionBox extends Component {
         if (data.user.id !== this.context.user.data.id && !moderator) {
             return;
         }
-        return <FiTrash2 className="ml-1 fa-sm cursor-click" onClick={() => this.onCommentDelete(data.id)}/>
+        return <FaTrashAlt className="ml-1 fa-xs cursor-click" onClick={() => this.onCommentDelete(data.id)}/>
     }
 
     renderLikes(data) {
         const likes = data.likesAmount;
         if (data.liked) {
-            return <span className="cursor-click" onClick={() => this.onCommentUnlike(data)}><AiFillHeart className="move-top-1px" style={{color: "#FE251B"}}/> {likes}</span>
+            return <span className="cursor-click" onClick={() => this.onCommentUnlike(data)}><FaHeart className="move-top-1px" style={{color: "#FE251B"}}/> {likes}</span>
         }
-        return <span className="cursor-click" onClick={() => this.onCommentLike(data)}><AiOutlineHeart className="move-top-1px"/> {likes}</span>
+        return <span className="cursor-click" onClick={() => this.onCommentLike(data)}><FaRegHeart className="move-top-1px"/> {likes}</span>
     }
 
     retrieveSpecialCommentTypeIcon(type) {

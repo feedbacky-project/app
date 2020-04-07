@@ -8,9 +8,9 @@ import StepSecond from "./steps/StepSecond";
 import {getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarning} from "../../../../components/util/Utils";
 import axios from "axios";
 import StepThird from "./steps/StepThird";
-import {MdNavigateBefore, MdNavigateNext} from "react-icons/md";
 
 import "../../../Steps.css";
+import {FaAngleLeft, FaAngleRight} from "react-icons/all";
 
 class CreateWebhook extends Component {
 
@@ -95,14 +95,14 @@ class CreateWebhook extends Component {
                 this.setState({url: value});
                 return;
             case "type":
-                if(value === "CUSTOM_ENDPOINT") {
+                if (value === "CUSTOM_ENDPOINT") {
                     toastWarning("Option not yet available.");
                     return;
                 }
                 this.setState({type: value});
                 return;
             case "event":
-                if(this.state.listenedEvents.includes(value)) {
+                if (this.state.listenedEvents.includes(value)) {
                     this.setState({listenedEvents: this.state.listenedEvents.filter(item => item !== value)});
                 } else {
                     this.setState({listenedEvents: [...this.state.listenedEvents, value]});
@@ -115,14 +115,14 @@ class CreateWebhook extends Component {
         if (this.state.step === 1) {
             return <React.Fragment/>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><MdNavigateBefore/> Back</Button>
+        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><FaAngleLeft/> Back</Button>
     }
 
     renderNextButton() {
         if (this.state.step >= 3) {
             return <Button variant="success" className="text-white" onClick={this.nextStep}>Finish</Button>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <MdNavigateNext/></Button>
+        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <FaAngleRight/></Button>
     }
 
     previousStep = () => {
@@ -136,7 +136,7 @@ class CreateWebhook extends Component {
         } else if (this.state.step === 2 && this.state.listenedEvents.length === 0) {
             toastWarning("Events must be chosen.");
             return;
-        } else if(this.state.step === 3 && this.state.url === "") {
+        } else if (this.state.step === 3 && this.state.url === "") {
             toastWarning("URL must be typed.");
             return;
         }

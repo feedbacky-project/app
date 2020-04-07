@@ -7,8 +7,8 @@ import {Badge, Button, Col, OverlayTrigger, Popover, Row, Tooltip} from "react-b
 import LoadingSpinner from "../../../../components/util/LoadingSpinner";
 import {FaQuestionCircle} from "react-icons/fa";
 import {Link} from "react-router-dom";
-import {IoIosClose} from "react-icons/io";
 import {popupSwal} from "../../../../components/util/SwalUtils";
+import {FaTimes, FaTimesCircle} from "react-icons/all";
 
 class WebhooksSettings extends Component {
 
@@ -111,7 +111,7 @@ class WebhooksSettings extends Component {
 
     renderWebhookDelete = (hook, i) => {
         return <OverlayTrigger overlay={<Tooltip id={"deleteWebhook" + i + "-tooltip"}>Delete</Tooltip>}>
-            <IoIosClose className="grey lighten-2 black-text rounded-circle" onClick={() => this.onWebhookDelete(hook)} style={{position: "absolute", transform: "translate(-6px, -6px)"}}/>
+            <FaTimesCircle className="grey lighten-2 black-text rounded-circle" onClick={() => this.onWebhookDelete(hook)} style={{position: "absolute", transform: "translate(-6px, -6px)"}}/>
         </OverlayTrigger>;
     };
 

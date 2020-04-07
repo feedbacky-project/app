@@ -65,9 +65,11 @@ class App extends Component {
         if (this.state.loaded && this.state.moderatingDataLoaded && this.state.serviceDataLoaded) {
             return;
         }
-        axios.get(this.state.apiRoute + "/service/about").then(res => {
-           this.setState({serviceData: res.data, serviceDataLoaded: true})
-        });
+        if(!this.state.serviceDataLoaded) {
+            axios.get(this.state.apiRoute + "/service/about").then(res => {
+                this.setState({serviceData: res.data, serviceDataLoaded: true});
+            });
+        }
         if (this.state.session == null) {
             this.setState({loaded: true, moderatingDataLoaded: true});
             return;
@@ -83,7 +85,7 @@ class App extends Component {
             });
             this.setState({user, loggedIn: true, loaded: true});
         }).catch(err => {
-            if (err.response === undefined || err.response.status === 401 || err.response.status === 403) {
+            if (err.response === undefined || err.response.status === 401 || err.response.status === 403 || (err.response.status >= 500 && err.response.status <= 599)) {
                 this.setState({error: false, loaded: true, loggedIn: false, moderatingDataLoaded: true});
                 return;
             }

@@ -3,8 +3,8 @@ import {Col} from "react-bootstrap";
 import Attribution from "../util/Attribution";
 import {increaseBrightness, isHexDark} from "../util/Utils";
 import AppContext from "../../context/AppContext";
-import {AiOutlineBell, AiOutlineProfile, AiOutlineSearch} from "react-icons/ai";
 import Badge from "react-bootstrap/Badge";
+import {FaRegAddressCard, FaRegBell, FaSearch} from "react-icons/all";
 
 const ProfileSidebar = (props) => {
     const context = useContext(AppContext);
@@ -21,17 +21,17 @@ const ProfileSidebar = (props) => {
         <ul className="pl-0 mb-1" style={{listStyle: "none", fontSize: "1.1rem", fontWeight: 500, lineHeight: "2rem"}}>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("settings")} style={settings}>
-                    <AiOutlineProfile className="fa-md mr-1 move-top-2px" style={settingsIcon}/> Settings
+                    <FaRegAddressCard className="fa-sm mr-1 move-top-2px" style={settingsIcon}/> Settings
                 </a>
             </li>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("explore")} style={explore}>
-                    <AiOutlineSearch className="fa-md mr-1 move-top-2px" style={exploreIcon}/> Explore
+                    <FaSearch className="fa-sm mr-1 move-top-2px" style={exploreIcon}/> Explore
                 </a>
             </li>
             <li>
                 <a href="#!" onClick={() => props.reRouteTo("notifications")} style={notifications}>
-                    <AiOutlineBell className="fa-md mr-1 move-top-2px" style={notificationsIcon}/> Notifications <Badge variant="warning" className="move-top-2px">Soon</Badge>
+                    <FaRegBell className="fa-sm mr-1 move-top-2px" style={notificationsIcon}/> Notifications <Badge variant="warning" className="move-top-2px">Soon</Badge>
                 </a>
             </li>
         </ul>

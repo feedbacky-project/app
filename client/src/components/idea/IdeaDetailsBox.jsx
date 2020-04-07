@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Button from "react-bootstrap/Button";
 import {Badge, Col} from "react-bootstrap";
-import {FaFrown, FaLock, FaRegEdit, FaTrash} from "react-icons/fa";
+import {FaFrown, FaLock, FaTrash} from "react-icons/fa";
 import Image from "react-bootstrap/Image";
 import TimeAgo from "timeago-react";
 import axios from "axios";
@@ -10,10 +10,10 @@ import Spinner from "react-bootstrap/Spinner";
 import {formatUsername, getSimpleRequestConfig, getSizedAvatarByUrl, htmlDecode, increaseBrightness, isHexDark, toastError, toastSuccess} from "../util/Utils";
 import ModeratorActions from "../board/ModeratorActions";
 import snarkdown from "../util/snarkdown";
-import {IoIosClose} from "react-icons/io";
 import {popupSwal} from "../util/SwalUtils";
 import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
 import TextareaAutosize from "react-autosize-textarea";
+import {FaPen, FaTimesCircle} from "react-icons/all";
 
 class IdeaDetailsBox extends Component {
 
@@ -130,7 +130,7 @@ class IdeaDetailsBox extends Component {
         if (this.props.ideaData.user.id !== this.context.user.data.id) {
             return;
         }
-        return <FaRegEdit className="ml-1 fa-sm cursor-click move-top-2px" onClick={this.onEditorToggle}/>
+        return <FaPen className="ml-2 fa-xs cursor-click move-top-2px" onClick={this.onEditorToggle}/>
     }
 
     renderEditedNote() {
@@ -160,7 +160,7 @@ class IdeaDetailsBox extends Component {
                 let userId = this.context.user.data.id;
                 if (this.props.ideaData.user.id === userId || this.props.moderators.find(mod => mod.userId === userId)) {
                     return <React.Fragment key={"attachment" + i}>
-                        <IoIosClose className="grey lighten-2 black-text rounded-circle" onClick={() => this.onAttachmentDelete(attachment)} style={{position: "absolute", transform: "translate(-5px, -5px)"}}/>
+                        <FaTimesCircle className="grey lighten-2 black-text rounded-circle" onClick={() => this.onAttachmentDelete(attachment)} style={{position: "absolute", transform: "translate(-5px, -5px)"}}/>
                         <a href={attachment.url} target="_blank" rel="noopener noreferrer">
                             <img width={125} className="img-thumbnail" alt="attachment" src={attachment.url} key={"attachment_" + i}/>
                         </a>

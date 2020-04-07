@@ -7,12 +7,12 @@ import {getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarni
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
 import ProfileNavbar from "../../components/navbars/ProfileNavbar";
-import {MdNavigateBefore, MdNavigateNext} from "react-icons/md";
 import {Link} from "react-router-dom";
 import StepFirst from "./steps/StepFirst";
 import StepSecond from "./steps/StepSecond";
 import StepThird from "./steps/StepThird";
 import axios from "axios";
+import {FaAngleLeft, FaAngleRight} from "react-icons/all";
 
 class CreateBoard extends Component {
 
@@ -33,7 +33,7 @@ class CreateBoard extends Component {
     }
 
     render() {
-        if(!this.context.serviceData.boardsCreatingAllowed) {
+        if (!this.context.serviceData.boardsCreatingAllowed) {
             this.props.history.push("/me");
             toastWarning("Boards creator was disabled by administrator.");
             return <React.Fragment/>
@@ -146,14 +146,14 @@ class CreateBoard extends Component {
         if (this.state.step === 1) {
             return <React.Fragment/>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><MdNavigateBefore/> Back</Button>
+        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><FaAngleLeft/> Back</Button>
     }
 
     renderNextButton() {
         if (this.state.step === 3) {
             return <Button variant="success" className="text-white" onClick={this.nextStep}>Create Board</Button>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <MdNavigateNext/></Button>
+        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <FaAngleRight/></Button>
     }
 
     previousStep = () => {

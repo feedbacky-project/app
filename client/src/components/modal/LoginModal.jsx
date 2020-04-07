@@ -11,9 +11,10 @@ const LoginModal = (props) => {
         </Modal.Header>
         <Modal.Body className="text-center pt-1 text-black-75">
             Sign in to {props.boardName} with<br/>
-            {context.serviceData.loginProviders.map((provider, _i) => {
+            {context.serviceData.loginProviders.map((data, _i) => {
+                let provider = data.providerData;
                 return <a key={_i} href={provider.oauthLink + props.redirectUrl}>
-                    <button type="button" className="btn btn-social" style={{color: "#fff", backgroundColor: provider.color}}><img alt={provider.name} src={provider.icon} width={16} height={16}/></button>
+                    <button type="button" className="btn btn-social move-top-1px" style={{color: "#fff", backgroundColor: provider.color}}><img alt={provider.name} src={provider.icon} width={16} height={16}/></button>
                 </a>
             })}
         </Modal.Body>

@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {Badge, Dropdown, Form} from "react-bootstrap";
-import {GoTools} from "react-icons/go";
 import PropTypes from "prop-types";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import axios from "axios";
@@ -9,6 +8,7 @@ import swalReact from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import AppContext from "../../context/AppContext";
 import {popupSwal} from "../util/SwalUtils";
+import {FaEllipsisH} from "react-icons/all";
 
 const ModeratorActions = (props) => {
     const swalGenerator = swalReact(Swal);
@@ -141,8 +141,8 @@ const ModeratorActions = (props) => {
         return <React.Fragment/>;
     }
     return <Dropdown alignRight className="cursor-click" onClick={e => e.preventDefault()} as={"span"}>
-        <Dropdown.Toggle as={"span"} id={props.ideaData.id + "_mod_tools"} variant="" className="text-black-60 ml-1">
-            <GoTools className="fa-sm move-top-2px"/>
+        <Dropdown.Toggle as={"span"} id={props.ideaData.id + "_mod_tools"} variant="" className="text-black-60 ml-1 dropdown-toggle-off">
+            <FaEllipsisH className="fa-sm move-top-2px"/>
         </Dropdown.Toggle>
         <Dropdown.Menu className="mod-tools">
             <Dropdown.Item as={"span"} onClick={onTagsManage}><FaTags className="fa-sm mr-1" style={{color: context.theme}}/> Change Tags</Dropdown.Item>

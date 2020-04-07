@@ -1,7 +1,6 @@
 package net.feedbacky.app.config;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.JwtException;
 import net.feedbacky.app.service.FeedbackyUserDetailsService;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.JwtTokenUtil;
@@ -19,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -76,7 +77,7 @@ public class RequestFilter extends OncePerRequestFilter {
   private String getEmailFromToken(String jwtToken) {
     try {
       return JwtTokenUtil.getEmailFromToken(jwtToken);
-    } catch(IllegalArgumentException | MalformedJwtException | ExpiredJwtException ex) {
+    } catch(JwtException ex) {
       return null;
     }
   }

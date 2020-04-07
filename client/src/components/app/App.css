@@ -537,3 +537,9 @@ body {
 .swal2-input:focus, .swal2-textarea:focus {
     border: none;
 }
+
+.dropdown-toggle-off::after {
+    border: none;
+    margin-left: 0;
+    vertical-align: 0;
+}

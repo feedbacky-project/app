@@ -6,10 +6,10 @@ import AppContext from "../../../context/AppContext";
 import {FaQuestionCircle, FaTrashAlt} from "react-icons/fa";
 import Badge from "react-bootstrap/Badge";
 import ModInvitationModal from "../../../components/modal/ModInvitationModal";
-import {IoIosClose} from "react-icons/io";
 import copy from "copy-text-to-clipboard";
 import AdminSidebar from "../../../components/sidebar/AdminSidebar";
 import {popupSwal} from "../../../components/util/SwalUtils";
+import {FaTimes} from "react-icons/all";
 
 class ModeratorsSettings extends Component {
 
@@ -181,7 +181,7 @@ class ModeratorsSettings extends Component {
             return;
         }
         return <OverlayTrigger overlay={<Tooltip id={"revokeInviteMod" + i + "-tooltip"}>Revoke Permissions</Tooltip>}>
-            <IoIosClose className="grey lighten-2 black-text rounded-circle" onClick={() => this.onPermissionsRevoke(mod)} style={{position: "absolute", transform: "translate(-6px,-6px)"}}/>
+            <FaTimes className="grey lighten-2 black-text rounded-circle" onClick={() => this.onPermissionsRevoke(mod)} style={{position: "absolute", transform: "translate(-6px,-6px)"}}/>
         </OverlayTrigger>;
     };
 

@@ -5,11 +5,11 @@ import StepSecond from "./steps/StepSecond";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import {getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarning} from "../../../../components/util/Utils";
 import axios from "axios";
-import {MdNavigateBefore, MdNavigateNext} from "react-icons/md";
 import Steps, {Step} from "rc-steps";
 import {Link, withRouter} from "react-router-dom";
 
 import "../../../Steps.css";
+import {FaAngleLeft, FaAngleRight} from "react-icons/all";
 
 class CreateSocialLink extends Component {
 
@@ -105,14 +105,14 @@ class CreateSocialLink extends Component {
         if (this.state.step === 1) {
             return <React.Fragment/>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><MdNavigateBefore/> Back</Button>
+        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><FaAngleLeft/> Back</Button>
     }
 
     renderNextButton() {
         if (this.state.step >= 2) {
             return <Button variant="success" className="text-white" onClick={this.nextStep}>Finish</Button>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <MdNavigateNext/></Button>
+        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <FaAngleRight/></Button>
     }
 
     previousStep = () => {

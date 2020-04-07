@@ -3,10 +3,10 @@ import {FaPencilAlt} from "react-icons/fa";
 import {Button, Card, Col} from "react-bootstrap";
 import IdeaCreateModal from "../modal/IdeaCreateModal";
 import AppContext from "../../context/AppContext";
-import {GoProject} from "react-icons/go";
 import {Link} from "react-router-dom";
 import snarkdown from "../util/snarkdown";
 import Attribution from "../util/Attribution";
+import {FaListAlt} from "react-icons/all";
 
 const BoardDetailsBox = (props) => {
     const context = useContext(AppContext);
@@ -33,7 +33,7 @@ const BoardDetailsBox = (props) => {
                 _boardData: props.boardData,
             },
         }} className="btn-smaller black-text mx-0 mt-0 mb-2 mr-1 py-1 ml-1 grey lighten-4" variant="">
-            <GoProject className="mr-1"/> Manage
+            <FaListAlt className="mr-1"/> Manage
         </Button>
     };
 

@@ -7,8 +7,8 @@ import {FaQuestionCircle, FaRegImage} from "react-icons/fa";
 import {formatRemainingCharacters, getBase64FromFile, getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "../util/Utils";
 import AppContext from "../../context/AppContext";
 import axios from "axios";
-import {IoIosClose} from "react-icons/io";
 import TextareaAutosize from "react-autosize-textarea";
+import {FaTimesCircle} from "react-icons/all";
 
 const IdeaCreateModal = (props) => {
     const context = useContext(AppContext);
@@ -57,7 +57,7 @@ const IdeaCreateModal = (props) => {
                 <input accept="image/jpeg, image/png" type="file" className="d-none" id="attachmentUpload" onChange={onAttachmentUpload}/>
                 <label htmlFor="attachmentUpload" className="mb-0 p-2"><FaRegImage className="fa-attachment"/></label>
             </Button>
-            {attachment != null ? <IoIosClose className="cursor-click grey lighten-2 black-text rounded-circle" onClick={() => {
+            {attachment != null ? <FaTimesCircle className="cursor-click grey lighten-2 black-text rounded-circle" onClick={() => {
                 setAttachment(null);
                 setAttachmentName("No Attachment");
             }} style={{position: "absolute", left: "100%", transform: "translate(-10px,-8px)"}}/> : ""}

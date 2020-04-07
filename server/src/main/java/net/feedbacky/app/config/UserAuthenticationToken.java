@@ -12,7 +12,7 @@ import java.util.Collection;
  * <p>
  * Created at 01.10.2019
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class UserAuthenticationToken extends AbstractAuthenticationToken {
 
   private static final long serialVersionUID = 520L;
