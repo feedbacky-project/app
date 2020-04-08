@@ -121,11 +121,12 @@ const IdeaCreateModal = (props) => {
                                           placeholder="Brief and descriptive title." id="titleTextarea" onKeyUp={e => {
                                 formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
                                 setTitle(e.target.value);
-                                clearTimeout(timeoutVal);
+                                //todo bring me back one day
+                                /*clearTimeout(timeoutVal);
                                 setTimeoutVal(setTimeout(() => {
                                     axios.get(context.apiRoute + "/boards/" + props.discriminator + "/ideas?query=" + title)
                                         .then(res => setSimilarIdeas(res.data.data))
-                                }, 500));
+                                }, 500));*/
                             }}/>
                         </div>
                         {renderAttachmentButton()}
