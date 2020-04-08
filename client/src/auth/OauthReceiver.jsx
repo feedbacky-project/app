@@ -23,7 +23,7 @@ const OauthReceiver = (props) => {
         if ("error" in qsData) {
             setError(true);
         }
-        axios.get(context.apiRoute + "/" + provider + "?code=" + qsData.code)
+        axios.get(context.apiRoute + "/service/" + provider + "?code=" + qsData.code)
             .then(res => {
                 if (res.status !== 200) {
                     console.log("Failed to connect " + res.error.message);
