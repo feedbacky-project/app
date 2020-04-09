@@ -16,10 +16,10 @@ import net.feedbacky.app.rest.data.board.moderator.Moderator;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.util.MailgunEmailHelper;
 import net.feedbacky.app.util.RequestValidator;
-
-import com.mashape.unirest.http.exceptions.UnirestException;
+import net.feedbacky.app.util.mailservice.MailHandler;
+import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
+import net.feedbacky.app.util.mailservice.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,12 +41,14 @@ public class BoardInviteServiceImpl implements BoardInviteService {
   private BoardRepository boardRepository;
   private UserRepository userRepository;
   private InvitationRepository invitationRepository;
+  private MailHandler mailHandler;
 
   @Autowired
-  public BoardInviteServiceImpl(BoardRepository boardRepository, UserRepository userRepository, InvitationRepository invitationRepository) {
+  public BoardInviteServiceImpl(BoardRepository boardRepository, UserRepository userRepository, InvitationRepository invitationRepository, MailHandler mailHandler) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.invitationRepository = invitationRepository;
+    this.mailHandler = mailHandler;
   }
 
   @Override
@@ -105,7 +107,7 @@ public class BoardInviteServiceImpl implements BoardInviteService {
     User eventUser = userRepository.findByEmail(dto.getUserEmail())
             .orElseThrow(() -> new ResourceNotFoundException("User with email " + dto.getUserEmail() + " does not exist."));
     if(board.getInvitedUsers().contains(eventUser) || invitationRepository.findByBoardAndUser(board, user).isPresent()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "User is already invited in this board.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is already invited to this board.");
     }
     if(user.equals(eventUser)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Inviting yourself huh?");
@@ -117,11 +119,11 @@ public class BoardInviteServiceImpl implements BoardInviteService {
     board.getInvitations().add(invitation);
     invitationRepository.save(invitation);
     CompletableFuture.runAsync(() -> {
-      try {
-        MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.BOARD_INVITATION, invitation, dto.getUserEmail());
-      } catch(UnirestException e) {
-        e.printStackTrace();
-      }
+      MailService.EmailTemplate template = MailService.EmailTemplate.BOARD_INVITATION;
+      String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, invitation);
+      String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, invitation);
+      String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, invitation);
+      mailHandler.getMailService().send(dto.getUserEmail(), subject, text, html);
     });
     return ResponseEntity.status(HttpStatus.CREATED).body(invitation.convertToDto());
   }

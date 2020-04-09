@@ -23,12 +23,12 @@ import net.feedbacky.app.service.board.featured.FeaturedBoardsServiceImpl;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.Constants;
 import net.feedbacky.app.util.EmojiFilter;
-import net.feedbacky.app.util.MailgunEmailHelper;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.mailservice.MailHandler;
+import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
+import net.feedbacky.app.util.mailservice.MailService;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
-
-import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
@@ -57,16 +57,19 @@ public class BoardServiceImpl implements BoardService {
   private IdeaRepository ideaRepository;
   private TagRepository tagRepository;
   private ObjectStorage objectStorage;
+  private MailHandler mailHandler;
   private FeaturedBoardsServiceImpl featuredBoardsServiceImpl;
 
   @Autowired
   //todo too big constuctor
-  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository, ObjectStorage objectStorage, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
+  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository,
+                          ObjectStorage objectStorage, MailHandler mailHandler, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.ideaRepository = ideaRepository;
     this.tagRepository = tagRepository;
     this.objectStorage = objectStorage;
+    this.mailHandler = mailHandler;
     this.featuredBoardsServiceImpl = featuredBoardsServiceImpl;
   }
 
@@ -204,11 +207,13 @@ public class BoardServiceImpl implements BoardService {
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to delete board with discriminator " + discriminator + ".");
     }
-    try {
-      MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.BOARD_DELETED, board, board.getCreator(), board.getCreator().getEmail());
-    } catch(UnirestException e) {
-      e.printStackTrace();
-    }
+
+    MailService.EmailTemplate template = MailService.EmailTemplate.BOARD_DELETED;
+    String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, null);
+    String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, null);
+    String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, null);
+    mailHandler.getMailService().send(board.getCreator().getEmail(), subject, text, html);
+
     board.getModerators().forEach(moderator -> {
       User modUser = moderator.getUser();
       modUser.getPermissions().remove(moderator);

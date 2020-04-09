@@ -12,11 +12,12 @@ import net.feedbacky.app.rest.data.user.dto.FetchConnectedAccount;
 import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
 import net.feedbacky.app.rest.data.user.dto.PatchUserDto;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.util.MailgunEmailHelper;
 import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.mailservice.MailHandler;
+import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
+import net.feedbacky.app.util.mailservice.MailService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.Conditions;
@@ -39,10 +40,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
+  private MailHandler mailHandler;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepository userRepository, MailHandler mailHandler) {
     this.userRepository = userRepository;
+    this.mailHandler = mailHandler;
   }
 
   @Override
@@ -101,11 +104,11 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     //better to run sync now
-    try {
-      MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.ACCOUNT_DEACTIVATED, user, user.getEmail());
-    } catch(UnirestException e) {
-      e.printStackTrace();
-    }
+    MailService.EmailTemplate template = MailService.EmailTemplate.ACCOUNT_DEACTIVATED;
+    String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, null, user, null);
+    String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, null, user, null);
+    String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, null, user, null);
+    mailHandler.getMailService().send(user.getEmail(), subject, text, html);
     user.setEmail("deactivated-" + RandomStringUtils.randomAlphanumeric(6) + "@feedbacky.net");
     user.setAvatar("https://cdn.feedbacky.net/static/img/default_avatar.png");
     user.setUsername("Anonymous");

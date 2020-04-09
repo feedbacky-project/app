@@ -1,0 +1,86 @@
+package net.feedbacky.app.util.mailservice;
+
+import lombok.SneakyThrows;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
+
+/**
+ * @author Plajer
+ * <p>
+ * Created at 09.04.2020
+ */
+public interface MailService {
+
+  String HOST_ADDRESS = System.getenv("REACT_APP_SERVER_IP_ADDRESS");
+
+  void send(String to, String subject, String text, String html);
+
+  enum EmailTemplate {
+    BOARD_INVITATION("mail_templates/invitation_join.html", HOST_ADDRESS + "/invitation/", "${board.name} - Invitation",
+            "You've been invited to private ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
+    MODERATOR_INVITATION("mail_templates/moderator_invitation.html", HOST_ADDRESS + "/moderator_invitation/", "${board.name} - Moderator Invitation",
+            "You've been invited to moderate ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
+    MODERATOR_KICKED("mail_templates/moderator_kicked.html", "", "${board.name} - Moderator Privileges Revoked",
+            "Your moderator privileges from board ${board.name} were revoked. (HTML not supported, default message sent)"),
+    BOARD_DELETED("mail_templates/board_deleted.html", "", "${board.name} - Board Removal Initiated",
+            "You requested to remove board ${board.name} and your request was proceeded and executed. (HTML not supported, default message sent)"),
+    ACCOUNT_DEACTIVATED("mail_templates/account_deactivated.html", "", "${username} - Account Deactivated",
+            "You requested to deactivate your ${username} account and we executed the request, your account was anonymized. (HTML not supported, default message sent)");
+
+    private String html;
+    private String inviteLink;
+    private String subject;
+    private String legacyText;
+
+    EmailTemplate(String templateFile, String inviteLink, String subject, String legacyText) {
+      this.html = readLineByLine(templateFile);
+      this.inviteLink = inviteLink;
+      this.subject = subject;
+      this.legacyText = legacyText;
+    }
+
+    public String getHtml() {
+      return html;
+    }
+
+    public String getInviteLink() {
+      return inviteLink;
+    }
+
+    public String getSubject() {
+      return subject;
+    }
+
+    public String getLegacyText() {
+      return legacyText;
+    }
+
+    @SneakyThrows
+    private String readLineByLine(String filePath) {
+      Resource resource = new ClassPathResource(filePath);
+      InputStream inputStream = resource.getInputStream();
+      StringBuilder contentBuilder = new StringBuilder();
+      try(BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+        for(String line; (line = br.readLine()) != null;) {
+          contentBuilder.append(line).append("\n");
+        }
+      }
+      return contentBuilder.toString();
+    }
+  }
+
+}

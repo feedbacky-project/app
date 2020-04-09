@@ -17,10 +17,10 @@ import net.feedbacky.app.rest.data.board.invite.Invitation;
 import net.feedbacky.app.rest.data.board.moderator.Moderator;
 import net.feedbacky.app.rest.data.user.User;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.util.MailgunEmailHelper;
 import net.feedbacky.app.util.RequestValidator;
-
-import com.mashape.unirest.http.exceptions.UnirestException;
+import net.feedbacky.app.util.mailservice.MailHandler;
+import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
+import net.feedbacky.app.util.mailservice.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,13 +44,16 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   private ModeratorRepository moderatorRepository;
   private UserRepository userRepository;
   private InvitationRepository invitationRepository;
+  private MailHandler mailHandler;
 
   @Autowired
-  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository, InvitationRepository invitationRepository) {
+  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository,
+                                   InvitationRepository invitationRepository, MailHandler mailHandler) {
     this.boardRepository = boardRepository;
     this.moderatorRepository = moderatorRepository;
     this.userRepository = userRepository;
     this.invitationRepository = invitationRepository;
+    this.mailHandler = mailHandler;
   }
 
   @Override
@@ -110,17 +113,20 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Inviting yourself huh?");
     }
     if(eventUser.isServiceStaff() || board.getModerators().stream().anyMatch(mod -> mod.getUser().equals(eventUser))) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user can see your board already.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is moderator already.");
+    }
+    if(board.getInvitedModerators().stream().anyMatch(invite -> invite.getUser().equals(eventUser))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is already invited.");
     }
     Invitation invitation = dto.convertToEntity(eventUser, board, "mod");
     board.getInvitedModerators().add(invitation);
     invitationRepository.save(invitation);
     CompletableFuture.runAsync(() -> {
-      try {
-        MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.MODERATOR_INVITATION, invitation, dto.getUserEmail());
-      } catch(UnirestException e) {
-        e.printStackTrace();
-      }
+      MailService.EmailTemplate template = MailService.EmailTemplate.MODERATOR_INVITATION;
+      String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, invitation);
+      String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, invitation);
+      String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, invitation);
+      mailHandler.getMailService().send(dto.getUserEmail(), subject, text, html);
     });
     return ResponseEntity.status(HttpStatus.CREATED).body(invitation.convertToDto());
   }
@@ -169,11 +175,11 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     boardRepository.save(board);
     moderatorRepository.delete(moderator);
     CompletableFuture.runAsync(() -> {
-      try {
-        MailgunEmailHelper.sendEmail(MailgunEmailHelper.EmailTemplate.MODERATOR_KICKED, board, eventUser, eventUser.getEmail());
-      } catch(UnirestException e) {
-        e.printStackTrace();
-      }
+      MailService.EmailTemplate template = MailService.EmailTemplate.MODERATOR_KICKED;
+      String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, null);
+      String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, null);
+      String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, null);
+      mailHandler.getMailService().send(eventUser.getEmail(), subject, text, html);
     });
     return ResponseEntity.noContent().build();
   }

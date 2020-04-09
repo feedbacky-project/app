@@ -16,8 +16,7 @@ public class ImageCompressor {
 
   private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_IMAGE_COMPRESSION_ENABLED"));
   private String compressorType = System.getenv("SERVER_IMAGE_COMPRESSION_TYPE");
-  @Getter
-  private Compressor compressor = getDefaultCompressor();
+  @Getter private Compressor compressor = getDefaultCompressor();
 
   @PostConstruct
   public void init() {
