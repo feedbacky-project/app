@@ -1,7 +1,7 @@
 package net.feedbacky.app.service.board.social;
 
-import net.feedbacky.app.rest.data.board.dto.social.FetchSocialLinkDto;
-import net.feedbacky.app.rest.data.board.dto.social.PostSocialLinkDto;
+import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
+import net.feedbacky.app.data.board.dto.social.PostSocialLinkDto;
 import net.feedbacky.app.service.FeedbackyService;
 
 import org.springframework.http.ResponseEntity;

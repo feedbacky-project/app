@@ -1,13 +1,13 @@
 package net.feedbacky.app.service.idea;
 
-import net.feedbacky.app.rest.data.idea.dto.FetchIdeaDto;
-import net.feedbacky.app.rest.data.idea.dto.PatchIdeaDto;
-import net.feedbacky.app.rest.data.idea.dto.PostIdeaDto;
-import net.feedbacky.app.rest.data.idea.dto.attachment.FetchAttachmentDto;
-import net.feedbacky.app.rest.data.idea.dto.attachment.PostAttachmentDto;
-import net.feedbacky.app.rest.data.tag.dto.FetchTagDto;
-import net.feedbacky.app.rest.data.tag.dto.PatchTagRequestDto;
-import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
+import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
+import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
+import net.feedbacky.app.data.idea.dto.PostIdeaDto;
+import net.feedbacky.app.data.idea.dto.attachment.FetchAttachmentDto;
+import net.feedbacky.app.data.idea.dto.attachment.PostAttachmentDto;
+import net.feedbacky.app.data.tag.dto.FetchTagDto;
+import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
+import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
 

@@ -1,8 +1,8 @@
 package net.feedbacky.app.util;
 
-import net.feedbacky.app.rest.data.idea.Idea;
-import net.feedbacky.app.rest.data.idea.comment.Comment;
-import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.user.User;
 
 /**
  * @author Plajer

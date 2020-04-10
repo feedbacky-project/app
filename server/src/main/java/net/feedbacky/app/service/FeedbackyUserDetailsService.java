@@ -1,7 +1,7 @@
 package net.feedbacky.app.service;
 
 import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.data.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

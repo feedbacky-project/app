@@ -1,9 +1,9 @@
 package net.feedbacky.app.service.board.invite;
 
-import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
-import net.feedbacky.app.rest.data.board.dto.invite.FetchInviteDto;
-import net.feedbacky.app.rest.data.board.dto.invite.PostInviteDto;
-import net.feedbacky.app.rest.data.user.dto.FetchSimpleUserDto;
+import net.feedbacky.app.data.board.dto.FetchBoardDto;
+import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
+import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
+import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.service.FeedbackyService;
 
 import org.springframework.http.ResponseEntity;

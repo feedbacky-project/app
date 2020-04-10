@@ -1,9 +1,9 @@
 package net.feedbacky.app.service.comment;
 
-import net.feedbacky.app.rest.data.idea.dto.comment.FetchCommentDto;
-import net.feedbacky.app.rest.data.idea.dto.comment.PatchCommentDto;
-import net.feedbacky.app.rest.data.idea.dto.comment.PostCommentDto;
-import net.feedbacky.app.rest.data.user.dto.FetchUserDto;
+import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
+import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
+import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
+import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
 

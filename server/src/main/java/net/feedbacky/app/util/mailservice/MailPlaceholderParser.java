@@ -1,8 +1,8 @@
 package net.feedbacky.app.util.mailservice;
 
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.invite.Invitation;
-import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.invite.Invitation;
+import net.feedbacky.app.data.user.User;
 
 import org.apache.commons.lang3.StringUtils;
 

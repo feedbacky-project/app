@@ -1,11 +1,11 @@
 package net.feedbacky.app.service.board;
 
-import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
-import net.feedbacky.app.rest.data.board.dto.PatchBoardDto;
-import net.feedbacky.app.rest.data.board.dto.PostBoardDto;
-import net.feedbacky.app.rest.data.tag.dto.FetchTagDto;
-import net.feedbacky.app.rest.data.tag.dto.PatchTagDto;
-import net.feedbacky.app.rest.data.tag.dto.PostTagDto;
+import net.feedbacky.app.data.board.dto.FetchBoardDto;
+import net.feedbacky.app.data.board.dto.PatchBoardDto;
+import net.feedbacky.app.data.board.dto.PostBoardDto;
+import net.feedbacky.app.data.tag.dto.FetchTagDto;
+import net.feedbacky.app.data.tag.dto.PatchTagDto;
+import net.feedbacky.app.data.tag.dto.PostTagDto;
 import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
 

@@ -1,8 +1,8 @@
 package net.feedbacky.app.repository.board;
 
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.moderator.Moderator;
-import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.moderator.Moderator;
+import net.feedbacky.app.data.user.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

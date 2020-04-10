@@ -1,6 +1,6 @@
 package net.feedbacky.app.repository;
 
-import net.feedbacky.app.rest.data.user.User;
+import net.feedbacky.app.data.user.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

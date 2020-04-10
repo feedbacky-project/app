@@ -1,8 +1,8 @@
 package net.feedbacky.app.service.board.featured;
 
 import net.feedbacky.app.repository.board.BoardRepository;
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.board.dto.FetchBoardDto;
+import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.FetchBoardDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

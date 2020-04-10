@@ -1,7 +1,7 @@
 package net.feedbacky.app.repository.idea;
 
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.idea.Idea;
+import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.idea.Idea;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

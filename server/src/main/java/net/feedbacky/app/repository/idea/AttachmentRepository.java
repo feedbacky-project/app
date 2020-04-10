@@ -1,7 +1,7 @@
 package net.feedbacky.app.repository.idea;
 
-import net.feedbacky.app.rest.data.idea.Idea;
-import net.feedbacky.app.rest.data.idea.attachment.Attachment;
+import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.attachment.Attachment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

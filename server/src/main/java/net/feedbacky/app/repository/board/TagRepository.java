@@ -1,7 +1,7 @@
 package net.feedbacky.app.repository.board;
 
-import net.feedbacky.app.rest.data.board.Board;
-import net.feedbacky.app.rest.data.tag.Tag;
+import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.tag.Tag;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
