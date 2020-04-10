@@ -14,8 +14,8 @@ import javax.annotation.PostConstruct;
 @Component
 public class ImageCompressor {
 
-  private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_IMAGE_COMPRESSION_ENABLED"));
-  private String compressorType = System.getenv("SERVER_IMAGE_COMPRESSION_TYPE");
+  private boolean enabled = Boolean.parseBoolean(System.getenv("IMAGE_COMPRESSION_ENABLED"));
+  private String compressorType = System.getenv("IMAGE_COMPRESSION_TYPE");
   @Getter private Compressor compressor = getDefaultCompressor();
 
   @PostConstruct

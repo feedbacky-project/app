@@ -106,7 +106,7 @@ public class BoardServiceImpl implements BoardService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token."));
-    if(!Boolean.parseBoolean(System.getenv("SERVER_SETTINGS_PUBLIC_BOARDS_CREATION")) && !user.isServiceStaff()) {
+    if(!Boolean.parseBoolean(System.getenv("SETTINGS_PUBLIC_BOARDS_CREATION")) && !user.isServiceStaff()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You don't have permission to create boards.");
     }
     long ownedBoards = user.getPermissions().stream().map(node -> node.getRole() == Moderator.Role.OWNER).count();

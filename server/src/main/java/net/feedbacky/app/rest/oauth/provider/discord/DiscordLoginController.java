@@ -44,10 +44,10 @@ import java.util.Set;
 @RestController
 public class DiscordLoginController implements AbstractLoginProvider {
 
-  private String redirectUri = System.getenv("SERVER_OAUTH_DISCORD_REDIRECT_URI");
-  private String clientId = System.getenv("SERVER_OAUTH_DISCORD_CLIENT_ID");
-  private String clientSecret = System.getenv("SERVER_OAUTH_DISCORD_CLIENT_SECRET");
-  private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_DISCORD_ENABLED"));
+  private String redirectUri = System.getenv("OAUTH_DISCORD_REDIRECT_URI");
+  private String clientId = System.getenv("OAUTH_DISCORD_CLIENT_ID");
+  private String clientSecret = System.getenv("OAUTH_DISCORD_CLIENT_SECRET");
+  private boolean enabled = Boolean.parseBoolean(System.getenv("OAUTH_DISCORD_ENABLED"));
   private UserRepository userRepository;
   private AuthProviderData providerData;
 

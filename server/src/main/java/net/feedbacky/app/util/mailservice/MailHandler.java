@@ -6,9 +6,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author Plajer
  * <p>
@@ -17,7 +14,7 @@ import java.util.logging.Logger;
 @Component
 public class MailHandler {
 
-  private String mailServiceType = System.getenv("SERVER_MAIL_SERVICE_TYPE");
+  private String mailServiceType = System.getenv("MAIL_SERVICE_TYPE");
   @Getter private MailService mailService;
 
   @PostConstruct

@@ -44,10 +44,10 @@ import java.util.Set;
 @RestController
 public class GoogleLoginController implements AbstractLoginProvider {
 
-  private String redirectUri = System.getenv("SERVER_OAUTH_GOOGLE_REDIRECT_URI");
-  private String clientId = System.getenv("SERVER_OAUTH_GOOGLE_CLIENT_ID");
-  private String clientSecret = System.getenv("SERVER_OAUTH_GOOGLE_CLIENT_SECRET");
-  private boolean enabled = Boolean.parseBoolean(System.getenv("SERVER_OAUTH_GOOGLE_ENABLED"));
+  private String redirectUri = System.getenv("OAUTH_GOOGLE_REDIRECT_URI");
+  private String clientId = System.getenv("OAUTH_GOOGLE_CLIENT_ID");
+  private String clientSecret = System.getenv("OAUTH_GOOGLE_CLIENT_SECRET");
+  private boolean enabled = Boolean.parseBoolean(System.getenv("OAUTH_GOOGLE_ENABLED"));
   private UserRepository userRepository;
   private AuthProviderData providerData;
 
@@ -121,7 +121,7 @@ public class GoogleLoginController implements AbstractLoginProvider {
     if(googleUser.getEmail() == null) {
       throw new LoginFailedException("Email for this Google user is not valid.");
     }
-    if(!googleUser.getEmailVerified()) {
+    if(googleUser.getEmailVerified() != null && !googleUser.getEmailVerified()) {
       throw new LoginFailedException("Email for this Google user is not verified.");
     }
 
