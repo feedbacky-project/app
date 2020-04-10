@@ -1,6 +1,5 @@
 package net.feedbacky.app.controller;
 
-import net.feedbacky.app.config.LocalConfiguration;
 import net.feedbacky.app.data.AboutFeedbackyData;
 import net.feedbacky.app.oauth.LoginProviderRegistry;
 
@@ -18,21 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AboutRestController {
 
   private LoginProviderRegistry loginProviderRegistry;
-  private LocalConfiguration localConfiguration;
+  private boolean publicBoardsCreation = Boolean.parseBoolean(System.getenv("SETTINGS_PUBLIC_BOARDS_CREATION"));
+  private boolean maintenanceMode = Boolean.parseBoolean(System.getenv("SETTINGS_MAINTENANCE_MODE"));
   private AboutFeedbackyData aboutFeedbackyData = null;
 
   @Autowired
-  public AboutRestController(LoginProviderRegistry loginProviderRegistry, LocalConfiguration localConfiguration) {
+  public AboutRestController(LoginProviderRegistry loginProviderRegistry) {
     this.loginProviderRegistry = loginProviderRegistry;
-    this.localConfiguration = localConfiguration;
   }
 
   @GetMapping("/v1/service/about")
   public ResponseEntity<AboutFeedbackyData> handle() {
+    //lazy init to make sure all login providers are registered before
     if(this.aboutFeedbackyData == null) {
-      this.aboutFeedbackyData = new AboutFeedbackyData(loginProviderRegistry.getRegisteredProviders(),
-              localConfiguration.getConfiguration().getBoolean(LocalConfiguration.Settings.PUBLIC_BOARDS_CREATION.name()),
-              localConfiguration.getConfiguration().getBoolean(LocalConfiguration.Settings.INITIAL_INSTALLATION.name()));
+      this.aboutFeedbackyData = new AboutFeedbackyData(loginProviderRegistry.getRegisteredProviders(), publicBoardsCreation, maintenanceMode);
     }
     return ResponseEntity.ok(aboutFeedbackyData);
   }

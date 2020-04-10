@@ -30,8 +30,6 @@ toast.configure();
 
 class App extends Component {
 
-    static maintenanceMode = false;
-
     state = {
         session: Cookies.get("FSID"),
         search: {
@@ -52,9 +50,6 @@ class App extends Component {
     };
 
     componentDidMount() {
-        if (App.maintenanceMode && Cookies.get("FPASS") == null) {
-            return;
-        }
         if (this.state.darkMode) {
             document.body.classList.add("dark");
         } else if (localStorage.getItem("feedbacky_v1_dark_mode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -154,15 +149,15 @@ class App extends Component {
     };
 
     render() {
-        if (App.maintenanceMode && Cookies.get("FPASS") == null) {
-            return <BrowserRouter><Maintenance/></BrowserRouter>
-        }
         if (this.state.error) {
             return <BrowserRouter><ErrorView iconMd={<FaDizzy style={{fontSize: 250, color: "#2c3e50"}}/>}
                                              iconSm={<FaDizzy style={{fontSize: 180, color: "#2c3e50"}}/>} message="Service Is Unavailable, try again in a while"/></BrowserRouter>
         }
         if (!this.state.loaded || !this.state.moderatingDataLoaded || !this.state.serviceDataLoaded) {
             return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
+        }
+        if (this.state.serviceData.maintenanceMode) {
+            return <BrowserRouter><Maintenance/></BrowserRouter>
         }
         return <AppContext.Provider value={{
             apiRoute: this.state.apiRoute,
