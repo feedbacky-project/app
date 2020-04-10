@@ -16,6 +16,7 @@ import {Row} from "react-bootstrap";
 import {getSimpleRequestConfig} from "../util/Utils";
 import Maintenance from "../../views/Maintenance";
 import {retry} from "../util/LazyInit";
+import OfflineErrorView from "../../views/errors/OfflineErrorView";
 
 const Profile = lazy(() => retry(() => import("../../views/profile/Profile")));
 const CreateBoard = lazy(() => retry(() => import("../../views/creator/CreateBoard")));
@@ -63,7 +64,7 @@ class App extends Component {
         if(!this.state.serviceDataLoaded) {
             axios.get(this.state.apiRoute + "/service/about").then(res => {
                 this.setState({serviceData: res.data, serviceDataLoaded: true});
-            });
+            }).catch(() => this.setState({error: true, serviceData: [], serviceDataLoaded: true}));
         }
         if (this.state.session == null) {
             this.setState({loaded: true, moderatingDataLoaded: true});
@@ -150,7 +151,7 @@ class App extends Component {
 
     render() {
         if (this.state.error) {
-            return <BrowserRouter><ErrorView iconMd={<FaDizzy style={{fontSize: 250, color: "#2c3e50"}}/>}
+            return <BrowserRouter><OfflineErrorView iconMd={<FaDizzy style={{fontSize: 250, color: "#2c3e50"}}/>}
                                              iconSm={<FaDizzy style={{fontSize: 180, color: "#2c3e50"}}/>} message="Service Is Unavailable, try again in a while"/></BrowserRouter>
         }
         if (!this.state.loaded || !this.state.moderatingDataLoaded || !this.state.serviceDataLoaded) {
