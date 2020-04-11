@@ -18,7 +18,7 @@ export const renderLogIn = (onNotLoggedClick, context) => {
             <DropdownToggle id="userOptions" variant="" className="btn btn-link m-0 pr-1 text-white">
                 <img className="img-responsive rounded mr-1"
                      src={getSizedAvatarByUrl(context.user.data.avatar, 64)}
-                     onError={(e) => e.target.src = "https://cdn.feedbacky.net/static/img/default_avatar.png"}
+                     onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
                      alt="avatar"
                      height="24px" width="24px"/>
             </DropdownToggle>

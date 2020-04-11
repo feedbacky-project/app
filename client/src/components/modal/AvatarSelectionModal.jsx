@@ -27,14 +27,14 @@ const AvatarSelectionModal = (props) => {
         </Modal.Header>
         <Modal.Body className="py-1">
             <Row className="mt-3 justify-content-center">
-                <Col xs={5} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose("https://cdn.feedbacky.net/static/img/default_avatar.png")}>
-                    <img src={"https://cdn.feedbacky.net/static/img/default_avatar.png"}
+                <Col xs={5} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose(process.env.REACT_APP_DEFAULT_USER_AVATAR)}>
+                    <img src={process.env.REACT_APP_DEFAULT_USER_AVATAR}
                          alt="Default Avatar" width={100} className="img-fluid img-thumbnail"/>
                     <div className="mt-1">Default</div>
                 </Col>
                 <Col xs={5} sm={3} className="cursor-click text-center"
-                     onClick={() => props.onAvatarChoose("https://www.gravatar.com/avatar/" + md5(context.user.data.email) + ".jpg?s=100?d=https://cdn.feedbacky.net/static/img/default_avatar.png")}>
-                    <img src={"https://www.gravatar.com/avatar/" + md5(context.user.data.email) + ".jpg?s=100?d=https://cdn.feedbacky.net/static/img/default_avatar.png"}
+                     onClick={() => props.onAvatarChoose("https://www.gravatar.com/avatar/" + md5(context.user.data.email) + ".jpg?s=100?d=" + process.env.REACT_APP_DEFAULT_USER_AVATAR)}>
+                    <img src={"https://www.gravatar.com/avatar/" + md5(context.user.data.email) + ".jpg?s=100?d=" + process.env.REACT_APP_DEFAULT_USER_AVATAR}
                          alt="Gravatar Avatar" width={100} className="img-fluid img-thumbnail"/>
                     <div className="mt-1">Gravatar</div>
                 </Col>

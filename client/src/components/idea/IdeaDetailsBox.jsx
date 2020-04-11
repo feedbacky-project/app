@@ -111,7 +111,7 @@ class IdeaDetailsBox extends Component {
             {this.renderEditButton()}
             <br/>
             <Image roundedCircle className="mr-1" src={getSizedAvatarByUrl(this.props.ideaData.user.avatar, 32)}
-                   width={18} height={18} style={{maxWidth: "none"}} onError={(e) => e.target.src = "https://cdn.feedbacky.net/static/img/default_avatar.png"}/>
+                   width={18} height={18} style={{maxWidth: "none"}} onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
             <small>{formatUsername(this.props.ideaData.user.id, this.props.ideaData.user.username, this.props.moderators)} ·{" "}</small>
             <small className="text-black-60"><TimeAgo datetime={this.props.ideaData.creationDate}/></small>
             {this.renderEditedNote()}
@@ -202,7 +202,7 @@ class IdeaDetailsBox extends Component {
         return <div>
             {this.state.data.slice(0, 5).map(data => {
                 return <Image roundedCircle key={"voter_" + data.id} alt="avatar" className="merged" src={getSizedAvatarByUrl(data.avatar, 32)} width={25} height={25}
-                              onError={(e) => e.target.src = "https://cdn.feedbacky.net/static/img/default_avatar.png"}/>
+                              onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
             })}
             {this.renderAndMore()}
         </div>

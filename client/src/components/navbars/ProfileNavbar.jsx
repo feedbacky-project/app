@@ -30,7 +30,7 @@ const renderHello = (context) => {
     if (!context.user.loggedIn) {
         return <React.Fragment>
             <img className="img-responsive rounded mr-2" alt="avatar"
-                 src="https://cdn.feedbacky.net/static/img/default_avatar.png"
+                 src={process.env.REACT_APP_DEFAULT_USER_AVATAR}
                  width={30} height={30}/>
             <span>Hello User</span>
         </React.Fragment>
@@ -38,7 +38,7 @@ const renderHello = (context) => {
     return <React.Fragment>
         <img className="img-responsive rounded mr-2" alt="avatar"
              src={getSizedAvatarByUrl(context.user.data.avatar, 64)}
-             onError={(e) => e.target.src = "https://cdn.feedbacky.net/static/img/default_avatar.png"}
+             onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
              width={30} height={30}/>
         <span>Hello {context.user.data.username}</span>
     </React.Fragment>

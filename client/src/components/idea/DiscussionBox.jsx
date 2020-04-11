@@ -67,7 +67,7 @@ class DiscussionBox extends Component {
                         <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
                             <div className="text-center mr-3 pt-2">
                                 <Image roundedCircle src={getSizedAvatarByUrl(data.user.avatar, 64)} width={30} height={30} alt="avatar"
-                                       onError={(e) => e.target.src = "https://cdn.feedbacky.net/static/img/default_avatar.png"}/>
+                                       onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
                                 <br/>
                             </div>
                             <div>
@@ -169,7 +169,7 @@ class DiscussionBox extends Component {
             return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
                 <div className="text-center mr-3 pt-2">
                     <Image roundedCircle src={getSizedAvatarByUrl(this.context.user.data.avatar, 64)} width={30} height={30} alt="avatar"
-                           onError={(e) => e.target.src = "https://cdn.feedbacky.net/static/img/default_avatar.png"}/>
+                           onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
                     <br/>
                 </div>
                 <div className="col-12 px-0">

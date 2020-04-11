@@ -158,7 +158,7 @@ class ModeratorsSettings extends Component {
                     return <div className="my-1" key={i}>
                         <img className="img-responsive rounded mr-1 m"
                              src={getSizedAvatarByUrl(invited.user.avatar, 32)}
-                             onError={(e) => e.target.src = "https://cdn.feedbacky.net/static/img/default_avatar.png"}
+                             onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
                              alt="avatar"
                              height="24px" width="24px"/>
                         {invited.user.username}

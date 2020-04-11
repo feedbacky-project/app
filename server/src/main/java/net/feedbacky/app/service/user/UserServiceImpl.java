@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
     String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, null, user, null);
     mailHandler.getMailService().send(user.getEmail(), subject, text, html);
     user.setEmail("deactivated-" + RandomStringUtils.randomAlphanumeric(6) + "@feedbacky.net");
-    user.setAvatar("https://cdn.feedbacky.net/static/img/default_avatar.png");
+    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR"));
     user.setUsername("Anonymous");
     user.setConnectedAccounts(new HashSet<>());
     userRepository.save(user);
