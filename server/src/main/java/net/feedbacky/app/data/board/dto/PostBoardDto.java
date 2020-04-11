@@ -62,8 +62,6 @@ public class PostBoardDto {
     board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
     board.setIdeas(new HashSet<>());
     board.setCreationDate(creationDate);
-    board.setBanner(Constants.DEFAULT_BANNER_URL);
-    board.setLogo(Constants.DEFAULT_LOGO_URL);
     return board;
   }
 

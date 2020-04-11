@@ -24,8 +24,6 @@ public final class Constants {
             "https://cdn.feedbacky.net/social/default-github.svg");
   }});
   public static final String IMAGE_HOST = System.getenv("REACT_APP_SERVER_IP_ADDRESS") + "/data/";
-  public static final String DEFAULT_BANNER_URL = "https://cdn.feedbacky.net/projects/banners/default-banner.jpg";
-  public static final String DEFAULT_LOGO_URL = "https://cdn.feedbacky.net/projects/logos/default-logo.png";
 
   private Constants() {
   }

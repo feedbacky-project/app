@@ -2,6 +2,7 @@ package net.feedbacky.app.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.oauth.provider.AbstractLoginProvider;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 public class AboutFeedbackyData {
 
   private List<AbstractLoginProvider> loginProviders;
-  private boolean boardsCreatingAllowed;
   private boolean maintenanceMode;
+  private List<FetchUserDto> serviceAdmins;
 
 }

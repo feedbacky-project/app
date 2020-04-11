@@ -9,7 +9,7 @@ const StepSecond = (props) => {
             <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_brand_project.svg" className="my-2" width={150} height={150}/>
             <h2>Brand Your Board</h2>
             <span className="text-black-60">
-                    Upload your board logo and banner. This step can be skipped and set later.
+                    Upload your board logo and banner. This step is required.
                 </span>
         </Col>
         <Col xs={12} sm={6} className="mt-4 px-md-5 px-3">
@@ -37,7 +37,7 @@ const StepSecond = (props) => {
             </OverlayTrigger>
             <br/>
             {/* simulate real board jumbotron to show properly sized image */}
-            <div id="boardBanner" className="jumbotron mb-2" style={{backgroundImage: `url("` + getDefaultBannerUrl(props) + `")`}}>
+            <div id="boardBanner" className="jumbotron mb-2" style={{backgroundImage: `url("` + props.banner + `")`}}>
                 <h3 className="h3-responsive" style={{color: "transparent"}}>Feedbacky Board</h3>
                 <h5 className="h5-responsive" style={{color: "transparent"}}>Feedbacky example Board</h5>
             </div>
@@ -67,25 +67,11 @@ const StepSecond = (props) => {
                 <FaQuestionCircle className="fa-xs text-black-50"/>
             </OverlayTrigger>
             <br/>
-            <img alt="logo" src={getDefaultLogoUrl(props)} id="boardLogo" className="img-fluid mb-2" width="50px"/>
+            <img alt="logo" src={props.logo} id="boardLogo" className="img-fluid mb-2" width="50px"/>
             <br/>
             <input className="small" accept="image/jpeg, image/png" id="logoInput" type="file" name="logo" onChange={e => onLogoChange(e, props)}/>
         </Col>
     </React.Fragment>
-};
-
-const getDefaultBannerUrl = (props) => {
-    if (props.banner == null) {
-        return "https://cdn.feedbacky.net/projects/banners/default-banner.jpg";
-    }
-    return props.banner;
-};
-
-const getDefaultLogoUrl = (props) => {
-    if (props.logo == null) {
-        return "https://cdn.feedbacky.net/projects/logos/default-logo.png";
-    }
-    return props.logo
 };
 
 const onLogoChange = (e, props) => {

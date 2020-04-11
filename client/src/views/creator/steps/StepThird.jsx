@@ -1,14 +1,11 @@
-import React, {lazy, Suspense, useContext} from 'react';
+import React, {lazy, Suspense} from 'react';
 import {Col} from "react-bootstrap";
 import LoadingSpinner from "../../../components/util/LoadingSpinner";
 import {retry} from "../../../components/util/LazyInit";
-import AppContext from "../../../context/AppContext";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
 const StepThird = (props) => {
-    const context = useContext(AppContext);
-
     return <React.Fragment>
         <Col xs={12} className="mt-4 text-center">
             <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_theme_color.svg" className="my-2" width={150} height={150}/>

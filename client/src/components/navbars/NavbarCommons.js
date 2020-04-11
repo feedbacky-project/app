@@ -1,6 +1,6 @@
 import {Dropdown, DropdownItem, NavItem} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
-import {getSizedAvatarByUrl} from "../util/Utils";
+import {getSizedAvatarByUrl, isServiceAdmin} from "../util/Utils";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import React from "react";
 import {Link} from "react-router-dom";
@@ -63,10 +63,10 @@ const renderModeratedBoards = (context) => {
 };
 
 const renderCreateBoardSection = (context) => {
-    if(!context.serviceData.boardsCreatingAllowed) {
+    if(!isServiceAdmin(context)) {
         return <React.Fragment/>
     }
-    return <DropdownItem as={Link} to="/create" style={{fontWeight: 500}}>
+    return <DropdownItem as={Link} to="/admin/create" style={{fontWeight: 500}}>
         Create Own Board
     </DropdownItem>
 };

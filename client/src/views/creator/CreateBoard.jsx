@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import "../Steps.css";
 
 import AppContext from "../../context/AppContext";
-import {getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarning} from "../../components/util/Utils";
+import {getSimpleRequestConfig, isServiceAdmin, toastAwait, toastError, toastSuccess, toastWarning} from "../../components/util/Utils";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
 import ProfileNavbar from "../../components/navbars/ProfileNavbar";
@@ -33,14 +33,8 @@ class CreateBoard extends Component {
     }
 
     render() {
-        if (!this.context.serviceData.boardsCreatingAllowed) {
+        if (!this.context.user.loggedIn || !isServiceAdmin(this.context)) {
             this.props.history.push("/me");
-            toastWarning("Boards creator was disabled by administrator.");
-            return <React.Fragment/>
-        }
-        if (!this.context.user.loggedIn) {
-            this.props.history.push("/me");
-            toastWarning("Please log in to create a board.");
             return <React.Fragment/>
         }
         return <React.Fragment>
@@ -54,15 +48,6 @@ class CreateBoard extends Component {
     }
 
     renderContent() {
-        if (this.calculateOwnedBoards() >= 5) {
-            return <Col xs={12} className="mt-4 text-center">
-                <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_project_limit.svg" className="my-2" width={150} height={150}/>
-                <h2 className="text-danger">Boards Limit Reached</h2>
-                <span className="text-black-60">
-                    Cannot create any more boards.
-                </span>
-            </Col>
-        }
         return <React.Fragment>
             <Col xs={12} className="d-none d-sm-block">
                 <Steps direction="horizontal" size="small" progressDot current={this.state.step}>
@@ -182,6 +167,11 @@ class CreateBoard extends Component {
                 this.setState({step: this.state.step + 1});
             });
             return;
+        } else if (this.state.step === 2) {
+            if(this.state.banner === null || this.state.logo === null) {
+                toastWarning("Banner and logo must be set.");
+                return;
+            }
         }
         this.setState({step: this.state.step + 1});
     };
@@ -192,16 +182,6 @@ class CreateBoard extends Component {
         }).catch(() => {
             return false;
         });
-    };
-
-    calculateOwnedBoards = () => {
-        let owned = 0;
-        this.context.user.moderates.forEach(board => {
-            if (board.role.toLowerCase() === "owner") {
-                owned++;
-            }
-        });
-        return owned;
     };
 }
 

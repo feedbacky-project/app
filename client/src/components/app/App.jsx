@@ -175,7 +175,7 @@ class App extends Component {
                     <Switch>
                         <Route exact path="/" render={(props) =>
                             <Profile {...props}/>}/>
-                        <Route exact path="/create" render={(props) =>
+                        <Route exact path="/admin/create" render={(props) =>
                             <CreateBoard {...props}/>}/>
                         <Route path="/merdr/:section" render={(props) =>
                             <Redirect to={{
