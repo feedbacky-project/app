@@ -5,7 +5,6 @@ import ProfileNavbar from "../../components/navbars/ProfileNavbar";
 import {Container, Row} from "react-bootstrap";
 import {Route, Switch, useHistory} from "react-router-dom";
 import SettingsView from "./subviews/SettingsView";
-import ExploreView from "./subviews/ExploreView";
 import {toastWarning} from "../../components/util/Utils";
 
 const Profile = () => {
@@ -38,7 +37,6 @@ const Profile = () => {
             <Row className="justify-content-center pb-4">
                 <Switch>
                     <Route path="/me/settings" render={() => <SettingsView reRouteTo={reRouteTo}/>}/>
-                    <Route path="/me/explore" render={() => <ExploreView reRouteTo={reRouteTo}/>}/>
                     <Route render={() => <SettingsView reRouteTo={reRouteTo}/>}/>
                 </Switch>
             </Row>
