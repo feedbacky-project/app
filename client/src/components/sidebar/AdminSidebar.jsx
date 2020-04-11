@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {Col} from "react-bootstrap";
 import {FaDiscord} from "react-icons/fa";
-import Attribution from "../util/Attribution";
 import {increaseBrightness, isHexDark} from "../util/Utils";
 import AppContext from "../../context/AppContext";
 import {FaAt, FaColumns, FaQuestionCircle, FaRegCommentDots, FaRegEnvelope, FaSlidersH, FaTags, FaUsersCog} from "react-icons/all";
@@ -72,7 +71,6 @@ const AdminSidebar = (props) => {
                 </a>
             </li>
         </ul>
-        <Attribution/>
     </Col>
 };
 

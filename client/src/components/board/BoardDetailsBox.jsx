@@ -5,7 +5,6 @@ import IdeaCreateModal from "../modal/IdeaCreateModal";
 import AppContext from "../../context/AppContext";
 import {Link} from "react-router-dom";
 import snarkdown from "../util/snarkdown";
-import Attribution from "../util/Attribution";
 import {FaListAlt} from "react-icons/all";
 
 const BoardDetailsBox = (props) => {
@@ -52,7 +51,6 @@ const BoardDetailsBox = (props) => {
                     {renderEditButton()}
                 </Card.Body>
             </Card>
-            <Attribution/>
         </Col>
     </React.Fragment>
 };

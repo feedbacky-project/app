@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {Col} from "react-bootstrap";
-import Attribution from "../util/Attribution";
 import {increaseBrightness, isHexDark} from "../util/Utils";
 import AppContext from "../../context/AppContext";
 import Badge from "react-bootstrap/Badge";
@@ -35,7 +34,6 @@ const ProfileSidebar = (props) => {
                 </a>
             </li>
         </ul>
-        <Attribution/>
     </Col>
 };
 
