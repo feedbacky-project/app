@@ -203,10 +203,11 @@ export const htmlDecode = (input) => {
 };
 
 export const isServiceAdmin = (context) => {
+    let isAdmin = false;
     context.serviceData.serviceAdmins.forEach(admin => {
         if (admin.id === context.user.data.id) {
-            return true;
+            isAdmin = true;
         }
     });
-    return false;
+    return isAdmin;
 };
