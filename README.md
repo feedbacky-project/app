@@ -49,9 +49,11 @@ or any safe random long text generator online.
 Paste copied token into `JWT_SECRET` variable.
 
 4. Create OAuth application(s) at login providers you want to use:
-To set up Discord OAuth application go and create one here https://discordapp.com/developers/applications
-To set up Google OAuth application go here https://console.developers.google.com/apis/dashboard create new project and check Credentials section
-To set up GitHub OAuth application go and create one here https://github.com/settings/developers
+    To set up Discord OAuth application go and create one here https://discordapp.com/developers/applications
+    
+    To set up Google OAuth application go here https://console.developers.google.com/apis/dashboard create new project and check Credentials section
+    
+    To set up GitHub OAuth application go and create one here https://github.com/settings/developers
 
 5. Set your mail sender at `MAIL_SENDER`, choose mail type under `MAIL_SERVICE_TYPE` and configure proper variables based on your choice (mailgun or smtp)
 
@@ -79,8 +81,9 @@ To set up GitHub OAuth application go and create one here https://github.com/set
 
 9. Now you can create screen session if you want to see how Feedbacky runs in the background by doing `screen -S <screen name>`
 and go to `feedbacky-project` folder.
-Begin the source compilation process by doing `docker-compose up`, it will take few minutes depending on your server capabilities.
-Server will likely use high amount of CPU at this part. After successfull compilation your Feedbacky instance should be ready.
+    
+    Begin the source compilation process by doing `docker-compose up`, it will take few minutes depending on your server capabilities.
+    Server will likely use high amount of CPU at this part. After successfull compilation your Feedbacky instance should be ready.
 
 ## License
 Feedbacky is free and open source software under the [MIT License](https://github.com/Plajer/feedbacky-project/blob/master/LICENSE.md).
