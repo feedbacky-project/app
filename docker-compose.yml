@@ -10,7 +10,7 @@ services:
         - REACT_APP_SERVER_IP_ADDRESS=${REACT_APP_SERVER_IP_ADDRESS}
         - REACT_APP_SERVICE_NAME=${REACT_APP_SERVICE_NAME}
     ports:
-      - '80:80'
+      - '${CLIENT_APP_PORT}:80'
     links:
       - feedbacky-server
     volumes:
@@ -21,7 +21,7 @@ services:
       context: server
       dockerfile: ./Dockerfile
     ports:
-      - '8095:8080'
+      - '${SERVER_APP_PORT}:8080'
     volumes:
       - feedbacky-data:/storage-data
     env_file:
