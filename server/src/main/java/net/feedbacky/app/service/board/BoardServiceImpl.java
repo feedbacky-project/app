@@ -19,7 +19,6 @@ import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.repository.board.TagRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.service.board.featured.FeaturedBoardsServiceImpl;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.EmojiFilter;
 import net.feedbacky.app.util.PaginableRequest;
@@ -57,19 +56,17 @@ public class BoardServiceImpl implements BoardService {
   private TagRepository tagRepository;
   private ObjectStorage objectStorage;
   private MailHandler mailHandler;
-  private FeaturedBoardsServiceImpl featuredBoardsServiceImpl;
 
   @Autowired
   //todo too big constuctor
   public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository, TagRepository tagRepository,
-                          ObjectStorage objectStorage, MailHandler mailHandler, FeaturedBoardsServiceImpl featuredBoardsServiceImpl) {
+                          ObjectStorage objectStorage, MailHandler mailHandler) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.ideaRepository = ideaRepository;
     this.tagRepository = tagRepository;
     this.objectStorage = objectStorage;
     this.mailHandler = mailHandler;
-    this.featuredBoardsServiceImpl = featuredBoardsServiceImpl;
   }
 
   @Override
@@ -214,8 +211,6 @@ public class BoardServiceImpl implements BoardService {
     objectStorage.deleteImage(board.getBanner());
     objectStorage.deleteImage(board.getLogo());
     boardRepository.delete(board);
-    //call explicitly to update boards if featured boards contained deleted board
-    featuredBoardsServiceImpl.scheduleFeaturedBoardsSelectionTask();
     return ResponseEntity.noContent().build();
   }
 
