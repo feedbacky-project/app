@@ -70,7 +70,8 @@ Paste copied token into `JWT_SECRET` variable.
 7. (Optional) If you have any apps running or port 8090 or 8095 edit `CLIENT_APP_PORT` and `SERVER_APP_PORT` variables.
 
 8. Domain configuration
-    a) Replace `REACT_APP_SERVER_IP_ADDRESS` with your server's IP eg. http://188.222.333.22 without trailing slash! (no `/` at the end)
+    a) Replace `REACT_APP_SERVER_IP_ADDRESS` with your server's IP and CLIENT_APP_PORT variable eg. http://188.222.333.22:8090 without trailing slash! (no `/` at the end).
+    If you use port 80 (web port), then you don't need to put port there.  
     b) Or use your own domain name in `REACT_APP_SERVER_IP_ADDRESS`, if you have a domain and want to use it you can get Apache Server,
     create virtual host configuration file at `etc/apache2/sites-available`
     Your file must end with `.conf` and should contain this:
