@@ -47,6 +47,9 @@ To clone repository with Git use:
 2. Open `.env` file located in `feedbacky-project` folder (you can use `nano .env`) and configure database credentials i.e.
 `MYSQL_USERNAME`, `MYSQL_PASSWORD` and `MYSQL_URL`.
 
+    **Please note that database Feedbacky will use must have utf8mb4 character set so to create database like that you can use
+    `CREATE DATABASE mydatabase CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci`**
+
     Please note that `localhost` won't work in `MYSQL_URL` variable due to nature of Docker (container is considered as a remote machine).
     IP of server must be provided and MySQL must be configured to accept non localhost connections.
     
@@ -73,7 +76,8 @@ Paste copied token into `JWT_SECRET` variable.
 
 7. (Optional) If you have any apps running or port 8090 or 8095 edit `CLIENT_APP_PORT` and `SERVER_APP_PORT` variables.
 
-8. Domain configuration
+8. Domain configuration, choose one of the following steps: 
+
     a) Replace `REACT_APP_SERVER_IP_ADDRESS` with your server's IP and CLIENT_APP_PORT variable eg. http://188.222.333.22:8090 without trailing slash! (no `/` at the end).
     If you use port 80 (web port), then you don't need to put port there.  
     b) Or use your own domain name in `REACT_APP_SERVER_IP_ADDRESS`, if you have a domain and want to use it you can get Apache Server,
@@ -96,9 +100,9 @@ Paste copied token into `JWT_SECRET` variable.
 and go to `feedbacky-project` folder.
     
     Begin the source compilation process by doing `docker-compose up`, it will take few minutes depending on your server capabilities.
-    Server will likely use high amount of CPU at this part. After successfull compilation your Feedbacky instance should be ready.
+    Server will likely use high amount of CPU at this part. After successful compilation your Feedbacky instance should be ready.
 
-10. When server is running properly go to webpage at your server ip (remember the port if it's not 80 (web port)), log in and restart
+10. When server is running properly go to web page at your server ip (remember the port if it's not 80 (web port)), log in and restart
 the instance and now you should be service admin and have Feedbacky fully configured.
 
 ## License
