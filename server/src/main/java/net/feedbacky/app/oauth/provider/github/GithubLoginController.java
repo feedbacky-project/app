@@ -155,6 +155,10 @@ public class GithubLoginController implements AbstractLoginProvider {
       Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
       accounts.add(generateConnectedAccount(githubUser, user));
       user.setConnectedAccounts(accounts);
+      //first user, set as service staff
+      if(userRepository.count() == 0) {
+        user.setServiceStaff(true);
+      }
       userRepository.save(user);
     } else {
       User user = optional.get();

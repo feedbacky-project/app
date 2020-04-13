@@ -135,6 +135,10 @@ public class DiscordLoginController implements AbstractLoginProvider {
       Set<ConnectedAccount> accounts = new HashSet<>();
       accounts.add(generateConnectedAccount(discordUser, user));
       user.setConnectedAccounts(accounts);
+      //first user, set as service staff
+      if(userRepository.count() == 0) {
+        user.setServiceStaff(true);
+      }
       userRepository.save(user);
     } else {
       User user = optional.get();
