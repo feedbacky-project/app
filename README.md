@@ -17,9 +17,9 @@
 </p>
 
 ### Minimum requirements
-* ~300 MB ram for runtime (at least 2 GB recommended for source compilation purposes)
+* ~300 MB ram for runtime (at least 1 GB recommended for source compilation purposes)
 * ~100 MB disk space (at least 2 GB space for source compilation purposes, can be pruned via docker afterwards)
-* Docker and Docker Compose installed
+* Docker and Docker Compose (latest recommended, older versions tend to break Node.js compilation somehow) installed
 * (Recommended) Git installed to clone this repository sources (alternatively you can just download source zip and unpack to skip this part)
 * MySQL database (recommended version 5.6 or higher)
 * Account at mailgun.com **OR** own SMTP server for mail sending feature
@@ -32,7 +32,7 @@ and mail server installed (or mailgun account).
 
 Helpful tutorials:
 * How to install Docker - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04 (just Step 1)
-* How to install Docker Compose - https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-18-04 (just Step 1)
+* How to install Docker Compose - https://docs.docker.com/compose/install/
 * How to install MySQL - https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-18-04
 
 1. Once requirements are installed you can either use git tool to clone repository or download and unpack sources yourself.
@@ -44,6 +44,11 @@ To clone repository with Git use:
 2. Open `.env` file located in `feedbacky-project` folder (you can use `nano .env`) and configure database credentials i.e.
 `MYSQL_USERNAME`, `MYSQL_PASSWORD` and `MYSQL_URL`.
 
+    Please note that `localhost` won't work in `MYSQL_URL` variable due to nature of Docker (container is considered as a remote machine).
+    IP of server must be provided and MySQL must be configured to accept non localhost connections.
+    
+    To adjust that, `bind-address` at `/etc/mysql/mysql.conf.d/mysqld.cnf` must be set to `0.0.0.0` and MySQL user with `%` login access should be made.
+
 3. Visit https://www.grc.com/passwords.htm site and copy one of safely generated tokens, if page is offline search for JWT secret generator
 or any safe random long text generator online.
 Paste copied token into `JWT_SECRET` variable.
@@ -54,6 +59,9 @@ Paste copied token into `JWT_SECRET` variable.
     To set up Google OAuth application go here https://console.developers.google.com/apis/dashboard create new project and check Credentials section
     
     To set up GitHub OAuth application go and create one here https://github.com/settings/developers
+    
+    Redirect URI for OAuth apps should be: <server ip/domain>:port/auth/<provider> eg. `http://188.222.333.22:8090/auth/discord`.
+    Valid providers: discord, github, google
 
 5. Set your mail sender at `MAIL_SENDER`, choose mail type under `MAIL_SERVICE_TYPE` and configure proper variables based on your choice (mailgun or smtp)
 
