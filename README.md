@@ -17,7 +17,9 @@
 </p>
 
 ### Minimum requirements
-* ~300 MB ram for runtime (at least 1 GB recommended for source compilation purposes)
+* ~300 MB ram for runtime (at least 1.5 GB for source compilation purposes)
+
+    **If you have small server with 1 GB or less ram you need to add swap space so compilation won't run out of memory and fail, link below.**
 * ~100 MB disk space (at least 2 GB space for source compilation purposes, can be pruned via docker afterwards)
 * Docker and Docker Compose (latest recommended, older versions tend to break Node.js compilation somehow) installed
 * (Recommended) Git installed to clone this repository sources (alternatively you can just download source zip and unpack to skip this part)
@@ -34,6 +36,7 @@ Helpful tutorials:
 * How to install Docker - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04 (just Step 1)
 * How to install Docker Compose - https://docs.docker.com/compose/install/
 * How to install MySQL - https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-18-04
+* How to add swap space - https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-18-04
 
 1. Once requirements are installed you can either use git tool to clone repository or download and unpack sources yourself.
 To clone repository with Git use:
@@ -48,6 +51,7 @@ To clone repository with Git use:
     IP of server must be provided and MySQL must be configured to accept non localhost connections.
     
     To adjust that, `bind-address` at `/etc/mysql/mysql.conf.d/mysqld.cnf` must be set to `0.0.0.0` and MySQL user with `%` login access should be made.
+    Remember to reload service after with `systemctl reload mysql`.
 
 3. Visit https://www.grc.com/passwords.htm site and copy one of safely generated tokens, if page is offline search for JWT secret generator
 or any safe random long text generator online.

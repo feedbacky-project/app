@@ -118,7 +118,6 @@ public class BoardServiceImpl implements BoardService {
     board.setFullDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(dto.getFullDescription())));
 
     board.setCreator(user);
-    board = boardRepository.save(board);
 
     //after save board id is set, so now we can set banners and logos that require board id
     String logoUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getLogo()), ObjectStorage.ImageType.PROJECT_LOGO);
@@ -131,7 +130,7 @@ public class BoardServiceImpl implements BoardService {
       throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board banner due to server side error.");
     }
     board.setBanner(bannerUrl);
-    boardRepository.save(board);
+    board = boardRepository.save(board);
 
     Moderator node = new Moderator();
     node.setRole(Moderator.Role.OWNER);
