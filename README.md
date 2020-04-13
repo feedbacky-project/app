@@ -98,7 +98,7 @@ and go to `feedbacky-project` folder.
     Begin the source compilation process by doing `docker-compose up`, it will take few minutes depending on your server capabilities.
     Server will likely use high amount of CPU at this part. After successfull compilation your Feedbacky instance should be ready.
 
-**10.** When server is running properly go to webpage at your server ip (remember the port if it's not 80 (web port)), log in and restart
+10. When server is running properly go to webpage at your server ip (remember the port if it's not 80 (web port)), log in and restart
 the instance and now you should be service admin and have Feedbacky fully configured.
 
 ## License
