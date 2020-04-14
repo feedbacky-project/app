@@ -51,7 +51,7 @@ To clone repository with Git use:
     IP of server must be provided and MySQL must be configured to accept non localhost connections.
     
     To adjust that, `bind-address` at `/etc/mysql/mysql.conf.d/mysqld.cnf` must be set to `0.0.0.0` and MySQL user with `%` login access should be made.
-    Remember to reload service after with `systemctl reload mysql`.
+    Remember to reload service after with `systemctl restart mysql`.
 
 3. Visit https://www.grc.com/passwords.htm site and copy one of safely generated tokens, if page is offline search for JWT secret generator
 or any safe random long text generator online.

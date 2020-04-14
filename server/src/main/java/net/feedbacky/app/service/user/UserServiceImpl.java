@@ -17,6 +17,7 @@ import net.feedbacky.app.util.mailservice.MailHandler;
 import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
 import net.feedbacky.app.util.mailservice.MailService;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +83,8 @@ public class UserServiceImpl implements UserService {
   @Override
   public FetchUserDto get(long id) {
     User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
-    Map<String, Object> data = new ObjectMapper().convertValue(user.convertToDto().exposeSensitiveData(false), Map.class);
+    TypeReference<HashMap<String, Object>> ref = new TypeReference<HashMap<String, Object>>() {};
+    Map<String, Object> data = new ObjectMapper().convertValue(user.convertToDto().exposeSensitiveData(false), ref);
     return new ObjectMapper().convertValue(data, FetchUserDto.class);
   }
 
