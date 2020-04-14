@@ -6,6 +6,7 @@ import AppContext from "../../context/AppContext";
 import {Link} from "react-router-dom";
 import snarkdown from "../util/snarkdown";
 import {FaListAlt} from "react-icons/all";
+import {parseEmojis} from "../util/EmojiFilter";
 
 const BoardDetailsBox = (props) => {
     const context = useContext(AppContext);
@@ -42,7 +43,7 @@ const BoardDetailsBox = (props) => {
         <Col id="boardDetails" lg={4} className="order-lg-12 order-1">
             <Card className="my-2 text-left" style={{borderRadius: 0}}>
                 <Card.Body className="pb-2">
-                    <div className="markdown-box" dangerouslySetInnerHTML={{__html: snarkdown(props.description)}}/>
+                    <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(props.description))}}/>
                     <hr/>
                     <Button className="btn-smaller text-white mx-0 mt-0 mb-2 mr-1 py-1" variant=""
                             style={{backgroundColor: context.theme}} onClick={onCreateIdeaModalClick}>

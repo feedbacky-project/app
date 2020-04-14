@@ -12,6 +12,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
 import {popupSwal} from "../util/SwalUtils";
 import {FaHeart, FaRegHeart, FaTrashAlt} from "react-icons/all";
+import {parseEmojis} from "../util/EmojiFilter";
 
 class DiscussionBox extends Component {
 
@@ -74,7 +75,7 @@ class DiscussionBox extends Component {
                                 <small style={{fontWeight: "bold"}}>{formatUsername(data.user.id, data.user.username, this.props.moderators)}</small>
                                 {this.renderDeletionButton(data)}
                                 <br/>
-                                <span className="snarkdown-box" dangerouslySetInnerHTML={{__html: snarkdown(data.description)}}/>
+                                <span className="snarkdown-box" dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(data.description))}}/>
                                 <br/>
                                 <small className="text-black-60"> {this.renderLikes(data)} · <TimeAgo datetime={data.creationDate}/></small>
                             </div>

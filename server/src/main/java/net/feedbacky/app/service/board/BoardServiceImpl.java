@@ -20,7 +20,6 @@ import net.feedbacky.app.repository.board.TagRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.Base64Util;
-import net.feedbacky.app.util.EmojiFilter;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.mailservice.MailHandler;
@@ -115,7 +114,7 @@ public class BoardServiceImpl implements BoardService {
 
     //sanitize
     board.setShortDescription(StringEscapeUtils.escapeHtml4(dto.getShortDescription()));
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(dto.getFullDescription())));
+    board.setFullDescription(StringEscapeUtils.escapeHtml4(dto.getFullDescription()));
 
     board.setCreator(user);
 
@@ -177,7 +176,7 @@ public class BoardServiceImpl implements BoardService {
 
     //sanitize
     board.setShortDescription(StringEscapeUtils.escapeHtml4(board.getShortDescription()));
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(board.getFullDescription())));
+    board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
 
     boardRepository.save(board);
     return board.convertToDto().ensureViewExplicit();

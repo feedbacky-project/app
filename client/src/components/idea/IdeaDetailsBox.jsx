@@ -14,6 +14,7 @@ import {popupSwal} from "../util/SwalUtils";
 import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaPen, FaTimesCircle} from "react-icons/all";
+import {parseEmojis} from "../util/EmojiFilter";
 
 class IdeaDetailsBox extends Component {
 
@@ -145,7 +146,7 @@ class IdeaDetailsBox extends Component {
             return this.renderEditorMode();
         }
         return <React.Fragment>
-            <span className="markdown-box" style={{wordBreak: "break-word"}} dangerouslySetInnerHTML={{__html: snarkdown(this.props.ideaData.description)}}/>
+            <span className="markdown-box" style={{wordBreak: "break-word"}} dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(this.props.ideaData.description))}}/>
         </React.Fragment>
     }
 

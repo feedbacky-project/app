@@ -18,7 +18,6 @@ import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.util.EmojiFilter;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
 
@@ -113,7 +112,7 @@ public class CommentServiceImpl implements CommentService {
     comment.setLikers(new HashSet<>());
     comment.setSpecial(false);
     comment.setSpecialType(Comment.SpecialType.LEGACY);
-    comment.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(dto.getDescription())));
+    comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Message with the same content posted by you already exist in this idea.");
@@ -160,7 +159,7 @@ public class CommentServiceImpl implements CommentService {
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, comment);
 
-    comment.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(comment.getDescription())));
+    comment.setDescription(StringEscapeUtils.escapeHtml4(comment.getDescription()));
     commentRepository.save(comment);
     return comment.convertToDto(user);
   }

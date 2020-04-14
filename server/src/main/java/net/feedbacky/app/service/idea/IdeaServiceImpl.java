@@ -30,7 +30,6 @@ import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.CommentBuilder;
-import net.feedbacky.app.util.EmojiFilter;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
@@ -191,7 +190,7 @@ public class IdeaServiceImpl implements IdeaService {
     set.add(user);
     idea.setVoters(set);
     idea.setStatus(Idea.IdeaStatus.OPENED);
-    idea.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(idea.getDescription())));
+    idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
     idea = ideaRepository.save(idea);
 
     //must save idea first in order to apply and save attachment
@@ -250,7 +249,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     boolean edited = false;
-    if(dto.getDescription() != null && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(dto.getDescription())))) {
+    if(dto.getDescription() != null && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(dto.getDescription()))) {
       edited = true;
       idea.setEdited(true);
     }
@@ -292,7 +291,7 @@ public class IdeaServiceImpl implements IdeaService {
     if(dto.getOpen() != null) {
       idea.setStatus(Idea.IdeaStatus.toIdeaStatus(dto.getOpen()));
     }
-    idea.setDescription(StringEscapeUtils.escapeHtml4(EmojiFilter.replaceEmojisPreSanitized(idea.getDescription())));
+    idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
     if(comment != null) {
       idea.getComments().add(comment);
       commentRepository.save(comment);
