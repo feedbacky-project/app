@@ -21,7 +21,7 @@
 
     **If you have small server with 1 GB or less ram you need to add swap space so compilation won't run out of memory and fail, link below.**
 * ~100 MB disk space (at least 2 GB space for source compilation purposes, can be pruned via docker afterwards)
-* Docker and Docker Compose (latest recommended, older versions tend to break Node.js compilation somehow) installed
+* Docker and Docker Compose installed
 * (Recommended) Git installed to clone this repository sources (alternatively you can just download source zip and unpack to skip this part)
 * MySQL database (recommended version 5.6 or higher)
 * Account at mailgun.com **OR** own SMTP server for mail sending feature
