@@ -44,10 +44,10 @@ import java.util.Set;
 @RestController
 public class GoogleLoginController implements AbstractLoginProvider {
 
-  private String redirectUri = System.getenv("OAUTH_GOOGLE_REDIRECT_URI");
-  private String clientId = System.getenv("OAUTH_GOOGLE_CLIENT_ID");
-  private String clientSecret = System.getenv("OAUTH_GOOGLE_CLIENT_SECRET");
-  private boolean enabled = Boolean.parseBoolean(System.getenv("OAUTH_GOOGLE_ENABLED"));
+  private String redirectUri = System.getenv().getOrDefault("OAUTH_GOOGLE_REDIRECT_URI", "");
+  private String clientId = System.getenv().getOrDefault("OAUTH_GOOGLE_CLIENT_ID", "");
+  private String clientSecret = System.getenv().getOrDefault("OAUTH_GOOGLE_CLIENT_SECRET", "");
+  private boolean enabled = Boolean.parseBoolean(System.getenv().getOrDefault("OAUTH_GOOGLE_ENABLED", "false"));
   private UserRepository userRepository;
   private AuthProviderData providerData;
 

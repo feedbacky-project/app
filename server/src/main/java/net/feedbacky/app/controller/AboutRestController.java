@@ -1,5 +1,6 @@
 package net.feedbacky.app.controller;
 
+import net.feedbacky.app.FeedbackyApplication;
 import net.feedbacky.app.data.AboutFeedbackyData;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.oauth.LoginProviderRegistry;
@@ -37,7 +38,7 @@ public class AboutRestController {
     //lazy init to make sure all login providers are registered before
     if(this.aboutFeedbackyData == null) {
       List<FetchUserDto> admins = userRepository.findByServiceStaffTrue().stream().map(user -> user.convertToDto().exposeSensitiveData(false)).collect(Collectors.toList());
-      this.aboutFeedbackyData = new AboutFeedbackyData(loginProviderRegistry.getRegisteredProviders(), maintenanceMode, admins);
+      this.aboutFeedbackyData = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, loginProviderRegistry.getRegisteredProviders(), maintenanceMode, admins);
     }
     return ResponseEntity.ok(aboutFeedbackyData);
   }

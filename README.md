@@ -105,5 +105,9 @@ and go to `feedbacky-project` folder.
 10. When server is running properly go to web page at your server ip (remember the port if it's not 80 (web port)), log in and restart
 the instance and now you should be service admin and have Feedbacky fully configured.
 
+### Updating from older versions
+This section will contain information about variables you need to put to .env file to make Feedbacky work after you update it.
+It might include other information as well. 
+
 ## License
 Feedbacky is free and open source software under the [MIT License](https://github.com/Plajer/feedbacky-project/blob/master/LICENSE.md).

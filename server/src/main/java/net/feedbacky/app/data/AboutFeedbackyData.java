@@ -16,6 +16,7 @@ import java.util.List;
 @Getter
 public class AboutFeedbackyData {
 
+  private String serverVersion;
   private List<AbstractLoginProvider> loginProviders;
   private boolean maintenanceMode;
   private List<FetchUserDto> serviceAdmins;

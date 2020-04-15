@@ -31,6 +31,7 @@ toast.configure();
 
 class App extends Component {
 
+    CLIENT_VERSION = "0.1.0-beta";
     state = {
         session: Cookies.get("FSID"),
         search: {
