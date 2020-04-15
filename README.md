@@ -47,6 +47,9 @@ To clone repository with Git use:
 2. Open `.env` file located in `feedbacky-project` folder (you can use `nano .env`) and configure database credentials i.e.
 `MYSQL_USERNAME`, `MYSQL_PASSWORD` and `MYSQL_URL`.
 
+    **Please note that database Feedbacky will use must have utf8mb4 character set so to create database like that you can use
+    `CREATE DATABASE mydatabase CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci`**
+
     Please note that `localhost` won't work in `MYSQL_URL` variable due to nature of Docker (container is considered as a remote machine).
     IP of server must be provided and MySQL must be configured to accept non localhost connections.
     
