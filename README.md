@@ -109,5 +109,12 @@ the instance and now you should be service admin and have Feedbacky fully config
 This section will contain information about variables you need to put to .env file to make Feedbacky work after you update it.
 It might include other information as well. 
 
+### Attribution note
+Icons (from client project at /src/views/admin/subviews/webhooks/steps/StepSecond.jsx) made by [Prosymbols](https://www.flaticon.com/authors/prosymbols) from www.flaticon.com
+
+Some SVG illustrations provided by https://undraw.co/
+
+Design system used in project provided by https://mdbootstrap.com and https://getbootstrap.com/
+
 ## License
 Feedbacky is free and open source software under the [MIT License](https://github.com/Plajer/feedbacky-project/blob/master/LICENSE.md).
