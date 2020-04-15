@@ -16,6 +16,7 @@ services:
       - feedbacky-server
     volumes:
       - feedbacky-data:/storage-data
+    restart: always
   feedbacky-server:
     container_name: feedbacky-server
     build:
@@ -27,6 +28,7 @@ services:
       - feedbacky-data:/storage-data
     env_file:
       - .env
+    restart: always
 
 volumes:
   feedbacky-data:
