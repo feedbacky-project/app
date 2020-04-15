@@ -11,7 +11,7 @@ public class FeedbackyApplication {
   public static final String BACKEND_VERSION = "0.1.0-beta";
 
   public static void main(String[] args) {
-    if(new StartupValidator().validateStartup()) {
+    if(!new StartupValidator().validateStartup()) {
       return;
     }
     SpringApplication.run(FeedbackyApplication.class, args);
