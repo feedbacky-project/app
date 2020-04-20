@@ -175,7 +175,7 @@
 }
 
 .dark .box-overlay-danger {
-    border-color: #990000;
+    border-color: #FF3547;
 }
 
 .dark #boardBanner {
@@ -183,7 +183,7 @@
 }
 
 .dark .text-danger {
-    color: #990000 !important;
+    color: #FF3547 !important;
 }
 
 .dark .circle-picker span div span {
@@ -245,7 +245,11 @@
 }
 
 .dark .role-moderator-color {
-    color: #3c9512 !important;
+    color: #ff3932 !important;
+}
+
+.dark .role-internal-color {
+    color: #3299ff !important;
 }
 
 .dark .hidden-anchor {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Col, Image, Row} from "react-bootstrap";
+import {Button, Col, Image, OverlayTrigger, Popover, Row, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "../util/LoadingSpinner";
 import {FaEdit, FaFrown, FaLockOpen, FaTags, FaTimesCircle} from "react-icons/fa";
@@ -11,7 +11,7 @@ import {ReactSVG} from "react-svg";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
 import {popupSwal} from "../util/SwalUtils";
-import {FaHeart, FaRegHeart, FaTrashAlt} from "react-icons/all";
+import {FaHeart, FaLowVision, FaQuestionCircle, FaRegHeart, FaTrashAlt} from "react-icons/all";
 import {parseEmojis} from "../util/EmojiFilter";
 
 class DiscussionBox extends Component {
@@ -72,7 +72,7 @@ class DiscussionBox extends Component {
                                 <br/>
                             </div>
                             <div>
-                                <small style={{fontWeight: "bold"}}>{formatUsername(data.user.id, data.user.username, this.props.moderators)}</small>
+                                {this.renderCommentUsername(data)}
                                 {this.renderDeletionButton(data)}
                                 <br/>
                                 <span className="snarkdown-box" dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(data.description))}}/>
@@ -101,6 +101,18 @@ class DiscussionBox extends Component {
                 </React.Fragment>
             })}
         </InfiniteScroll>
+    }
+
+    renderCommentUsername(data) {
+        if(data.viewType === "INTERNAL") {
+            return <React.Fragment>
+                <small style={{fontWeight: "bold"}}><span className="role-internal-color">{data.user.username}</span></small>
+                <OverlayTrigger overlay={<Tooltip id={"internal" + data.id + "-tooltip"}>Internal Comment</Tooltip>}>
+                    <FaLowVision className="fa-xs ml-1"/>
+                </OverlayTrigger>
+            </React.Fragment>
+        }
+        return <small style={{fontWeight: "bold"}}>{formatUsername(data.user.id, data.user.username, this.props.moderators)}</small>
     }
 
     renderDeletionButton(data) {
@@ -187,14 +199,34 @@ class DiscussionBox extends Component {
 
     renderSubmitButton() {
         if (this.state.submitVisible) {
-            return <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}} onClick={this.onCommentSubmit}>Submit</Button>
+            const moderator = this.props.moderators.find(mod => mod.userId === this.context.user.id);
+            return <React.Fragment>
+                <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
+                        onClick={() => this.onCommentSubmit(false)}>Submit</Button>
+                {moderator && <React.Fragment>
+                    <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
+                                      onClick={() => this.onCommentSubmit(true)}>Submit Internal</Button>
+                    <OverlayTrigger trigger="click" placement="top" rootClose={true} rootCloseEvent="click"
+                        overlay={
+                            <Popover id="internalPopover">
+                                <Popover.Title as="h3">Internal Comments</Popover.Title>
+                                <Popover.Content>
+                                    Comments visible only for moderators of the project, hidden from public view.
+                                </Popover.Content>
+                            </Popover>
+                        }>
+                        <FaQuestionCircle className="fa-xs text-black-50"/>
+                    </OverlayTrigger>
+                </React.Fragment>}
+            </React.Fragment>
         }
         return <React.Fragment/>
     }
 
-    onCommentSubmit = () => {
+    onCommentSubmit = (internal) => {
         const textarea = document.getElementById("commentMessage");
         const message = textarea.value;
+        const viewType = internal ? "INTERNAL" : "PUBLIC";
         if (message.length < 10 || message.length > 500) {
             toastWarning("Message must be longer than 10 and shorter than 500 characters!");
             return;
@@ -202,6 +234,7 @@ class DiscussionBox extends Component {
         axios.post(this.context.apiRoute + "/comments/", {
             ideaId: this.props.ideaData.id,
             description: message,
+            viewType,
         }, getSimpleRequestConfig(this.context.user.session)).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();

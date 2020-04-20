@@ -473,6 +473,10 @@ body {
     color: #4cbb17;
 }
 
+.role-internal-color {
+    color: #0080FF;
+}
+
 .dark-toggler {
     position: relative;
 }

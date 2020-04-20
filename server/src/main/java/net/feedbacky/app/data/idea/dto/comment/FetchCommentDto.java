@@ -24,6 +24,7 @@ public class FetchCommentDto {
   private String description;
   private boolean special;
   private String specialType;
+  private String viewType;
   private int likesAmount;
   private boolean liked;
   private Date creationDate;

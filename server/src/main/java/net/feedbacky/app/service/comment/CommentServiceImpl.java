@@ -73,6 +73,10 @@ public class CommentServiceImpl implements CommentService {
     List<Comment> comments = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     final User finalUser = user;
+    boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
+    if(!isModerator) {
+      comments = comments.stream().filter(comment -> comment.getViewType() != Comment.ViewType.INTERNAL).collect(Collectors.toList());
+    }
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
             comments.stream().map(comment -> comment.convertToDto(finalUser)).collect(Collectors.toList()));
   }
@@ -84,12 +88,16 @@ public class CommentServiceImpl implements CommentService {
       UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
-    Comment comment = commentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+    Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
     if(!comment.getIdea().getBoard().canView(user)) {
       FetchCommentDto dto = new FetchCommentDto();
       dto.setId(id);
       return dto;
+    }
+    final User finalUser = user;
+    boolean isModerator = comment.getIdea().getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
+    if(comment.getViewType() == Comment.ViewType.INTERNAL && !isModerator) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to view this comment.");
     }
     return comment.convertToDto(user);
   }
@@ -104,6 +112,11 @@ public class CommentServiceImpl implements CommentService {
     if(!idea.getBoard().canView(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment to this idea.");
     }
+    //internal type is for moderators only
+    if(Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL
+            && idea.getBoard().getModerators().stream().noneMatch(mod -> mod.getUser().equals(user))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment with internal view type.");
+    }
 
     Comment comment = new ModelMapper().map(this, Comment.class);
     comment.setId(null);
@@ -112,6 +125,7 @@ public class CommentServiceImpl implements CommentService {
     comment.setLikers(new HashSet<>());
     comment.setSpecial(false);
     comment.setSpecialType(Comment.SpecialType.LEGACY);
+    comment.setViewType(Comment.ViewType.valueOf(dto.getType().toUpperCase()));
     comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
@@ -119,8 +133,11 @@ public class CommentServiceImpl implements CommentService {
     }
     commentRepository.save(comment);
 
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT, builder.build());
+    //do not publish information about private internal comments
+    if(comment.getViewType() != Comment.ViewType.INTERNAL) {
+      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
+      idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT, builder.build());
+    }
     return ResponseEntity.status(HttpStatus.CREATED).body(comment.convertToDto(user));
   }
 

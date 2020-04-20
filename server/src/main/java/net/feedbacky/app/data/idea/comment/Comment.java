@@ -12,7 +12,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.Column;
+import javax.persistence.Converter;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -51,6 +54,9 @@ public class Comment implements Serializable {
   private String description;
   private boolean special;
   private SpecialType specialType;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "view_type", columnDefinition = "enum")
+  private ViewType viewType = ViewType.PUBLIC;
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> likers = new HashSet<>();
   @CreationTimestamp
@@ -66,17 +72,11 @@ public class Comment implements Serializable {
 
   //byte type to force database to use smaller data type
   public enum SpecialType {
-    LEGACY((byte) 0), IDEA_CLOSED((byte) 1), IDEA_OPENED((byte) 2), IDEA_EDITED((byte) 2), TAGS_MANAGED((byte) 3);
+    LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED
+  }
 
-    private byte id;
-
-    SpecialType(byte id) {
-      this.id = id;
-    }
-
-    public byte getId() {
-      return id;
-    }
+  public enum ViewType {
+    PUBLIC, INTERNAL
   }
 
 }

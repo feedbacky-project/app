@@ -6,8 +6,7 @@ import Badge from "react-bootstrap/Badge";
 import {FaRegAddressCard, FaRegBell} from "react-icons/all";
 
 const ProfileSidebar = (props) => {
-    const context = useContext(AppContext);
-    const themeColor = isHexDark(context.theme) && context.user.darkMode ? increaseBrightness(context.theme, 40) : context.theme;
+    const themeColor = context.user.darkMode ? "#00c851" : "#00a040";
     const settings = props.currentNode === "settings" ? {color: themeColor} : {};
     const settingsIcon = props.currentNode === "settings" ? {color: themeColor} : {color: "rgba(0,0,0,.5) !important"};
     const notifications = props.currentNode === "notifications" ? {color: themeColor} : {};
