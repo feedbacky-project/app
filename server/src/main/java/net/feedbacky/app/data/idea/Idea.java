@@ -89,7 +89,8 @@ public class Idea implements Serializable {
     dto.setAttachments(attachments.stream().map(Attachment::convertToDto).collect(Collectors.toList()));
     dto.setBoardDiscriminator(board.getDiscriminator());
     dto.setVotersAmount(voters.size());
-    dto.setCommentsAmount(comments.stream().filter(comment -> !comment.isSpecial()).count());
+    //count only public and non special comments
+    dto.setCommentsAmount(comments.stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count());
     dto.setTags(tagDtos);
     dto.setUpvoted(voted);
     dto.setUser(creator.convertToDto().exposeSensitiveData(false).convertToSimpleDto());

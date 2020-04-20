@@ -199,7 +199,7 @@ class DiscussionBox extends Component {
 
     renderSubmitButton() {
         if (this.state.submitVisible) {
-            const moderator = this.props.moderators.find(mod => mod.userId === this.context.user.id);
+            const moderator = this.props.moderators.find(mod => mod.userId === this.context.user.data.id);
             return <React.Fragment>
                 <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
                         onClick={() => this.onCommentSubmit(false)}>Submit</Button>
@@ -215,7 +215,7 @@ class DiscussionBox extends Component {
                                 </Popover.Content>
                             </Popover>
                         }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
+                        <FaQuestionCircle className="fa-xs text-black-50 align-top mt-2"/>
                     </OverlayTrigger>
                 </React.Fragment>}
             </React.Fragment>
@@ -226,7 +226,7 @@ class DiscussionBox extends Component {
     onCommentSubmit = (internal) => {
         const textarea = document.getElementById("commentMessage");
         const message = textarea.value;
-        const viewType = internal ? "INTERNAL" : "PUBLIC";
+        const type = internal ? "INTERNAL" : "PUBLIC";
         if (message.length < 10 || message.length > 500) {
             toastWarning("Message must be longer than 10 and shorter than 500 characters!");
             return;
@@ -234,7 +234,7 @@ class DiscussionBox extends Component {
         axios.post(this.context.apiRoute + "/comments/", {
             ideaId: this.props.ideaData.id,
             description: message,
-            viewType,
+            type,
         }, getSimpleRequestConfig(this.context.user.session)).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
