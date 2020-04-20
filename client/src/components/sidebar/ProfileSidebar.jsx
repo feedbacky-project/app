@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
 import {Col} from "react-bootstrap";
-import {increaseBrightness, isHexDark} from "../util/Utils";
 import AppContext from "../../context/AppContext";
 import Badge from "react-bootstrap/Badge";
 import {FaRegAddressCard, FaRegBell} from "react-icons/all";
 
 const ProfileSidebar = (props) => {
+    const context = useContext(AppContext);
     const themeColor = context.user.darkMode ? "#00c851" : "#00a040";
     const settings = props.currentNode === "settings" ? {color: themeColor} : {};
     const settingsIcon = props.currentNode === "settings" ? {color: themeColor} : {color: "rgba(0,0,0,.5) !important"};
