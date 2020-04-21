@@ -47,6 +47,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -186,6 +187,7 @@ public class IdeaServiceImpl implements IdeaService {
     idea.setId(null);
     idea.setBoard(board);
     idea.setCreator(user);
+    idea.setCreationDate(Calendar.getInstance().getTime());
     Set<User> set = new HashSet<>();
     set.add(user);
     idea.setVoters(set);
