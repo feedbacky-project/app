@@ -23,8 +23,10 @@ public class SortFilterResolver {
       case VOTERS_ASC:
         return Sort.by(Sort.Direction.ASC, "votersAmount");
       case VOTERS_DESC:
-      default:
         return Sort.by(Sort.Direction.DESC, "votersAmount");
+      case TRENDING:
+      default:
+        return Sort.by(Sort.Direction.DESC, "trendScore");
     }
   }
 

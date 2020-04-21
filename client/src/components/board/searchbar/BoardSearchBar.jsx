@@ -26,8 +26,10 @@ const BoardSearchBar = (props) => {
             case "oldest":
                 return "Oldest";
             case "voters_desc":
-            default:
                 return "Most Voted";
+            case "trending":
+            default:
+                return "Trending";
         }
     };
 
@@ -55,6 +57,9 @@ const BoardSearchBar = (props) => {
                 <u>{resolveSorting()}</u>
             </DropdownToggle>
             <DropdownMenu alignRight>
+                <DropdownItem onClick={() => context.onSortingUpdate("trending", props.boardData, props.moderators, props.history, props.discriminator)}>
+                    Trending
+                </DropdownItem>
                 <DropdownItem onClick={() => context.onSortingUpdate("voters_desc", props.boardData, props.moderators, props.history, props.discriminator)}>
                     Most Voted
                 </DropdownItem>

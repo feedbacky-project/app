@@ -35,6 +35,7 @@ public class FetchIdeaDto {
   private long votersAmount;
   private long commentsAmount;
   private boolean upvoted;
+  private double trendScore;
   private boolean open;
   private boolean edited;
 

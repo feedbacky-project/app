@@ -47,7 +47,7 @@ public interface IdeaService extends FeedbackyService {
   List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags);
 
   enum SortType {
-    VOTERS_ASC, VOTERS_DESC, NEWEST, OLDEST
+    VOTERS_ASC, VOTERS_DESC, NEWEST, OLDEST, TRENDING
   }
 
   enum FilterType {

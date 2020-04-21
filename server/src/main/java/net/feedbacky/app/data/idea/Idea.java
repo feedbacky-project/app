@@ -29,6 +29,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,10 +62,11 @@ public class Idea implements Serializable {
   private String description;
   @ManyToOne
   private User creator;
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   private Set<User> voters = new HashSet<>();
   //always the same as voters.size()
   private int votersAmount;
+  private double trendScore;
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "idea")
   private Set<Comment> comments = new HashSet<>();
   @ManyToMany(fetch = FetchType.LAZY)
@@ -77,6 +81,11 @@ public class Idea implements Serializable {
   public void setVoters(Set<User> voters) {
     this.voters = voters;
     this.votersAmount = voters.size();
+    this.trendScore = getCalculatedTrendScore();
+  }
+
+  public double getCalculatedTrendScore() {
+    return ((double) voters.size() - 1.0) / Math.pow(ChronoUnit.DAYS.between(creationDate.toInstant(), Instant.now()) + 2.0, 1.8);
   }
 
   public FetchIdeaDto convertToDto(boolean voted) {
