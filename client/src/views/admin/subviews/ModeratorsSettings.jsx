@@ -93,7 +93,7 @@ class ModeratorsSettings extends Component {
                 <ul className="mb-0 pl-3">
                     <li>Close and Delete Ideas</li>
                     <li>Add and Remove Tags from Ideas</li>
-                    <li>Delete Comments</li>
+                    <li>Post Internal Comments, Delete Comments</li>
                 </ul>
             </Col>
         </React.Fragment>

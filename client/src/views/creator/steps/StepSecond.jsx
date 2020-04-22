@@ -13,7 +13,7 @@ const StepSecond = (props) => {
                 </span>
         </Col>
         <Col xs={12} sm={6} className="mt-4 px-md-5 px-3">
-            <Form.Label className="mr-1 text-muted">Board Banner</Form.Label>
+            <Form.Label className="mr-1 text-black-60">Board Banner</Form.Label>
             <OverlayTrigger
                 trigger="click"
                 placement="top"
@@ -44,7 +44,7 @@ const StepSecond = (props) => {
             <input className="small" accept="image/jpeg, image/png" id="bannerInput" type="file" name="banner" onChange={e => onBannerChange(e, props)}/>
         </Col>
         <Col xs={12} sm={6} className="mt-4 px-md-5 px-3">
-            <Form.Label className="mr-1 text-muted">Board Logo</Form.Label>
+            <Form.Label className="mr-1 text-black-60">Board Logo</Form.Label>
             <OverlayTrigger
                 trigger="click"
                 placement="top"

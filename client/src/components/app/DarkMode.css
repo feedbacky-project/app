@@ -129,6 +129,10 @@
     background-color: rgba(40, 40, 40, 0.98) !important;
 }
 
+.dark .badge-warning {
+    background-color: #e5a82d !important;
+}
+
 .dark button:not(.btn-attachment) {
     filter: brightness(90%);
 }
@@ -257,7 +261,7 @@
 }
 
 .dark kbd {
-    background-color: rgba(40, 40, 40, 0.98) !important;
+    background-color: #343434 !important;
 }
 
 .dark .modal-header {
@@ -275,4 +279,12 @@
 
 .dark .popover  {
     background: transparent !important;
+}
+
+.dark .jumbotron h3, .dark .jumbotron h5 {
+    color: white !important;
+}
+
+.dark .profile-card .text-truncate {
+    color: white !important;
 }

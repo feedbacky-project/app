@@ -64,7 +64,7 @@ class WebhooksSettings extends Component {
     renderWebhooks() {
         return <React.Fragment>
             <Col xs={12} sm={6} className="mb-sm-0 mb-3">
-                <div className="text-muted mb-1">
+                <div className="text-black-60 mb-1">
                     Webhooks Quota ({this.calculateLeft()} left)
                     <OverlayTrigger
                         trigger="click"
