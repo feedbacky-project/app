@@ -65,7 +65,7 @@ public class IdeaRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    IdeaService.SortType sortType = IdeaService.SortType.VOTERS_DESC;
+    IdeaService.SortType sortType = IdeaService.SortType.TRENDING;
     if(requestParams.containsKey("sort")) {
       try {
         sortType = IdeaService.SortType.valueOf(requestParams.get("sort").toUpperCase());
