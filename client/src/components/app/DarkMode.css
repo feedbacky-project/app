@@ -208,7 +208,7 @@
     background-color: #f2f2f2 !important;
 }
 
-.dark .markdown-box a, .dark .markdown-box a *, .dark .snarkdown-box a {
+.dark .markdown-box a:not(.pre-href), .dark .markdown-box a *, .dark .snarkdown-box a:not(.pre-href) {
     color: #3ea6ff !important;
 }
 
