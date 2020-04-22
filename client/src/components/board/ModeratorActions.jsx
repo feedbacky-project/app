@@ -87,12 +87,12 @@ const ModeratorActions = (props) => {
             res.data.forEach((tag, i) => {
                 if (props.ideaData.tags.find(ideaTag => ideaTag.name === tag.name)) {
                     html.push(<Form.Check id={"tagManage_" + tag.name} key={i} defaultChecked custom inline label={<Badge key={i} color="" style={{
-                        transform: `translateY(-2px)`,
+                        transform: `translateY(1px)`,
                         backgroundColor: tag.color
                     }}>{tag.name}</Badge>} type="checkbox"/>)
                 } else {
                     html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<Badge key={i} color="" style={{
-                        transform: `translateY(-2px)`,
+                        transform: `translateY(1px)`,
                         backgroundColor: tag.color
                     }}>{tag.name}</Badge>} type="checkbox"/>)
                 }
