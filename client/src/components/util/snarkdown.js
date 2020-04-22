@@ -23,8 +23,21 @@ function encodeAttr(str) {
     return (str+'').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+function parseLinks(text) {
+    return (text || "").replace(
+        /([^\S]|^)(((https?\:\/\/)|(www\.))(\S+))/gi,
+        function(match, space, url){
+            var hyperlink = url;
+            if (!hyperlink.match('^https?:\/\/')) {
+                hyperlink = 'http://' + hyperlink;
+            }
+            return space + '<a href="' + hyperlink + '" target="_blank" rel="noopener noreferrer">' + url + '</a>';
+        }
+    );
+}
+
 /** Parse Markdown into an HTML String. */
-export default function parse(md, prevLinks) {
+function parseInternal(md, prevLinks) {
     let tokenizer = /((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^``` *(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:\!\[([^\]]*?)\]\(([^\)]+?)\))|(\[)|(\](?:\(([^\)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(\-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,6})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|__|\*\*|[_*]|~~)/gm,
         context = [],
         out = '',
@@ -69,7 +82,7 @@ export default function parse(md, prevLinks) {
             if (t.match(/\./)) {
                 token[5] = token[5].replace(/^\d+/gm, '');
             }
-            inner = parse(outdent(token[5].replace(/^\s*[>*+.-]/gm, '')));
+            inner = parseInternal(outdent(token[5].replace(/^\s*[>*+.-]/gm, '')));
             if (t==='>') t = 'blockquote';
             else {
                 t = t.match(/\./) ? 'ol' : 'ul';
@@ -88,7 +101,8 @@ export default function parse(md, prevLinks) {
                 out = out.replace('<a class="pre-href">', `<a href="${aHref}" target="_blank" rel="noopener noreferrer">`);
                 chunk = flush() + '</a>';
             } else {
-                chunk = flush();
+                out = out.replace('<a class="pre-href">', `[`);
+                chunk = flush() + ']';
             }
         }
         else if (token[9]) {
@@ -97,7 +111,7 @@ export default function parse(md, prevLinks) {
         // Headings:
         else if (token[12] || token[14]) {
             t = 'h' + (token[14] ? token[14].length : (token[13][0]==='='?1:2));
-            chunk = '<'+t+'>' + parse(token[12] || token[15], links) + '</'+t+'>';
+            chunk = '<'+t+'>' + parseInternal(token[12] || token[15], links) + '</'+t+'>';
         }
         // `code`:
         else if (token[16]) {
@@ -112,4 +126,8 @@ export default function parse(md, prevLinks) {
     }
 
     return (out + md.substring(last) + flush()).trim();
+}
+
+export default function parse(md, prevLinks) {
+    return parseLinks(parseInternal(md, prevLinks));
 }
