@@ -106,7 +106,7 @@
     color: rgba(255,255,255,.6) !important;
 }
 
-.dark textarea, .dark .form-control {
+.dark textarea, .dark .form-control, .dark .swal2-input {
     background-color: rgba(40, 40, 40, 0.98) !important;
     color: rgba(255,255,255,.6) !important;
     box-shadow: none !important;
