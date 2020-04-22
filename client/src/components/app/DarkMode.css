@@ -281,7 +281,7 @@
     background: transparent !important;
 }
 
-.dark .jumbotron h3, .dark .jumbotron h5 {
+.dark .dark-mask h3, .dark .dark-mask h5 {
     color: white !important;
 }
 
