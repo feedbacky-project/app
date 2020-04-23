@@ -180,6 +180,7 @@ public class DiscordLoginController implements AbstractLoginProvider {
       return;
     }
     user.setAvatar(discordUser.getAvatar());
+    userRepository.save(user);
   }
 
 }
