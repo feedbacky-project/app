@@ -11,6 +11,7 @@ import BoardBanner from "../components/board/BoardBanner";
 import LoadingSpinner from "../components/util/LoadingSpinner";
 import AppContext from "../context/AppContext";
 import {getSimpleRequestConfig} from "../components/util/Utils";
+import {FaEyeSlash} from "react-icons/all";
 
 class Board extends Component {
 
@@ -24,6 +25,7 @@ class Board extends Component {
         moderators: [],
         moderatorsLoaded: false,
         loginModalOpened: false,
+        privatePage: false
     };
 
     //workaround for refs that don't properly work with react router links...
@@ -48,6 +50,10 @@ class Board extends Component {
                         this.setState({error: true});
                     }
                     const data = res.data;
+                    if (data.privatePage && data.name === null) {
+                        this.setState({loaded: true, privatePage: true});
+                        return;
+                    }
                     data.socialLinks.sort((a, b) => (a.id > b.id) ? 1 : -1);
                     this.context.onThemeChange(data.themeColor || "#343a40");
                     this.setState({data, loaded: true});
@@ -91,24 +97,11 @@ class Board extends Component {
         if (!this.state.loaded || !this.state.moderatorsLoaded) {
             return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
         }
-        //ensure it's private and data is null for private that can't be seen
-        if (this.state.data.privatePage && this.state.data.name == null) {
-            return <React.Fragment>
-                <LoginModal open={this.state.loginModalOpened} image={"https://cdn.feedbacky.net/static/svg/question.svg"}
-                            boardName={"Private Board"}
-                            redirectUrl={"b/" + this.state.data.discriminator}
-                            onLoginModalClose={this.onLoginModalClose}/>
-                <BoardNavbar name={"Private Board"}
-                             logoUrl={"https://cdn.feedbacky.net/static/svg/question.svg"}
-                             onNotLoggedClick={this.onNotLoggedClick}/>
-                <Container className="pb-5">
-                    <Row className="pb-4">
-                        <BoardBanner name={"Private Board"} description={"You don't have permission to view this board."}
-                                     bannerUrl={"https://cdn.feedbacky.net/static/img/private_project.png"} socialLinks={[]}/>
-                        <BoardSearchBar history={this.props.history} discriminator={this.state.data.discriminator} boardData={this.state.data} moderators={this.state.moderators}/>
-                    </Row>
-                </Container>
-            </React.Fragment>
+
+        if (this.state.privatePage) {
+            return <ErrorView iconMd={<FaEyeSlash style={{fontSize: 250, color: "#3299ff"}}/>}
+                              iconSm={<FaEyeSlash style={{fontSize: 180, color: "#3299ff"}}/>}
+                              message="This Board Is Private"/>
         }
         return <React.Fragment>
             <LoginModal open={this.state.loginModalOpened} image={this.state.data.logo}

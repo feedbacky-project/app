@@ -10,6 +10,7 @@ import DiscussionBox from "../components/idea/DiscussionBox";
 import {Col, Container, Row} from "react-bootstrap";
 import AppContext from "../context/AppContext";
 import {getSimpleRequestConfig} from "../components/util/Utils";
+import {FaEyeSlash} from "react-icons/all";
 
 class Idea extends Component {
 
@@ -27,6 +28,7 @@ class Idea extends Component {
         moderatorsLoaded: false,
         moderatorsDataError: false,
         loginModalOpened: false,
+        privatePage: false,
     };
 
     //workaround for refs that don't properly work with react router links...
@@ -134,6 +136,10 @@ class Idea extends Component {
                     return;
                 }
                 const ideaData = res.data;
+                if (data.title === null && data.user === null) {
+                    this.setState({ideaDataLoaded: true, boardDataLoaded: true, moderatorsLoaded: true, privatePage: true});
+                    return;
+                }
                 ideaData.tags.sort((a, b) => a.name.localeCompare(b.name));
                 this.setState({ideaData, ideaDataLoaded: true});
                 this.loadBoardDataCascade(ideaData);
@@ -203,12 +209,11 @@ class Idea extends Component {
         if (!this.state.boardDataLoaded || !this.state.moderatorsLoaded) {
             return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
         }
-        if (this.state.boardData.privatePage && this.state.boardData.name == null) {
-            return <React.Fragment>
-                <Container>
-                    Private {/* todo finish me */}
-                </Container>
-            </React.Fragment>
+
+        if (this.state.privatePage) {
+            return <ErrorView iconMd={<FaEyeSlash style={{fontSize: 250, color: "#3299ff"}}/>}
+                              iconSm={<FaEyeSlash style={{fontSize: 180, color: "#3299ff"}}/>}
+                              message="This Idea Is Private"/>
         }
         return <React.Fragment>
             <LoginModal open={this.state.loginModalOpened} onLoginModalClose={this.onLoginModalClose}
@@ -232,7 +237,7 @@ class Idea extends Component {
             return <div className="my-5"><LoadingSpinner/></div>
         }
         return <IdeaDetailsBox moderators={this.state.moderators} ideaData={this.state.ideaData} onNotLoggedClick={this.onNotLoggedClick}
-                               onStateUpdate={this.onStateUpdate} passedData={this.state.passedIdeaData} onIdeaEdit={this.onIdeaEdit} onAttachmentDelete={this.onAttachmentDelete}
+                               onStateUpdate={this.onStateUpdate} onIdeaEdit={this.onIdeaEdit} onAttachmentDelete={this.onAttachmentDelete}
                                onTagsUpdate={this.onTagsUpdate} onStateChange={this.onStateChange} {...this.props}/>
     }
 
