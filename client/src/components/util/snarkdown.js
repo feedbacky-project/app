@@ -1,7 +1,7 @@
 //https://github.com/developit/snarkdown/blob/master/src/index.js
 
 const TAGS = {
-    '' : ['<em>','</em>'],
+    '|' : ['<em>','</em>'],
     _ : ['<strong>','</strong>'],
     '~' : ['<s>','</s>'],
     '\n' : ['<br />'],
@@ -38,7 +38,7 @@ function parseLinks(text) {
 
 /** Parse Markdown into an HTML String. */
 function parseInternal(md, prevLinks) {
-    let tokenizer = /((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^``` *(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:\!\[([^\]]*?)\]\(([^\)]+?)\))|(\[)|(\](?:\(([^\)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(\-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,6})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|__|\*\*|[_*]|~~)/gm,
+    let tokenizer = /((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^``` *(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:\!\[([^\]]*?)\]\(([^\)]+?)\))|(\[)|(\](?:\(([^\)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(\-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,6})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|\|\||\*\*|[|*]|~~)/gm,
         context = [],
         out = '',
         links = prevLinks || {},
@@ -46,7 +46,7 @@ function parseInternal(md, prevLinks) {
         chunk, prev, token, inner, t;
 
     function tag(token) {
-        var desc = TAGS[token.replace(/\*/g,'_')[1] || ''],
+        var desc = TAGS[token.replace(/\*/g,'_')[1] || '|'],
             end = context[context.length-1]==token;
         if (!desc) return token;
         if (!desc[1]) return desc[0];
