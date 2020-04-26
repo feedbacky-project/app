@@ -52,7 +52,7 @@ const OauthReceiver = (props) => {
     }
     if (!loaded) {
         logIn();
-        return <div className="row justify-content-center mt-5 pt-5">
+        return <div className="row justify-content-center vertical-center">
             <LoadingSpinner/>
         </div>
     }
