@@ -16,7 +16,7 @@ spring:
     jdbc:
       initialize-schema: "always"
   jpa:
-    database-platform: "org.hibernate.dialect.MySQL5Dialect"
+    database-platform: "net.feedbacky.app.config.MySQLCustomDialect"
     show-sql: false
     generate-ddl: true
     hibernate:

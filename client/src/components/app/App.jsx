@@ -92,7 +92,7 @@ class App extends Component {
 
     onLogin = (token) => {
         //setting loaded to false because it was already loaded before this method call
-        this.setState({session: token, loaded: false, moderatingDataLoaded: false});
+        this.setState({session: token, loaded: false, serviceDataLoaded: false, moderatingDataLoaded: false});
         //forcing reupdate the props
         this.componentDidMount();
     };

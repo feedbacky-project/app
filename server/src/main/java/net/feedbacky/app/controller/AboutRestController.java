@@ -35,12 +35,19 @@ public class AboutRestController {
 
   @GetMapping("/v1/service/about")
   public ResponseEntity<AboutFeedbackyData> handle() {
+    AboutFeedbackyData data;
     //lazy init to make sure all login providers are registered before
     if(this.aboutFeedbackyData == null) {
       List<FetchUserDto> admins = userRepository.findByServiceStaffTrue().stream().map(user -> user.convertToDto().exposeSensitiveData(false)).collect(Collectors.toList());
-      this.aboutFeedbackyData = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, loginProviderRegistry.getRegisteredProviders(), maintenanceMode, admins);
+      data = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, loginProviderRegistry.getRegisteredProviders(), maintenanceMode, admins);
+      //only cache when there is at least 1 service admin registered (for first installation purposes)
+      if(!admins.isEmpty()) {
+        this.aboutFeedbackyData = data;
+      }
+    } else {
+      data = this.aboutFeedbackyData;
     }
-    return ResponseEntity.ok(aboutFeedbackyData);
+    return ResponseEntity.ok(data);
   }
 
 }

@@ -136,7 +136,7 @@ class Idea extends Component {
                     return;
                 }
                 const ideaData = res.data;
-                if (data.title === null && data.user === null) {
+                if (ideaData.title === null && ideaData.user === null) {
                     this.setState({ideaDataLoaded: true, boardDataLoaded: true, moderatorsLoaded: true, privatePage: true});
                     return;
                 }

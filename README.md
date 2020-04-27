@@ -16,7 +16,7 @@
     <img src="https://cdn.feedbacky.net/static/img/main_banner_ideas.png">
 </p>
 
-### Minimum requirements
+## Minimum requirements
 * ~300 MB ram for runtime (at least 1.5 GB for source compilation purposes)
 
     **If you have small server with 1 GB or less ram you need to add swap space so compilation won't run out of memory and fail, link below.**
@@ -46,9 +46,6 @@ To clone repository with Git use:
    
 2. Open `.env` file located in `feedbacky-project` folder (you can use `nano .env`) and configure database credentials i.e.
 `MYSQL_USERNAME`, `MYSQL_PASSWORD` and `MYSQL_URL`.
-
-    **Please note that database Feedbacky will use must have utf8mb4 character set so to create database like that you can use
-    `CREATE DATABASE mydatabase CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci`**
 
     Please note that `localhost` won't work in `MYSQL_URL` variable due to nature of Docker (container is considered as a remote machine).
     IP of server must be provided and MySQL must be configured to accept non localhost connections.
@@ -102,14 +99,19 @@ and go to `feedbacky-project` folder.
     Begin the source compilation process by doing `docker-compose up`, it will take few minutes depending on your server capabilities.
     Server will likely use high amount of CPU at this part. After successful compilation your Feedbacky instance should be ready.
 
-10. When server is running properly go to web page at your server ip (remember the port if it's not 80 (web port)), log in and restart
-the instance and now you should be service admin and have Feedbacky fully configured.
+## Further customizing
+If you want you can customize your Feedbacky instance even more.
+You can edit [this file](https://github.com/Plajer/feedbacky-project/blob/master/client/public/index.html) to add for example
+your own OG meta tags like
+![](https://static.plajer.xyz/feedbacky/img/og-example.png)
 
-### Updating from older versions
+Mail templates can be edited [in this folder](https://github.com/Plajer/feedbacky-project/tree/master/server/src/main/resources/mail_templates).
+
+## Updating from older versions
 This section will contain information about variables you need to put to .env file to make Feedbacky work after you update it.
 It might include other information as well. 
 
-### Attribution note
+## Attribution note
 Icons (from client project at /src/views/admin/subviews/webhooks/steps/StepSecond.jsx) made by [Prosymbols](https://www.flaticon.com/authors/prosymbols) from www.flaticon.com
 
 Some SVG illustrations provided by https://undraw.co/
