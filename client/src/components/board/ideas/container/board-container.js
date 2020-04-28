@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import IdeaBox from "../idea-box";
 import axios from 'axios';
 import {Col, Row} from "react-bootstrap";
-import ErrorIdeaBox from "../ErrorIdeaBox";
+import ErrorIdeaBox from "../error-idea-box";
 import {FaRegFrown} from "react-icons/fa";
 import LoadingSpinner from "../../../util/loading-spinner";
 import AppContext from "../../../../context/app-context";
