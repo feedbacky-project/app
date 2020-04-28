@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
     if(!idea.getBoard().canView(user)) {
       return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, 0, pageSize), new ArrayList<>());
     }
-    Page<Comment> pageData = commentRepository.findByIdea(idea, PageRequest.of(page, pageSize, Sort.by("id").descending()));
+    Page<Comment> pageData = commentRepository.findByIdea(idea, PageRequest.of(page, pageSize, Sort.by("id").ascending()));
     List<Comment> comments = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     final User finalUser = user;
