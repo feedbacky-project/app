@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
-import {Button, Col, OverlayTrigger, Popover, Row, Tooltip} from "react-bootstrap";
+import {Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {getSimpleRequestConfig, getSizedAvatarByUrl, toastError, toastSuccess} from "../../../components/util/utils";
 import AppContext from "../../../context/app-context";
-import {FaQuestionCircle, FaTrashAlt} from "react-icons/fa";
+import {FaTrashAlt} from "react-icons/fa";
 import Badge from "react-bootstrap/Badge";
 import ModeratorInvitationModal from "../../../components/modal/moderator-invitation-modal";
 import copy from "copy-text-to-clipboard";
 import AdminSidebar from "../../../components/sidebar/admin-sidebar";
 import {popupSwal} from "../../../components/util/sweetalert-utils";
 import {FaTimes} from "react-icons/all";
+import ClickableTip from "../../../components/util/clickable-tip";
 
 class ModeratorsSettings extends Component {
 
@@ -43,9 +44,7 @@ class ModeratorsSettings extends Component {
             const mods = res.data;
             let quotaReached = this.quotaModeratorsLimitReached(mods);
             this.setState({data: mods, loaded: true, quotaReached});
-        }).catch(() => {
-            this.setState({error: true});
-        });
+        }).catch(() => this.setState({error: true}));
         axios.get(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/invitedModerators", getSimpleRequestConfig(this.context.user.session)).then(res => {
             if (res.status !== 200) {
                 this.setState({invitedError: true});
@@ -54,9 +53,7 @@ class ModeratorsSettings extends Component {
             const mods = res.data;
             let quotaReached = this.quotaModeratorsLimitReached(mods);
             this.setState({invitedData: mods, invitedLoaded: true, quotaReached});
-        }).catch(() => {
-            this.setState({invitedError: true});
-        });
+        }).catch(() => this.setState({invitedError: true}));
     }
 
     quotaModeratorsLimitReached(mods) {
@@ -103,22 +100,8 @@ class ModeratorsSettings extends Component {
         return <React.Fragment>
             <Col xs={12} sm={6} className="mb-sm-0 mb-3">
                 <div className="text-black-60 mb-1">
-                    Moderators Quota ({10 - this.state.data.length} left)
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="moderatorsQuota">
-                                <Popover.Title as="h3">Moderators Quota</Popover.Title>
-                                <Popover.Content>
-                                    Amount of moderators your board can have.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="ml-1 fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <span className="mr-1">Moderators Quota ({10 - this.state.data.length} left)</span>
+                    <ClickableTip id="quota" title="Moderators Quota" description="Amount of moderators your board can have."/>
                 </div>
                 {this.state.data.map((mod, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={"boardMod_" + i}>
@@ -137,22 +120,8 @@ class ModeratorsSettings extends Component {
             </Col>
             <Col xs={12} sm={6}>
                 <div className="text-black-60 mb-1">
-                    Invited Moderators
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="moderatorsQuota">
-                                <Popover.Title as="h3">Invited Moderators</Popover.Title>
-                                <Popover.Content>
-                                    Moderators that were invited and received invitation email.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="ml-1 fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <span className="mr-1">Invited Moderators</span>
+                    <ClickableTip id="invited" title="Invited Moderators" description="Moderators that were invited and received invitation email."/>
                 </div>
                 {this.state.invitedData.map((invited, i) => {
                     return <div className="my-1" key={i}>
@@ -164,7 +133,7 @@ class ModeratorsSettings extends Component {
                         {invited.user.username}
                         {" - "}
                         <a href="#!" className="text-black-60" onClick={() => {
-                            copy("https://app.feedbacky.net/moderator_invitation/" + invited.code);
+                            copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
                             toastSuccess("Copied to clipboard.");
                         }}>Copy Invite</a>
                         <OverlayTrigger overlay={<Tooltip id={"deleteModInvite" + i + "-tooltip"}>Invalidate</Tooltip>}>
@@ -210,9 +179,7 @@ class ModeratorsSettings extends Component {
                     const data = this.state.data.filter(item => item.userId !== mod.userId);
                     this.setState({data});
                     toastSuccess("Permissions revoked.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 
@@ -235,9 +202,7 @@ class ModeratorsSettings extends Component {
                     const invitedData = this.state.invitedData.filter(item => item.id !== id);
                     this.setState({invitedData});
                     toastSuccess("Invitation removed.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 

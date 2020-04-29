@@ -174,9 +174,7 @@ class IdeaBox extends Component {
                     votersAmount
                 }
             }));
-        }).catch(() => {
-            toastError();
-        });
+        }).catch(() => toastError());
     };
 
 }

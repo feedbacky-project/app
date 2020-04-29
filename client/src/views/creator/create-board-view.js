@@ -13,6 +13,7 @@ import StepSecond from "./steps/step-second";
 import StepThird from "./steps/step-third";
 import axios from "axios";
 import {FaAngleLeft, FaAngleRight} from "react-icons/all";
+import {NextStepButton, PreviousStepButton} from "../../components/steps/steps-buttons";
 
 class CreateBoardView extends Component {
 
@@ -97,9 +98,7 @@ class CreateBoardView extends Component {
                     }
                     toastSuccess("Created new board! Hooray!", toastId);
                     this.props.history.push("/b/" + this.state.discriminator);
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                });
+                }).catch(err => toastError(err.response.data.errors[0]));
                 return <StepThird onSetupMethodCall={this.onSetupMethodCall} theme={this.state.themeColor}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");
@@ -131,14 +130,14 @@ class CreateBoardView extends Component {
         if (this.state.step === 1) {
             return <React.Fragment/>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><FaAngleLeft/> Back</Button>
+        return <PreviousStepButton previousStep={this.previousStep}/>
     }
 
     renderNextButton() {
         if (this.state.step === 3) {
             return <Button variant="success" className="text-white" onClick={this.nextStep}>Create Board</Button>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <FaAngleRight/></Button>
+        return <NextStepButton nextStep={this.nextStep}/>
     }
 
     previousStep = () => {
@@ -177,11 +176,8 @@ class CreateBoardView extends Component {
     };
 
     async checkBoardAvailability() {
-        return axios.get(this.context.apiRoute + "/boards/" + this.state.discriminator).then(res => {
-            return res.status === 200;
-        }).catch(() => {
-            return false;
-        });
+        return axios.get(this.context.apiRoute + "/boards/" + this.state.discriminator)
+            .then(res => res.status === 200).catch(() => false);
     };
 }
 

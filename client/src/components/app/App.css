@@ -1,29 +1,4 @@
-/* fixes scrollbar repositioning page */
-html {
-    overflow-x: hidden;
-    margin-right: calc(-1 * (100vw - 100%));
-}
 
-body {
-    font-size: 15px;
-    font-family: 'Roboto', sans-serif !important;
-}
-
-.form-control::placeholder {
-    font-size: 15px;
-}
-
-.btn {
-    text-transform: none !important;
-}
-
-.btn:not(.btn-link) {
-    box-shadow: 0 1px 3px rgba(50,50,93,.25),0 1px 0 rgba(0,0,0,.02);
-}
-
-.btn:not(.btn-link):hover {
-    box-shadow: 0 3px 5px rgba(50,50,93,.35),0 1px 0 rgba(0,0,0,.02);
-}
 
 .block-hover a:hover {
     color: white !important;
@@ -110,17 +85,6 @@ body {
     }
 }
 
-/* fixes mobile minimum width */
-body, .modal {
-    min-width: 280px;
-}
-
-body {
-    min-height: 100vh;
-    position: relative;
-    margin: 0;
-}
-
 footer {
     position: absolute;
     bottom: 0;
@@ -179,14 +143,6 @@ footer p {
 
 .small-text-shadow {
     text-shadow: 0 0 3px #000;
-}
-
-.vertical-center {
-    min-height: 100%;
-    min-height: 100vh;
-
-    display: flex;
-    align-items: center;
 }
 
 /* to fix profile mobile card deck breaking */
@@ -448,11 +404,6 @@ a {
     font-size: 1.25em !important;
 }
 
-/* fixes sweetalert modal padding override */
-body {
-    padding-right: 0 !important;
-}
-
 .box-overlay {
     border-style: solid;
     border-width: 2px;
@@ -475,36 +426,6 @@ body {
 
 .role-internal-color {
     color: #0080FF;
-}
-
-.dark-toggler {
-    position: relative;
-}
-.dark-toggler .well {
-    cursor: pointer;
-}
-.dark-toggler .toggle {
-    appearance: none;
-    background: transparent;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    z-index: 100;
-}
-.dark-toggler .toggle ~ .dark-toggle:before {
-    content: "🌕";
-    position: absolute;
-    left: 0;
-    top: -15px;
-    font-size: 40px;
-    z-index: 1;
-    transition: 0.2s;
-}
-.dark-toggler .toggle:checked ~ .dark-toggle:before {
-    content: "🌑";
-    left: 100%;
-    margin-left: -1em;
 }
 
 .view .mask {

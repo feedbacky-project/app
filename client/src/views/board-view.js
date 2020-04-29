@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import BoardNavbar from "../components/navbars/board-navbar";
 import BoardSearchBar from "../components/board/searchbar/board-search-bar";
-import BoardContainer from "../components/board/ideas/container/board-container";
+import BoardContainer from "../components/board/ideas/board-container";
 import axios from "axios";
 import ErrorView from "./errors/error-view";
 import {FaExclamationCircle} from "react-icons/fa";
@@ -57,9 +57,7 @@ class BoardView extends Component {
                     data.socialLinks.sort((a, b) => (a.id > b.id) ? 1 : -1);
                     this.context.onThemeChange(data.themeColor || "#343a40");
                     this.setState({data, loaded: true});
-                }).catch(() => {
-                this.setState({error: true})
-            });
+                }).catch(() => this.setState({error: true}));
         }
         if (!this.state.moderatorsLoaded) {
             axios.get(this.context.apiRoute + "/boards/" + this.state.id + "/moderators", getSimpleRequestConfig(this.context.user.session))
@@ -69,9 +67,7 @@ class BoardView extends Component {
                     }
                     const moderators = res.data;
                     this.setState({moderators, moderatorsLoaded: true});
-                }).catch(() => {
-                this.setState({error: true})
-            });
+                }).catch(() => this.setState({error: true}));
         }
     }
 

@@ -40,9 +40,7 @@ class AdminPanelView extends Component {
                 }
                 const data = res.data;
                 this.setState({data, loaded: true});
-            }).catch(() => {
-            this.setState({error: true})
-        });
+            }).catch(() => this.setState({error: true}));
     }
 
     resolvePassedData() {

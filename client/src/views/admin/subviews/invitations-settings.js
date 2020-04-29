@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import AppContext from "../../../context/app-context";
-import {Button, Col, OverlayTrigger, Popover, Row, Tooltip} from "react-bootstrap";
+import {Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "../../../components/util/loading-spinner";
-import {FaQuestionCircle, FaTrashAlt} from "react-icons/fa";
+import {FaTrashAlt} from "react-icons/fa";
 import {getSimpleRequestConfig, getSizedAvatarByUrl, toastError, toastSuccess} from "../../../components/util/utils";
 import InvitationModal from "../../../components/modal/invitation-modal";
 import copy from "copy-text-to-clipboard";
 import AdminSidebar from "../../../components/sidebar/admin-sidebar";
 import {popupSwal} from "../../../components/util/sweetalert-utils";
+import ClickableTip from "../../../components/util/clickable-tip";
 
 class InvitationsSettings extends Component {
 
@@ -40,9 +41,7 @@ class InvitationsSettings extends Component {
             }
             const data = res.data;
             this.setState({data, loaded: true});
-        }).catch(() => {
-            this.setState({error: true});
-        });
+        }).catch(() => this.setState({error: true}));
         axios.get(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/invitedUsers", getSimpleRequestConfig(this.context.user.session)).then(res => {
             if (res.status !== 200) {
                 this.setState({invitedError: true});
@@ -50,9 +49,7 @@ class InvitationsSettings extends Component {
             }
             const invitedData = res.data;
             this.setState({invitedData, invitedLoaded: true});
-        }).catch(() => {
-            this.setState({invitedError: true});
-        });
+        }).catch(() => this.setState({invitedError: true}));
     }
 
     render() {
@@ -85,21 +82,7 @@ class InvitationsSettings extends Component {
             <Row className="m-0 p-4 rounded box-overlay">
                 <Col sm={6} className="px-1 mb-sm-0 mb-4">
                     <span className="mr-1 text-black-60">Pending Invitations</span>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="boardPendingPopover">
-                                <Popover.Title as="h3">Pending Invitations</Popover.Title>
-                                <Popover.Content>
-                                    Users whose invitations were not yet accepted.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="invitePending" title="Pending Invitations" description="Users whose invitations were not yet accepted."/>
                     {this.renderInvitations()}
                     <div>
                         <Button className="btn-smaller text-white m-0 mt-3" variant="" style={{backgroundColor: this.context.theme}} onClick={this.onInvitationCreateModalClick}>Invite New</Button>
@@ -107,22 +90,7 @@ class InvitationsSettings extends Component {
                 </Col>
                 <Col sm={6} className="px-1">
                     <span className="mr-1 text-black-60">Invited Members</span>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="boardInvitedPopover">
-                                <Popover.Title as="h3">Invited Members</Popover.Title>
-                                <Popover.Content>
-                                    Users who accepted invitation and can see your board.
-                                    Can be kicked any time.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="invited" title="Invited Members" description="Users who accepted invitation and can see your board. Can be kicked any time."/>
                     {this.renderInvited()}
                 </Col>
             </Row>
@@ -140,7 +108,7 @@ class InvitationsSettings extends Component {
                 {invite.user.username}
                 {" - "}
                 <a href="#!" className="text-black-60" onClick={() => {
-                    copy("https://app.feedbacky.net/invitation/" + invite.code);
+                    copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/invitation/" + invite.code);
                     toastSuccess("Copied to clipboard.")
                 }}>Copy Invite</a>
                 <OverlayTrigger overlay={<Tooltip id={"deleteInvite" + i + "-tooltip"}>Invalidate</Tooltip>}>

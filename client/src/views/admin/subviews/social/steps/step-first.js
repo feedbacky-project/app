@@ -3,6 +3,7 @@ import {Card, CardDeck, Col, Row} from "react-bootstrap";
 import {FaDiscord, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
 import {getBase64FromFile, validateImageWithWarning} from "../../../../../components/util/utils";
 import {FaFileUpload} from "react-icons/all";
+import UndrawCreateProject from "../../../../../assets/svg/undraw/create_project.svg";
 
 const itemsIcons = [<FaGithub className="fa-lg"/>, <FaDiscord className="fa-lg"/>, <FaPatreon className="fa-lg"/>, <FaYoutube className="fa-lg"/>,
     <FaGlobe className="fa-lg"/>, <FaFileUpload className="fa-lg"/>];
@@ -46,7 +47,7 @@ const StepFirst = (props) => {
     return <React.Fragment>
         <input id="logoInput" type="file" accept="image/jpeg, image/png" className="d-none" name="logo" onChange={e => onUpload(e, props)}/>
         <Col xs={12} className="mt-4 text-center">
-            <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_create_project.svg" className="my-2" width={150} height={150}/>
+            <img alt="" src={UndrawCreateProject} className="my-2" width={150} height={150}/>
             <h2>Choose Link Icon</h2>
             <span className="text-black-60">
                     Select icon that your Social Link will represent.

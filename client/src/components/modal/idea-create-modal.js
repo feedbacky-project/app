@@ -1,14 +1,14 @@
 import React, {useContext, useState} from 'react';
-import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import {OverlayTrigger, Popover} from "react-bootstrap";
-import {FaQuestionCircle, FaRegImage} from "react-icons/fa";
+import {FaRegImage} from "react-icons/fa";
 import {formatRemainingCharacters, getBase64FromFile, getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "../util/utils";
 import AppContext from "../../context/app-context";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaTimesCircle} from "react-icons/all";
+import PageModal from "./page-modal";
+import ClickableTip from "../util/clickable-tip";
 
 const IdeaCreateModal = (props) => {
     const context = useContext(AppContext);
@@ -90,97 +90,57 @@ const IdeaCreateModal = (props) => {
         });
     };
 
-    return <Modal id="ideaPostModal" show={props.open} onHide={props.onCreateIdeaModalClose}>
-        <Modal.Header className="text-center pb-0" style={{display: "block", borderBottom: "none"}}>
-            <Modal.Title><h5 className="modal-title">Post Feedback</h5></Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="py-1">
-            <Form noValidate onSubmit={e => e.preventDefault()}>
-                <Form.Group className="mt-2 mb-1">
-                    <Form.Label className="mr-1">Title</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="ideaTitlePopover">
-                                <Popover.Title as="h3">Writing a Title</Popover.Title>
-                                <Popover.Content>
-                                    Short and simple title for your feedback suggestion.<br/>
-                                    Keep longer than 10 and shorter than 50 characters.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
-                    <br/>
-                    <div className="col-12 d-inline-block px-0">
-                        <div className="col-11 pr-3 px-0 d-inline-block">
-                            <Form.Control style={{maxHeight: 38, resize: "none"}} minLength="10" maxLength="50" rows="1" required type="text" defaultValue={title}
-                                          placeholder="Brief and descriptive title." id="titleTextarea" onKeyUp={e => {
-                                formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
-                                setTitle(e.target.value);
-                                //todo bring me back one day
-                                /*clearTimeout(timeoutVal);
-                                setTimeoutVal(setTimeout(() => {
-                                    axios.get(context.apiRoute + "/boards/" + props.discriminator + "/ideas?query=" + title)
-                                        .then(res => setSimilarIdeas(res.data.data))
-                                }, 500));*/
-                            }}/>
-                        </div>
-                        {renderAttachmentButton()}
-                    </div>
-                    <Form.Text className="d-inline float-left text-black-60" id="remainingTitle">
-                        50 Remaining
-                    </Form.Text>
-                    <Form.Text className="d-inline float-right text-black-60">
-                        {attachmentName}
-                    </Form.Text>
-                </Form.Group>
+    return <PageModal id="ideaPost" isOpen={props.open} onHide={props.onCreateIdeaModalClose} title="Post Feedback"
+                      applyButton={<Button variant="" style={{backgroundColor: context.theme}} onClick={handleSubmit} className="btn-smaller text-white">Post Idea</Button>}>
+        <Form noValidate onSubmit={e => e.preventDefault()}>
+            <Form.Group className="mt-2 mb-1">
+                <Form.Label className="mr-1">Title</Form.Label>
+                <ClickableTip id="ideaTitle" title="Writing a Title" description="Keep longer than 10 and shorter than 50 characters."/>
                 <br/>
-                <Form.Group className="my-2">
-                    <Form.Label className="mr-1">Description</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="ideaDescriptionPopover">
-                                <Popover.Title as="h3">Writing a Description</Popover.Title>
-                                <Popover.Content>
-                                    Write a detailed description of your feedback suggestion.<br/>
-                                    Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
-                                    Please keep under 1800 characters.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
-                    <TextareaAutosize className="form-control" id="descriptionTextarea" rows={3} maxRows={9}
-                                      placeholder="Detailed description." minLength="10" maxLength="1800" required as="textarea"
-                                      style={{resize: "none", overflow: "hidden"}} onKeyUp={() => formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800)}/>
-                    <Form.Text className="d-inline float-left text-black-60" id="remainingDescription">
-                        1800 Remaining
-                    </Form.Text>
-                    <Form.Text className="d-inline float-right text-black-60 d-inline">
-                        Markdown Supported
-                    </Form.Text>
-                </Form.Group>
-                {renderSimilarIdeas()}
-            </Form>
-        </Modal.Body>
-        <Modal.Footer style={{borderTop: "none"}} className="pt-2">
-            <Button variant="link" className="m-0 btn-smaller text-black-60" onClick={props.onCreateIdeaModalClose}>
-                Cancel
-            </Button>
-            <Button variant="" style={{backgroundColor: context.theme}}
-                    onClick={handleSubmit} className="btn-smaller text-white">
-                Post Idea
-            </Button>
-        </Modal.Footer>
-    </Modal>
+                <div className="col-12 d-inline-block px-0">
+                    <div className="col-11 pr-3 px-0 d-inline-block">
+                        <Form.Control style={{maxHeight: 38, resize: "none"}} minLength="10" maxLength="50" rows="1" required type="text" defaultValue={title}
+                                      placeholder="Brief and descriptive title." id="titleTextarea" onKeyUp={e => {
+                            formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
+                            setTitle(e.target.value);
+                            //todo bring me back one day
+                            /*clearTimeout(timeoutVal);
+                            setTimeoutVal(setTimeout(() => {
+                                axios.get(context.apiRoute + "/boards/" + props.discriminator + "/ideas?query=" + title)
+                                    .then(res => setSimilarIdeas(res.data.data))
+                            }, 500));*/
+                        }}/>
+                    </div>
+                    {renderAttachmentButton()}
+                </div>
+                <Form.Text className="d-inline float-left text-black-60" id="remainingTitle">
+                    50 Remaining
+                </Form.Text>
+                <Form.Text className="d-inline float-right text-black-60">
+                    {attachmentName}
+                </Form.Text>
+            </Form.Group>
+            <br/>
+            <Form.Group className="my-2">
+                <Form.Label className="mr-1">Description</Form.Label>
+                <ClickableTip id="ideaDescription" title="Writing a Description" description={<React.Fragment>
+                    Write a detailed description of your feedback suggestion.<br/>
+                    Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
+                    Please keep under 1800 characters.
+                </React.Fragment>}/>
+                <TextareaAutosize className="form-control" id="descriptionTextarea" rows={3} maxRows={9}
+                                  placeholder="Detailed description." minLength="10" maxLength="1800" required as="textarea"
+                                  style={{resize: "none", overflow: "hidden"}} onKeyUp={() => formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800)}/>
+                <Form.Text className="d-inline float-left text-black-60" id="remainingDescription">
+                    1800 Remaining
+                </Form.Text>
+                <Form.Text className="d-inline float-right text-black-60 d-inline">
+                    Markdown Supported
+                </Form.Text>
+            </Form.Group>
+            {renderSimilarIdeas()}
+        </Form>
+    </PageModal>
 };
 
 export default IdeaCreateModal;

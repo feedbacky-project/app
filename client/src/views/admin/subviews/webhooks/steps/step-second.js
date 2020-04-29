@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, Col, Row} from "react-bootstrap";
 import CardGroup from "react-bootstrap/CardGroup";
+import UndrawChooseEvents from "../../../../../assets/svg/undraw/choose_events.svg";
 
 const events = ["IDEA_CREATE", "IDEA_DELETE", "IDEA_COMMENT", "IDEA_COMMENT_DELETE", "IDEA_EDIT", "IDEA_TAG_CHANGE", "IDEA_OPEN", "IDEA_CLOSE"];
 const eventNames = ["Idea Post Create", "Idea Post Delete", "Idea Comment Post", "Idea Comment Delete", "Idea Post Edited", "Idea Tag Change", "Idea State Open", "Idea State Close"];
@@ -28,7 +29,7 @@ const StepSecond = (props) => {
 
     return <React.Fragment>
         <Col xs={12} className="mt-4 text-center">
-            <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_events.svg" className="my-2" width={150} height={150}/>
+            <img alt="" src={UndrawChooseEvents} className="my-2" width={150} height={150}/>
             <h2>Choose Listened Events</h2>
             <span className="text-black-60">
                     Select events that this webhook will listen for.

@@ -74,9 +74,7 @@ const SettingsSubview = (props) => {
                 context.user.onLogOut();
                 history.push("/me/explore");
                 toastSuccess("Account permanently deactivated.", toastId);
-            }).catch(err => {
-                toastError(err.response.data.errors[0]);
-            });
+            }).catch(err => toastError(err.response.data.errors[0]));
         });
     };
 

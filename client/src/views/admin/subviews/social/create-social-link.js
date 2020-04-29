@@ -10,6 +10,7 @@ import {Link, withRouter} from "react-router-dom";
 
 import "../../../Steps.css";
 import {FaAngleLeft, FaAngleRight} from "react-icons/all";
+import {NextStepButton, PreviousStepButton} from "../../../../components/steps/steps-buttons";
 
 class CreateSocialLink extends Component {
 
@@ -73,9 +74,7 @@ class CreateSocialLink extends Component {
                     }
                     toastSuccess("Added new social link.", toastId);
                     this.props.history.push("/ba/" + this.props.data.discriminator + "/social");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0], toastId);
-                });
+                }).catch(err => toastError(err.response.data.errors[0], toastId));
                 return <StepSecond onSetupMethodCall={this.onSetupMethodCall} banner={this.state.banner} logo={this.state.logo}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");
@@ -105,14 +104,14 @@ class CreateSocialLink extends Component {
         if (this.state.step === 1) {
             return <React.Fragment/>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><FaAngleLeft/> Back</Button>
+        return <PreviousStepButton previousStep={this.previousStep}/>
     }
 
     renderNextButton() {
         if (this.state.step >= 2) {
             return <Button variant="success" className="text-white" onClick={this.nextStep}>Finish</Button>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <FaAngleRight/></Button>
+        return <NextStepButton nextStep={this.nextStep}/>
     }
 
     previousStep = () => {

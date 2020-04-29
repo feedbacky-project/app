@@ -1,19 +1,15 @@
 import React, {useContext} from 'react';
-import {Container, Nav, Navbar, NavbarBrand} from "react-bootstrap";
+import {Container, Nav, NavbarBrand} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import AppContext from "../../context/app-context";
 import {renderLogIn} from "./navbar-commons";
+import PageNavbar from "./page-navbar";
 
 const BoardNavbar = (props) => {
     const context = useContext(AppContext);
-    const styles = {
-        zIndex: 3,
-        //darken
-        backgroundColor: context.user.darkMode ? context.theme + "D9" : context.theme,
-    };
+    const theme = context.user.darkMode ? context.theme + "D9" : context.theme;
 
-    return <Navbar variant="dark" style={styles} expand="lg"
-                   className="py-1 fixed-nav-index">
+    return <PageNavbar theme={theme}>
         <Container className="d-flex">
             <NavbarBrand className="mr-0 text-truncate text-left flex-on" as={Link} to="/me">
                 <img className="img-responsive mr-2" src={props.logoUrl}
@@ -25,7 +21,7 @@ const BoardNavbar = (props) => {
                 {renderLogIn(props.onNotLoggedClick, context)}
             </Nav>
         </Container>
-    </Navbar>
+    </PageNavbar>
 };
 
 export default BoardNavbar;

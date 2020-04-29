@@ -1,6 +1,5 @@
 import React, {Component, lazy, Suspense} from 'react';
-import {Badge, Col, Form, OverlayTrigger, Popover, Row} from "react-bootstrap";
-import {FaQuestionCircle} from "react-icons/fa";
+import {Badge, Col, Form, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import {formatRemainingCharacters, getBase64FromFile, getSimpleRequestConfig, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "../../../components/util/utils";
@@ -12,6 +11,7 @@ import TextareaAutosize from "react-autosize-textarea";
 import LoadingSpinner from "../../../components/util/loading-spinner";
 import {retry} from "../../../components/util/lazy-init";
 import {popupSwal} from "../../../components/util/sweetalert-utils";
+import ClickableTip from "../../../components/util/clickable-tip";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
@@ -41,21 +41,7 @@ class GeneralSettings extends Component {
             <Row className="py-4 px-sm-2 px-0 rounded-top box-overlay">
                 <Col xs={12} lg={6}>
                     <Form.Label className="mr-1 text-black-60">Board Name</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="boardNamePopover">
-                                <Popover.Title as="h3">Set Board Name</Popover.Title>
-                                <Popover.Content>
-                                    Name of your board should be at least 4 and maximum 25 characters long
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="boardName" title="Set Board Name" description="Name of your board should be at least 4 and maximum 25 characters long."/>
                     <Form.Control style={{maxHeight: 38, resize: "none"}} minLength="4" maxLength="25" rows="1" required type="text"
                                   placeholder="Short name of board." defaultValue={this.props.data.name} id="boardTextarea"
                                   onKeyUp={() => formatRemainingCharacters("remainingBoardName", "boardTextarea", 25)}/>
@@ -65,21 +51,7 @@ class GeneralSettings extends Component {
                 </Col>
                 <Col xs={12} lg={6}>
                     <Form.Label className="mr-1 mt-lg-0 mt-2 text-black-60">Short Description</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="boardDescPopover">
-                                <Popover.Title as="h3">Set Short Description</Popover.Title>
-                                <Popover.Content>
-                                    Very short board description used for thumbnail purposes. Keep it under 50 characters long.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="boardShortDescription" title="Set Short Description" description="Very short board description used for thumbnail purposes. Keep it under 50 characters long."/>
                     <Form.Control style={{maxHeight: 38, resize: "none"}} minLength="10" maxLength="50" rows="1" required type="text"
                                   placeholder="Short description of board." defaultValue={this.props.data.shortDescription} id="shortDescrTextarea"
                                   onKeyUp={() => formatRemainingCharacters("remainingShortDescr", "shortDescrTextarea", 50)}/>
@@ -89,26 +61,12 @@ class GeneralSettings extends Component {
                 </Col>
                 <Col xs={12} lg={6}>
                     <Form.Label className="mr-1 text-black-60 mt-2">Full Description</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="fullBoardDescPopover">
-                                <Popover.Title as="h3">Set Description</Popover.Title>
-                                <Popover.Content>
-                                    Full description visible at your Feedbacky board, markdown supported. Keep it under 2500 characters long.
-                                    <br/>
-                                    <strong>Markdown Tips:</strong>
-                                    <br/><strong>**bold text**</strong> <i>*italic text*</i>
-                                    <br/><br/>
-                                    Use two line breaks (click Enter twice) to make a separate blank line.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="boardDescription" title="Set Description" description={<React.Fragment>
+                        Full description visible at your Feedbacky board, markdown supported. Keep it under 2500 characters long.
+                        <br/>
+                        <strong>Markdown Tips:</strong>
+                        <br/><strong>**bold text**</strong> <i>*italic text*</i>
+                    </React.Fragment>}/>
                     <TextareaAutosize className="form-control bg-lighter" minLength="10" maxLength="2500" rows={6} maxRows={13} required as="textarea"
                                       placeholder="Full and descriptive description of board (supports emojis and markdown)." defaultValue={htmlDecode(this.props.data.fullDescription)} id="fullDescrTextarea"
                                       onKeyUp={() => formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500)}/>
@@ -121,21 +79,7 @@ class GeneralSettings extends Component {
                 </Col>
                 <Col xs={12} lg={6}>
                     <Form.Label className="mr-1 text-black-60 mt-2">Theme Color</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="themePopover">
-                                <Popover.Title as="h3">Set Theme Color</Popover.Title>
-                                <Popover.Content>
-                                    Configure theme color of your board. It will affect elements of your board.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="themeColor" title="Set Theme Color" description="Configure theme color of your board. It will affect elements of your board."/>
                     <br/>
                     <Suspense fallback={<LoadingSpinner/>}>
                         <CirclePicker colors={["#202428", "#2d3436", "#2c3e50", "#d35400", "#e74c3c", "#e67e22", "#8e44ad", "#2980b9", "#3498db", "#f39c12", "#f1c40f", "#27ae60", "#2ecc71", "#16a085", "#1abc9c", "#95a5a6"]} className="text-center color-picker-admin"
@@ -144,27 +88,7 @@ class GeneralSettings extends Component {
                 </Col>
                 <Col xs={12} lg={8}>
                     <Form.Label className="mr-1 text-black-60 mt-2">Board Banner</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="bannerPopover">
-                                <Popover.Title as="h3">Set Board Banner</Popover.Title>
-                                <Popover.Content>
-                                    Upload your board banner.
-                                    <br/>
-                                    <strong>
-                                        Maximum size 500 kb, png and jpg only.
-                                        <br/>
-                                        Suggested size: 1120x400
-                                    </strong>
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="banner" title="Set Board Banner" description="Suggested size: 1120x400. Maximum size 500 kb, PNG and JPG only."/>
                     <br/>
                     {/* simulate real board jumbotron to show properly sized image */}
                     <div id="boardBanner" className="jumbotron mb-2" style={{backgroundImage: `url("` + this.props.data.banner + `")`}}>
@@ -175,27 +99,7 @@ class GeneralSettings extends Component {
                 </Col>
                 <Col xs={12} lg={4}>
                     <Form.Label className="mr-1 text-black-60 mt-2">Board Logo</Form.Label>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="logoPopover">
-                                <Popover.Title as="h3">Set Board Logo</Popover.Title>
-                                <Popover.Content>
-                                    Upload your board logo.
-                                    <br/>
-                                    <strong>
-                                        Maximum size 150 kb, png and jpg only.
-                                        <br/>
-                                        Suggested size: 100x100
-                                    </strong>
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="logo" title="Set Board Logo" description="Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."/>
                     <br/>
                     <img alt="logo" src={this.props.data.logo} id="boardLogo" className="img-fluid mb-2" width="50px"/>
                     <br/>
@@ -215,7 +119,7 @@ class GeneralSettings extends Component {
                             <Badge variant="warning" className="ml-1" style={{transform: "translateY(-4px)"}}>Beta</Badge>
                         </h4>
                         <span className="text-black-50" style={{fontSize: ".9em"}}>
-                            Private board can be seen only by invited users from <kbd>Invitations</kbd> section, Feedbacky staff and moderators.
+                            Private board can be seen only by invited users from <kbd>Invitations</kbd> section, service staff and moderators.
                            </span>
                     </div>
                     <div className="col-sm-3 col-6 p-0 text-sm-right text-left my-auto">
@@ -279,9 +183,7 @@ class GeneralSettings extends Component {
                 }
                 this.props.history.push("/me");
                 toastSuccess("Board permanently deleted.", toastId);
-            }).catch(err => {
-                toastError(err.response.data.errors[0]);
-            });
+            }).catch(err => toastError(err.response.data.errors[0]));
         });
     };
 
@@ -304,9 +206,7 @@ class GeneralSettings extends Component {
                     }
                     this.setState({privatePage: state});
                     toastSuccess("Board visibility toggled.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 

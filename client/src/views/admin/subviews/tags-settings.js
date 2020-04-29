@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import {Badge, Button, Col, OverlayTrigger, Popover, Row, Tooltip} from "react-bootstrap";
+import {Badge, Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "../../../components/util/loading-spinner";
-import {FaExclamation, FaQuestionCircle, FaTrashAlt} from "react-icons/fa";
+import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import {getSimpleRequestConfig, toastError, toastSuccess} from "../../../components/util/utils";
 import AppContext from "../../../context/app-context";
 import TagCreateModal from "../../../components/modal/tag-create-modal";
 import AdminSidebar from "../../../components/sidebar/admin-sidebar";
 import {popupSwal} from "../../../components/util/sweetalert-utils";
+import ClickableTip from "../../../components/util/clickable-tip";
 
 class TagsSettings extends Component {
 
@@ -30,9 +31,7 @@ class TagsSettings extends Component {
             const tags = res.data;
             let quotaReached = this.quotaTagsLimitReached(tags);
             this.setState({tags, loaded: true, quotaReached});
-        }).catch(() => {
-            this.setState({error: true});
-        });
+        }).catch(() => this.setState({error: true}));
     }
 
     quotaTagsLimitReached(tags) {
@@ -76,21 +75,7 @@ class TagsSettings extends Component {
             <Row className="m-0 p-4 rounded box-overlay">
                 <Col xs={12} className="px-1 mb-sm-0 mb-4">
                     <span className="mr-1 text-black-60">Tags Quota ({this.renderTagsQuota()} left)</span>
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="boardNamePopover">
-                                <Popover.Title as="h3">Tags Quota</Popover.Title>
-                                <Popover.Content>
-                                    Amount of tags your board can have, you're limited to 10 tags per board.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <ClickableTip id="quota" title="Tags Quota" description="Amount of tags your board can have, you're limited to 10 tags per board."/>
                     {this.renderTags()}
                     <br/>
                     {this.renderNewTagButton()}
@@ -142,9 +127,7 @@ class TagsSettings extends Component {
                         tags, quotaReached: this.quotaTagsLimitReached(tags)
                     });
                     toastSuccess("Tag permanently deleted.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 }

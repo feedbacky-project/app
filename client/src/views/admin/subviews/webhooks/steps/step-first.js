@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, CardDeck, Col, Row} from "react-bootstrap";
 import {FaDiscord, FaGlobe} from "react-icons/fa";
+import UndrawCreateProject from "../../../../../assets/svg/undraw/create_project.svg";
 
 const type = ["DISCORD", "CUSTOM_ENDPOINT"];
 const typeName = ["Discord", "Custom Endpoint"];
@@ -28,7 +29,7 @@ const StepFirst = (props) => {
 
     return <React.Fragment>
         <Col xs={12} className="mt-4 text-center">
-            <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_create_project.svg" className="my-2" width={150} height={150}/>
+            <img alt="" src={UndrawCreateProject} className="my-2" width={150} height={150}/>
             <h2>Select Webhook Type</h2>
             <span className="text-black-60">
                     Select in which way you'll utilize this webhook.

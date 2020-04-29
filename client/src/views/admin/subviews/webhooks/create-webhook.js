@@ -11,6 +11,7 @@ import StepThird from "./steps/step-third";
 
 import "../../../Steps.css";
 import {FaAngleLeft, FaAngleRight} from "react-icons/all";
+import {NextStepButton, PreviousStepButton} from "../../../../components/steps/steps-buttons";
 
 class CreateWebhook extends Component {
 
@@ -78,9 +79,7 @@ class CreateWebhook extends Component {
                     }
                     toastSuccess("Added new webhook, sending sample response.", toastId);
                     this.props.history.push("/ba/" + this.props.data.discriminator + "/webhooks");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0], toastId);
-                });
+                }).catch(err => toastError(err.response.data.errors[0], toastId));
                 return <StepThird onSetupMethodCall={this.onSetupMethodCall} url={this.state.url}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");
@@ -115,14 +114,14 @@ class CreateWebhook extends Component {
         if (this.state.step === 1) {
             return <React.Fragment/>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pl-1" onClick={this.previousStep}><FaAngleLeft/> Back</Button>
+        return <PreviousStepButton previousStep={this.previousStep}/>
     }
 
     renderNextButton() {
         if (this.state.step >= 3) {
             return <Button variant="success" className="text-white" onClick={this.nextStep}>Finish</Button>
         }
-        return <Button variant="" style={{backgroundColor: "#0994f6"}} className="text-white pr-1" onClick={this.nextStep}>Next <FaAngleRight/></Button>
+        return <NextStepButton nextStep={this.nextStep}/>
     }
 
     previousStep = () => {

@@ -6,13 +6,13 @@ import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 import LoginModal from "../../components/modal/login-modal";
+import ServiceLogo from "../../assets/img/service-logo.png";
 
 const ErrorView = (props) => {
     const [loginModalOpen, setLoginModalOpen] = useState(false);
     return <React.Fragment>
-        <LoginModal open={loginModalOpen} image="https://cdn.feedbacky.net/static/img/login-logo.png"
-                    boardName={process.env.REACT_APP_SERVICE_NAME} redirectUrl={"me"}
-                    onLoginModalClose={() => setLoginModalOpen(false)}/>
+        <LoginModal open={loginModalOpen} image={ServiceLogo} onLoginModalClose={() => setLoginModalOpen(false)}
+                    boardName={process.env.REACT_APP_SERVICE_NAME} redirectUrl={"me"}/>
         <ErrorNavbar onNotLoggedClick={() => setLoginModalOpen(true)}/>
         <Container>
             <Row className="vertically-center-error text-center">

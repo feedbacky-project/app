@@ -1,12 +1,13 @@
 import React from 'react';
-import {Col, Form, OverlayTrigger, Popover} from "react-bootstrap";
-import {FaQuestionCircle} from "react-icons/fa";
+import {Col, Form} from "react-bootstrap";
 import {getBase64FromFile, validateImageWithWarning} from "../../../components/util/utils";
+import ClickableTip from "../../../components/util/clickable-tip";
+import UndrawBrandProject from "../../../assets/svg/undraw/brand_project.svg";
 
 const StepSecond = (props) => {
     return <React.Fragment>
         <Col xs={12} className="mt-4 text-center">
-            <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_brand_project.svg" className="my-2" width={150} height={150}/>
+            <img alt="" src={UndrawBrandProject} className="my-2" width={150} height={150}/>
             <h2>Brand Your Board</h2>
             <span className="text-black-60">
                     Upload your board logo and banner. This step is required.
@@ -14,27 +15,15 @@ const StepSecond = (props) => {
         </Col>
         <Col xs={12} sm={6} className="mt-4 px-md-5 px-3">
             <Form.Label className="mr-1 text-black-60">Board Banner</Form.Label>
-            <OverlayTrigger
-                trigger="click"
-                placement="top"
-                rootClose={true}
-                rootCloseEvent="click"
-                overlay={
-                    <Popover id="bannerPopover">
-                        <Popover.Title as="h3">Set Board Banner</Popover.Title>
-                        <Popover.Content>
-                            Upload your board banner.
-                            <br/>
-                            <strong>
-                                Maximum size 500 kb, png and jpg only.
-                                <br/>
-                                Suggested size: 1120x400
-                            </strong>
-                        </Popover.Content>
-                    </Popover>
-                }>
-                <FaQuestionCircle className="fa-xs text-black-50"/>
-            </OverlayTrigger>
+            <ClickableTip id="banner" title="Set Board Banner" description={<React.Fragment>
+                Upload your board banner.
+                <br/>
+                <strong>
+                    Maximum size 500 kb, png and jpg only.
+                    <br/>
+                    Suggested size: 1120x400
+                </strong>
+            </React.Fragment>}/>
             <br/>
             {/* simulate real board jumbotron to show properly sized image */}
             <div id="boardBanner" className="jumbotron mb-2" style={{backgroundImage: `url("` + props.banner + `")`}}>
@@ -45,27 +34,15 @@ const StepSecond = (props) => {
         </Col>
         <Col xs={12} sm={6} className="mt-4 px-md-5 px-3">
             <Form.Label className="mr-1 text-black-60">Board Logo</Form.Label>
-            <OverlayTrigger
-                trigger="click"
-                placement="top"
-                rootClose={true}
-                rootCloseEvent="click"
-                overlay={
-                    <Popover id="logoPopover">
-                        <Popover.Title as="h3">Set Board Logo</Popover.Title>
-                        <Popover.Content>
-                            Upload your board logo.
-                            <br/>
-                            <strong>
-                                Maximum size 150 kb, png and jpg only.
-                                <br/>
-                                Suggested size: 100x100
-                            </strong>
-                        </Popover.Content>
-                    </Popover>
-                }>
-                <FaQuestionCircle className="fa-xs text-black-50"/>
-            </OverlayTrigger>
+            <ClickableTip id="logo" title="Set Board Logo" description={<React.Fragment>
+                Upload your board logo.
+                <br/>
+                <strong>
+                    Maximum size 150 kb, png and jpg only.
+                    <br/>
+                    Suggested size: 100x100
+                </strong>
+            </React.Fragment>}/>
             <br/>
             <img alt="logo" src={props.logo} id="boardLogo" className="img-fluid mb-2" width="50px"/>
             <br/>

@@ -3,12 +3,12 @@ import AppContext from "../../../../context/app-context";
 import axios from "axios";
 import {getSimpleRequestConfig, prettifyEnum, toastError, toastSuccess} from "../../../../components/util/utils";
 import AdminSidebar from "../../../../components/sidebar/admin-sidebar";
-import {Badge, Button, Col, OverlayTrigger, Popover, Row, Tooltip} from "react-bootstrap";
+import {Badge, Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
 import LoadingSpinner from "../../../../components/util/loading-spinner";
-import {FaQuestionCircle} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {popupSwal} from "../../../../components/util/sweetalert-utils";
-import {FaTimes, FaTimesCircle} from "react-icons/all";
+import {FaTimesCircle} from "react-icons/all";
+import ClickableTip from "../../../../components/util/clickable-tip";
 
 class WebhooksSettings extends Component {
 
@@ -28,9 +28,7 @@ class WebhooksSettings extends Component {
             }
             const data = res.data;
             this.setState({data, loaded: true});
-        }).catch(() => {
-            this.setState({error: true});
-        });
+        }).catch(() => this.setState({error: true}));
     }
 
     calculateLeft() {
@@ -65,22 +63,8 @@ class WebhooksSettings extends Component {
         return <React.Fragment>
             <Col xs={12} sm={6} className="mb-sm-0 mb-3">
                 <div className="text-black-60 mb-1">
-                    Webhooks Quota ({this.calculateLeft()} left)
-                    <OverlayTrigger
-                        trigger="click"
-                        placement="top"
-                        rootClose={true}
-                        rootCloseEvent="click"
-                        overlay={
-                            <Popover id="moderatorsQuota">
-                                <Popover.Title as="h3">Webhooks Quota</Popover.Title>
-                                <Popover.Content>
-                                    Amount of webhooks your board can have.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="ml-1 fa-xs text-black-50"/>
-                    </OverlayTrigger>
+                    <span className="mr-1">Webhooks Quota ({this.calculateLeft()} left)</span>
+                    <ClickableTip id="moderatorsQuota" title="Webhooks Quota" description="Amount of webhooks your board can have."/>
                 </div>
                 {this.state.data.map((hook, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={"boardWebhook_" + i}>
@@ -138,9 +122,7 @@ class WebhooksSettings extends Component {
                     const data = this.state.data.filter(item => item.id !== hook.id);
                     this.setState({data});
                     toastSuccess("Webhook deleted.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 

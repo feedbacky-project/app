@@ -27,9 +27,7 @@ class SocialLinksSettings extends Component {
             }
             const links = res.data;
             this.setState({data: links, loaded: true});
-        }).catch(() => {
-            this.setState({error: true});
-        });
+        }).catch(() => this.setState({error: true}));
     }
 
     calculateLeft() {
@@ -97,9 +95,7 @@ class SocialLinksSettings extends Component {
                     const data = this.state.data.filter(item => item.id !== id);
                     this.setState({data});
                     toastSuccess("Social link deleted.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 

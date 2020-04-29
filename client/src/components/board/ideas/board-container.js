@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
-import IdeaBox from "../idea-box";
+import IdeaBox from "./idea-box";
 import axios from 'axios';
 import {Col, Row} from "react-bootstrap";
-import ErrorIdeaBox from "../error-idea-box";
 import {FaRegFrown} from "react-icons/fa";
-import LoadingSpinner from "../../../util/loading-spinner";
-import AppContext from "../../../../context/app-context";
-import BoardDetailsBox from "../../board-details-box";
+import LoadingSpinner from "../../util/loading-spinner";
+import AppContext from "../../../context/app-context";
+import BoardDetailsBox from "../board-details-box";
 import InfiniteScroll from 'react-infinite-scroller';
-import {getSimpleRequestConfig, prepareFilterAndSortRequests} from "../../../util/utils";
-import {ReactSVG} from "react-svg";
+import {getSimpleRequestConfig, prepareFilterAndSortRequests} from "../../util/utils";
+import {ReactComponent as UndrawNoIdeas} from "../../../assets/svg/undraw/no_ideas.svg";
 
 //fixme
 class BoardContainer extends Component {
@@ -66,16 +65,16 @@ class BoardContainer extends Component {
 
     loadIdeas() {
         if (this.state.error) {
-            return <ErrorIdeaBox>
-                <FaRegFrown className="mr-1"/> Failed to load ideas
-            </ErrorIdeaBox>
+            return <div className="text-center mt-3">
+                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
+                <div>
+                    <strong><FaRegFrown className="mr-1"/> Failed to load ideas</strong>
+                </div>
+            </div>
         }
         if (this.state.initialLoaded && this.state.ideas.length === 0 && !this.state.moreToLoad) {
             return <div className="text-center mt-3">
-                <ReactSVG src="https://cdn.feedbacky.net/static/svg/undraw_no_ideas.svg"
-                          beforeInjection={svg => {
-                              svg.setAttribute('style', 'max-width: 150px; max-height: 120px; color: ' + this.context.theme);
-                          }}/>
+                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
                 <div>
                     <strong style={{fontSize: "1.1rem"}}>No ideas yet.</strong>
                     <br/>
@@ -102,9 +101,7 @@ class BoardContainer extends Component {
                 const ideas = res.data.data;
                 ideas.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
                 this.setState({ideas: this.state.ideas.concat(ideas), moreToLoad: res.data.pageMetadata.currentPage !== res.data.pageMetadata.pages, initialLoaded: true});
-            }).catch(() => {
-                this.setState({error: true});
-            });
+            }).catch(() => this.setState({error: true}));
     }
 
 }

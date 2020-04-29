@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Col, Image, OverlayTrigger, Popover, Row, Tooltip} from "react-bootstrap";
+import {Button, Col, Image, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "../util/loading-spinner";
 import {FaEdit, FaFrown, FaLockOpen, FaTags, FaTimesCircle} from "react-icons/fa";
@@ -7,12 +7,13 @@ import TimeAgo from "timeago-react";
 import {formatUsername, getSimpleRequestConfig, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, toastSuccess, toastWarning} from "../util/utils";
 import AppContext from "../../context/app-context";
 import snarkdown from "../util/snarkdown";
-import {ReactSVG} from "react-svg";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
 import {popupSwal} from "../util/sweetalert-utils";
-import {FaHeart, FaLowVision, FaQuestionCircle, FaRegHeart, FaTrashAlt} from "react-icons/all";
+import {FaHeart, FaLowVision, FaRegHeart, FaTrashAlt} from "react-icons/all";
 import {parseEmojis} from "../util/emoji-filter";
+import ClickableTip from "../util/clickable-tip";
+import {ReactComponent as UndrawNoData} from "../../assets/svg/undraw/no_data.svg";
 
 class DiscussionBox extends Component {
 
@@ -47,9 +48,7 @@ class DiscussionBox extends Component {
             .then(res => {
                 const ideas = res.data.data;
                 this.setState({loaded: true, data: this.state.data.concat(ideas), page, moreToLoad: res.data.pageMetadata.currentPage !== res.data.pageMetadata.pages});
-            }).catch(() => {
-                this.setState({error: true, loaded: true});
-            });
+            }).catch(() => this.setState({error: true, loaded: true}));
     };
 
     renderComments() {
@@ -104,7 +103,7 @@ class DiscussionBox extends Component {
     }
 
     renderCommentUsername(data) {
-        if(data.viewType === "INTERNAL") {
+        if (data.viewType === "INTERNAL") {
             return <React.Fragment>
                 <small style={{fontWeight: "bold"}}><span className="role-internal-color">{data.user.username}</span></small>
                 <OverlayTrigger overlay={<Tooltip id={"internal" + data.id + "-tooltip"}>Internal Comment</Tooltip>}>
@@ -150,20 +149,14 @@ class DiscussionBox extends Component {
         if (this.state.loaded && this.state.data.length === 0) {
             if (!this.props.ideaData.open) {
                 return <div className="my-3 text-center">
-                    <ReactSVG src="https://cdn.feedbacky.net/static/svg/undraw_no_data.svg"
-                              beforeInjection={svg => {
-                                  svg.setAttribute('style', 'max-width: 150px; max-height: 120px; color: ' + this.context.theme);
-                              }}/>
+                    <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
                     <div>
                         <strong style={{fontSize: "1.1rem"}}>No comments here.</strong>
                     </div>
                 </div>
             }
             return <div className="my-3 text-center">
-                <ReactSVG src="https://cdn.feedbacky.net/static/svg/undraw_no_data.svg"
-                          beforeInjection={svg => {
-                              svg.setAttribute('style', 'max-width: 150px; max-height: 120px; color: ' + this.context.theme);
-                          }}/>
+                <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
                 <div>
                     <strong style={{fontSize: "1.1rem"}}>No comments yet.</strong>
                     <br/>
@@ -205,18 +198,8 @@ class DiscussionBox extends Component {
                         onClick={() => this.onCommentSubmit(false)}>Submit</Button>
                 {moderator && <React.Fragment>
                     <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
-                                      onClick={() => this.onCommentSubmit(true)}>Submit Internal</Button>
-                    <OverlayTrigger trigger="click" placement="top" rootClose={true} rootCloseEvent="click"
-                        overlay={
-                            <Popover id="internalPopover">
-                                <Popover.Title as="h3">Internal Comments</Popover.Title>
-                                <Popover.Content>
-                                    Comments visible only for moderators of the project, hidden from public view.
-                                </Popover.Content>
-                            </Popover>
-                        }>
-                        <FaQuestionCircle className="fa-xs text-black-50 align-top mt-2"/>
-                    </OverlayTrigger>
+                            onClick={() => this.onCommentSubmit(true)}>Submit Internal</Button>
+                    <div className="d-inline-block align-top move-bottom-2px"><ClickableTip id="internalTip" title="Internal Comments" description="Comments visible only for moderators of the project, hidden from public view."/></div>
                 </React.Fragment>}
             </React.Fragment>
         }
@@ -283,9 +266,7 @@ class DiscussionBox extends Component {
                     });
                     this.props.onCommentDelete();
                     toastSuccess("Comment permanently deleted.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]))
             });
     };
 

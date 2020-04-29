@@ -143,9 +143,7 @@ class IdeaView extends Component {
                 ideaData.tags.sort((a, b) => a.name.localeCompare(b.name));
                 this.setState({ideaData, ideaDataLoaded: true});
                 this.loadBoardDataCascade(ideaData);
-            }).catch(() => {
-            this.setState({ideaDataError: true})
-        });
+            }).catch(() => this.setState({ideaDataError: true}));
     }
 
     resolvePassedData() {
@@ -174,9 +172,7 @@ class IdeaView extends Component {
                 this.setState({boardData, boardDataLoaded: true});
                 this.context.onThemeChange(boardData.themeColor);
                 this.loadModeratorDataCascade(boardData);
-            }).catch(() => {
-            this.setState({boardDataError: true});
-        });
+            }).catch(() => this.setState({boardDataError: true}));
     }
 
     loadModeratorDataCascade(boardData) {
@@ -190,9 +186,7 @@ class IdeaView extends Component {
                 }
                 const moderators = response.data;
                 this.setState({moderators, moderatorsLoaded: true});
-            }).catch(() => {
-            this.setState({error: true})
-        });
+            }).catch(() => this.setState({error: true}));
     }
 
     render() {

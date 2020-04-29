@@ -2,13 +2,14 @@ import React, {lazy, Suspense} from 'react';
 import {Col} from "react-bootstrap";
 import LoadingSpinner from "../../../components/util/loading-spinner";
 import {retry} from "../../../components/util/lazy-init";
+import UndrawChooseTheme from "../../../assets/svg/undraw/choose_theme.svg";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
 const StepThird = (props) => {
     return <React.Fragment>
         <Col xs={12} className="mt-4 text-center">
-            <img alt="" src="https://cdn.feedbacky.net/static/svg/undraw_theme_color.svg" className="my-2" width={150} height={150}/>
+            <img alt="" src={UndrawChooseTheme} className="my-2" width={150} height={150}/>
             <h2>Select Theme</h2>
             <span className="text-black-60">
                 Pick theme for your board. This is how your page elements will looks like.

@@ -1,20 +1,16 @@
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 import {FaChevronLeft} from "react-icons/fa";
-import {Container, Nav, Navbar, NavbarBrand} from "react-bootstrap";
+import {Container, Nav, NavbarBrand} from "react-bootstrap";
 import AppContext from "../../context/app-context";
 import {renderLogIn} from "./navbar-commons";
+import PageNavbar from "./page-navbar";
 
 const IdeaNavbar = (props) => {
     const context = useContext(AppContext);
-    const styles = {
-        zIndex: 3,
-        //darken
-        backgroundColor: context.user.darkMode ? context.theme + "D9" : context.theme,
-    };
-
-    return <Navbar variant="dark" style={styles} expand="lg"
-                   className="py-1 fixed-nav-index">
+    const theme = context.user.darkMode ? context.theme + "D9" : context.theme;
+    
+    return <PageNavbar theme={theme}>
         <Link to={{
             pathname: "/b/" + props.discriminator,
             state: {_boardData: props.boardData, _moderators: props.moderators}
@@ -35,7 +31,7 @@ const IdeaNavbar = (props) => {
                 {renderLogIn(props.onNotLoggedClick, context)}
             </Nav>
         </Container>
-    </Navbar>
+    </PageNavbar>
 };
 
 export default IdeaNavbar;

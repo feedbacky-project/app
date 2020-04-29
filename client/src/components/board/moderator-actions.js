@@ -38,9 +38,7 @@ const ModeratorActions = (props) => {
                 }
                 props.onStateChange(true);
                 toastSuccess("Idea opened.");
-            }).catch(err => {
-                toastError(err.response.data.errors[0]);
-            })
+            }).catch(err => toastError(err.response.data.errors[0]))
         });
     };
     const onIdeaClose = () => {
@@ -58,9 +56,7 @@ const ModeratorActions = (props) => {
                     }
                     props.onStateChange(false);
                     toastSuccess("Idea closed.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]))
             });
     };
     const onIdeaDelete = () => {
@@ -76,26 +72,18 @@ const ModeratorActions = (props) => {
                     }
                     toastSuccess("Idea permanently deleted.");
                     props.onIdeaDelete(props.ideaData.id);
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]))
             });
     };
     const onTagsManage = () => {
         axios.get(context.apiRoute + "/boards/" + props.ideaData.boardDiscriminator + "/tags", getSimpleRequestConfig(context.user.session)).then(res => {
             let html = [];
             res.data.forEach((tag, i) => {
-                if (props.ideaData.tags.find(ideaTag => ideaTag.name === tag.name)) {
-                    html.push(<Form.Check id={"tagManage_" + tag.name} key={i} defaultChecked custom inline label={<Badge key={i} color="" style={{
-                        transform: `translateY(1px)`,
-                        backgroundColor: tag.color
-                    }}>{tag.name}</Badge>} type="checkbox"/>)
-                } else {
-                    html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<Badge key={i} color="" style={{
-                        transform: `translateY(1px)`,
-                        backgroundColor: tag.color
-                    }}>{tag.name}</Badge>} type="checkbox"/>)
-                }
+                const applied = props.ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
+                html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<Badge key={i} color="" style={{
+                    transform: `translateY(1px)`,
+                    backgroundColor: tag.color
+                }}>{tag.name}</Badge>} type="checkbox" defaultChecked={applied}/>)
             });
             swalGenerator.fire({
                 html: <React.Fragment>
@@ -127,14 +115,10 @@ const ModeratorActions = (props) => {
                         }
                         props.onTagsUpdate(response.data);
                         toastSuccess("Tags updated!");
-                    }).catch(err => {
-                        toastError(err.response.data.errors[0]);
-                    });
+                    }).catch(err => toastError(err.response.data.errors[0]));
                 }
             });
-        }).catch(err => {
-            toastError(err.response.data.errors[0]);
-        });
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
 
     if (!visible) {
