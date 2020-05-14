@@ -74,11 +74,7 @@ public class IdeaRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    Logger.getLogger("PERFORMANCE").log(Level.SEVERE, "TEST STARTING");
-    long start = System.currentTimeMillis();
-    PaginableRequest<List<FetchIdeaDto>> list = ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType);
-    Logger.getLogger("PERFORMANCE").log(Level.SEVERE, "TEST FINISHED TOOK " + (System.currentTimeMillis() - start) + "ms");
-    return list;
+    return ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType);
   }
 
   @GetMapping("v1/ideas/{id}")
