@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import {Button, Col, Image, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
 import axios from "axios";
-import LoadingSpinner from "../util/loading-spinner";
+import LoadingSpinner from "components/util/loading-spinner";
 import {FaEdit, FaFrown, FaLockOpen, FaTags, FaTimesCircle} from "react-icons/fa";
 import TimeAgo from "timeago-react";
-import {formatUsername, getSimpleRequestConfig, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, toastSuccess, toastWarning} from "../util/utils";
-import AppContext from "../../context/app-context";
-import snarkdown from "../util/snarkdown";
+import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import AppContext from "context/app-context";
+import snarkdown from "components/util/snarkdown";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
-import {popupSwal} from "../util/sweetalert-utils";
+import {popupSwal} from "components/util/sweetalert-utils";
 import {FaHeart, FaLowVision, FaRegHeart, FaTrashAlt} from "react-icons/all";
-import {parseEmojis} from "../util/emoji-filter";
-import ClickableTip from "../util/clickable-tip";
-import {ReactComponent as UndrawNoData} from "../../assets/svg/undraw/no_data.svg";
+import {parseEmojis} from "components/util/emoji-filter";
+import ClickableTip from "components/util/clickable-tip";
+import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 
 class DiscussionBox extends Component {
 
@@ -21,55 +21,56 @@ class DiscussionBox extends Component {
     textarea = React.createRef();
 
     state = {
-        data: [],
-        loaded: false,
-        error: false,
-        loaderVisible: true,
+        comments: {data: [], loaded: false, error: false, moreToLoad: true},
         page: 0,
         submitVisible: false,
-        moreToLoad: true,
     };
 
     render() {
-        return <Col xs="12">
+        return <Col xs={12}>
             <span className="text-black-75">Discussion ({this.props.ideaData.commentsAmount} comments)</span>
-            <Col xs="12" sm="10" md="6" className="p-0 mb-1 mt-1" id="commentBox">
+            <Col xs={12} sm={10} md={6} className="p-0 mb-1 mt-1" id="commentBox">
                 {this.renderCommentBox()}
                 {this.renderNoDataImage()}
             </Col>
-            <Col xs="11" md="10" className="px-0">
+            <Col xs={11} md={10} className="px-0" id="commentContainer">
                 {this.renderComments()}
             </Col>
         </Col>
     }
 
     onLoadRequest = (page) => {
-        return axios.get(this.context.apiRoute + "/ideas/" + this.props.ideaData.id + "/comments?page=" + (page - 1), getSimpleRequestConfig(this.context.user.session))
-            .then(res => {
-                const ideas = res.data.data;
-                this.setState({loaded: true, data: this.state.data.concat(ideas), page, moreToLoad: res.data.pageMetadata.currentPage !== res.data.pageMetadata.pages});
-            }).catch(() => this.setState({error: true, loaded: true}));
+        return axios.get("/ideas/" + this.props.ideaData.id + "/comments?page=" + (page - 1)).then(res => {
+            this.setState({
+                comments: {
+                    ...this.state.comments,
+                    data: res.data.data.concat(this.state.comments.data),
+                    loaded: true,
+                    moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages,
+                },
+                page
+            });
+        }).catch(() => this.setState({
+            comments: {...this.state.comments, loaded: true, error: true}
+        }));
     };
 
     renderComments() {
-        if (this.state.error) {
+        if (this.state.comments.error) {
             return <div className="text-danger mt-2 mb-3"><FaFrown/> Failed to load comments</div>
         }
         let self = this;
         return <InfiniteScroll
             pageStart={0}
             loadMore={(page) => this.onLoadRequest(page)}
-            hasMore={this.state.moreToLoad}
-            loader={<Row className="justify-content-center my-5" key={"loader_" + this.state.data.length}><LoadingSpinner/></Row>}>
-            {this.state.data.map(data => {
+            hasMore={this.state.comments.moreToLoad}
+            loader={<Row className="justify-content-center my-5" key={this.state.comments.data.length}><LoadingSpinner/></Row>}>
+            {this.state.comments.data.map(data => {
                 if (!data.special) {
-                    return <React.Fragment key={"comment_" + data.id}>
+                    return <React.Fragment key={data.id}>
                         <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
-                            <div className="text-center mr-3 pt-2">
-                                <Image roundedCircle src={getSizedAvatarByUrl(data.user.avatar, 64)} width={30} height={30} alt="avatar"
-                                       onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
-                                <br/>
-                            </div>
+                            <Image roundedCircle src={getSizedAvatarByUrl(data.user.avatar, 64)} className="mr-3 mt-2" width={30} height={30} alt="avatar"
+                                   onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
                             <div>
                                 {this.renderCommentUsername(data)}
                                 {this.renderDeletionButton(data)}
@@ -86,11 +87,9 @@ class DiscussionBox extends Component {
                 if (isHexDark(color) && this.context.user.darkMode) {
                     color = increaseBrightness(color, 20);
                 }
-                return <React.Fragment key={"comment_special_" + data.id}>
+                return <React.Fragment key={data.id}>
                     <div className="d-inline-flex my-1">
-                        <div className="text-center mr-3">
-                            <div style={{height: "1.8rem", width: "1.8rem", color}}>{self.retrieveSpecialCommentTypeIcon(data.specialType)}</div>
-                        </div>
+                        <div className="comment-icon mr-3" style={{backgroundColor: color, color}}>{self.retrieveSpecialCommentTypeIcon(data.specialType)}</div>
                         <div>
                             <span style={{color}} dangerouslySetInnerHTML={{__html: data.description}}/>
                             <small className="ml-1 text-black-60"><TimeAgo datetime={data.creationDate}/></small>
@@ -105,7 +104,7 @@ class DiscussionBox extends Component {
     renderCommentUsername(data) {
         if (data.viewType === "INTERNAL") {
             return <React.Fragment>
-                <small style={{fontWeight: "bold"}}><span className="role-internal-color">{data.user.username}</span></small>
+                <small style={{fontWeight: "bold"}}><span className="board-role internal">{data.user.username}</span></small>
                 <OverlayTrigger overlay={<Tooltip id={"internal" + data.id + "-tooltip"}>Internal Comment</Tooltip>}>
                     <FaLowVision className="fa-xs ml-1"/>
                 </OverlayTrigger>
@@ -133,20 +132,20 @@ class DiscussionBox extends Component {
     retrieveSpecialCommentTypeIcon(type) {
         switch (type) {
             case "IDEA_CLOSED":
-                return <FaTimesCircle style={{height: "1.2em", width: "1.2em"}}/>;
+                return <FaTimesCircle className="icon"/>;
             case "IDEA_OPENED":
-                return <FaLockOpen style={{height: "1.2em", width: "1.2em"}}/>;
+                return <FaLockOpen className="icon"/>;
             case "IDEA_EDITED":
-                return <FaEdit style={{height: "1.2em", width: "1.2em"}}/>;
+                return <FaEdit className="icon"/>;
             case "LEGACY":
             case "TAGS_MANAGED":
             default:
-                return <FaTags style={{height: "1.2em", width: "1.2em"}}/>;
+                return <FaTags className="icon"/>;
         }
     }
 
     renderNoDataImage() {
-        if (this.state.loaded && this.state.data.length === 0) {
+        if (this.state.comments.loaded && this.state.comments.data.length === 0) {
             if (!this.props.ideaData.open) {
                 return <div className="my-3 text-center">
                     <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
@@ -197,7 +196,7 @@ class DiscussionBox extends Component {
                 <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
                         onClick={() => this.onCommentSubmit(false)}>Submit</Button>
                 {moderator && <React.Fragment>
-                    <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
+                    <Button variant="" className="mt-2 ml-2 mr-1 mb-0 text-white" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
                             onClick={() => this.onCommentSubmit(true)}>Submit Internal</Button>
                     <div className="d-inline-block align-top move-bottom-2px"><ClickableTip id="internalTip" title="Internal Comments" description="Comments visible only for moderators of the project, hidden from public view."/></div>
                 </React.Fragment>}
@@ -214,17 +213,20 @@ class DiscussionBox extends Component {
             toastWarning("Message must be longer than 10 and shorter than 500 characters!");
             return;
         }
-        axios.post(this.context.apiRoute + "/comments/", {
+        axios.post("/comments/", {
             ideaId: this.props.ideaData.id,
             description: message,
             type,
-        }, getSimpleRequestConfig(this.context.user.session)).then(res => {
+        }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
                 return;
             }
             this.setState({
-                data: [res.data, ...this.state.data],
+                comments: {
+                    ...this.state.comments,
+                    data: [res.data, ...this.state.comments.data],
+                },
                 submitVisible: false,
             });
             this.textarea.current.value = "";
@@ -256,13 +258,13 @@ class DiscussionBox extends Component {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(this.context.apiRoute + "/comments/" + id, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                axios.delete("/comments/" + id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;
                     }
                     this.setState({
-                        data: this.state.data.filter(item => item.id !== id)
+                        comments: {...this.state.comments, data: this.state.comments.data.filter(item => item.id !== id)}
                     });
                     this.props.onCommentDelete();
                     toastSuccess("Comment permanently deleted.");
@@ -271,37 +273,43 @@ class DiscussionBox extends Component {
     };
 
     onCommentLike = (data) => {
-        axios.post(this.context.apiRoute + "/comments/" + data.id + "/likers", {}, getSimpleRequestConfig(this.context.user.session)).then(res => {
+        axios.post("/comments/" + data.id + "/likers", {}).then(res => {
             if (res.status !== 200) {
                 toastWarning("Failed to like comment.");
                 return;
             }
             this.setState({
-                data: this.state.data.map(comment => {
-                    if (comment.id === data.id) {
-                        comment.liked = true;
-                        comment.likesAmount++;
-                    }
-                    return comment;
-                })
+                comments: {
+                    ...this.state.comments,
+                    data: this.state.comments.data.map(comment => {
+                        if (comment.id === data.id) {
+                            comment.liked = true;
+                            comment.likesAmount++;
+                        }
+                        return comment;
+                    })
+                }
             });
         });
     };
 
     onCommentUnlike = (data) => {
-        axios.delete(this.context.apiRoute + "/comments/" + data.id + "/likers", getSimpleRequestConfig(this.context.user.session)).then(res => {
+        axios.delete("/comments/" + data.id + "/likers").then(res => {
             if (res.status !== 204) {
                 toastWarning("Failed to unlike comment.");
                 return;
             }
             this.setState({
-                data: this.state.data.map(comment => {
-                    if (comment.id === data.id) {
-                        comment.liked = false;
-                        comment.likesAmount--;
-                    }
-                    return comment;
-                })
+                comments: {
+                    ...this.state.comments,
+                    data: this.state.comments.data.map(comment => {
+                        if (comment.id === data.id) {
+                            comment.liked = false;
+                            comment.likesAmount--;
+                        }
+                        return comment;
+                    })
+                }
             });
         });
     };

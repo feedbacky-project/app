@@ -1,17 +1,16 @@
 import React, {Component} from 'react';
-import AppContext from "../../../../context/app-context";
+import AppContext from "context/app-context";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
 import {Link, withRouter} from "react-router-dom";
-import StepFirst from "./steps/step-first";
-import StepSecond from "./steps/step-second";
-import {getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarning} from "../../../../components/util/utils";
+import StepFirst from "views/admin/subviews/webhooks/steps/step-first";
+import StepSecond from "views/admin/subviews/webhooks/steps/step-second";
+import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
-import StepThird from "./steps/step-third";
+import StepThird from "views/admin/subviews/webhooks/steps/step-third";
 
-import "../../../Steps.css";
-import {FaAngleLeft, FaAngleRight} from "react-icons/all";
-import {NextStepButton, PreviousStepButton} from "../../../../components/steps/steps-buttons";
+import "views/Steps.css";
+import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
 
 class CreateWebhook extends Component {
 
@@ -68,11 +67,11 @@ class CreateWebhook extends Component {
                 return <StepThird onSetupMethodCall={this.onSetupMethodCall} url={this.state.url}/>;
             case 4:
                 let toastId = toastAwait("Adding new webhook...");
-                axios.post(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/webhooks", {
+                axios.post("/boards/" + this.props.data.discriminator + "/webhooks", {
                     url: this.state.url,
                     type: this.state.type,
                     events: this.state.listenedEvents,
-                }, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                }).then(res => {
                     if (res.status !== 201) {
                         toastWarning("Couldn't add webhook due to unknown error!", toastId);
                         return;
@@ -107,6 +106,8 @@ class CreateWebhook extends Component {
                     this.setState({listenedEvents: [...this.state.listenedEvents, value]});
                 }
                 return;
+            default:
+                return;
         }
     };
 
@@ -119,7 +120,7 @@ class CreateWebhook extends Component {
 
     renderNextButton() {
         if (this.state.step >= 3) {
-            return <Button variant="success" className="text-white" onClick={this.nextStep}>Finish</Button>
+            return <Button variant="success" className="text-white ml-2" onClick={this.nextStep}>Finish</Button>
         }
         return <NextStepButton nextStep={this.nextStep}/>
     }

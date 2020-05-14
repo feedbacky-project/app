@@ -1,6 +1,6 @@
 import React from 'react';
 import {Col, Form} from "react-bootstrap";
-import UndrawSetUrl from "../../../../../assets/svg/undraw/set_url.svg";
+import UndrawSetUrl from "assets/svg/undraw/set_url.svg";
 
 const StepSecond = (props) => {
     return <React.Fragment>
@@ -15,7 +15,7 @@ const StepSecond = (props) => {
             <div className="text-black-60 mb-2">
                 Social URL
             </div>
-            <Form.Control style={{maxHeight: 38, resize: "none"}} rows="1" required type="text"
+            <Form.Control style={{minHeight: 38, resize: "none"}} rows="1" required type="text"
                           placeholder="URL to target site, include http/https:// state." id="url" defaultValue={props.url}
                           onChange={() => props.onSetupMethodCall("url", document.getElementById("url").value)}/>
         </Col>

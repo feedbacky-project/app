@@ -1,4 +1,4 @@
-import {toastError} from "./utils";
+import {toastError} from "components/util/utils";
 
 export const retry = (fn, retriesLeft = 5, interval = 500) => {
     return new Promise((resolve, reject) => {

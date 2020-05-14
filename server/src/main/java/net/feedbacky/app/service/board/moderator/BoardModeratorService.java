@@ -17,8 +17,6 @@ import java.util.List;
  */
 public interface BoardModeratorService extends FeedbackyService {
 
-  List<FetchModeratorDto> getAll(String discriminator);
-
   List<FetchInviteDto> getAllInvited(String discriminator);
 
   FetchBoardDto postAccept(String code);

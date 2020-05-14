@@ -5,16 +5,25 @@ import {FaFrown, FaLock, FaTrash} from "react-icons/fa";
 import Image from "react-bootstrap/Image";
 import TimeAgo from "timeago-react";
 import axios from "axios";
-import AppContext from "../../context/app-context";
+import AppContext from "context/app-context";
 import Spinner from "react-bootstrap/Spinner";
-import {formatUsername, getSimpleRequestConfig, getSizedAvatarByUrl, htmlDecode, increaseBrightness, isHexDark, toastError, toastSuccess} from "../util/utils";
-import ModeratorActions from "../board/moderator-actions";
-import snarkdown from "../util/snarkdown";
-import {popupSwal} from "../util/sweetalert-utils";
+import {
+    formatUsername,
+    getSizedAvatarByUrl,
+    htmlDecode,
+    increaseBrightness,
+    isHexDark,
+    toastError,
+    toastSuccess
+} from "components/util/utils";
+import ModeratorActions from "components/board/moderator-actions";
+import snarkdown from "components/util/snarkdown";
+import {popupSwal} from "components/util/sweetalert-utils";
 import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
 import TextareaAutosize from "react-autosize-textarea";
-import {FaPen, FaTimesCircle} from "react-icons/all";
-import {parseEmojis} from "../util/emoji-filter";
+import {FaPen, FaRegBell, FaRegBellSlash} from "react-icons/all";
+import {parseEmojis} from "components/util/emoji-filter";
+import DeleteButton from "components/util/delete-button";
 
 class IdeaDetailsBox extends Component {
 
@@ -23,30 +32,33 @@ class IdeaDetailsBox extends Component {
     justVoted = false;
 
     state = {
-        data: [],
-        loaded: false,
-        error: false,
+        voters: {data: [], loaded: false, error: false},
         editorMode: false,
         editorValue: htmlDecode(this.props.ideaData.description),
     };
 
     componentDidMount() {
-        axios.get(this.context.apiRoute + "/ideas/" + this.props.ideaData.id + "/voters", getSimpleRequestConfig(this.context.user.session))
-            .then(res => {
-                if (res.status !== 200) {
-                    this.setState({error: true});
-                }
-                const data = res.data;
-                this.setState({data, loaded: true});
-            }).catch(() => {
-            this.setState({error: true})
+        axios.get("/ideas/" + this.props.ideaData.id + "/voters").then(res => {
+            if (res.status !== 200) {
+                this.setState({
+                    voters: {...this.state.voters, error: true}
+                });
+            }
+            const data = res.data;
+            this.setState({
+                voters: {...this.state.voters, data, loaded: true}
+            });
+        }).catch(() => {
+            this.setState({
+                voters: {...this.state.voters, error: true}
+            });
         });
     }
 
     render() {
         return <React.Fragment>
-            <Col sm="12" md="10" className="mt-4">
-                <Col xs="12" className="d-inline-flex mb-2 p-0">
+            <Col sm={12} md={10} className="mt-4">
+                <Col xs={12} className="d-inline-flex mb-2 p-0">
                     <div className="my-auto mr-2">
                         {this.renderButton()}
                     </div>
@@ -55,17 +67,18 @@ class IdeaDetailsBox extends Component {
                         {this.renderDetails()}
                     </div>
                 </Col>
-                <Col xs="12" className="p-0">
+                <Col xs={12} className="p-0">
                     {this.renderDescription()}
                 </Col>
             </Col>
-            <Col md="2" xs="12">
+            <Col md={2} xs={12}>
                 <React.Fragment>
                     <div className="mt-4 text-black-75">Voters ({this.props.ideaData.votersAmount} votes)</div>
                     {this.renderVoters()}
                 </React.Fragment>
                 {this.renderTags()}
                 {this.renderAttachments()}
+                {this.renderSubscribe()}
             </Col>
         </React.Fragment>
     }
@@ -82,15 +95,15 @@ class IdeaDetailsBox extends Component {
         } else {
             vote = <FiChevronsUp style={{color}}/>;
         }
-        let classes = "grey-text font-weight-bold vote-button z-depth-0 px-2 py-1 m-0";
+        let classes = "vote-button px-2 py-1 m-0";
         if (this.justVoted) {
-            classes += " animated pulse on-vote";
+            classes += " upvote-animation";
         }
         return <span className="my-auto">
-            <Button className={classes}
-                    style={{lineHeight: '16px', minWidth: 35, minHeight: 45, fontSize: 15}} onClick={this.onUpvote} variant="">
+            <Button className={classes} style={{lineHeight: '16px', minWidth: 35, minHeight: 45}}
+                    onClick={this.onUpvote} variant="">
                 {vote}
-                <span className="d-block bg-transparent" style={{color: color}}>{this.props.ideaData.votersAmount}</span>
+                <strong className="d-block" style={{color: color}}>{this.props.ideaData.votersAmount}</strong>
         </Button>
         </span>
     }
@@ -99,20 +112,23 @@ class IdeaDetailsBox extends Component {
         if (this.props.ideaData.open) {
             return;
         }
-        return <FaLock className="fa-sm mr-1" style={{transform: "translateY(-5px)"}}/>
+        return <FaLock className="mr-1" style={{transform: "translateY(-4px)"}}/>
     }
 
 
     renderDetails() {
         return <React.Fragment>
-            <span className="mr-1" style={{fontSize: "1.45rem", letterSpacing: "-.3pt"}} dangerouslySetInnerHTML={{__html: this.props.ideaData.title}}/>
-            <ModeratorActions moderators={this.props.moderators} ideaData={this.props.ideaData} onStateChange={this.props.onStateChange}
+            <span className="mr-1 text-tight" style={{fontSize: "1.45rem"}}
+                  dangerouslySetInnerHTML={{__html: this.props.ideaData.title}}/>
+            <ModeratorActions moderators={this.props.moderators} ideaData={this.props.ideaData}
+                              onStateChange={this.props.onStateChange}
                               onTagsUpdate={this.props.onTagsUpdate} onIdeaDelete={this.onIdeaDelete}/>
             {this.renderDeletionButton()}
             {this.renderEditButton()}
             <br/>
             <Image roundedCircle className="mr-1" src={getSizedAvatarByUrl(this.props.ideaData.user.avatar, 32)}
-                   width={18} height={18} style={{maxWidth: "none"}} onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+                   width={18} height={18} style={{maxWidth: "none"}}
+                   onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
             <small>{formatUsername(this.props.ideaData.user.id, this.props.ideaData.user.username, this.props.moderators)} ·{" "}</small>
             <small className="text-black-60"><TimeAgo datetime={this.props.ideaData.creationDate}/></small>
             {this.renderEditedNote()}
@@ -131,7 +147,7 @@ class IdeaDetailsBox extends Component {
         if (this.props.ideaData.user.id !== this.context.user.data.id) {
             return;
         }
-        return <FaPen className="ml-2 fa-xs cursor-click move-top-2px" onClick={this.onEditorToggle}/>
+        return <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={this.onEditorToggle}/>
     }
 
     renderEditedNote() {
@@ -146,7 +162,8 @@ class IdeaDetailsBox extends Component {
             return this.renderEditorMode();
         }
         return <React.Fragment>
-            <span className="markdown-box" style={{wordBreak: "break-word"}} dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(this.props.ideaData.description))}}/>
+            <span className="markdown-box" style={{wordBreak: "break-word"}}
+                  dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(this.props.ideaData.description))}}/>
         </React.Fragment>
     }
 
@@ -157,17 +174,18 @@ class IdeaDetailsBox extends Component {
         //todo lightbox for attachments
         return <React.Fragment>
             <div className="my-1 text-black-75">Attached Files</div>
-            {this.props.ideaData.attachments.map((attachment, i) => {
+            {this.props.ideaData.attachments.map(attachment => {
                 let userId = this.context.user.data.id;
                 if (this.props.ideaData.user.id === userId || this.props.moderators.find(mod => mod.userId === userId)) {
-                    return <React.Fragment key={"attachment" + i}>
-                        <FaTimesCircle className="grey lighten-2 black-text rounded-circle" onClick={() => this.onAttachmentDelete(attachment)} style={{position: "absolute", transform: "translate(-5px, -5px)"}}/>
+                    return <React.Fragment key={attachment.id}>
+                        <DeleteButton tooltipName="Remove" onClick={() => this.onAttachmentDelete(attachment)}
+                                      id="attachment-del"/>
                         <a href={attachment.url} target="_blank" rel="noopener noreferrer">
-                            <img width={125} className="img-thumbnail" alt="attachment" src={attachment.url} key={"attachment_" + i}/>
+                            <img width={125} className="img-thumbnail" alt="attachment" src={attachment.url}/>
                         </a>
                     </React.Fragment>
                 }
-                return <a href={attachment.url} target="_blank" rel="noopener noreferrer" key={"attachment_" + i}>
+                return <a href={attachment.url} target="_blank" rel="noopener noreferrer" key={attachment.id}>
                     <img width={125} className="img-thumbnail" alt="attachment" src={attachment.url}/>
                 </a>
             })}
@@ -176,33 +194,47 @@ class IdeaDetailsBox extends Component {
 
     renderEditorMode() {
         return <React.Fragment>
-            <TextareaAutosize className="form-control bg-lighter" id="editorBox" rows={1} maxRows={12} placeholder="Write a description..." required as="textarea"
-                              style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(this.state.editorValue)}/>
-            <Button className="m-0 mt-2 btn-smaller text-white" variant="" style={{backgroundColor: this.context.theme}} onClick={this.onEditApply}>Save</Button>
-            <Button className="m-0 mt-2 btn-smaller text-black-50" variant="link" onClick={this.onEditorToggle}>Cancel</Button>
+            <TextareaAutosize className="form-control bg-lighter" id="editorBox" rows={1} maxRows={12}
+                              placeholder="Write a description..." required as="textarea"
+                              style={{resize: "none", overflow: "hidden"}}
+                              defaultValue={htmlDecode(this.state.editorValue)}/>
+            <Button className="m-0 mt-2 text-white" variant="" style={{backgroundColor: this.context.theme}}
+                    onClick={this.onEditApply}>Save</Button>
+            <Button className="m-0 mt-2 text-black-50" variant="link" onClick={this.onEditorToggle}>Cancel</Button>
         </React.Fragment>
     }
 
     renderVoters() {
-        if (!this.state.loaded) {
+        if (!this.state.voters.loaded) {
             const voters = this.props.ideaData.votersAmount > 5 ? 5 : this.props.ideaData.votersAmount;
             let spinners = [];
             for (let i = 0; i < voters; i++) {
-                spinners.push(<Spinner key={"spinner_" + i} animation="grow" variant="" className="merged" style={{verticalAlign: "text-bottom", margin: "0 -10px 0 0", width: 23, height: 23, color: this.context.theme}}/>);
+                spinners.push(<Spinner key={i} animation="grow" variant="" className="merged" style={{
+                    verticalAlign: "text-bottom",
+                    margin: "0 -10px 0 0",
+                    width: 23,
+                    height: 23,
+                    color: this.context.theme
+                }}/>);
             }
             if (this.props.ideaData.votersAmount <= 5) {
                 return <React.Fragment>{spinners}</React.Fragment>
             }
             return <React.Fragment>
-                {spinners} <span className="d-inline-block" style={{marginLeft: 10, fontSize: 13, letterSpacing: "-.2pt", transform: "translateY(-4px)"}}> + {this.props.ideaData.votersAmount - 5} more</span>
+                {spinners} <span className="d-inline-block text-tight" style={{
+                marginLeft: 10,
+                fontSize: 13,
+                transform: "translateY(-4px)"
+            }}> + {this.props.ideaData.votersAmount - 5} more</span>
             </React.Fragment>
         }
-        if (this.state.error) {
-            return <div className="text-danger"><FaFrown className="fa-sm"/> Failed to load</div>
+        if (this.state.voters.error) {
+            return <div className="text-danger"><FaFrown className="move-top-2px"/> Failed to load</div>
         }
         return <div>
-            {this.state.data.slice(0, 5).map(data => {
-                return <Image roundedCircle key={"voter_" + data.id} alt="avatar" className="merged" src={getSizedAvatarByUrl(data.avatar, 32)} width={25} height={25}
+            {this.state.voters.data.slice(0, 5).map(data => {
+                return <Image roundedCircle key={data.id} alt="avatar" className="merged"
+                              src={getSizedAvatarByUrl(data.avatar, 32)} width={25} height={25}
                               onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
             })}
             {this.renderAndMore()}
@@ -210,10 +242,13 @@ class IdeaDetailsBox extends Component {
     }
 
     renderAndMore() {
-        if (this.state.data.length <= 5) {
+        if (this.state.voters.data.length <= 5) {
             return;
         }
-        return <span className="d-inline" style={{marginLeft: 10, fontSize: 13, letterSpacing: "-.2pt"}}> + {this.state.data.length - 5} more</span>
+        return <span className="d-inline text-tight" style={{
+            marginLeft: 10,
+            fontSize: 13
+        }}> + {this.state.voters.data.length - 5} more</span>
     }
 
     renderTags() {
@@ -227,9 +262,20 @@ class IdeaDetailsBox extends Component {
                 if (this.context.user.darkMode) {
                     color += "BF";
                 }
-                return <Badge key={"badge_" + data.name} variant="" className="mr-1" style={{backgroundColor: color}}>{data.name}</Badge>
+                return <Badge key={data.name} variant="" className="mr-1"
+                              style={{backgroundColor: color}}>{data.name}</Badge>
             })}
         </React.Fragment>
+    }
+
+    renderSubscribe() {
+        if (this.props.ideaData.subscribed) {
+            return <Button variant="" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
+                           onClick={this.onSubscribeToggle}><FaRegBellSlash/> Unsubscribe</Button>
+        } else {
+            return <Button variant="" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
+                           onClick={this.onSubscribeToggle}><FaRegBell/> Subscribe</Button>
+        }
     }
 
     onAttachmentDelete = (attachment) => {
@@ -238,7 +284,7 @@ class IdeaDetailsBox extends Component {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(this.context.apiRoute + "/attachments/" + attachment.id, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                axios.delete("/attachments/" + attachment.id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;
@@ -270,7 +316,7 @@ class IdeaDetailsBox extends Component {
         }
         axios({
             method: request,
-            url: this.context.apiRoute + "/ideas/" + this.props.ideaData.id + "/voters",
+            url: "/ideas/" + this.props.ideaData.id + "/voters",
             headers: {
                 "Authorization": "Bearer " + this.context.user.session
             }
@@ -281,14 +327,44 @@ class IdeaDetailsBox extends Component {
             }
             this.justVoted = upvoted;
             if (upvoted) {
-                this.setState({data: this.state.data.concat(this.context.user.data)});
+                this.setState({
+                    voters: {
+                        ...this.state.voters,
+                        data: this.state.voters.data.concat(this.context.user.data)
+                    }
+                });
             } else {
-                this.setState({data: this.state.data.filter(item => item.id !== this.context.user.data.id)});
+                this.setState({
+                    voters: {
+                        ...this.state.voters,
+                        data: this.state.data.filter(item => item.id !== this.context.user.data.id)
+                    }
+                });
             }
             this.props.onStateUpdate(upvoted, votersAmount);
-        }).catch(() => {
-            toastError();
-        });
+        }).catch(() => toastError());
+    };
+
+    onSubscribeToggle = () => {
+        if (!this.context.user.loggedIn) {
+            this.props.onNotLoggedClick();
+            return;
+        }
+        const request = this.props.ideaData.subscribed ? "DELETE" : "POST";
+        axios({
+            method: request,
+            url: "/ideas/" + this.props.ideaData.id + "/subscribe",
+            headers: {
+                "Authorization": "Bearer " + this.context.user.session
+            }
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                toastError();
+                return;
+            }
+            toastSuccess("Enabled mail notifications for this idea.");
+            this.props.onSubscribeStateChange(!this.props.ideaData.subscribed);
+        }).catch(() => toastError());
     };
 
     onIdeaDelete = () => {
@@ -301,9 +377,9 @@ class IdeaDetailsBox extends Component {
 
     onEditApply = () => {
         let description = document.getElementById("editorBox").value;
-        axios.patch(this.context.apiRoute + "/ideas/" + this.props.ideaData.id, {
+        axios.patch("/ideas/" + this.props.ideaData.id, {
             description: description
-        }, getSimpleRequestConfig(this.context.user.session)).then(res => {
+        }).then(res => {
             if (res.status !== 200) {
                 toastError();
                 return;
@@ -311,9 +387,7 @@ class IdeaDetailsBox extends Component {
             this.setState({editorMode: false});
             this.props.onIdeaEdit(description);
             toastSuccess("Idea edited.");
-        }).catch(err => {
-            toastError(err.response.data.errors[0]);
-        })
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
 
     onDelete = () => {
@@ -322,16 +396,14 @@ class IdeaDetailsBox extends Component {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(this.context.apiRoute + "/ideas/" + this.props.ideaData.id, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                axios.delete("/ideas/" + this.props.ideaData.id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;
                     }
                     this.props.history.push("/b/" + this.props.ideaData.boardDiscriminator);
                     toastSuccess("Idea permanently deleted.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 

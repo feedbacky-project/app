@@ -1,12 +1,12 @@
 import React, {useState, useContext} from 'react';
-import LoadingSpinner from "../components/util/loading-spinner";
+import LoadingSpinner from "components/util/loading-spinner";
 import qs from "querystringify";
 import axios from "axios";
 import {Redirect, useLocation, useParams} from "react-router-dom";
-import ErrorView from "../views/errors/error-view";
+import ErrorView from "views/errors/error-view";
 import {FaTimes} from "react-icons/fa";
 import Cookies from "js-cookie";
-import AppContext from "../context/app-context";
+import AppContext from "context/app-context";
 
 const OauthReceiver = (props) => {
     const context = useContext(AppContext);
@@ -44,17 +44,13 @@ const OauthReceiver = (props) => {
     };
 
     if (error && status !== 403) {
-        return <ErrorView message="Unknown Login Error" iconMd={<FaTimes style={{fontSize: 250, color: "#8A0707"}}/>}
-                          iconSm={<FaTimes style={{fontSize: 180, color: "#8A0707"}}/>}/>
+        return <ErrorView message="Unknown Login Error" icon={<FaTimes className="error-icon"/>}/>
     } else if (error && status === 403) {
-        return <ErrorView message="Login Refused. Sign in with other service." iconMd={<FaTimes style={{fontSize: 250, color: "#8A0707"}}/>}
-                          iconSm={<FaTimes style={{fontSize: 180, color: "#8A0707"}}/>}/>
+        return <ErrorView message="Login Refused. Sign in with other service." icon={<FaTimes className="error-icon"/>}/>
     }
     if (!loaded) {
         logIn();
-        return <div className="row justify-content-center vertical-center">
-            <LoadingSpinner/>
-        </div>
+        return <div className="row justify-content-center vertical-center"><LoadingSpinner/></div>
     }
     return <Redirect from={"/auth/" + provider} to={"/" + qs.parse(location.search).state}/>
 };

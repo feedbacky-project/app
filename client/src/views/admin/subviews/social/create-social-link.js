@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
-import AppContext from "../../../../context/app-context";
-import StepFirst from "./steps/step-first";
-import StepSecond from "./steps/step-second";
+import AppContext from "context/app-context";
+import StepFirst from "views/admin/subviews/social/steps/step-first";
+import StepSecond from "views/admin/subviews/social//steps/step-second";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
-import {getSimpleRequestConfig, toastAwait, toastError, toastSuccess, toastWarning} from "../../../../components/util/utils";
+import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
 import Steps, {Step} from "rc-steps";
 import {Link, withRouter} from "react-router-dom";
 
-import "../../../Steps.css";
-import {FaAngleLeft, FaAngleRight} from "react-icons/all";
-import {NextStepButton, PreviousStepButton} from "../../../../components/steps/steps-buttons";
+import "views/Steps.css";
+import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
 
 class CreateSocialLink extends Component {
 
@@ -64,10 +63,10 @@ class CreateSocialLink extends Component {
                 return <StepSecond onSetupMethodCall={this.onSetupMethodCall} banner={this.state.banner} logo={this.state.logo}/>;
             case 3:
                 let toastId = toastAwait("Adding new social link...");
-                axios.post(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/socialLinks", {
+                axios.post("/boards/" + this.props.data.discriminator + "/socialLinks", {
                     iconData: this.state.iconData,
                     url: this.state.url
-                }, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                }).then(res => {
                     if (res.status !== 201) {
                         toastWarning("Couldn't add social link due to unknown error!", toastId);
                         return;
@@ -97,6 +96,8 @@ class CreateSocialLink extends Component {
             case "chosen":
                 this.setState({chosen: value});
                 return;
+            default:
+                return;
         }
     };
 
@@ -109,7 +110,7 @@ class CreateSocialLink extends Component {
 
     renderNextButton() {
         if (this.state.step >= 2) {
-            return <Button variant="success" className="text-white" onClick={this.nextStep}>Finish</Button>
+            return <Button variant="success" className="text-white ml-2" onClick={this.nextStep}>Finish</Button>
         }
         return <NextStepButton nextStep={this.nextStep}/>
     }

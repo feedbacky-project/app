@@ -23,5 +23,5 @@ export default ClickableTip;
 ClickableTip.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.object.isRequired
+    description: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired
 };

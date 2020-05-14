@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import AdminSidebar from "../../../../components/sidebar/admin-sidebar";
-import {Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
+import AdminSidebar from "components/sidebar/admin-sidebar";
+import {Button, Col} from "react-bootstrap";
 import axios from "axios";
-import {getSimpleRequestConfig, toastError, toastSuccess} from "../../../../components/util/utils";
-import AppContext from "../../../../context/app-context";
-import LoadingSpinner from "../../../../components/util/loading-spinner";
-import {FaTrashAlt} from "react-icons/fa";
+import {toastError, toastSuccess} from "components/util/utils";
+import AppContext from "context/app-context";
+import LoadingSpinner from "components/util/loading-spinner";
 import {Link} from "react-router-dom";
-import {popupSwal} from "../../../../components/util/sweetalert-utils";
+import {popupSwal} from "components/util/sweetalert-utils";
+import DeleteButton from "components/util/delete-button";
+import ViewBox from "components/viewbox/view-box";
 
 class SocialLinksSettings extends Component {
 
@@ -20,7 +21,7 @@ class SocialLinksSettings extends Component {
     };
 
     componentDidMount() {
-        axios.get(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/socialLinks", getSimpleRequestConfig(this.context.user.session)).then(res => {
+        axios.get("/boards/" + this.props.data.discriminator + "/socialLinks").then(res => {
             if (res.status !== 200) {
                 this.setState({error: true});
                 return;
@@ -37,9 +38,11 @@ class SocialLinksSettings extends Component {
     render() {
         return <React.Fragment>
             <AdminSidebar currentNode="social" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
-            <Col xs={12} md={9} className="mt-4">
-                <h2 className="h2-responsive mb-3">Social Links</h2>
-                {this.renderContent()}
+            <Col xs={12} md={9}>
+                <ViewBox theme={this.context.theme} title="Social Links"
+                         description="Edit links visible at your board page here.">
+                    {this.renderContent()}
+                </ViewBox>
             </Col>
         </React.Fragment>
     }
@@ -49,24 +52,25 @@ class SocialLinksSettings extends Component {
             return <span className="text-danger">Failed to obtain social links data</span>
         }
         if (!this.state.loaded) {
-            return <Row className="mt-4 ml-2"><LoadingSpinner/></Row>
+            return <LoadingSpinner/>
         }
-        return <Col className="mb-3">
-            <Row className="py-4 px-sm-2 px-0 rounded-top box-overlay">
-                <Col xs={12} className="mb-sm-0 mb-3">
-                    <div className="text-black-60">Current Social Links ({this.calculateLeft()} left)</div>
-                    {this.state.data.map((link) => {
-                        return <div className="mr-2" key={"boardLink_" + link.id}>
-                            <img className="bg-dark p-2 mr-2" alt="Logo" src={link.logoUrl} height={32} width={32}/>
-                            {this.truncateUrl(link.url)}
-                            <OverlayTrigger overlay={<Tooltip id={"deleteSocial" + link.id + "-tooltip"}>Delete</Tooltip>}>
-                                <FaTrashAlt className="fa-xs ml-1" onClick={() => this.onSocialLinkDelete(link.id)}/>
-                            </OverlayTrigger>
-                        </div>
-                    })}
-                    {this.renderAddButton()}
-                </Col>
-            </Row>
+        return <Col xs={12}>
+            <div className="text-black-60 mb-1">Current Social Links ({this.calculateLeft()} left)</div>
+            {this.state.data.map((link) => {
+                return <div className="d-inline-flex justify-content-center mr-2" key={link.id}>
+                    <div className="text-center">
+                        <img className="bg-dark rounded p-2" alt="Logo" src={link.logoUrl} height={40} width={40}/>
+                        <DeleteButton tooltipName="Delete" onClick={() => this.onSocialLinkDelete(link.id)}
+                                      id={"social-" + link.id + "-del"}/>
+                        <br/>
+                        <a href={link.url} target="_blank" rel="noreferrer noopener"
+                           className="text-tight">{this.extractHostname(link.url)}</a>
+                    </div>
+                </div>
+            })}
+            <div>
+                {this.renderAddButton()}
+            </div>
         </Col>
     }
 
@@ -74,11 +78,21 @@ class SocialLinksSettings extends Component {
         if (this.calculateLeft() <= 0) {
             return <React.Fragment/>
         }
-        return <Button className="btn-smaller text-white m-0 mt-3" variant="" style={{backgroundColor: this.context.theme}} as={Link} to={"/ba/" + this.props.data.discriminator + "/social/create"}>Add New</Button>
+        return <Button className="text-white m-0 mt-3 float-right" variant=""
+                       style={{backgroundColor: this.context.theme}}
+                       as={Link} to={"/ba/" + this.props.data.discriminator + "/social/create"}>Add New</Button>
     }
 
-    truncateUrl(url) {
-        return url.replace("https://", "").replace("http://", "").replace("www.", "");
+    extractHostname(url) {
+        let hostname;
+        if (url.indexOf("//") > -1) {
+            hostname = url.split('/')[2];
+        } else {
+            hostname = url.split('/')[0];
+        }
+        hostname = hostname.split(':')[0];
+        hostname = hostname.split('?')[0];
+        return hostname.replace("www.", "");
     }
 
     onSocialLinkDelete = (id) => {
@@ -87,7 +101,7 @@ class SocialLinksSettings extends Component {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(this.context.apiRoute + "/socialLinks/" + id, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                axios.delete("/socialLinks/" + id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;

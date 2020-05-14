@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
 
-import "../Steps.css";
+import "views/Steps.css";
 
-import AppContext from "../../context/app-context";
-import {getSimpleRequestConfig, isServiceAdmin, toastAwait, toastError, toastSuccess, toastWarning} from "../../components/util/utils";
+import AppContext from "context/app-context";
+import {isServiceAdmin, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
-import ProfileNavbar from "../../components/navbars/profile-navbar";
+import ProfileNavbar from "components/navbars/profile-navbar";
 import {Link} from "react-router-dom";
-import StepFirst from "./steps/step-first";
-import StepSecond from "./steps/step-second";
-import StepThird from "./steps/step-third";
+import StepFirst from "views/creator/steps/step-first";
+import StepSecond from "views/creator/steps/step-second";
+import StepThird from "views/creator/steps/step-third";
 import axios from "axios";
-import {FaAngleLeft, FaAngleRight} from "react-icons/all";
-import {NextStepButton, PreviousStepButton} from "../../components/steps/steps-buttons";
+import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
 
 class CreateBoardView extends Component {
 
@@ -81,7 +80,7 @@ class CreateBoardView extends Component {
                 return <StepThird onSetupMethodCall={this.onSetupMethodCall} theme={this.state.themeColor}/>;
             case 4:
                 let toastId = toastAwait("Creating new board...");
-                axios.post(this.context.apiRoute + "/boards/", {
+                axios.post("/boards/", {
                     discriminator: this.state.discriminator,
                     name: this.state.name,
                     shortDescription: this.state.name + " feedback",
@@ -91,7 +90,7 @@ class CreateBoardView extends Component {
                     themeColor: this.state.themeColor,
                     banner: this.state.banner,
                     logo: this.state.logo,
-                }, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                }).then(res => {
                     if (res.status !== 201) {
                         toastWarning("Couldn't create new board due to unknown error!", toastId);
                         return;
@@ -123,6 +122,8 @@ class CreateBoardView extends Component {
             case "themeColor":
                 this.setState({themeColor: value});
                 return;
+            default:
+                return;
         }
     };
 
@@ -135,7 +136,7 @@ class CreateBoardView extends Component {
 
     renderNextButton() {
         if (this.state.step === 3) {
-            return <Button variant="success" className="text-white" onClick={this.nextStep}>Create Board</Button>
+            return <Button variant="success" className="text-white ml-2" onClick={this.nextStep}>Create Board</Button>
         }
         return <NextStepButton nextStep={this.nextStep}/>
     }
@@ -167,7 +168,7 @@ class CreateBoardView extends Component {
             });
             return;
         } else if (this.state.step === 2) {
-            if(this.state.banner === null || this.state.logo === null) {
+            if (this.state.banner === null || this.state.logo === null) {
                 toastWarning("Banner and logo must be set.");
                 return;
             }
@@ -176,9 +177,8 @@ class CreateBoardView extends Component {
     };
 
     async checkBoardAvailability() {
-        return axios.get(this.context.apiRoute + "/boards/" + this.state.discriminator)
-            .then(res => res.status === 200).catch(() => false);
-    };
+        return axios.get("/boards/" + this.state.discriminator).then(res => res.status === 200).catch(() => false);
+    }
 }
 
 export default CreateBoardView;

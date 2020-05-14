@@ -3,12 +3,12 @@ import IdeaBox from "./idea-box";
 import axios from 'axios';
 import {Col, Row} from "react-bootstrap";
 import {FaRegFrown} from "react-icons/fa";
-import LoadingSpinner from "../../util/loading-spinner";
-import AppContext from "../../../context/app-context";
-import BoardDetailsBox from "../board-details-box";
+import LoadingSpinner from "components/util/loading-spinner";
+import AppContext from "context/app-context";
+import BoardDetailsBox from "components/board/board-details-box";
 import InfiniteScroll from 'react-infinite-scroller';
-import {getSimpleRequestConfig, prepareFilterAndSortRequests} from "../../util/utils";
-import {ReactComponent as UndrawNoIdeas} from "../../../assets/svg/undraw/no_ideas.svg";
+import {prepareFilterAndSortRequests} from "components/util/utils";
+import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 
 //fixme
 class BoardContainer extends Component {
@@ -16,11 +16,8 @@ class BoardContainer extends Component {
     static contextType = AppContext;
 
     state = {
-        initialLoaded: false,
-        error: false,
-        ideas: [],
+        ideas: {data: [], loaded: false, error: false, moreToLoad: true},
         scrollTo: null,
-        moreToLoad: true,
     };
 
     render() {
@@ -28,14 +25,14 @@ class BoardContainer extends Component {
             <Col lg={8} className="order-lg-1 order-12">
                 {this.loadIdeas()}
             </Col>
-            <BoardDetailsBox onIdeaCreation={this.onIdeaCreation} description={this.props.boardData.fullDescription} moderators={this.props.moderators} discriminator={this.props.boardData.discriminator}
-                             license={this.props.boardData.license} boardData={this.props.boardData} onNotLoggedClick={this.props.onNotLoggedClick}/>
+            <BoardDetailsBox onIdeaCreation={this.onIdeaCreation} description={this.props.boardData.fullDescription} moderators={this.props.moderators}
+                             discriminator={this.props.boardData.discriminator} boardData={this.props.boardData} onNotLoggedClick={this.props.onNotLoggedClick}/>
         </React.Fragment>
     }
 
     onIdeaCreation = (data) => {
         this.setState({
-            ideas: this.state.ideas.concat(data),
+            ideas: {...this.state.ideas, data: this.state.ideas.data.concat(data)},
             scrollTo: data.id,
         });
     };
@@ -51,7 +48,7 @@ class BoardContainer extends Component {
                 behavior: "smooth",
             });
             setTimeout(function () {
-                document.getElementById("container_idea_" + self.state.scrollTo).classList.add("animated", "pulse", "on-vote");
+                document.getElementById("container_idea_" + self.state.scrollTo).classList.add("upvote-animation");
                 self.setState({scrollTo: null});
             }, 200);
         }, 500);
@@ -59,12 +56,12 @@ class BoardContainer extends Component {
 
     onIdeaDelete = (id) => {
         this.setState({
-            ideas: this.state.ideas.filter(item => item.id !== id)
+            ideas: {...this.state.ideas, data: this.state.ideas.data.filter(item => item.id !== id)}
         });
     };
 
     loadIdeas() {
-        if (this.state.error) {
+        if (this.state.ideas.error) {
             return <div className="text-center mt-3">
                 <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
                 <div>
@@ -72,7 +69,7 @@ class BoardContainer extends Component {
                 </div>
             </div>
         }
-        if (this.state.initialLoaded && this.state.ideas.length === 0 && !this.state.moreToLoad) {
+        if (this.state.ideas.loaded && this.state.ideas.data.length === 0 && !this.state.ideas.moreToLoad) {
             return <div className="text-center mt-3">
                 <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
                 <div>
@@ -85,9 +82,9 @@ class BoardContainer extends Component {
         return <InfiniteScroll
             pageStart={0}
             loadMore={(page) => this.onLoadRequest(page)}
-            hasMore={this.state.moreToLoad}
-            loader={<Row className="justify-content-center my-5" key={"loader_" + this.state.ideas.length}><LoadingSpinner/></Row>}>
-            {this.state.ideas.map(ideaData => {
+            hasMore={this.state.ideas.moreToLoad}
+            loader={<Row className="justify-content-center my-5" key={this.state.ideas.data.length}><LoadingSpinner/></Row>}>
+            {this.state.ideas.data.map(ideaData => {
                 return <IdeaBox key={ideaData.id} data={ideaData} onIdeaDelete={this.onIdeaDelete} boardData={this.props.boardData}
                                 moderators={this.props.moderators} onNotLoggedClick={this.props.onNotLoggedClick}/>
             })}
@@ -95,13 +92,20 @@ class BoardContainer extends Component {
     }
 
     onLoadRequest = (page) => {
-        return axios.get(this.context.apiRoute + "/boards/" + this.props.id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(this.context.user.searchPreferences),
-            getSimpleRequestConfig(this.context.user.session))
-            .then(res => {
-                const ideas = res.data.data;
-                ideas.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
-                this.setState({ideas: this.state.ideas.concat(ideas), moreToLoad: res.data.pageMetadata.currentPage !== res.data.pageMetadata.pages, initialLoaded: true});
-            }).catch(() => this.setState({error: true}));
+        return axios.get("/boards/" + this.props.id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(this.context.user.searchPreferences)).then(res => {
+            const ideas = res.data.data;
+            ideas.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
+            this.setState({
+                ideas: {
+                    ...this.state.ideas,
+                    data: this.state.ideas.data.concat(ideas),
+                    loaded: true,
+                    moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages
+                }
+            });
+        }).catch(() => this.setState({
+            ideas: {...this.state.ideas, error: true}
+        }));
     }
 
 }

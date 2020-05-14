@@ -3,11 +3,11 @@ import {Badge, Dropdown, Form} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import axios from "axios";
-import {getSimpleRequestConfig, toastError, toastSuccess} from "../util/utils";
+import {toastError, toastSuccess} from "components/util/utils";
 import swalReact from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import AppContext from "../../context/app-context";
-import {popupSwal} from "../util/sweetalert-utils";
+import AppContext from "context/app-context";
+import {popupSwal} from "components/util/sweetalert-utils";
 import {FaEllipsisH} from "react-icons/all";
 
 const ModeratorActions = (props) => {
@@ -29,9 +29,7 @@ const ModeratorActions = (props) => {
             if (!willClose.value) {
                 return;
             }
-            axios.patch(context.apiRoute + "/ideas/" + props.ideaData.id, {
-                "open": true
-            }, getSimpleRequestConfig(context.user.session)).then(res => {
+            axios.patch("/ideas/" + props.ideaData.id, {"open": true}).then(res => {
                 if (res.status !== 200 && res.status !== 204) {
                     toastError();
                     return;
@@ -47,9 +45,7 @@ const ModeratorActions = (props) => {
                 if (!willClose.value) {
                     return;
                 }
-                axios.patch(context.apiRoute + "/ideas/" + props.ideaData.id, {
-                    "open": false
-                }, getSimpleRequestConfig(context.user.session)).then(res => {
+                axios.patch("/ideas/" + props.ideaData.id, {"open": false}).then(res => {
                     if (res.status !== 200 && res.status !== 204) {
                         toastError();
                         return;
@@ -65,7 +61,7 @@ const ModeratorActions = (props) => {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(context.apiRoute + "/ideas/" + props.ideaData.id, getSimpleRequestConfig(context.user.session)).then(res => {
+                axios.delete("/ideas/" + props.ideaData.id).then(res => {
                     if (res.status !== 200 && res.status !== 204) {
                         toastError();
                         return;
@@ -76,12 +72,11 @@ const ModeratorActions = (props) => {
             });
     };
     const onTagsManage = () => {
-        axios.get(context.apiRoute + "/boards/" + props.ideaData.boardDiscriminator + "/tags", getSimpleRequestConfig(context.user.session)).then(res => {
+        axios.get("/boards/" + props.ideaData.boardDiscriminator + "/tags").then(res => {
             let html = [];
             res.data.forEach((tag, i) => {
                 const applied = props.ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
                 html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<Badge key={i} color="" style={{
-                    transform: `translateY(1px)`,
                     backgroundColor: tag.color
                 }}>{tag.name}</Badge>} type="checkbox" defaultChecked={applied}/>)
             });
@@ -95,6 +90,7 @@ const ModeratorActions = (props) => {
                         })}
                     </Form>
                 </React.Fragment>,
+                icon: "info",
                 showCancelButton: true,
                 animation: false,
                 reverseButtons: true,
@@ -107,8 +103,7 @@ const ModeratorActions = (props) => {
                         let obj = document.getElementById("tagManage_" + tagName);
                         data.push({name: tagName, apply: obj.checked});
                     });
-                    axios.patch(context.apiRoute + "/ideas/" + props.ideaData.id + "/tags", data,
-                        getSimpleRequestConfig(context.user.session)).then(response => {
+                    axios.patch("/ideas/" + props.ideaData.id + "/tags", data).then(response => {
                         if (response.status !== 200 && response.status !== 204) {
                             toastError();
                             return;
@@ -125,16 +120,16 @@ const ModeratorActions = (props) => {
         return <React.Fragment/>;
     }
     return <Dropdown alignRight className="cursor-click" onClick={e => e.preventDefault()} as={"span"}>
-        <Dropdown.Toggle as={"span"} id={props.ideaData.id + "_mod_tools"} variant="" className="text-black-60 ml-1 dropdown-toggle-off">
-            <FaEllipsisH className="fa-sm move-top-2px"/>
+        <Dropdown.Toggle as={"span"} id={props.ideaData.id + "_mod_tools"} variant="" className="text-black-60 ml-1">
+            <FaEllipsisH className="move-top-1px"/>
         </Dropdown.Toggle>
         <Dropdown.Menu className="mod-tools">
-            <Dropdown.Item as={"span"} onClick={onTagsManage}><FaTags className="fa-sm mr-1" style={{color: context.theme}}/> Change Tags</Dropdown.Item>
+            <Dropdown.Item as={"span"} onClick={onTagsManage}><FaTags className="mr-1 move-top-2px" style={{color: context.theme}}/> Change Tags</Dropdown.Item>
             {props.ideaData.open ?
-                <Dropdown.Item as={"span"} onClick={onIdeaClose}><FaLock className="fa-sm mr-1" style={{color: context.theme}}/> Close Idea</Dropdown.Item> :
-                <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="fa-sm mr-1" style={{color: context.theme}}/> Open Idea</Dropdown.Item>
+                <Dropdown.Item as={"span"} onClick={onIdeaClose}><FaLock className="mr-1 move-top-2px" style={{color: context.theme}}/> Close Idea</Dropdown.Item> :
+                <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="mr-1 move-top-2px" style={{color: context.theme}}/> Open Idea</Dropdown.Item>
             }
-            <Dropdown.Item as={"span"} onClick={onIdeaDelete}><FaTrash className="fa-sm mr-1" style={{color: context.theme}}/> Delete Idea</Dropdown.Item>
+            <Dropdown.Item as={"span"} onClick={onIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.theme}}/> Delete Idea</Dropdown.Item>
         </Dropdown.Menu>
     </Dropdown>
 };

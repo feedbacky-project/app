@@ -4,9 +4,9 @@ import axios from "axios";
 import {FaLock, FaRegComment} from "react-icons/fa";
 import {Badge, Card} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import AppContext from "../../../context/app-context";
-import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, truncateText} from "../../util/utils";
-import ModeratorActions from "../moderator-actions";
+import AppContext from "context/app-context";
+import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, truncateText} from "components/util/utils";
+import ModeratorActions from "components/board/moderator-actions";
 import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
 
 class IdeaBox extends Component {
@@ -16,13 +16,12 @@ class IdeaBox extends Component {
 
     state = {
         ideaData: this.props.data,
-        tags: [],
     };
 
     render() {
         let classes = "my-2 container col";
         if (this.justVoted) {
-            classes += " animated pulse on-vote";
+            classes += " upvote-animation";
             this.justVoted = false;
         }
         return <Card id={"container_idea_" + this.state.ideaData.id} className={classes} style={{borderRadius: 0, display: `block`}}>
@@ -63,12 +62,11 @@ class IdeaBox extends Component {
         } else {
             vote = <FiChevronsUp style={{color}}/>;
         }
-        return <Button className="grey-text font-weight-bold vote-button z-depth-0 px-2 py-1 m-0 no-upvote-js"
-                       style={{lineHeight: '16px', minWidth: 35, minHeight: 45, fontSize: 15}}
+        return <Button className="vote-button px-2 py-1 m-0"
+                       style={{lineHeight: '16px', minWidth: 35, minHeight: 45}}
                        onClick={this.onUpvote} variant="">
             {vote}
-            <span className="d-block bg-transparent"
-                  style={{color: color}}>{this.state.ideaData.votersAmount}</span>
+            <strong className="d-block" style={{color: color}}>{this.state.ideaData.votersAmount}</strong>
         </Button>
     }
 
@@ -81,7 +79,7 @@ class IdeaBox extends Component {
 
     renderComments() {
         if (this.state.ideaData.commentsAmount > 0) {
-            return <small className="text-black-60 float-right move-bottom-3px">
+            return <small className="comments-container">
                 {this.state.ideaData.commentsAmount}
                 <FaRegComment className="ml-1 move-top-2px"/>
             </small>
@@ -128,7 +126,7 @@ class IdeaBox extends Component {
     };
 
     renderAuthor() {
-        return <small className="text-black-60 float-right ml-1 move-bottom-3px">
+        return <small className="author-container">
             By {" "}
             {formatUsername(this.state.ideaData.user.id, truncateText(this.state.ideaData.user.username, 20), this.props.moderators)} {" "}
             <img className="img-responsive m-0 rounded-circle move-top-1px" alt="avatar"
@@ -157,7 +155,7 @@ class IdeaBox extends Component {
         }
         axios({
             method: request,
-            url: this.context.apiRoute + "/ideas/" + this.state.ideaData.id + "/voters",
+            url: "/ideas/" + this.state.ideaData.id + "/voters",
             headers: {
                 "Authorization": "Bearer " + this.context.user.session
             }

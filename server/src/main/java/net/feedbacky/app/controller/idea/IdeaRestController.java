@@ -26,6 +26,8 @@ import javax.validation.Valid;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -72,7 +74,11 @@ public class IdeaRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    return ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType);
+    Logger.getLogger("PERFORMANCE").log(Level.SEVERE, "TEST STARTING");
+    long start = System.currentTimeMillis();
+    PaginableRequest<List<FetchIdeaDto>> list = ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType);
+    Logger.getLogger("PERFORMANCE").log(Level.SEVERE, "TEST FINISHED TOOK " + (System.currentTimeMillis() - start) + "ms");
+    return list;
   }
 
   @GetMapping("v1/ideas/{id}")
@@ -87,6 +93,11 @@ public class IdeaRestController {
 
   //todo post attachment api
 
+  @PostMapping("v1/ideas/{id}/subscribe")
+  public FetchUserDto postSubscribe(@PathVariable long id) {
+    return ideaService.postSubscribe(id);
+  }
+
   @PatchMapping("v1/ideas/{id}")
   public FetchIdeaDto patch(@PathVariable long id, @Valid @RequestBody PatchIdeaDto dto) {
     return ideaService.patch(id, dto);
@@ -100,6 +111,11 @@ public class IdeaRestController {
   @DeleteMapping("v1/attachments/{id}")
   public ResponseEntity deleteAttachment(@PathVariable long id) {
     return ideaService.deleteAttachment(id);
+  }
+
+  @DeleteMapping("v1/ideas/{id}/subscribe")
+  public ResponseEntity deleteSubscribe(@PathVariable long id) {
+    return ideaService.deleteSubscribe(id);
   }
 
   @GetMapping("v1/ideas/{id}/voters")

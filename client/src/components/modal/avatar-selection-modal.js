@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
-import AppContext from "../../context/app-context";
+import AppContext from "context/app-context";
 import md5 from "md5";
 import PropTypes from "prop-types";
 import {Col, Row} from "react-bootstrap";
-import {prettifyEnum} from "../util/utils";
-import PageModal from "./page-modal";
+import {prettifyEnum} from "components/util/utils";
+import PageModal from "components/modal/page-modal";
 
 const AvatarSelectionModal = (props) => {
     const context = useContext(AppContext);
@@ -12,9 +12,9 @@ const AvatarSelectionModal = (props) => {
         return props.connectedAccounts.map((conn, i) => {
             let data = JSON.parse(conn.data);
             if (data.AVATAR === undefined) {
-                return <React.Fragment key={"connAcc" + i}/>
+                return <React.Fragment key={i}/>
             }
-            return <Col key={"connAcc" + i} xs={5} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose(data.AVATAR)}>
+            return <Col key={i} xs={5} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose(data.AVATAR)}>
                 <img src={data.AVATAR} alt={prettifyEnum(conn.accountType) + " Avatar"} width={100} className="img-fluid img-thumbnail"/>
                 <div className="mt-1">{prettifyEnum(conn.accountType)}</div>
             </Col>

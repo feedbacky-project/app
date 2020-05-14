@@ -1,16 +1,16 @@
 import {Dropdown, DropdownItem, NavItem} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
-import {getSizedAvatarByUrl, isServiceAdmin} from "../util/utils";
+import {getSizedAvatarByUrl, isServiceAdmin} from "components/util/utils";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import React from "react";
 import {Link} from "react-router-dom";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
+import {FaAngleDown} from "react-icons/all";
 
 export const renderLogIn = (onNotLoggedClick, context) => {
     if (!context.user.loggedIn) {
         return <NavItem>
-            <a className="button btn active text-white mx-0 z-depth-0 py-0" href="#!"
-               onClick={onNotLoggedClick}><FaSignInAlt/></a>
+            <a className="button btn active text-white mx-0 z-depth-0 py-0" href="#!" onClick={onNotLoggedClick}><FaSignInAlt/></a>
         </NavItem>
     }
     return <NavItem>
@@ -19,13 +19,13 @@ export const renderLogIn = (onNotLoggedClick, context) => {
                 <img className="img-responsive rounded mr-1"
                      src={getSizedAvatarByUrl(context.user.data.avatar, 64)}
                      onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
-                     alt="avatar"
-                     height="24px" width="24px"/>
+                     alt="avatar" height="24px" width="24px"/>
+                <FaAngleDown/>
             </DropdownToggle>
             <DropdownMenu alignRight>
-                <DropdownItem className="rounded px-2">
-                    <FaUserAlt className="fa-sm mr-2"/>
-                    <strong className="d-inline-block align-middle text-truncate" style={{maxWidth: 100, fontWeight: 500}}>{context.user.data.username}</strong>
+                <DropdownItem>
+                    <FaUserAlt className="mr-2 move-top-1px"/>
+                    <strong className="d-inline-block align-middle text-truncate" style={{maxWidth: 100}}>{context.user.data.username}</strong>
                 </DropdownItem>
                 <div className="my-1"/>
                 <DropdownItem className="d-inline-block" onClick={context.onDarkModeToggle}>
@@ -51,22 +51,22 @@ const renderModeratedBoards = (context) => {
     }
     return <React.Fragment>
         <div className="my-1"/>
-        <DropdownItem className="px-2">
-            <FaCogs className="fa-sm mr-2"/>
-            <strong style={{fontWeight: 500}}>Moderated Boards</strong>
+        <DropdownItem>
+            <FaCogs className="mr-2 move-top-1px"/>
+            <strong>Moderated Boards</strong>
         </DropdownItem>
         <div className="my-1"/>
         {context.user.moderates.map(data => {
-            return <DropdownItem key={"moderated_" + data.boardDiscriminator} as={Link} to={"/brdr/" + data.boardDiscriminator}>{data.boardName}</DropdownItem>
+            return <DropdownItem key={data.boardDiscriminator} as={Link} to={"/brdr/" + data.boardDiscriminator}>{data.boardName}</DropdownItem>
         })}
     </React.Fragment>
 };
 
 const renderCreateBoardSection = (context) => {
-    if(!isServiceAdmin(context)) {
+    if (!isServiceAdmin(context)) {
         return <React.Fragment/>
     }
-    return <DropdownItem as={Link} to="/admin/create" style={{fontWeight: 500}}>
-        Create Own Board
+    return <DropdownItem as={Link} to="/admin/create">
+        <strong>Create Own Board</strong>
     </DropdownItem>
 };

@@ -1,0 +1,403 @@
+@import "~react-toastify/dist/ReactToastify.css";
+@import "assets/scss/override-variables";
+@import "assets/scss/align-utils";
+@import "assets/scss/font-face";
+@import "assets/scss/swal-override";
+
+.btn-success, .btn-success:hover, .btn-success:focus {
+  background-color: $green !important;
+}
+
+.btn-danger, .btn-danger:hover, .btn-danger:focus {
+  background-color: $red !important;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:focus {
+  background-color: $blue;
+}
+
+.btn-warning, .btn-warning:hover, .btn-warning:focus {
+  background: $orange;
+}
+
+.dropdown-item:active {
+  background-color: rgba(0,0,0,.4) !important;
+}
+
+.cascading-modal {
+  &.modal-header {
+    padding: 1.5rem;
+    margin: -2rem 1rem 1rem 1rem;
+    text-align: center;
+    border: none;
+    border-radius: 0.125rem;
+    box-shadow: $box-shadow;
+  }
+  &.modal-avatar {
+    margin-top: 6rem;
+    .modal-header {
+      margin: -6rem 0 -1rem;
+      box-shadow: none;
+      img {
+        width: 130px;
+        margin-right: auto;
+        margin-left: auto;
+        box-shadow: $box-shadow;
+      }
+    }
+  }
+}
+
+.popover-header {
+  text-align: center;
+}
+
+.card {
+  box-shadow: $box-shadow;
+}
+
+.jumbotron {
+  box-shadow: $box-shadow;
+  background-position: center;
+  text-align: center;
+  border-radius: 0 !important;
+}
+
+.shadow {
+  box-shadow: $box-shadow;
+}
+
+.danger-shadow {
+  box-shadow: 0 3px 5px 0 rgba(204, 51, 0, .5);
+}
+
+.badge {
+  color: #fff !important;
+  border-width: 0;
+  box-shadow: none;
+}
+
+.navbar {
+  box-shadow: $box-shadow;
+  font-weight: 300;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.dropdown-menu {
+  padding: .2rem 0 !important;
+
+  a {
+    font-size: 14px !important;
+    padding: 4px 10px !important;
+  }
+}
+
+hr {
+  border-top: 1px solid rgba(0,0,0,.1) !important;
+}
+
+.btn:not(.vote-button):not(.dropdown-toggle):not(.btn-link) {
+  box-shadow: $box-shadow;
+
+  &:hover, &:active {
+    box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, .3);
+  }
+}
+
+.btn, .btn:focus {
+  border: 1px solid transparent !important;
+}
+
+@import "~bootstrap/scss/bootstrap";
+
+/* fixes scrollbar repositioning page */
+html {
+  overflow-x: hidden;
+  margin-right: calc(-1 * (100vw - 100%));
+}
+
+/* fixes mobile minimum width */
+body, .modal {
+  min-width: 280px;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+  margin: 0;
+  padding-right: 0 !important; /* fixes sweetalert modal padding override */
+}
+
+.form-control::placeholder {
+  font-size: 15px;
+}
+
+.badge-container {
+  .badge:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  .badge:nth-child(n+2) {
+    border-radius: 0;
+  }
+
+  .badge:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+
+  .badge:only-child {
+    border-radius: 4px;
+  }
+}
+
+.author-container, .comments-container {
+  color: rgba(0,0,0,.6);
+  float: right;
+  margin-left: 0.25rem;
+  transform: translateY(3px);
+}
+
+.comment-icon {
+  text-align: center;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px white, 0 0 0 2px currentColor;
+  .icon {
+    vertical-align: bottom;
+    transform: translateY(-1px);
+    fill: white;
+  }
+}
+
+@media (max-width: 576px) {
+  .vote-button {
+    font-size: .85rem;
+    padding: .3rem .6rem;
+  }
+
+  .card-body {
+    padding: .9rem .9rem;
+  }
+}
+
+.go-back-button {
+  color: white;
+}
+
+.go-back-button:hover {
+  transform: scale(1.15);
+  color: white;
+  text-decoration: none;
+}
+
+.markdown-box a {
+  color: #09c;
+}
+
+.flex-on {
+  flex: 1 !important;
+}
+
+.not-voted {
+  color: rgba(0, 0, 0, .7);
+}
+
+.hidden-anchor {
+  text-decoration: none !important;
+  color: black !important;
+}
+
+.small-text-shadow {
+  text-shadow: 0 0 3px #000;
+}
+
+/* to fix profile mobile card deck breaking */
+.card-deck {
+  flex-flow: row wrap !important;
+}
+
+@keyframes pulse {
+  from, to {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+}
+
+.upvote-animation {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-name: pulse;
+  z-index: 1;
+}
+
+.merged {
+  margin: 0 -12px 0 0;
+  border: 2px solid #f8f9fa;
+}
+
+.snarkdown-box p {
+  margin-bottom: 0;
+}
+
+.fa-lg {
+  height: 2em;
+  width: 2em;
+}
+
+@media (max-width: 768px) {
+  .fa-xs {
+    font-size: 1rem !important;
+  }
+}
+
+.fa-xs {
+  height: .7em;
+  width: .7em;
+}
+
+a.pre-href {
+  cursor: text;
+}
+
+.color-picker-admin {
+  width: 260px !important;
+}
+
+.text-black-60 {
+  color: rgba(0, 0, 0, .6) !important;
+}
+
+.text-black-75 {
+  color: rgba(0, 0, 0, .75) !important;
+}
+
+@media (max-width: 315px) {
+  .color-picker-admin {
+    width: 200px !important;
+  }
+}
+
+textarea, input {
+  border-color: #ced4da !important;
+}
+
+.modal-open {
+  overflow-y: inherit !important;
+}
+
+.close {
+  opacity: 1 !important;
+}
+
+.toast-style {
+  color: rgba(0, 0, 0, .9) !important;
+  background-color: white !important;
+  &.info {
+    border-left: 5px solid #2196f3 !important;
+  }
+  &.error {
+    border-left: 5px solid #e43e3e !important;
+  }
+  &.warning {
+    border-left: 5px solid #ffe008 !important;
+  }
+  &.success {
+    border-left: 5px solid #3ec569 !important;
+  }
+  &.await {
+    border-left: 5px solid #0994f6 !important;
+  }
+}
+
+a {
+  outline: 0;
+}
+
+.bg-feedbacky, .badge-feedbacky {
+  background-color: #0994f6 !important;
+}
+
+.social-link:first-of-type {
+  border-top-left-radius: 4px;
+}
+
+.social-link:last-child {
+  border-top-right-radius: 4px;
+}
+
+.border-chosen {
+  border: 2px solid #0994f6 !important;
+}
+
+.border-invisible {
+  border: 2px solid transparent !important;
+}
+
+.rounded-xl {
+  border-radius: 6px !important;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.modal {
+  overflow-y: hidden !important;
+}
+
+.form-control::placeholder {
+  color: rgba(0, 0, 0, .5);
+}
+
+.btn-attachment *:hover {
+  cursor: pointer !important;
+}
+
+.box-overlay {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #ececec;
+
+  &.danger {
+    border-color: #cc3300;
+  }
+}
+
+.board-role {
+  &.admin {
+    color: #ff0800;
+  }
+  &.moderator {
+    color: #4cbb17;
+  }
+  &.internal {
+    color: #0080FF;
+  }
+}
+
+.cursor-click {
+  cursor: pointer;
+}
+
+.error-icon {
+  font-size: 190px;
+  color: $red;
+}
+
+.text-tight {
+  letter-spacing: -.3pt;
+}
+
+.view-box-bg {
+  background-color: white;
+}
+
+@import "assets/scss/dark-mode";

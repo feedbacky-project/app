@@ -35,7 +35,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
     compile 'org.hibernate:hibernate-core:5.4.5.Final'
-    compile 'org.springframework.boot:spring-boot-starter-actuator:2.2.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-data-jdbc:2.2.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.2.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-jdbc:2.2.4.RELEASE'
@@ -52,13 +51,9 @@ dependencies {
     compile 'org.imgscalr:imgscalr-lib:4.2'
     //todo replace this with proper libraries
     compile 'io.jsonwebtoken:jjwt:0.9.1'
-    compile 'org.projectlombok:lombok:1.18.10'
     compile 'org.modelmapper:modelmapper:2.3.2'
-    compile 'commons-validator:commons-validator:1.4.0'
-    compile 'commons-configuration:commons-configuration:1.10'
     compile 'org.apache.commons:commons-text:1.8'
     compile 'com.mashape.unirest:unirest-java:1.4.9'
-    compile 'org.jetbrains:annotations:16.0.1'
     compile 'com.github.MrPowerGamerBR:TemmieWebhook:59de40c3b6'
     compile 'javax.mail:mail:1.4.7'
     runtime 'mysql:mysql-connector-java:8.0.18'

@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.board.dto.moderator.FetchUserPermissionDto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import org.modelmapper.ModelMapper;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -20,7 +22,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonPropertyOrder( {"id", "username", "avatar", "email", "permissionsUrl", "connectedAccountsUrl", "creationDate"})
+@JsonPropertyOrder({"id", "username", "avatar", "email", "permissionsUrl", "connectedAccountsUrl", "creationDate"})
 public class FetchUserDto {
 
   private final String permissionsUrl = "/v1/users/:id/permissions";
@@ -29,6 +31,8 @@ public class FetchUserDto {
   private String username;
   private String avatar;
   private String email;
+  private FetchMailPreferences mailPreferences;
+  private List<FetchUserPermissionDto> permissions;
   private Date creationDate;
 
   public FetchSimpleUserDto convertToSimpleDto() {

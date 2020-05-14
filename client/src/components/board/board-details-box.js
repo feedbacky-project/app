@@ -1,12 +1,12 @@
 import React, {useContext, useState} from 'react';
 import {FaPencilAlt} from "react-icons/fa";
 import {Button, Card, Col} from "react-bootstrap";
-import IdeaCreateModal from "../modal/idea-create-modal";
-import AppContext from "../../context/app-context";
+import IdeaCreateModal from "components/modal/idea-create-modal";
+import AppContext from "context/app-context";
 import {Link} from "react-router-dom";
-import snarkdown from "../util/snarkdown";
-import {FaListAlt} from "react-icons/all";
-import {parseEmojis} from "../util/emoji-filter";
+import snarkdown from "components/util/snarkdown";
+import {FaAlignRight} from "react-icons/all";
+import {parseEmojis} from "components/util/emoji-filter";
 
 const BoardDetailsBox = (props) => {
     const context = useContext(AppContext);
@@ -32,8 +32,8 @@ const BoardDetailsBox = (props) => {
             state: {
                 _boardData: props.boardData,
             },
-        }} className="btn-smaller black-text mx-0 mt-0 mb-2 mr-1 py-1 ml-1 grey lighten-4" variant="">
-            <FaListAlt className="mr-1"/> Manage
+        }} className="text-white mx-0 mt-0 py-1 float-right" variant="" style={{backgroundColor: context.theme}}>
+            Manage <FaAlignRight className="ml-1 move-top-1px"/>
         </Button>
     };
 
@@ -45,9 +45,8 @@ const BoardDetailsBox = (props) => {
                 <Card.Body className="pb-2">
                     <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(props.description))}}/>
                     <hr/>
-                    <Button className="btn-smaller text-white mx-0 mt-0 mb-2 mr-1 py-1" variant=""
-                            style={{backgroundColor: context.theme}} onClick={onCreateIdeaModalClick}>
-                        <FaPencilAlt className="mr-1"/> New Idea
+                    <Button className="text-white mx-0 mt-0 mb-2 py-1" variant="" style={{backgroundColor: context.theme}} onClick={onCreateIdeaModalClick}>
+                        <FaPencilAlt className="mr-1 move-top-1px"/> New Idea
                     </Button>
                     {renderEditButton()}
                 </Card.Body>

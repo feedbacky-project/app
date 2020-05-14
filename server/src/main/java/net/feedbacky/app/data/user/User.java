@@ -18,12 +18,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -47,16 +49,20 @@ public class User implements Serializable {
   private String avatar;
   private String email;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<Moderator> permissions = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<ConnectedAccount> connectedAccounts = new HashSet<>();
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private MailPreferences mailPreferences;
   @CreationTimestamp
   private Date creationDate;
   private boolean serviceStaff = false;
 
   public FetchUserRequest convertToDto() {
     FetchUserDto dto = new ModelMapper().map(this, FetchUserDto.class);
+    dto.setMailPreferences(mailPreferences.convertToDto());
+    dto.setPermissions(permissions.stream().map(Moderator::convertToUserPermissionDto).collect(Collectors.toList()));
     return new FetchUserRequest(dto);
   }
 
@@ -70,7 +76,7 @@ public class User implements Serializable {
     }
 
     public FetchUserDto exposeSensitiveData(boolean expose) {
-      if (!expose) {
+      if(!expose) {
         dto.setEmail(null);
       }
       return dto;

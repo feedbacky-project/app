@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,6 +35,7 @@ public class FetchBoardDto {
   private Date creationDate;
 
   private List<FetchSocialLinkDto> socialLinks;
+  private List<FetchModeratorDto> moderators;
 
   private String themeColor;
   private String logo;
@@ -41,7 +43,6 @@ public class FetchBoardDto {
   private boolean privatePage;
 
   private final String ideasUrl = "/v1/boards/:id/ideas";
-  private final String moderatorsUrl = "/v1/boards/:id/moderators";
   private final String tagsUrl = "/v1/boards/:id/tags";
   private final String webhooksUrl = "/v1/boards/:id/webhooks";
   private final String invitedUsersUrl = "/v1/boards/:id/invitedUsers";

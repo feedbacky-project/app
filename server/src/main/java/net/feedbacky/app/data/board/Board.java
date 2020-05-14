@@ -68,7 +68,7 @@ public class Board implements Serializable {
   private boolean privatePage;
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Idea> ideas = new LinkedHashSet<>();
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board", orphanRemoval = true)
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "board", orphanRemoval = true)
   private Set<Moderator> moderators = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Invitation> invitedModerators = new HashSet<>();
@@ -109,6 +109,7 @@ public class Board implements Serializable {
       if(preDto.canView(user)) {
         FetchBoardDto dto = new ModelMapper().map(preDto, FetchBoardDto.class);
         dto.setSocialLinks(preDto.getSocialLinks().stream().map(SocialLink::convertToDto).collect(Collectors.toList()));
+        dto.setModerators(preDto.getModerators().stream().map(Moderator::convertToModeratorDto).collect(Collectors.toList()));
         return dto;
       }
       FetchBoardDto dto = new FetchBoardDto();

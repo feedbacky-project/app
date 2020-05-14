@@ -1,8 +1,8 @@
 import React from 'react';
 import {Col, Form} from "react-bootstrap";
-import {formatRemainingCharacters} from "../../../components/util/utils";
-import ClickableTip from "../../../components/util/clickable-tip";
-import UndrawCreateProject from "../../../assets/svg/undraw/create_project.svg";
+import {formatRemainingCharacters} from "components/util/utils";
+import ClickableTip from "components/util/clickable-tip";
+import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 
 const StepFirst = (props) => {
     return <React.Fragment>
@@ -24,7 +24,7 @@ const StepFirst = (props) => {
                                   <br/>
                                   <strong>Minimum 3 and maximum of 20 characters.</strong></React.Fragment>}/>
             </div>
-            <Form.Control style={{maxHeight: 38, resize: "none"}} minLength="3" maxLength="20" rows="1" required type="text"
+            <Form.Control style={{minHeight: 38, resize: "none"}} minLength="3" maxLength="20" rows="1" required type="text"
                           placeholder="Short discriminator eg. my-project-123." id="discriminator" defaultValue={props.discriminator}
                           onKeyUp={() => onValueInput("discriminator", "remainingDiscriminator", 20, props)}/>
             <Form.Text className="text-right text-black-60" id="remainingDiscriminator">
@@ -36,7 +36,7 @@ const StepFirst = (props) => {
                 <span className="mr-1">Board Name</span>
                 <ClickableTip id="boardName" title="Set Board Name" description="Name of your board should be at least 4 and maximum 25 characters long."/>
             </div>
-            <Form.Control style={{maxHeight: 38, resize: "none"}} minLength="4" maxLength="25" rows="1" required type="text"
+            <Form.Control style={{minHeight: 38, resize: "none"}} minLength="4" maxLength="25" rows="1" required type="text"
                           placeholder="Short name of board." id="name" defaultValue={props.name}
                           onKeyUp={() => onValueInput("name", "remainingName", 25, props)}/>
             <Form.Text className="text-right text-black-60" id="remainingName">

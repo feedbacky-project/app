@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, CardDeck, Col, Row} from "react-bootstrap";
 import {FaDiscord, FaGlobe} from "react-icons/fa";
-import UndrawCreateProject from "../../../../../assets/svg/undraw/create_project.svg";
+import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 
 const type = ["DISCORD", "CUSTOM_ENDPOINT"];
 const typeName = ["Discord", "Custom Endpoint"];
@@ -17,7 +17,7 @@ const StepFirst = (props) => {
             } else {
                 classes += " border-invisible";
             }
-            return <Card key={"card" + i} className={classes} style={{minWidth: 175}} onClick={() => props.onSetupMethodCall("type", item)}>
+            return <Card key={i} className={classes} style={{minWidth: 175}} onClick={() => props.onSetupMethodCall("type", item)}>
                 <Card.Body className="text-center">
                     {typeIcon[i]}
                     <br className="my-3"/>
@@ -32,8 +32,8 @@ const StepFirst = (props) => {
             <img alt="" src={UndrawCreateProject} className="my-2" width={150} height={150}/>
             <h2>Select Webhook Type</h2>
             <span className="text-black-60">
-                    Select in which way you'll utilize this webhook.
-                </span>
+                Select in which way you'll utilize this webhook.
+            </span>
         </Col>
         <Col xs={12} className="mt-4 px-md-5 px-3">
             <Row className="justify-content-center">

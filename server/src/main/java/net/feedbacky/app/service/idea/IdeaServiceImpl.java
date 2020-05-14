@@ -112,13 +112,8 @@ public class IdeaServiceImpl implements IdeaService {
     List<Idea> ideas = pageData.getContent();
     final User finalUser = user;
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
-    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream().map(idea -> {
-      boolean upvoted = false;
-      if(finalUser != null && idea.getVoters().contains(finalUser)) {
-        upvoted = true;
-      }
-      return idea.convertToDto(upvoted);
-    }).collect(Collectors.toList()));
+    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
+            .map(idea -> idea.convertToDto(finalUser)).collect(Collectors.toList()));
   }
 
   @Override
@@ -137,13 +132,8 @@ public class IdeaServiceImpl implements IdeaService {
     Page<Idea> pageData = ideaRepository.findByBoardAndTitleIgnoreCaseContaining(board, query, PageRequest.of(page, pageSize));
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
-    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream().map(idea -> {
-      boolean upvoted = false;
-      if(finalUser != null && idea.getVoters().contains(finalUser)) {
-        upvoted = true;
-      }
-      return idea.convertToDto(upvoted);
-    }).collect(Collectors.toList()));
+    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
+            .map(idea -> idea.convertToDto(finalUser)).collect(Collectors.toList()));
   }
 
   @Override
@@ -160,12 +150,7 @@ public class IdeaServiceImpl implements IdeaService {
       dto.setBoardDiscriminator(idea.getBoard().getDiscriminator());
       return dto;
     }
-    final User finalUser = user;
-    boolean upvoted = false;
-    if(finalUser != null && idea.getVoters().contains(finalUser)) {
-      upvoted = true;
-    }
-    return idea.convertToDto(upvoted);
+    return idea.convertToDto(user);
   }
 
   @Override
@@ -193,6 +178,7 @@ public class IdeaServiceImpl implements IdeaService {
     idea.setVoters(set);
     idea.setStatus(Idea.IdeaStatus.OPENED);
     idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
+    idea.setSubscribers(set);
     idea = ideaRepository.save(idea);
 
     //must save idea first in order to apply and save attachment
@@ -208,7 +194,7 @@ public class IdeaServiceImpl implements IdeaService {
     idea.setAttachments(attachments);
     ideaRepository.save(idea);
 
-    FetchIdeaDto fetchDto = idea.convertToDto(true);
+    FetchIdeaDto fetchDto = idea.convertToDto(user);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
     idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_CREATE, builder.build());
     return ResponseEntity.status(HttpStatus.CREATED).body(fetchDto);
@@ -234,6 +220,22 @@ public class IdeaServiceImpl implements IdeaService {
     idea.getAttachments().add(attachment);
     ideaRepository.save(idea);
     return ResponseEntity.status(HttpStatus.CREATED).body(attachment.convertToDto());
+  }
+
+  @Override
+  public FetchUserDto postSubscribe(long id) {
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+    Idea idea = ideaRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
+    if(idea.getSubscribers().contains(user)) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is already subscribed by you.");
+    }
+    idea.getSubscribers().add(user);
+    ideaRepository.save(idea);
+    //no need to expose
+    return user.convertToDto().exposeSensitiveData(false);
   }
 
   @Override
@@ -299,7 +301,7 @@ public class IdeaServiceImpl implements IdeaService {
       commentRepository.save(comment);
     }
     ideaRepository.save(idea);
-    return idea.convertToDto(idea.getVoters().contains(user));
+    return idea.convertToDto(user);
   }
 
   @Override
@@ -333,6 +335,22 @@ public class IdeaServiceImpl implements IdeaService {
     objectStorage.deleteImage(attachment.getUrl());
     idea.getAttachments().remove(attachment);
     attachmentRepository.delete(attachment);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  public ResponseEntity deleteSubscribe(long id) {
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+    Idea idea = ideaRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
+    if(!idea.getSubscribers().contains(user)) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is not subscribed by you.");
+    }
+    idea.getSubscribers().remove(user);
+    ideaRepository.save(idea);
+    //no need to expose
     return ResponseEntity.noContent().build();
   }
 

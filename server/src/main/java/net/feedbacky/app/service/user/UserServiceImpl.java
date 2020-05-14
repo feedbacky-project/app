@@ -1,6 +1,7 @@
 package net.feedbacky.app.service.user;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -67,20 +68,6 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<FetchUserPermissionDto> getSelfPermissions() {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    return user.getPermissions().stream().map(Moderator::convertToUserPermissionDto).collect(Collectors.toList());
-  }
-
-  @Override
-  public List<FetchUserPermissionDto> getPermissions(long id) {
-    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
-    return user.getPermissions().stream().map(Moderator::convertToUserPermissionDto).collect(Collectors.toList());
-  }
-
-  @Override
   public FetchUserDto get(long id) {
     User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
     TypeReference<HashMap<String, Object>> ref = new TypeReference<HashMap<String, Object>>() {};
@@ -116,6 +103,10 @@ public class UserServiceImpl implements UserService {
     user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR"));
     user.setUsername("Anonymous");
     user.setConnectedAccounts(new HashSet<>());
+    MailPreferences mailPreferences = user.getMailPreferences();
+    mailPreferences.setNotifyFromTagsChange(false);
+    mailPreferences.setNotifyFromStatusChange(false);
+    mailPreferences.setNotifyFromModeratorsComments(false);
     userRepository.save(user);
     return ResponseEntity.noContent().build();
   }

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Col, Form} from "react-bootstrap";
-import {getBase64FromFile, validateImageWithWarning} from "../../../components/util/utils";
-import ClickableTip from "../../../components/util/clickable-tip";
-import UndrawBrandProject from "../../../assets/svg/undraw/brand_project.svg";
+import {getBase64FromFile, validateImageWithWarning} from "components/util/utils";
+import ClickableTip from "components/util/clickable-tip";
+import UndrawBrandProject from "assets/svg/undraw/brand_project.svg";
 
 const StepSecond = (props) => {
     return <React.Fragment>

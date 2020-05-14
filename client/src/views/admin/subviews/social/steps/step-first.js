@@ -1,9 +1,9 @@
 import React from 'react';
 import {Card, CardDeck, Col, Row} from "react-bootstrap";
 import {FaDiscord, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
-import {getBase64FromFile, validateImageWithWarning} from "../../../../../components/util/utils";
+import {getBase64FromFile, validateImageWithWarning} from "components/util/utils";
 import {FaFileUpload} from "react-icons/all";
-import UndrawCreateProject from "../../../../../assets/svg/undraw/create_project.svg";
+import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 
 const itemsIcons = [<FaGithub className="fa-lg"/>, <FaDiscord className="fa-lg"/>, <FaPatreon className="fa-lg"/>, <FaYoutube className="fa-lg"/>,
     <FaGlobe className="fa-lg"/>, <FaFileUpload className="fa-lg"/>];
@@ -19,14 +19,14 @@ const StepFirst = (props) => {
     const renderCards = () => {
         return itemsIcons.map((item, i) => {
             let name = itemNames[i];
-            let classes = "rounded-xl mb-3";
+            let classes = "rounded-xl m-2";
             if (props.chosen === i) {
                 classes += " border-chosen";
             } else {
                 classes += " border-invisible";
             }
             if (name === "Custom") {
-                return <Card key={"card" + i} className={classes} style={{minWidth: 175}} onClick={onCustomUpload}>
+                return <Card key={i} className={classes} style={{minWidth: 175}} onClick={onCustomUpload}>
                     <Card.Body className="text-center">
                         {props.iconData === "" || !props.customIcon ? item : <img alt="Icon" src={props.iconData} className="fa-lg"/>}
                         <br className="my-3"/>
@@ -34,7 +34,7 @@ const StepFirst = (props) => {
                     </Card.Body>
                 </Card>
             }
-            return <Card key={"card" + i} className={classes} style={{minWidth: 175}} onClick={() => setChosen(i, props)}>
+            return <Card key={i} className={classes} style={{minWidth: 175}} onClick={() => setChosen(i, props)}>
                 <Card.Body className="text-center">
                     {item}
                     <br className="my-3"/>
@@ -53,7 +53,7 @@ const StepFirst = (props) => {
                     Select icon that your Social Link will represent.
                 </span>
         </Col>
-        <Col xs={12} className="mt-4 px-md-5 px-3">
+        <Col xs={12} className="mt-3 px-md-5 px-3">
             <Row className="justify-content-center">
                 <CardDeck className="col-8 justify-content-center">
                     {renderCards()}

@@ -1,18 +1,16 @@
-import React, {useContext, useEffect} from 'react';
-import AppContext from "../../context/app-context";
+import React, {useEffect} from 'react';
 import axios from "axios";
-import {getSimpleRequestConfig, toastSuccess, toastWarning} from "../util/utils";
+import {toastSuccess, toastWarning} from "components/util/utils";
 import {Row} from "react-bootstrap";
-import LoadingSpinner from "../util/loading-spinner";
+import LoadingSpinner from "components/util/loading-spinner";
 import {useHistory, useParams} from "react-router-dom";
 
 const ModeratorInvitation = () => {
-    const context = useContext(AppContext);
     const history = useHistory();
     const {code} = useParams();
 
     useEffect(() => {
-        axios.post(context.apiRoute + "/moderatorInvitations/" + code + "/accept", {}, getSimpleRequestConfig(context.user.session)).then(res => {
+        axios.post("/moderatorInvitations/" + code + "/accept", {}).then(res => {
             if (res.status !== 200) {
                 history.push("/me");
                 toastWarning("Failed to validate invitation.");
@@ -24,7 +22,6 @@ const ModeratorInvitation = () => {
             history.push("/me");
             toastWarning(err.response.data.errors[0]);
         });
-
     }, []);
 
     return <Row className="justify-content-center"><LoadingSpinner/></Row>

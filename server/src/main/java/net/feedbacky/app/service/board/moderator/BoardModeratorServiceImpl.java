@@ -57,13 +57,6 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   }
 
   @Override
-  public List<FetchModeratorDto> getAll(String discriminator) {
-    Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
-    return board.getModerators().stream().map(Moderator::convertToModeratorDto).collect(Collectors.toList());
-  }
-
-  @Override
   public List<FetchInviteDto> getAllInvited(String discriminator) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())

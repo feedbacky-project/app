@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
-import AppContext from "../../context/app-context";
-import LoginModal from "../../components/modal/login-modal";
-import ProfileNavbar from "../../components/navbars/profile-navbar";
+import AppContext from "context/app-context";
+import LoginModal from "components/modal/login-modal";
+import ProfileNavbar from "components/navbars/profile-navbar";
 import {Container, Row} from "react-bootstrap";
 import {Route, Switch, useHistory} from "react-router-dom";
-import SettingsSubview from "./subviews/settings-subview";
-import {toastWarning} from "../../components/util/utils";
-import ServiceLogo from "../../assets/img/service-logo.png";
+import SettingsSubview from "views/profile/subviews/settings-subview";
+import {toastWarning} from "components/util/utils";
+import ServiceLogo from "assets/img/service-logo.png";
 
 const ProfileView = () => {
     const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -25,9 +25,7 @@ const ProfileView = () => {
         });
     };
 
-    useEffect(() => {
-        context.onThemeChange("#343a40");
-    }, []);
+    useEffect(() => context.onThemeChange("#343a40"), []);
 
     return <React.Fragment>
         <LoginModal open={loginModalOpen} onLoginModalClose={() => setLoginModalOpen(false)}

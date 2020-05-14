@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import {Container, Nav, NavbarBrand} from "react-bootstrap";
+import {Container, Nav, Navbar, NavbarBrand} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import AppContext from "../../context/app-context";
-import {renderLogIn} from "./navbar-commons";
-import PageNavbar from "./page-navbar";
+import AppContext from "context/app-context";
+import {renderLogIn} from "components/navbars/navbar-commons";
+import PageNavbar from "components/navbars/page-navbar";
 
 const BoardNavbar = (props) => {
     const context = useContext(AppContext);
@@ -17,9 +17,9 @@ const BoardNavbar = (props) => {
                      width="30px" alt=""/>
                 <span>{props.name}</span>
             </NavbarBrand>
-            <Nav className="ml-auto py-0 text-nowrap">
+            <div className="ml-auto py-0 text-nowrap">
                 {renderLogIn(props.onNotLoggedClick, context)}
-            </Nav>
+            </div>
         </Container>
     </PageNavbar>
 };

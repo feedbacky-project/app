@@ -23,13 +23,13 @@ export const popupToast = (content, type, toastId) => {
             pauseOnFocusLoss: false,
             draggable: true,
             transition: Slide,
-            className: type + "-toast-style",
+            className: "toast-style " + type,
         });
     } else {
         toast.update(toastId, {
             render: content,
             type: type,
-            className: type + "-toast-style",
+            className: "toast-style " + type,
         })
     }
 };
@@ -85,24 +85,13 @@ export const formatUsername = (userId, userName, moderators = []) => {
     switch (user.role.toLowerCase()) {
         case "owner":
         case "admin":
-            return <span className="role-admin-color">{userName}</span>;
+            return <span className="board-role admin">{userName}</span>;
         case "moderator":
-            return <span className="role-moderator-color">{userName}</span>;
+            return <span className="board-role moderator">{userName}</span>;
         case "user":
         default:
             return userName;
     }
-};
-
-export const getSimpleRequestConfig = (token) => {
-    if (token == null) {
-        return {};
-    }
-    return {
-        headers: {
-            "Authorization": "Bearer " + token
-        }
-    };
 };
 
 export const prepareFilterAndSortRequests = (searchPreferences) => {
@@ -120,6 +109,7 @@ export const isHexDark = (color) => {
     color = +("0x" + color.slice(1).replace(
         color.length < 5 && /./g, '$&$&'));
     let r = color >> 16;
+    //eslint-disable-next-line no-mixed-operators
     let g = color >> 8 & 255;
     let b = color & 255;
 

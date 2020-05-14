@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
-import AppContext from "../../../../context/app-context";
+import AppContext from "context/app-context";
 import axios from "axios";
-import {getSimpleRequestConfig, prettifyEnum, toastError, toastSuccess} from "../../../../components/util/utils";
-import AdminSidebar from "../../../../components/sidebar/admin-sidebar";
-import {Badge, Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
-import LoadingSpinner from "../../../../components/util/loading-spinner";
+import {prettifyEnum, toastError, toastSuccess} from "components/util/utils";
+import AdminSidebar from "components/sidebar/admin-sidebar";
+import {Badge, Button, Col, Row} from "react-bootstrap";
+import LoadingSpinner from "components/util/loading-spinner";
 import {Link} from "react-router-dom";
-import {popupSwal} from "../../../../components/util/sweetalert-utils";
-import {FaTimesCircle} from "react-icons/all";
-import ClickableTip from "../../../../components/util/clickable-tip";
+import {popupSwal} from "components/util/sweetalert-utils";
+import ClickableTip from "components/util/clickable-tip";
+import DeleteButton from "components/util/delete-button";
+import ViewBox from "components/viewbox/view-box";
 
 class WebhooksSettings extends Component {
 
@@ -21,7 +22,7 @@ class WebhooksSettings extends Component {
     };
 
     componentDidMount() {
-        axios.get(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/webhooks", getSimpleRequestConfig(this.context.user.session)).then(res => {
+        axios.get("/boards/" + this.props.data.discriminator + "/webhooks").then(res => {
             if (res.status !== 200) {
                 this.setState({error: true});
                 return;
@@ -38,9 +39,11 @@ class WebhooksSettings extends Component {
     render() {
         return <React.Fragment>
             <AdminSidebar currentNode="webhooks" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
-            <Col xs={12} md={9} className="mt-4">
-                <h2 className="h2-responsive mb-3">Webhooks</h2>
-                {this.renderContent()}
+            <Col xs={12} md={9}>
+                <ViewBox theme={this.context.theme} title="Webhooks"
+                         description="Edit webhooks to integrate with other apps here.">
+                    {this.renderContent()}
+                </ViewBox>
             </Col>
         </React.Fragment>
     }
@@ -50,35 +53,36 @@ class WebhooksSettings extends Component {
             return <span className="text-danger">Failed to obtain webhooks data</span>
         }
         if (!this.state.loaded) {
-            return <Row className="mt-4 ml-2"><LoadingSpinner/></Row>
+            return <LoadingSpinner/>
         }
-        return <Col className="mb-3">
-            <Row className="py-4 px-sm-2 px-0 rounded-top box-overlay">
-                {this.renderWebhooks()}
-            </Row>
-        </Col>
+        return this.renderWebhooks();
     }
 
     renderWebhooks() {
         return <React.Fragment>
-            <Col xs={12} sm={6} className="mb-sm-0 mb-3">
+            <Col xs={12} className="mb-sm-0 mb-3">
                 <div className="text-black-60 mb-1">
                     <span className="mr-1">Webhooks Quota ({this.calculateLeft()} left)</span>
-                    <ClickableTip id="moderatorsQuota" title="Webhooks Quota" description="Amount of webhooks your board can have."/>
+                    <ClickableTip id="moderatorsQuota" title="Webhooks Quota"
+                                  description="Amount of webhooks your board can have."/>
                 </div>
                 {this.state.data.map((hook, i) => {
-                    return <div className="d-inline-flex justify-content-center mr-2" key={"boardWebhook_" + i}>
+                    return <div className="d-inline-flex justify-content-center mr-2" key={hook.id}>
                         <div className="text-center">
-                            <img alt="Webhook" className="rounded bg-dark p-2" src={this.getTypeIcon(hook)} height={40} width={40}/>
-                            {this.renderWebhookDelete(hook, i)}
+                            <img alt="Webhook" className="rounded bg-dark p-2" src={this.getTypeIcon(hook)} height={40}
+                                 width={40}/>
+                            <DeleteButton id={"webhook_del_" + i} onClick={() => this.onWebhookDelete(hook)}
+                                          tooltipName="Delete"/>
                             <br/>
-                            <small className="text-truncate text-center d-block" style={{maxWidth: 100}}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
+                            <small className="text-truncate text-center d-block"
+                                   style={{maxWidth: 100}}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
                             {this.renderEvents(hook)}
                         </div>
                     </div>
                 })}
                 <div>
-                    <Button className="btn-smaller text-white m-0 mt-3" variant="" style={{backgroundColor: this.context.theme}} as={Link} to={"/ba/" + this.props.data.discriminator + "/webhooks/create"}>Add New</Button>
+                    <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.theme}}
+                            as={Link} to={"/ba/" + this.props.data.discriminator + "/webhooks/create"}>Add New</Button>
                 </div>
             </Col>
         </React.Fragment>
@@ -90,19 +94,15 @@ class WebhooksSettings extends Component {
                 return "https://cdn.feedbacky.net/social/default-discord.svg";
             case "CUSTOM_ENDPOINT":
                 return "https://cdn.feedbacky.net/social/default-website.svg";
+            default:
+                return "";
         }
-    };
-
-    renderWebhookDelete = (hook, i) => {
-        return <OverlayTrigger overlay={<Tooltip id={"deleteWebhook" + i + "-tooltip"}>Delete</Tooltip>}>
-            <FaTimesCircle className="grey lighten-2 black-text rounded-circle" onClick={() => this.onWebhookDelete(hook)} style={{position: "absolute", transform: "translate(-6px, -6px)"}}/>
-        </OverlayTrigger>;
     };
 
     renderEvents = (hook) => {
         return hook.events.map((event, i) => {
-            return <React.Fragment key={"e" + hook.id + "_" + i}>
-                <Badge variant="primary">{prettifyEnum(event)}</Badge>
+            return <React.Fragment key={hook.id}>
+                <Badge variant="" style={{backgroundColor: this.context.theme}}>{prettifyEnum(event)}</Badge>
                 <br/>
             </React.Fragment>
         });
@@ -114,7 +114,7 @@ class WebhooksSettings extends Component {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(this.context.apiRoute + "/webhooks/" + hook.id, getSimpleRequestConfig(this.context.user.session)).then(res => {
+                axios.delete("/webhooks/" + hook.id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;

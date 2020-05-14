@@ -32,11 +32,15 @@ public interface IdeaService extends FeedbackyService {
 
   ResponseEntity<FetchAttachmentDto> postAttachment(long id, PostAttachmentDto dto);
 
+  FetchUserDto postSubscribe(long id);
+
   FetchIdeaDto patch(long id, PatchIdeaDto dto);
 
   ResponseEntity delete(long id);
 
   ResponseEntity deleteAttachment(long id);
+
+  ResponseEntity deleteSubscribe(long id);
 
   List<FetchUserDto> getAllVoters(long id);
 

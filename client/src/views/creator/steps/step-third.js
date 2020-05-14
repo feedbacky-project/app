@@ -1,10 +1,8 @@
-import React, {lazy, Suspense} from 'react';
+import React, {Suspense} from 'react';
 import {Col} from "react-bootstrap";
-import LoadingSpinner from "../../../components/util/loading-spinner";
-import {retry} from "../../../components/util/lazy-init";
-import UndrawChooseTheme from "../../../assets/svg/undraw/choose_theme.svg";
-
-const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
+import LoadingSpinner from "components/util/loading-spinner";
+import {CirclePicker} from "react-color";
+import UndrawChooseTheme from "assets/svg/undraw/choose_theme.svg";
 
 const StepThird = (props) => {
     return <React.Fragment>

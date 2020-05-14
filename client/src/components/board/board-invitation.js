@@ -1,18 +1,16 @@
-import React, {useContext, useEffect} from 'react';
-import AppContext from "../../context/app-context";
-import {getSimpleRequestConfig, toastSuccess, toastWarning} from "../util/utils";
+import React, {useEffect} from 'react';
+import {toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
-import LoadingSpinner from "../util/loading-spinner";
+import LoadingSpinner from "components/util/loading-spinner";
 import {Row} from "react-bootstrap";
 import {useHistory, useParams} from "react-router-dom";
 
 const BoardInvitation = () => {
-    const context = useContext(AppContext);
     const history = useHistory();
     const {code} = useParams();
 
     useEffect(() => {
-        axios.post(context.apiRoute + "/invitations/" + code + "/accept", {}, getSimpleRequestConfig(context.user.session)).then(res => {
+        axios.post("/invitations/" + code + "/accept", {}).then(res => {
             if (res.status !== 200) {
                 history.push("/me");
                 toastWarning("Failed to validate invitation.");

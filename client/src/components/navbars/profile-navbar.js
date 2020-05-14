@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {Container, Nav, NavbarBrand} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import AppContext from "../../context/app-context";
-import {getSizedAvatarByUrl} from "../util/utils";
-import {renderLogIn} from "./navbar-commons";
-import PageNavbar from "./page-navbar";
+import AppContext from "context/app-context";
+import {getSizedAvatarByUrl} from "components/util/utils";
+import {renderLogIn} from "components/navbars/navbar-commons";
+import PageNavbar from "components/navbars/page-navbar";
 
 const ProfileNavbar = (props) => {
     const context = useContext(AppContext);

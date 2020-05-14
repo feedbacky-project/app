@@ -36,11 +36,6 @@ public class BoardModeratorInviteRestController {
     this.boardModeratorService = boardModeratorService;
   }
 
-  @GetMapping("v1/boards/{discriminator}/moderators")
-  public List<FetchModeratorDto> getAll(@PathVariable String discriminator) {
-    return boardModeratorService.getAll(discriminator);
-  }
-
   @GetMapping("v1/boards/{discriminator}/invitedModerators")
   public List<FetchInviteDto> getAllInvited(@PathVariable String discriminator) {
     return boardModeratorService.getAllInvited(discriminator);

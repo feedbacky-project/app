@@ -3,9 +3,9 @@ import Container from "react-bootstrap/Container";
 import NavbarBrand from "react-bootstrap/NavbarBrand";
 import {Link} from "react-router-dom";
 import {Nav} from "react-bootstrap";
-import {renderLogIn} from "./navbar-commons";
-import AppContext from "../../context/app-context";
-import PageNavbar from "./page-navbar";
+import {renderLogIn} from "components/navbars/navbar-commons";
+import AppContext from "context/app-context";
+import PageNavbar from "components/navbars/page-navbar";
 
 const ErrorNavbar = (props) => {
     const context = useContext(AppContext);

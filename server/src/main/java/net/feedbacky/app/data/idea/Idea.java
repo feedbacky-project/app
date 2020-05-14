@@ -71,8 +71,10 @@ public class Idea implements Serializable {
   private Set<Comment> comments = new HashSet<>();
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<Tag> tags = new HashSet<>();
-  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "idea")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "idea")
   private Set<Attachment> attachments = new HashSet<>();
+  @ManyToMany(fetch = FetchType.EAGER)
+  private Set<User> subscribers = new HashSet<>();
   private IdeaStatus status;
   @CreationTimestamp
   private Date creationDate;
@@ -88,7 +90,7 @@ public class Idea implements Serializable {
     return ((double) voters.size() - 1.0) / Math.pow(ChronoUnit.DAYS.between(creationDate.toInstant(), Instant.now()) + 2.0, 1.8);
   }
 
-  public FetchIdeaDto convertToDto(boolean voted) {
+  public FetchIdeaDto convertToDto(User user) {
     FetchIdeaDto dto = new ModelMapper().map(this, FetchIdeaDto.class);
     dto.setOpen(status == IdeaStatus.OPENED);
     Set<FetchTagDto> tagDtos = new HashSet<>();
@@ -101,7 +103,8 @@ public class Idea implements Serializable {
     //count only public and non special comments
     dto.setCommentsAmount(comments.stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count());
     dto.setTags(tagDtos);
-    dto.setUpvoted(voted);
+    dto.setUpvoted(voters.contains(user));
+    dto.setSubscribed(subscribers.contains(user));
     dto.setUser(creator.convertToDto().exposeSensitiveData(false).convertToSimpleDto());
     return dto;
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, Col, Row} from "react-bootstrap";
 import CardGroup from "react-bootstrap/CardGroup";
-import UndrawChooseEvents from "../../../../../assets/svg/undraw/choose_events.svg";
+import UndrawChooseEvents from "assets/svg/undraw/choose_events.svg";
 
 const events = ["IDEA_CREATE", "IDEA_DELETE", "IDEA_COMMENT", "IDEA_COMMENT_DELETE", "IDEA_EDIT", "IDEA_TAG_CHANGE", "IDEA_OPEN", "IDEA_CLOSE"];
 const eventNames = ["Idea Post Create", "Idea Post Delete", "Idea Comment Post", "Idea Comment Delete", "Idea Post Edited", "Idea Tag Change", "Idea State Open", "Idea State Close"];
@@ -17,7 +17,7 @@ const StepSecond = (props) => {
             } else {
                 classes += " border-invisible";
             }
-            return <Card key={"card" + i} className={classes} style={{minWidth: 175}} onClick={() => props.onSetupMethodCall("event", item)}>
+            return <Card key={i} className={classes} style={{minWidth: 175}} onClick={() => props.onSetupMethodCall("event", item)}>
                 <Card.Body className="text-center">
                     <img alt={item} src={"https://cdn.feedbacky.net/static/svg/webhooks/" + eventIcons[i]} style={{width: "2.5rem", height: "2.5rem"}}/>
                     <br className="my-3"/>

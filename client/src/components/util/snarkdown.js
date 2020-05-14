@@ -1,3 +1,4 @@
+/* eslint-disable */
 //https://github.com/developit/snarkdown/blob/master/src/index.js
 
 const TAGS = {
