@@ -99,7 +99,7 @@ class App extends Component {
         Cookies.remove("FSID");
         this.setState({
             session: null,
-            userData: {...this.state.userData, data: [], loaded: false, loggedIn: false}
+            userData: {...this.state.userData, data: [], loaded: true, loggedIn: false}
         });
         this.componentDidMount();
     };

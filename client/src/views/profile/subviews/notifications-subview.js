@@ -41,7 +41,7 @@ const NotificationsSubview = (props) => {
             <ProfileSidebar currentNode="notifications" reRouteTo={props.reRouteTo}/>
             <Col xs={12} md={9}>
                 <ViewBox theme={context.theme} title="Mail Notifications" description="Configure your mail notifications here.">
-                    Please log in to see contents of this page.
+                    <Col>Please log in to see contents of this page.</Col>
                 </ViewBox>
             </Col>
         </React.Fragment>

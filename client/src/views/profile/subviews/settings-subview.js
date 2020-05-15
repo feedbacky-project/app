@@ -92,7 +92,7 @@ const SettingsSubview = (props) => {
             <ProfileSidebar currentNode="settings" reRouteTo={props.reRouteTo}/>
             <Col xs={12} md={9}>
                 <ViewBox theme={context.theme} title="User Settings" description="Edit your account here.">
-                    Please log in to see contents of this page.
+                    <Col>Please log in to see contents of this page.</Col>
                 </ViewBox>
             </Col>
         </React.Fragment>
