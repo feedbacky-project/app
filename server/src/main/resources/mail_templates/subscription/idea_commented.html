@@ -7,11 +7,14 @@
         Hello <strong>${username}</strong> idea <strong>${idea.name}</strong> has just been commented!
         <br/>
         <kbd>${status.change}</kbd>
+        <br/>
+        <a href="${idea.viewLink}">View it here</a>
     </span>
     <div>
         <small style="color: #6c757d">You receive this email because you opted to receive subscription mails at ${host.address}</small>
-        <br/>
-        <a href="${unsubscribe_link}"><small style="color: #6c757d">Unsubscribe</small></a>
+    </div>
+    <div>
+        <small style="color: #6c757d"><a href="${unsubscribe_link}">Unsubscribe</a></small>
     </div>
 </div>
 </body>

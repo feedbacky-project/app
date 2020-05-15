@@ -19,13 +19,14 @@ const BoardView = lazy(() => retry(() => import("views/board-view")));
 const AdminPanelView = lazy(() => retry(() => import("views/admin/admin-panel-view")));
 const IdeaView = lazy(() => retry(() => import("views/idea-view")));
 const OauthReceiver = lazy(() => retry(() => import("auth/oauth-receiver")));
+const UnsubscribeView = lazy(() => retry(() => import("views/unsubscribe-view")));
 
 toast.configure();
 
 class App extends Component {
 
     CLIENT_VERSION = "0.2.0-beta";
-    API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "http://165.227.222.137:8090") + "/api/v1";
+    API_ROUTE = process.env.REACT_APP_SERVER_IP_ADDRESS + "/api/v1";
     state = {
         session: Cookies.get("FSID"),
         search: {
@@ -191,6 +192,7 @@ class App extends Component {
                             state: props.location.state,
                         }}/>}/>
                     <Route path="/i/:id" component={IdeaView}/>
+                    <Route path="/unsubscribe/:id/:code" component={UnsubscribeView}/>
                     <Route path="/auth/:provider" render={props => <OauthReceiver onLogin={this.onLogin} {...props}/>}/>
                     <Route render={() => <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>}/>
                 </Switch>

@@ -5,8 +5,8 @@ import ProfileNavbar from "components/navbars/profile-navbar";
 import {Container, Row} from "react-bootstrap";
 import {Route, Switch, useHistory} from "react-router-dom";
 import SettingsSubview from "views/profile/subviews/settings-subview";
-import {toastWarning} from "components/util/utils";
 import ServiceLogo from "assets/img/service-logo.png";
+import NotificationsSubview from "views/profile/subviews/notifications-subview";
 
 const ProfileView = () => {
     const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -16,10 +16,6 @@ const ProfileView = () => {
         setLoginModalOpen(true);
     };
     const reRouteTo = (destination) => {
-        if(destination === "notifications") {
-            toastWarning("Section not yet available.");
-            return;
-        }
         history.push({
             pathname: "/merdr/" + destination,
         });
@@ -35,6 +31,7 @@ const ProfileView = () => {
             <Row className="justify-content-center pb-4">
                 <Switch>
                     <Route path="/me/settings" render={() => <SettingsSubview reRouteTo={reRouteTo}/>}/>
+                    <Route path="/me/notifications" render={() => <NotificationsSubview reRouteTo={reRouteTo}/>}/>
                     <Route render={() => <SettingsSubview reRouteTo={reRouteTo}/>}/>
                 </Switch>
             </Row>

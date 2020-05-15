@@ -7,15 +7,7 @@ import TimeAgo from "timeago-react";
 import axios from "axios";
 import AppContext from "context/app-context";
 import Spinner from "react-bootstrap/Spinner";
-import {
-    formatUsername,
-    getSizedAvatarByUrl,
-    htmlDecode,
-    increaseBrightness,
-    isHexDark,
-    toastError,
-    toastSuccess
-} from "components/util/utils";
+import {formatUsername, getSizedAvatarByUrl, htmlDecode, increaseBrightness, isHexDark, toastError, toastSuccess} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import snarkdown from "components/util/snarkdown";
 import {popupSwal} from "components/util/sweetalert-utils";
@@ -24,6 +16,7 @@ import TextareaAutosize from "react-autosize-textarea";
 import {FaPen, FaRegBell, FaRegBellSlash} from "react-icons/all";
 import {parseEmojis} from "components/util/emoji-filter";
 import DeleteButton from "components/util/delete-button";
+import ClickableTip from "components/util/clickable-tip";
 
 class IdeaDetailsBox extends Component {
 
@@ -78,6 +71,10 @@ class IdeaDetailsBox extends Component {
                 </React.Fragment>
                 {this.renderTags()}
                 {this.renderAttachments()}
+                <div className="my-1 text-black-75">
+                    Mail Subscription
+                    <span className="ml-1"><ClickableTip id="subTip" title="Mail Subscriptions" description="Subscribe idea to receive mail notifications, configure settings at profile page."/></span>
+                </div>
                 {this.renderSubscribe()}
             </Col>
         </React.Fragment>
@@ -270,11 +267,11 @@ class IdeaDetailsBox extends Component {
 
     renderSubscribe() {
         if (this.props.ideaData.subscribed) {
-            return <Button variant="" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
-                           onClick={this.onSubscribeToggle}><FaRegBellSlash/> Unsubscribe</Button>
+            return <Button variant="" size="sm" className="text-white" style={{backgroundColor: this.context.theme}}
+                           onClick={this.onSubscribeToggle}><FaRegBellSlash className="move-top-1px"/> Unsubscribe</Button>
         } else {
-            return <Button variant="" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
-                           onClick={this.onSubscribeToggle}><FaRegBell/> Subscribe</Button>
+            return <Button variant="" size="sm" className="text-white" style={{backgroundColor: this.context.theme}}
+                           onClick={this.onSubscribeToggle}><FaRegBell className="move-top-1px"/> Subscribe</Button>
         }
     }
 
@@ -362,8 +359,8 @@ class IdeaDetailsBox extends Component {
                 toastError();
                 return;
             }
-            toastSuccess("Enabled mail notifications for this idea.");
-            this.props.onSubscribeStateChange(!this.props.ideaData.subscribed);
+            this.props.onSubscribeStateUpdate(!this.props.ideaData.subscribed);
+            toastSuccess("Toggled mail notifications for this idea.");
         }).catch(() => toastError());
     };
 

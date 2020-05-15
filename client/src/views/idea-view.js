@@ -221,7 +221,7 @@ class IdeaView extends Component {
         }
         return <IdeaDetailsBox moderators={this.state.board.data.moderators} ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}
                                onStateUpdate={this.onStateUpdate} onIdeaEdit={this.onIdeaEdit} onAttachmentDelete={this.onAttachmentDelete}
-                               onTagsUpdate={this.onTagsUpdate} onStateChange={this.onStateChange} onSubscribeStateChange={this.onSubscribeStateChange} {...this.props}/>
+                               onTagsUpdate={this.onTagsUpdate} onStateChange={this.onStateChange} onSubscribeStateUpdate={this.onSubscribeStateUpdate} {...this.props}/>
     }
 
     renderDiscussion() {

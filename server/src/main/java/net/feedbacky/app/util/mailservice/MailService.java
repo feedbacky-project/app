@@ -6,17 +6,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /**
  * @author Plajer
@@ -39,7 +30,13 @@ public interface MailService {
     BOARD_DELETED("mail_templates/board_deleted.html", "", "${board.name} - Board Removal Initiated",
             "You requested to remove board ${board.name} and your request was proceeded and executed. (HTML not supported, default message sent)"),
     ACCOUNT_DEACTIVATED("mail_templates/account_deactivated.html", "", "${username} - Account Deactivated",
-            "You requested to deactivate your ${username} account and we executed the request, your account was anonymized. (HTML not supported, default message sent)");
+            "You requested to deactivate your ${username} account and we executed the request, your account was anonymized. (HTML not supported, default message sent)"),
+    SUBSCRIBE_COMMENT("mail_templates/subscription/idea_commented.html", "", "Subscribed Idea Commented",
+            "Idea you're subscribed to was commented. (HTML not supported, default message sent)"),
+    SUBSCRIBE_TAGS_CHANGE("mail_templates/subscription/idea_state_changed.html", "", "Subscribed Idea Tags Changed",
+            "Idea you're subscribed to tags were changed. (HTML not supported, default message sent)"),
+    SUBSCRIBE_STATUS_CHANGE("mail_templates/subscription/idea_state_changed.html", "", "Subscribed Idea Status Changed",
+            "Idea you're subscribed to status was changed. (HTML not supported, default message sent)");
 
     private String html;
     private String inviteLink;

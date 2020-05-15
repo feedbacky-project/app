@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Badge, Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
+import {Badge, Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";

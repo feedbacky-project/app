@@ -2,6 +2,7 @@ package net.feedbacky.app.util.mailservice;
 
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.invite.Invitation;
+import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.user.User;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,14 @@ import org.apache.commons.lang3.StringUtils;
 public class MailPlaceholderParser {
 
   private MailPlaceholderParser() {
+  }
+
+  public static String parseSubscribeStatusPlaceholder(String text, Idea idea, String status) {
+      String parsedText = text;
+      parsedText = StringUtils.replace(parsedText, "${idea.viewLink}", MailService.HOST_ADDRESS + "/i/" + idea.getId());
+      parsedText = StringUtils.replace(parsedText, "${idea.name}", idea.getTitle());
+      parsedText = StringUtils.replace(parsedText, "${status.change}", status);
+      return parsedText;
   }
 
   public static String parseAllAvailablePlaceholders(String text, MailService.EmailTemplate template, Board board, User user, Invitation invitation) {
@@ -42,6 +51,7 @@ public class MailPlaceholderParser {
   public static String parseUserPlaceholders(String text, User user) {
     String parsedText = text;
     parsedText = StringUtils.replace(parsedText, "${username}", user.getUsername());
+    parsedText = StringUtils.replace(parsedText, "${unsubscribe_link}", MailService.HOST_ADDRESS + "/unsubscribe/" + user.getId() + "/" + user.getMailPreferences().getUnsubscribeToken());
     parsedText = StringUtils.replace(parsedText, "${host.address}", MailService.HOST_ADDRESS);
     return parsedText;
   }

@@ -6,3 +6,7 @@
 * Minor UI changes including:
   * Special comments icons change
   * Board admin panel and profile page UI changes
+* Added mail notifications feature, subscribe to idea to receive mails when it gets changed, supported notifications:
+  * Idea commented by board moderator
+  * Idea tags changed
+  * Idea status changed (closed, opened)

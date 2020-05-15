@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import LoadingSpinner from "components/util/loading-spinner";
 import qs from "querystringify";
 import axios from "axios";
@@ -23,20 +23,19 @@ const OauthReceiver = (props) => {
         if ("error" in qsData) {
             setError(true);
         }
-        axios.get(context.apiRoute + "/service/" + provider + "?code=" + qsData.code)
-            .then(res => {
-                if (res.status !== 200) {
-                    console.log("Failed to connect " + res.error.message);
-                    setLoaded(true);
-                    setError(true);
-                    setStatus(res.status);
-                    return;
-                }
-                const data = res.data;
-                Cookies.set("FSID", data.token, {expires: 14});
+        axios.get(context.apiRoute + "/service/" + provider + "?code=" + qsData.code).then(res => {
+            if (res.status !== 200) {
+                console.log("Failed to connect " + res.error.message);
                 setLoaded(true);
-                props.onLogin(data.token);
-            }).catch(() => {
+                setError(true);
+                setStatus(res.status);
+                return;
+            }
+            const data = res.data;
+            Cookies.set("FSID", data.token, {expires: 14});
+            setLoaded(true);
+            props.onLogin(data.token);
+        }).catch(() => {
             setLoaded(true);
             setError(true);
             setStatus(-1);

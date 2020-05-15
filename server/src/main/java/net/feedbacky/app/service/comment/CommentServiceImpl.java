@@ -1,6 +1,8 @@
 package net.feedbacky.app.service.comment;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.data.idea.subscribe.SubscriptionDataBuilder;
+import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
@@ -49,12 +51,14 @@ public class CommentServiceImpl implements CommentService {
   private CommentRepository commentRepository;
   private IdeaRepository ideaRepository;
   private UserRepository userRepository;
+  private SubscriptionExecutor subscriptionExecutor;
 
   @Autowired
-  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository) {
+  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor) {
     this.commentRepository = commentRepository;
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
+    this.subscriptionExecutor = subscriptionExecutor;
   }
 
   @Override
@@ -112,9 +116,9 @@ public class CommentServiceImpl implements CommentService {
     if(!idea.getBoard().canView(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment to this idea.");
     }
+    boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(user));
     //internal type is for moderators only
-    if(Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL
-            && idea.getBoard().getModerators().stream().noneMatch(mod -> mod.getUser().equals(user))) {
+    if(Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL && !isModerator) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment with internal view type.");
     }
 
@@ -135,8 +139,13 @@ public class CommentServiceImpl implements CommentService {
 
     //do not publish information about private internal comments
     if(comment.getViewType() != Comment.ViewType.INTERNAL) {
-      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-      idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT, builder.build());
+      WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
+      idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT, webhookBuilder.build());
+
+      if(isModerator) {
+        SubscriptionDataBuilder subscribeBuilder = new SubscriptionDataBuilder().withUser(user).withComment(comment).withIdea(idea);
+        subscriptionExecutor.notifySubscribers(idea, SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, subscribeBuilder.build());
+      }
     }
     return ResponseEntity.status(HttpStatus.CREATED).body(comment.convertToDto(user));
   }

@@ -3,6 +3,7 @@ package net.feedbacky.app.data.board.webhook;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.util.mailservice.MailService;
 
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -28,7 +29,7 @@ public class WebhookDataBuilder {
   public WebhookDataBuilder withIdea(Idea idea) {
     data.put(WebhookExecutor.WebhookMapData.IDEA_NAME.getName(), idea.getTitle());
     data.put(WebhookExecutor.WebhookMapData.IDEA_DESCRIPTION.getName(), StringEscapeUtils.unescapeHtml4(idea.getDescription()));
-    data.put(WebhookExecutor.WebhookMapData.IDEA_LINK.getName(), "https://app.feedbacky.net/i/" + idea.getId());
+    data.put(WebhookExecutor.WebhookMapData.IDEA_LINK.getName(), MailService.HOST_ADDRESS + "/i/" + idea.getId());
     data.put(WebhookExecutor.WebhookMapData.IDEA_ID.getName(), String.valueOf(idea.getId()));
     return this;
   }

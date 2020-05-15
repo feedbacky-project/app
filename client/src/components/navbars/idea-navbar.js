@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 import {FaChevronLeft} from "react-icons/fa";
-import {Container, Nav, NavbarBrand} from "react-bootstrap";
+import {Container, NavbarBrand} from "react-bootstrap";
 import AppContext from "context/app-context";
 import {renderLogIn} from "components/navbars/navbar-commons";
 import PageNavbar from "components/navbars/page-navbar";
@@ -9,7 +9,7 @@ import PageNavbar from "components/navbars/page-navbar";
 const IdeaNavbar = (props) => {
     const context = useContext(AppContext);
     const theme = context.user.darkMode ? context.theme + "D9" : context.theme;
-    
+
     return <PageNavbar theme={theme}>
         <Link to={{
             pathname: "/b/" + props.boardData.discriminator,
@@ -27,9 +27,9 @@ const IdeaNavbar = (props) => {
                      width="30px" alt=""/>
                 <span>{props.boardData.name}</span>
             </NavbarBrand>
-            <Nav className="ml-auto py-0 text-nowrap">
+            <div className="ml-auto py-0 text-nowrap">
                 {renderLogIn(props.onNotLoggedClick, context)}
-            </Nav>
+            </div>
         </Container>
     </PageNavbar>
 };

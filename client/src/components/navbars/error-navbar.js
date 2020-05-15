@@ -15,9 +15,9 @@ const ErrorNavbar = (props) => {
             <NavbarBrand className="mr-0 text-truncate text-left flex-on" as={Link} to="/me">
                 Oops, unexpected issue!
             </NavbarBrand>
-            <Nav className="ml-auto py-0 text-nowrap">
+            <div className="ml-auto py-0 text-nowrap">
                 {renderLogIn(props.onNotLoggedClick, context)}
-            </Nav>
+            </div>
         </Container>
     </PageNavbar>
 };

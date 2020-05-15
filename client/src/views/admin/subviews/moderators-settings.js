@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Col, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
+import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {getSizedAvatarByUrl, prettifyEnum, toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";

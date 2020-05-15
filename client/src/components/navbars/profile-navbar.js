@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Container, Nav, NavbarBrand} from "react-bootstrap";
+import {Container, NavbarBrand} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import AppContext from "context/app-context";
 import {getSizedAvatarByUrl} from "components/util/utils";
@@ -15,9 +15,9 @@ const ProfileNavbar = (props) => {
             <NavbarBrand className="mr-0 text-truncate text-left flex-on" as={Link} to="/me">
                 {renderHello(context)}
             </NavbarBrand>
-            <Nav className="ml-auto py-0 text-nowrap">
+            <div className="ml-auto py-0 text-nowrap">
                 {renderLogIn(props.onNotLoggedClick, context)}
-            </Nav>
+            </div>
         </Container>
     </PageNavbar>
 };

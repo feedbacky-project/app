@@ -1,6 +1,8 @@
 package net.feedbacky.app.service.idea;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.data.idea.subscribe.SubscriptionDataBuilder;
+import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
@@ -69,10 +71,12 @@ public class IdeaServiceImpl implements IdeaService {
   private CommentRepository commentRepository;
   private AttachmentRepository attachmentRepository;
   private ObjectStorage objectStorage;
+  private SubscriptionExecutor subscriptionExecutor;
 
   @Autowired
   //todo too big constructor
-  public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage) {
+  public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
+                         CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage, SubscriptionExecutor subscriptionExecutor) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -80,6 +84,7 @@ public class IdeaServiceImpl implements IdeaService {
     this.commentRepository = commentRepository;
     this.attachmentRepository = attachmentRepository;
     this.objectStorage = objectStorage;
+    this.subscriptionExecutor = subscriptionExecutor;
   }
 
   @Override
@@ -288,6 +293,8 @@ public class IdeaServiceImpl implements IdeaService {
         WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
         idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_OPEN, builder.build());
       }
+      SubscriptionDataBuilder builder = new SubscriptionDataBuilder().withUser(user).withIdea(idea).withComment(comment);
+      subscriptionExecutor.notifySubscribers(idea, SubscriptionExecutor.Event.IDEA_STATUS_CHANGE, builder.build());
     }
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
@@ -447,9 +454,13 @@ public class IdeaServiceImpl implements IdeaService {
     idea.getComments().add(comment);
     commentRepository.save(comment);
     ideaRepository.save(idea);
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea())
+    WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea())
             .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
-    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_TAG_CHANGE, builder.build());
+    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
+
+    SubscriptionDataBuilder subscriptionBuilder = new SubscriptionDataBuilder().withUser(user).withIdea(idea).withComment(comment)
+            .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
+    subscriptionExecutor.notifySubscribers(idea, SubscriptionExecutor.Event.IDEA_TAGS_CHANGE, subscriptionBuilder.build());
     return idea.getTags().stream().map(Tag::convertToDto).collect(Collectors.toList());
   }
 

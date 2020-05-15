@@ -1,5 +1,5 @@
 import ProfileSidebar from "components/sidebar/profile-sidebar";
-import {Badge, Col, Form, Row} from "react-bootstrap";
+import {Col, Form} from "react-bootstrap";
 import React, {useContext, useEffect, useState} from "react";
 import {formatRemainingCharacters, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
@@ -159,8 +159,7 @@ const SettingsSubview = (props) => {
                            </span>
                         </div>
                         <div className="col-sm-3 col-6 p-0 text-sm-right text-left my-auto">
-                            <Button variant="danger" className="m-0 mt-sm-0 mt-2"
-                                    onClick={() => onAccountDeactivation()}>Deactivate</Button>
+                            <Button variant="danger" className="m-0 mt-sm-0 mt-2" onClick={() => onAccountDeactivation()}>Deactivate</Button>
                         </div>
                     </Form.Group>
                 </Form>
