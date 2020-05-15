@@ -225,7 +225,7 @@ class DiscussionBox extends Component {
             this.setState({
                 comments: {
                     ...this.state.comments,
-                    data: [res.data, ...this.state.comments.data],
+                    data: [...this.state.comments.data, res.data],
                 },
                 submitVisible: false,
             });
