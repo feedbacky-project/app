@@ -35,7 +35,7 @@ class InvitationsSettings extends Component {
     };
 
     componentDidMount() {
-        axios.get(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/invitations").then(res => {
+        axios.get("/boards/" + this.props.data.discriminator + "/invitations").then(res => {
             if (res.status !== 200) {
                 this.setState({error: true});
                 return;
@@ -43,7 +43,7 @@ class InvitationsSettings extends Component {
             const data = res.data;
             this.setState({data, loaded: true});
         }).catch(() => this.setState({error: true}));
-        axios.get(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/invitedUsers").then(res => {
+        axios.get("/boards/" + this.props.data.discriminator + "/invitedUsers").then(res => {
             if (res.status !== 200) {
                 this.setState({invitedError: true});
                 return;
@@ -147,7 +147,7 @@ class InvitationsSettings extends Component {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(this.context.apiRoute + "/boards/" + this.props.data.discriminator + "/invitedUsers/" + id).then(res => {
+                axios.delete("/boards/" + this.props.data.discriminator + "/invitedUsers/" + id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;
@@ -172,7 +172,7 @@ class InvitationsSettings extends Component {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete(this.context.apiRoute + "/invitations/" + id).then(res => {
+                axios.delete("/invitations/" + id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;

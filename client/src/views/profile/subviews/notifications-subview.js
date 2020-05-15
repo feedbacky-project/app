@@ -9,9 +9,9 @@ import Button from "react-bootstrap/Button";
 
 const NotificationsSubview = (props) => {
     const context = useContext(AppContext);
-    const [moderatorsCommentsNotify, setModeratorsCommentsNotify] = useState(context.user.data.mailPreferences.notifyFromModeratorsComments);
-    const [tagsChangeNotify, setTagsChangeNotify] = useState(context.user.data.mailPreferences.notifyFromTagsChange);
-    const [statusChangeNotify, setStatusChangeNotify] = useState(context.user.data.mailPreferences.notifyFromStatusChange);
+    const [moderatorsCommentsNotify, setModeratorsCommentsNotify] = useState(context.user.data.mailPreferences.notifyFromModeratorsComments || false);
+    const [tagsChangeNotify, setTagsChangeNotify] = useState(context.user.data.mailPreferences.notifyFromTagsChange || false);
+    const [statusChangeNotify, setStatusChangeNotify] = useState(context.user.data.mailPreferences.notifyFromStatusChange || false);
     const onChangesSave = () => {
         let toastId = toastAwait("Saving changes...");
         axios.patch("/users/@me/mailPreferences", {
