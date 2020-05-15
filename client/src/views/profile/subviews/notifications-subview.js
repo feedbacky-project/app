@@ -9,6 +9,16 @@ import Button from "react-bootstrap/Button";
 
 const NotificationsSubview = (props) => {
     const context = useContext(AppContext);
+    if (!context.user.loggedIn) {
+        return <React.Fragment>
+            <ProfileSidebar currentNode="notifications" reRouteTo={props.reRouteTo}/>
+            <Col xs={12} md={9}>
+                <ViewBox theme={context.theme} title="Mail Notifications" description="Configure your mail notifications here.">
+                    <Col>Please log in to see contents of this page.</Col>
+                </ViewBox>
+            </Col>
+        </React.Fragment>
+    }
     const [moderatorsCommentsNotify, setModeratorsCommentsNotify] = useState(context.user.data.mailPreferences.notifyFromModeratorsComments || false);
     const [tagsChangeNotify, setTagsChangeNotify] = useState(context.user.data.mailPreferences.notifyFromTagsChange || false);
     const [statusChangeNotify, setStatusChangeNotify] = useState(context.user.data.mailPreferences.notifyFromStatusChange || false);
@@ -36,16 +46,6 @@ const NotificationsSubview = (props) => {
             });
         });
     };
-    if (!context.user.loggedIn) {
-        return <React.Fragment>
-            <ProfileSidebar currentNode="notifications" reRouteTo={props.reRouteTo}/>
-            <Col xs={12} md={9}>
-                <ViewBox theme={context.theme} title="Mail Notifications" description="Configure your mail notifications here.">
-                    <Col>Please log in to see contents of this page.</Col>
-                </ViewBox>
-            </Col>
-        </React.Fragment>
-    }
     const conditionalButton = (conditionEnabled, funcEnable, funcDisable) => {
         if (conditionEnabled) {
             return <Button variant="danger" className="m-0 mt-sm-0 mt-2" onClick={funcDisable}>Disable</Button>
