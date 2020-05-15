@@ -148,7 +148,6 @@ class App extends Component {
             return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
         }
         return <AppContext.Provider value={{
-            apiRoute: this.API_ROUTE,
             user: {
                 data: this.state.userData.data,
                 loggedIn: this.state.userData.loggedIn,

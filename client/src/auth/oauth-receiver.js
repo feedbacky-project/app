@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import LoadingSpinner from "components/util/loading-spinner";
 import qs from "querystringify";
 import axios from "axios";
@@ -6,10 +6,8 @@ import {Redirect, useLocation, useParams} from "react-router-dom";
 import ErrorView from "views/errors/error-view";
 import {FaTimes} from "react-icons/fa";
 import Cookies from "js-cookie";
-import AppContext from "context/app-context";
 
 const OauthReceiver = (props) => {
-    const context = useContext(AppContext);
     const {provider} = useParams();
     const location = useLocation();
     const [loaded, setLoaded] = useState(false);
@@ -23,7 +21,7 @@ const OauthReceiver = (props) => {
         if ("error" in qsData) {
             setError(true);
         }
-        axios.get(context.apiRoute + "/service/" + provider + "?code=" + qsData.code).then(res => {
+        axios.get("/service/" + provider + "?code=" + qsData.code).then(res => {
             if (res.status !== 200) {
                 console.log("Failed to connect " + res.error.message);
                 setLoaded(true);
