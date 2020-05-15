@@ -152,7 +152,6 @@ class App extends Component {
                 data: this.state.userData.data,
                 loggedIn: this.state.userData.loggedIn,
                 session: this.state.session,
-                moderates: this.state.userData.data.permissions,
                 searchPreferences: this.state.search,
                 darkMode: this.state.darkMode,
                 onLogOut: this.onLogOut,

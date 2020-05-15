@@ -46,7 +46,7 @@ export const renderLogIn = (onNotLoggedClick, context) => {
 };
 
 const renderModeratedBoards = (context) => {
-    if (context.user.moderates.length === 0) {
+    if (context.user.data.permissions.length === 0) {
         return;
     }
     return <React.Fragment>
@@ -56,7 +56,7 @@ const renderModeratedBoards = (context) => {
             <strong>Moderated Boards</strong>
         </DropdownItem>
         <div className="my-1"/>
-        {context.user.moderates.map(data => {
+        {context.user.data.permissions.map(data => {
             return <DropdownItem key={data.boardDiscriminator} as={Link} to={"/brdr/" + data.boardDiscriminator}>{data.boardName}</DropdownItem>
         })}
     </React.Fragment>
