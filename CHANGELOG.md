@@ -10,3 +10,4 @@
   * Idea commented by board moderator
   * Idea tags changed
   * Idea status changed (closed, opened)
+* Comments are now loaded from oldest
