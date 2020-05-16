@@ -10,7 +10,7 @@ const ViewBox = (props) => {
             <div>{props.description}</div>
         </Card>
         <Col className="view-box-bg rounded shadow">
-            <Row className="py-4 px-sm-2 px-0 pt-5 mb-3">
+            <Row className="py-4 px-3 px-0 pt-5 mb-3">
                 {props.children}
             </Row>
         </Col>

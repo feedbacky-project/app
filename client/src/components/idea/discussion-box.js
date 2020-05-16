@@ -124,9 +124,9 @@ class DiscussionBox extends Component {
     renderLikes(data) {
         const likes = data.likesAmount;
         if (data.liked) {
-            return <span className="cursor-click" onClick={() => this.onCommentUnlike(data)}><FaHeart className="move-top-1px" style={{color: "#FE251B"}}/> {likes}</span>
+            return <span className="cursor-click" onClick={() => this.onCommentUnlike(data)}><FaHeart className="red"/> {likes}</span>
         }
-        return <span className="cursor-click" onClick={() => this.onCommentLike(data)}><FaRegHeart className="move-top-1px"/> {likes}</span>
+        return <span className="cursor-click" onClick={() => this.onCommentLike(data)}><FaRegHeart/> {likes}</span>
     }
 
     retrieveSpecialCommentTypeIcon(type) {

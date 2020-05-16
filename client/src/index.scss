@@ -164,7 +164,7 @@ body {
   text-align: center;
   border-radius: 50%;
   height: 30px;
-  width: 30px;
+  min-width: 30px;
   transform: translateY(-3px);
   box-shadow: 0 0 0 1px white, 0 0 0 2px currentColor;
   .icon {
@@ -176,8 +176,7 @@ body {
 
 @media (max-width: 576px) {
   .vote-button {
-    font-size: .85rem;
-    padding: .3rem .6rem;
+    font-size: 1rem;
   }
 
   .card-body {
@@ -389,6 +388,10 @@ a {
 
 .error-icon {
   font-size: 190px;
+  color: $red;
+}
+
+.red {
   color: $red;
 }
 

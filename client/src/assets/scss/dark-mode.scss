@@ -53,11 +53,11 @@
 }
 
 .dark .mod-tools .dropdown-item {
-  background-color: rgba(40, 40, 40, 0.98) !important;
+  background-color: #2e2e2e !important;
 }
 
 .dark .form-control::placeholder {
-  color: #646464 !important;
+  color: #707070 !important;
 }
 
 .dark .swal2-cancel, .dark .btn-link {
@@ -105,16 +105,16 @@
 }
 
 .dark textarea, .dark .form-control, .dark .swal2-input {
-  background-color: rgba(40, 40, 40, 0.98) !important;
+  background-color: #2d2d2d !important;
   color: rgba(255,255,255,.6) !important;
   box-shadow: none !important;
 }
 
 .dark .form-control:disabled {
-  background-color: rgba(40, 40, 40, 0.5) !important;
+  background-color: rgba(40, 40, 40, 0.8) !important;
 }
 
-.dark [for="attachmentUpload"], .dark .btn-attachment {
+.dark .btn-attachment {
   background-color: rgba(40, 40, 40, 0.98) !important;
   box-shadow: none !important;
 }
@@ -207,7 +207,7 @@
   background-color: #f2f2f2 !important;
 }
 
-.dark #commentContainer a {
+.dark #commentContainer a, .dark #socialPreviewContainer a {
   color: #3ea6ff;
 }
 

@@ -58,13 +58,12 @@ class SocialLinksSettings extends Component {
             <div className="text-black-60 mb-1">Current Social Links ({this.calculateLeft()} left)</div>
             {this.state.data.map((link) => {
                 return <div className="d-inline-flex justify-content-center mr-2" key={link.id}>
-                    <div className="text-center">
+                    <div className="text-center" id="socialPreviewContainer">
                         <img className="bg-dark rounded p-2" alt="Logo" src={link.logoUrl} height={40} width={40}/>
                         <DeleteButton tooltipName="Delete" onClick={() => this.onSocialLinkDelete(link.id)}
                                       id={"social-" + link.id + "-del"}/>
                         <br/>
-                        <a href={link.url} target="_blank" rel="noreferrer noopener"
-                           className="text-tight">{this.extractHostname(link.url)}</a>
+                        <a href={link.url} target="_blank" rel="noreferrer noopener" className="text-tight">{this.extractHostname(link.url)}</a>
                     </div>
                 </div>
             })}
