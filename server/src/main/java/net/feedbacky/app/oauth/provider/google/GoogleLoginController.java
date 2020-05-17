@@ -1,5 +1,6 @@
 package net.feedbacky.app.oauth.provider.google;
 
+import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.exception.types.LoginFailedException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.data.user.ConnectedAccount;
@@ -13,6 +14,7 @@ import net.feedbacky.app.util.JwtTokenUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -132,6 +134,12 @@ public class GoogleLoginController implements AbstractLoginProvider {
       user.setEmail(googleUser.getEmail());
       user.setAvatar(googleUser.getAvatar());
       user.setUsername(googleUser.getName());
+      MailPreferences preferences = new MailPreferences();
+      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+      preferences.setNotifyFromTagsChange(true);
+      preferences.setNotifyFromStatusChange(true);
+      preferences.setNotifyFromModeratorsComments(true);
+      user.setMailPreferences(preferences);
       Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
       accounts.add(generateConnectedAccount(googleUser, user));
       user.setConnectedAccounts(accounts);
