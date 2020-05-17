@@ -1,12 +1,6 @@
 package net.feedbacky.app.service.board.webhook;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
-import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.exception.types.InvalidAuthenticationException;
-import net.feedbacky.app.exception.types.ResourceNotFoundException;
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.repository.board.BoardRepository;
-import net.feedbacky.app.repository.board.WebhookRepository;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.webhook.FetchWebhookDto;
 import net.feedbacky.app.data.board.dto.webhook.PatchWebhookDto;
@@ -15,14 +9,20 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InvalidAuthenticationException;
+import net.feedbacky.app.exception.types.ResourceNotFoundException;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.repository.board.BoardRepository;
+import net.feedbacky.app.repository.board.WebhookRepository;
 import net.feedbacky.app.service.ServiceUser;
+import net.feedbacky.app.util.RequestValidator;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class WebhookServiceImpl implements WebhookService {
 
   @Override
   public List<FetchWebhookDto> getAll(String discriminator) {
-    UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -62,7 +62,7 @@ public class WebhookServiceImpl implements WebhookService {
 
   @Override
   public ResponseEntity<FetchWebhookDto> post(String discriminator, PostWebhookDto dto) {
-    UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -87,7 +87,7 @@ public class WebhookServiceImpl implements WebhookService {
 
   @Override
   public FetchWebhookDto patch(long id, PatchWebhookDto dto) {
-    UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Webhook webhook = webhookRepository.findById(id)
@@ -104,7 +104,7 @@ public class WebhookServiceImpl implements WebhookService {
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Webhook webhook = webhookRepository.findById(id)
