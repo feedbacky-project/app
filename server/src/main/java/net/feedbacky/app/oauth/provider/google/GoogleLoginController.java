@@ -139,6 +139,7 @@ public class GoogleLoginController implements AbstractLoginProvider {
       preferences.setNotifyFromTagsChange(true);
       preferences.setNotifyFromStatusChange(true);
       preferences.setNotifyFromModeratorsComments(true);
+      preferences.setUser(user);
       user.setMailPreferences(preferences);
       Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
       accounts.add(generateConnectedAccount(googleUser, user));
