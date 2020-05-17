@@ -57,6 +57,9 @@ public class StartupMigrator {
       logger.log(Level.WARNING, "Failed to get version file contents! Migrator won't run.");
       e.printStackTrace();
     }
+    if(version == FILE_VERSION) {
+      return;
+    }
     doAttemptMigration();
   }
 
