@@ -1,17 +1,8 @@
 import React, {Component, lazy, Suspense} from 'react';
-import {Badge, Col, Form} from "react-bootstrap";
+import {Col, Form, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import {
-    formatRemainingCharacters,
-    getBase64FromFile,
-    htmlDecode,
-    toastAwait,
-    toastError,
-    toastSuccess,
-    toastWarning,
-    validateImageWithWarning
-} from "components/util/utils";
+import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import swalReact from "sweetalert2-react-content";
 import Swal from "sweetalert2";

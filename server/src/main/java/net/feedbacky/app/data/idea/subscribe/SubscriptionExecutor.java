@@ -61,25 +61,28 @@ public class SubscriptionExecutor {
         template = MailService.EmailTemplate.SUBSCRIBE_COMMENT;
         subject = template.getSubject();
         text = template.getLegacyText();
-        status = data.get(SubscriptionMapData.COMMENT_USER_NAME.getName()) + ": " + data.get(SubscriptionMapData.COMMENT_DESCRIPTION.getName());
+        status = data.get(SubscriptionMapData.COMMENT_DESCRIPTION.getName());
+        data.put("status", status);
         html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_COMMENT, null, user, null), idea, status);
+                MailService.EmailTemplate.SUBSCRIBE_COMMENT, null, user, null), idea, data);
         break;
       case IDEA_STATUS_CHANGE:
         template = MailService.EmailTemplate.SUBSCRIBE_STATUS_CHANGE;
         subject = template.getSubject();
         text = template.getLegacyText();
         status = "Idea status changed to " + data.get(SubscriptionMapData.NEW_STATUS.getName());
+        data.put("status", status);
         html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_STATUS_CHANGE, null, user, null), idea, status);
+                MailService.EmailTemplate.SUBSCRIBE_STATUS_CHANGE, null, user, null), idea, data);
         break;
       case IDEA_TAGS_CHANGE:
         template = MailService.EmailTemplate.SUBSCRIBE_TAGS_CHANGE;
         subject = template.getSubject();
         text = template.getLegacyText();
         status = data.get(SubscriptionMapData.TAGS_CHANGED.getName());
+        data.put("status", status);
         html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_TAGS_CHANGE, null, user, null), idea, status);
+                MailService.EmailTemplate.SUBSCRIBE_TAGS_CHANGE, null, user, null), idea, data);
         break;
       default:
         return;
@@ -95,6 +98,7 @@ public class SubscriptionExecutor {
     USER_NAME("user_name"), USER_AVATAR("user_avatar"), USER_ID("user_id"), IDEA_NAME("idea_name"),
     IDEA_DESCRIPTION("idea_description"), IDEA_LINK("idea_link"), IDEA_ID("idea_id"),
     COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"), COMMENT_USER_NAME("comment_user_name"),
+    COMMENT_USER_AVATAR("comment_user_avatar"),
     NEW_STATUS("new_status"), TAGS_CHANGED("tags_changed");
 
     private String name;

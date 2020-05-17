@@ -39,6 +39,7 @@ public class SubscriptionDataBuilder {
     data.put(SubscriptionExecutor.SubscriptionMapData.COMMENT_DESCRIPTION.getName(), StringEscapeUtils.unescapeHtml4(comment.getDescription()));
     data.put(SubscriptionExecutor.SubscriptionMapData.COMMENT_ID.getName(), String.valueOf(comment.getId()));
     data.put(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_NAME.getName(), comment.getCreator().getUsername());
+    data.put(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_AVATAR.getName(), comment.getCreator().getAvatar());
     return this;
   }
 

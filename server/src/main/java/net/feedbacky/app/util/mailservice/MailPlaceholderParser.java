@@ -3,9 +3,12 @@ package net.feedbacky.app.util.mailservice;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.user.User;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -17,11 +20,13 @@ public class MailPlaceholderParser {
   private MailPlaceholderParser() {
   }
 
-  public static String parseSubscribeStatusPlaceholder(String text, Idea idea, String status) {
+  public static String parseSubscribeStatusPlaceholder(String text, Idea idea, Map<String, String> data) {
       String parsedText = text;
       parsedText = StringUtils.replace(parsedText, "${idea.viewLink}", MailService.HOST_ADDRESS + "/i/" + idea.getId());
       parsedText = StringUtils.replace(parsedText, "${idea.name}", idea.getTitle());
-      parsedText = StringUtils.replace(parsedText, "${status.change}", status);
+      parsedText = StringUtils.replace(parsedText, "${status.change}", data.get("status"));
+      parsedText = StringUtils.replace(parsedText, "${status.user.avatar}", data.get(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_AVATAR.getName()));
+      parsedText = StringUtils.replace(parsedText, "${status.username}", data.get(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_NAME.getName()));
       return parsedText;
   }
 
