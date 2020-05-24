@@ -21,7 +21,9 @@ const ProfileView = () => {
         });
     };
 
-    useEffect(() => context.onThemeChange("#343a40"), []);
+    useEffect(() => context.onThemeChange("#343a40"),
+        // eslint-disable-next-line
+        []);
 
     return <React.Fragment>
         <LoginModal open={loginModalOpen} onLoginModalClose={() => setLoginModalOpen(false)}

@@ -9,10 +9,12 @@ import Swal from "sweetalert2";
 import AppContext from "context/app-context";
 import {popupSwal} from "components/util/sweetalert-utils";
 import {FaEllipsisH} from "react-icons/all";
+import {useHistory} from "react-router-dom";
 
 const ModeratorActions = (props) => {
     const swalGenerator = swalReact(Swal);
     const context = useContext(AppContext);
+    const history = useHistory();
     const visible = props.moderators.find(mod => mod.userId === context.user.data.id);
     const onIdeaOpen = () => {
         swalGenerator.fire({
@@ -34,7 +36,7 @@ const ModeratorActions = (props) => {
                     toastError();
                     return;
                 }
-                props.onStateChange(true);
+                props.updateState({...props.ideaData, open: true});
                 toastSuccess("Idea opened.");
             }).catch(err => toastError(err.response.data.errors[0]))
         });
@@ -50,7 +52,7 @@ const ModeratorActions = (props) => {
                         toastError();
                         return;
                     }
-                    props.onStateChange(false);
+                    props.updateState({...props.ideaData, open: false});
                     toastSuccess("Idea closed.");
                 }).catch(err => toastError(err.response.data.errors[0]))
             });
@@ -62,12 +64,12 @@ const ModeratorActions = (props) => {
                     return;
                 }
                 axios.delete("/ideas/" + props.ideaData.id).then(res => {
-                    if (res.status !== 200 && res.status !== 204) {
+                    if (res.status !== 204) {
                         toastError();
                         return;
                     }
                     toastSuccess("Idea permanently deleted.");
-                    props.onIdeaDelete(props.ideaData.id);
+                    history.push("/b/" + props.ideaData.boardDiscriminator);
                 }).catch(err => toastError(err.response.data.errors[0]))
             });
     };
@@ -108,7 +110,7 @@ const ModeratorActions = (props) => {
                             toastError();
                             return;
                         }
-                        props.onTagsUpdate(response.data);
+                        props.updateState({...props.ideaData, tags: response.data});
                         toastSuccess("Tags updated!");
                     }).catch(err => toastError(err.response.data.errors[0]));
                 }
@@ -137,9 +139,7 @@ const ModeratorActions = (props) => {
 ModeratorActions.propTypes = {
     moderators: PropTypes.array,
     ideaData: PropTypes.object,
-    onTagsUpdate: PropTypes.func,
     onIdeaDelete: PropTypes.func,
-    onStateChange: PropTypes.func,
 };
 
 export default ModeratorActions;

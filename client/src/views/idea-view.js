@@ -32,84 +32,8 @@ class IdeaView extends Component {
         this.setState({loginModalOpened: false});
     };
 
-    onStateUpdate = (upvoted, votersAmount) => {
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, upvoted, votersAmount}
-            }
-        });
-        this.resetStateHistory();
-    };
-
-    onSubscribeStateUpdate = (subscribed) => {
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, subscribed}
-            }
-        });
-        this.resetStateHistory();
-    };
-
-    onCommentDelete = () => {
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, commentsAmount: this.state.idea.data.commentsAmount - 1}
-            }
-        });
-        this.resetStateHistory();
-    };
-
-    onCommentPost = () => {
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, commentsAmount: this.state.idea.data.commentsAmount + 1}
-            }
-        });
-        this.resetStateHistory();
-    };
-
-    onIdeaEdit = (description) => {
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, description, edited: true}
-            }
-        });
-        this.resetStateHistory();
-    };
-
-    onStateChange = (open) => {
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, open}
-            }
-        });
-        this.resetStateHistory();
-    };
-
-    onTagsUpdate = (tags) => {
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, tags}
-            }
-        });
-        this.resetStateHistory();
-    };
-
-    onAttachmentDelete = (url) => {
-        let attachments = this.state.ideaData.attachments.filter(data => data.url !== url);
-        this.setState({
-            idea: {
-                ...this.state.idea,
-                data: {...this.state.idea.data, attachments}
-            }
-        });
+    updateState = (data) => {
+        this.setState({idea: {...this.state.idea, data}});
         this.resetStateHistory();
     };
 
@@ -219,17 +143,15 @@ class IdeaView extends Component {
         if (!this.state.idea.loaded) {
             return <div className="my-5"><LoadingSpinner/></div>
         }
-        return <IdeaDetailsBox moderators={this.state.board.data.moderators} ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}
-                               onStateUpdate={this.onStateUpdate} onIdeaEdit={this.onIdeaEdit} onAttachmentDelete={this.onAttachmentDelete}
-                               onTagsUpdate={this.onTagsUpdate} onStateChange={this.onStateChange} onSubscribeStateUpdate={this.onSubscribeStateUpdate} {...this.props}/>
+        return <IdeaDetailsBox updateState={this.updateState} moderators={this.state.board.data.moderators} ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}
+                               {...this.props}/>
     }
 
     renderDiscussion() {
         if (!this.state.idea.loaded) {
             return <div className="mt-4"><LoadingSpinner/></div>
         }
-        return <DiscussionBox onCommentPost={this.onCommentPost} onCommentDelete={this.onCommentDelete} moderators={this.state.board.data.moderators}
-                              ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}/>
+        return <DiscussionBox updateState={this.updateState} moderators={this.state.board.data.moderators} ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}/>
     }
 }
 

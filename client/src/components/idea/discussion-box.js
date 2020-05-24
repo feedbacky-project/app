@@ -4,14 +4,12 @@ import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaEdit, FaFrown, FaLockOpen, FaTags, FaTimesCircle} from "react-icons/fa";
 import TimeAgo from "timeago-react";
-import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, parseMarkdown, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
-import snarkdown from "components/util/snarkdown";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
 import {popupSwal} from "components/util/sweetalert-utils";
 import {FaHeart, FaLowVision, FaRegHeart, FaTrashAlt} from "react-icons/all";
-import {parseEmojis} from "components/util/emoji-filter";
 import ClickableTip from "components/util/clickable-tip";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 
@@ -75,7 +73,7 @@ class DiscussionBox extends Component {
                                 {this.renderCommentUsername(data)}
                                 {this.renderDeletionButton(data)}
                                 <br/>
-                                <span className="snarkdown-box" dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(data.description))}}/>
+                                <span className="snarkdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(data.description)}}/>
                                 <br/>
                                 <small className="text-black-60"> {this.renderLikes(data)} · <TimeAgo datetime={data.creationDate}/></small>
                             </div>
@@ -230,7 +228,9 @@ class DiscussionBox extends Component {
                 submitVisible: false,
             });
             this.textarea.current.value = "";
-            this.props.onCommentPost();
+            this.props.updateState({
+                ...this.props.ideaData, commentsAmount: this.props.ideaData.commentsAmount + 1
+            });
         }).catch(err => {
             if (err.response.status === 400) {
                 toastWarning(err.response.data.errors[0]);
@@ -266,7 +266,9 @@ class DiscussionBox extends Component {
                     this.setState({
                         comments: {...this.state.comments, data: this.state.comments.data.filter(item => item.id !== id)}
                     });
-                    this.props.onCommentDelete();
+                    this.props.updateState({
+                        ...this.props.ideaData, commentsAmount: this.props.ideaData.commentsAmount - 1
+                    });
                     toastSuccess("Comment permanently deleted.");
                 }).catch(err => toastError(err.response.data.errors[0]))
             });

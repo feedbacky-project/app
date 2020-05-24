@@ -89,9 +89,9 @@ class AdminPanelView extends Component {
                         <Route path="/ba/:id/webhooks" render={() => <WebhooksSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
                         <Route path="/ba/:id/social/create" render={() => <CreateSocialLink reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
                         <Route path="/ba/:id/social" render={() => <SocialLinksSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
-                        <Route path="/ba/:id/general" render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} onLogoChange={this.onLogoChange} onThemeChange={this.onThemeChange}
+                        <Route path="/ba/:id/general" render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState} onThemeChange={this.onThemeChange}
                                                                                           data={this.state.board.data} {...props}/>}/>
-                        <Route render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} onLogoChange={this.onLogoChange} onThemeChange={this.onThemeChange}
+                        <Route render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState} onThemeChange={this.onThemeChange}
                                                                    data={this.state.board.data} {...props}/>}/>
                     </Switch>
                 </Row>
@@ -99,14 +99,12 @@ class AdminPanelView extends Component {
         </React.Fragment>
     }
 
-    onLogoChange = (logo) => {
+    updateState = (boardData) => {
         this.setState({
-            board: {
-                ...this.state.board,
-                data: {...this.state.board.data, logo}
-            }
+            board: {...this.state.board, data: boardData}
         });
     };
+
 }
 
 export default AdminPanelView;

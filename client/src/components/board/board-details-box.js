@@ -4,9 +4,8 @@ import {Button, Card, Col} from "react-bootstrap";
 import IdeaCreateModal from "components/modal/idea-create-modal";
 import AppContext from "context/app-context";
 import {Link} from "react-router-dom";
-import snarkdown from "components/util/snarkdown";
 import {FaAlignRight} from "react-icons/all";
-import {parseEmojis} from "components/util/emoji-filter";
+import {parseMarkdown} from "components/util/utils";
 
 const BoardDetailsBox = (props) => {
     const context = useContext(AppContext);
@@ -43,7 +42,7 @@ const BoardDetailsBox = (props) => {
         <Col id="boardDetails" lg={4} className="order-lg-12 order-1">
             <Card className="my-2 text-left" style={{borderRadius: 0}}>
                 <Card.Body className="pb-2">
-                    <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(props.description))}}/>
+                    <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(props.description)}}/>
                     <hr/>
                     <Button className="text-white mx-0 mt-0 mb-2 py-1" variant="" style={{backgroundColor: context.theme}} onClick={onCreateIdeaModalClick}>
                         <FaPencilAlt className="mr-1 move-top-1px"/> New Idea

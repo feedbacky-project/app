@@ -22,6 +22,7 @@ const ModeratorInvitation = () => {
             history.push("/me");
             toastWarning(err.response.data.errors[0]);
         });
+        // eslint-disable-next-line
     }, []);
 
     return <Row className="justify-content-center"><LoadingSpinner/></Row>

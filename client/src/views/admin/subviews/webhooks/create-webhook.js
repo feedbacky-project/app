@@ -78,7 +78,10 @@ class CreateWebhook extends Component {
                     }
                     toastSuccess("Added new webhook, sending sample response.", toastId);
                     this.props.history.push("/ba/" + this.props.data.discriminator + "/webhooks");
-                }).catch(err => toastError(err.response.data.errors[0], toastId));
+                }).catch(err => {
+                    toastError(err.response.data.errors[0], toastId);
+                    this.setState({step: 3});
+                });
                 return <StepThird onSetupMethodCall={this.onSetupMethodCall} url={this.state.url}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");

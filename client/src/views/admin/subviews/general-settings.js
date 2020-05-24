@@ -25,7 +25,6 @@ class GeneralSettings extends Component {
     state = {
         bannerInput: null,
         logoInput: null,
-        privatePage: this.props.data.privatePage,
     };
 
     render() {
@@ -174,7 +173,7 @@ class GeneralSettings extends Component {
     }
 
     renderPrivateBoardButton() {
-        if (this.state.privatePage) {
+        if (this.props.data.privatePage) {
             return <Button variant="danger" className="m-0 mt-sm-0 mt-2"
                            onClick={() => this.onBoardPrivacyChange(false)}>Disable</Button>
         }
@@ -236,28 +235,35 @@ class GeneralSettings extends Component {
                         toastError();
                         return;
                     }
-                    this.setState({privatePage: state});
+                    this.props.updateState({
+                        ...this.props.data, privatePage: state
+                    });
                     toastSuccess("Board visibility toggled.");
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
 
     onChangesSave = () => {
-        let banner = this.state.bannerInput;
-        let logo = this.state.logoInput;
-        let toastId = toastAwait("Saving changes...");
+        const banner = this.state.bannerInput;
+        const logo = this.state.logoInput;
+        const toastId = toastAwait("Saving changes...");
+        const name = document.getElementById("boardTextarea").value;
+        const shortDescription = document.getElementById("shortDescrTextarea").value;
+        const fullDescription = document.getElementById("fullDescrTextarea").value;
+        const themeColor = this.context.theme;
         axios.patch("/boards/" + this.props.data.discriminator, {
-            name: document.getElementById("boardTextarea").value,
-            shortDescription: document.getElementById("shortDescrTextarea").value,
-            fullDescription: document.getElementById("fullDescrTextarea").value,
-            themeColor: this.context.theme,
-            banner, logo,
+            name, shortDescription, fullDescription, themeColor, banner, logo,
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 toastError();
                 return;
             }
             toastSuccess("Settings successfully updated.", toastId);
+            this.props.updateState({
+                ...this.props.data,
+                name, shortDescription, fullDescription, themeColor,
+                banner: banner || this.props.data.banner, logo: logo || this.props.data.logo
+            });
         }).catch(err => {
             if (err.response === undefined) {
                 return;
@@ -285,7 +291,6 @@ class GeneralSettings extends Component {
         let file = e.target.files[0];
         getBase64FromFile(file).then(data => {
             document.getElementById("boardLogo").setAttribute("src", data);
-            this.props.onLogoChange(data);
             this.setState({logoInput: data});
         });
     };

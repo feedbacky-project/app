@@ -73,7 +73,10 @@ class CreateSocialLink extends Component {
                     }
                     toastSuccess("Added new social link.", toastId);
                     this.props.history.push("/ba/" + this.props.data.discriminator + "/social");
-                }).catch(err => toastError(err.response.data.errors[0], toastId));
+                }).catch(err => {
+                    toastError(err.response.data.errors[0], toastId);
+                    this.setState({step: 2});
+                });
                 return <StepSecond onSetupMethodCall={this.onSetupMethodCall} banner={this.state.banner} logo={this.state.logo}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");

@@ -2,6 +2,12 @@ import {Slide, toast} from "react-toastify";
 import React from "react";
 import {FaCheck, FaExclamation, FaExclamationTriangle} from "react-icons/fa";
 import Spinner from "react-bootstrap/Spinner";
+import {parseEmojis} from "components/util/emoji-filter";
+import marked from "marked";
+
+export const parseMarkdown = (html) => {
+  return parseEmojis(marked(html, {breaks: true}));
+};
 
 export const getSizedAvatarByUrl = (url, sizing) => {
     if (url.includes("googleusercontent")) {

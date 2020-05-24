@@ -7,14 +7,12 @@ import TimeAgo from "timeago-react";
 import axios from "axios";
 import AppContext from "context/app-context";
 import Spinner from "react-bootstrap/Spinner";
-import {formatUsername, getSizedAvatarByUrl, htmlDecode, increaseBrightness, isHexDark, toastError, toastSuccess} from "components/util/utils";
+import {formatUsername, getSizedAvatarByUrl, htmlDecode, increaseBrightness, isHexDark, parseMarkdown, toastError, toastSuccess} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
-import snarkdown from "components/util/snarkdown";
 import {popupSwal} from "components/util/sweetalert-utils";
 import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaPen, FaRegBell, FaRegBellSlash} from "react-icons/all";
-import {parseEmojis} from "components/util/emoji-filter";
 import DeleteButton from "components/util/delete-button";
 import ClickableTip from "components/util/clickable-tip";
 
@@ -118,8 +116,7 @@ class IdeaDetailsBox extends Component {
             <span className="mr-1 text-tight" style={{fontSize: "1.45rem"}}
                   dangerouslySetInnerHTML={{__html: this.props.ideaData.title}}/>
             <ModeratorActions moderators={this.props.moderators} ideaData={this.props.ideaData}
-                              onStateChange={this.props.onStateChange}
-                              onTagsUpdate={this.props.onTagsUpdate} onIdeaDelete={this.onIdeaDelete}/>
+                              updateState={this.props.updateState}/>
             {this.renderDeletionButton()}
             {this.renderEditButton()}
             <br/>
@@ -160,7 +157,7 @@ class IdeaDetailsBox extends Component {
         }
         return <React.Fragment>
             <span className="markdown-box" style={{wordBreak: "break-word"}}
-                  dangerouslySetInnerHTML={{__html: parseEmojis(snarkdown(this.props.ideaData.description))}}/>
+                  dangerouslySetInnerHTML={{__html: parseMarkdown(this.props.ideaData.description)}}/>
         </React.Fragment>
     }
 
@@ -175,8 +172,9 @@ class IdeaDetailsBox extends Component {
                 let userId = this.context.user.data.id;
                 if (this.props.ideaData.user.id === userId || this.props.moderators.find(mod => mod.userId === userId)) {
                     return <React.Fragment key={attachment.id}>
-                        <DeleteButton tooltipName="Remove" onClick={() => this.onAttachmentDelete(attachment)}
-                                      id="attachment-del"/>
+                        <DeleteButton tooltipName="Remove" onClick={() => this.props.updateState({
+                            ...this.props.ideaData, attachments: this.props.ideaData.attachments.filter(data => data.url !== attachment.url)
+                        })} id="attachment-del"/>
                         <a href={attachment.url} target="_blank" rel="noopener noreferrer">
                             <img width={125} className="img-thumbnail" alt="attachment" src={attachment.url}/>
                         </a>
@@ -286,7 +284,10 @@ class IdeaDetailsBox extends Component {
                         toastError();
                         return;
                     }
-                    this.props.onAttachmentDelete(attachment.url);
+                    this.props.updateState({
+                        ...this.props.ideaData,
+                        attachments: this.props.ideaData.attachments.filter(data => data.url !== attachment.url)
+                    });
                     toastSuccess("Attachment removed.");
                 }).catch(err => {
                     toastError(err.response.data.errors[0]);
@@ -325,20 +326,16 @@ class IdeaDetailsBox extends Component {
             this.justVoted = upvoted;
             if (upvoted) {
                 this.setState({
-                    voters: {
-                        ...this.state.voters,
-                        data: this.state.voters.data.concat(this.context.user.data)
-                    }
+                    voters: {...this.state.voters, data: this.state.voters.data.concat(this.context.user.data)}
                 });
             } else {
                 this.setState({
-                    voters: {
-                        ...this.state.voters,
-                        data: this.state.data.filter(item => item.id !== this.context.user.data.id)
-                    }
+                    voters: {...this.state.voters, data: this.state.voters.data.filter(item => item.id !== this.context.user.data.id)}
                 });
             }
-            this.props.onStateUpdate(upvoted, votersAmount);
+            this.props.updateState({
+                ...this.props.ideaData, upvoted, votersAmount
+            });
         }).catch(() => toastError());
     };
 
@@ -359,13 +356,11 @@ class IdeaDetailsBox extends Component {
                 toastError();
                 return;
             }
-            this.props.onSubscribeStateUpdate(!this.props.ideaData.subscribed);
+            this.props.updateState({
+                ...this.props.ideaData, subscribed: !this.props.ideaData.subscribed
+            });
             toastSuccess("Toggled mail notifications for this idea.");
         }).catch(() => toastError());
-    };
-
-    onIdeaDelete = () => {
-        this.props.history.push("/b/" + this.props.ideaData.boardDiscriminator);
     };
 
     onEditorToggle = () => {
@@ -381,8 +376,10 @@ class IdeaDetailsBox extends Component {
                 toastError();
                 return;
             }
-            this.setState({editorMode: false});
-            this.props.onIdeaEdit(description);
+            this.setState({editorMode: false, editedValue: htmlDecode(description)});
+            this.props.updateState({
+                ...this.props.ideaData, description, edited: true
+            });
             toastSuccess("Idea edited.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };

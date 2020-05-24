@@ -22,6 +22,7 @@ const UnsubscribeView = () => {
     };
     useEffect(() => {
         unsubscribe();
+        // eslint-disable-next-line
     }, []);
     return <div className="row justify-content-center vertical-center"><LoadingSpinner/></div>
 };
