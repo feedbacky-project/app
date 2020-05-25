@@ -92,6 +92,7 @@ class BoardContainer extends Component {
     }
 
     onLoadRequest = (page) => {
+        this.setState({ideas: {...this.state.ideas, moreToLoad: false}});
         return axios.get("/boards/" + this.props.id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(this.context.user.searchPreferences)).then(res => {
             const ideas = res.data.data;
             ideas.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));

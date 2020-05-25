@@ -14,3 +14,5 @@
 * Board settings changed in admin panel now are updated properly for the whole page
 * Social link and webhooks creators won't break anymore when putting invalid url value
 * Replaced custom edited snarkdown library with marked for better markdown parsing and to fix broken parsing issues
+* Comments should load in good order now, before later pages could be returned earlier and would load first
+* Dark mode received some improvements, theme colors are lighten to fit it better and badges are changed as well

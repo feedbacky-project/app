@@ -256,14 +256,12 @@ class IdeaDetailsBox extends Component {
                 if(this.context.user.darkMode) {
                     color = color.lighten(10);
                     return <Badge key={data.id} color="" className="mr-1" style={{
-                        transform: `translateY(-2px)`,
                         color: color,
                         fontWeight: "bold",
                         backgroundColor: color.clone().setAlpha(.2)
                     }}>{data.name}</Badge>
                 } else {
                     return <Badge key={data.id} color="" className="mr-1" style={{
-                        transform: `translateY(-2px)`,
                         backgroundColor: color
                     }}>{data.name}</Badge>
                 }

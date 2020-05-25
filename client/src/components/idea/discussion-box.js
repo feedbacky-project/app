@@ -38,11 +38,12 @@ class DiscussionBox extends Component {
     }
 
     onLoadRequest = (page) => {
+        this.setState({comments: {...this.state.comments, moreToLoad: false}});
         return axios.get("/ideas/" + this.props.ideaData.id + "/comments?page=" + (page - 1)).then(res => {
             this.setState({
                 comments: {
                     ...this.state.comments,
-                    data: res.data.data.concat(this.state.comments.data),
+                    data: this.state.comments.data.concat(res.data.data),
                     loaded: true,
                     moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages,
                 },
@@ -60,6 +61,7 @@ class DiscussionBox extends Component {
         let self = this;
         return <InfiniteScroll
             pageStart={0}
+            initialLoad={true}
             loadMore={(page) => this.onLoadRequest(page)}
             hasMore={this.state.comments.moreToLoad}
             loader={<Row className="justify-content-center my-5" key={this.state.comments.data.length}><LoadingSpinner/></Row>}>
