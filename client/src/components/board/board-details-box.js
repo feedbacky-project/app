@@ -31,7 +31,7 @@ const BoardDetailsBox = (props) => {
             state: {
                 _boardData: props.boardData,
             },
-        }} className="text-white mx-0 mt-0 py-1 float-right" variant="" style={{backgroundColor: context.theme}}>
+        }} className="text-white mx-0 mt-0 py-1 float-right" variant="" style={{backgroundColor: context.getTheme()}}>
             Manage <FaAlignRight className="ml-1 move-top-1px"/>
         </Button>
     };
@@ -44,7 +44,7 @@ const BoardDetailsBox = (props) => {
                 <Card.Body className="pb-2">
                     <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(props.description)}}/>
                     <hr/>
-                    <Button className="text-white mx-0 mt-0 mb-2 py-1" variant="" style={{backgroundColor: context.theme}} onClick={onCreateIdeaModalClick}>
+                    <Button className="text-white mx-0 mt-0 mb-2 py-1" variant="" style={{backgroundColor: context.getTheme()}} onClick={onCreateIdeaModalClick}>
                         <FaPencilAlt className="mr-1 move-top-1px"/> New Idea
                     </Button>
                     {renderEditButton()}

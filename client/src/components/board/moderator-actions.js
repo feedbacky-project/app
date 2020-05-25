@@ -126,12 +126,12 @@ const ModeratorActions = (props) => {
             <FaEllipsisH className="move-top-1px"/>
         </Dropdown.Toggle>
         <Dropdown.Menu className="mod-tools">
-            <Dropdown.Item as={"span"} onClick={onTagsManage}><FaTags className="mr-1 move-top-2px" style={{color: context.theme}}/> Change Tags</Dropdown.Item>
+            <Dropdown.Item as={"span"} onClick={onTagsManage}><FaTags className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Change Tags</Dropdown.Item>
             {props.ideaData.open ?
-                <Dropdown.Item as={"span"} onClick={onIdeaClose}><FaLock className="mr-1 move-top-2px" style={{color: context.theme}}/> Close Idea</Dropdown.Item> :
-                <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="mr-1 move-top-2px" style={{color: context.theme}}/> Open Idea</Dropdown.Item>
+                <Dropdown.Item as={"span"} onClick={onIdeaClose}><FaLock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Close Idea</Dropdown.Item> :
+                <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Open Idea</Dropdown.Item>
             }
-            <Dropdown.Item as={"span"} onClick={onIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.theme}}/> Delete Idea</Dropdown.Item>
+            <Dropdown.Item as={"span"} onClick={onIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Delete Idea</Dropdown.Item>
         </Dropdown.Menu>
     </Dropdown>
 };

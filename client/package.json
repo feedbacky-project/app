@@ -25,7 +25,8 @@
     "react-toastify": "^5.5.0",
     "sweetalert2": "^9.10.7",
     "sweetalert2-react-content": "^3.0.1",
-    "timeago-react": "^3.0.0"
+    "timeago-react": "^3.0.0",
+    "tinycolor2": "^1.4.1"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

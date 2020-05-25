@@ -57,7 +57,7 @@ class InvitationsSettings extends Component {
         return <React.Fragment>
             <AdminSidebar currentNode="invitations" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
             <Col>
-                <ViewBox theme={this.context.theme} title="Invitations"
+                <ViewBox theme={this.context.getTheme()} title="Invitations"
                          description="Invite and manage users of your private board here.">
                     {this.renderContent()}
                 </ViewBox>
@@ -98,7 +98,7 @@ class InvitationsSettings extends Component {
             </Col>
             <Col xs={12}>
                 <Button className="text-white m-0 mt-3 float-right" variant=""
-                        style={{backgroundColor: this.context.theme}}
+                        style={{backgroundColor: this.context.getTheme()}}
                         onClick={this.onInvitationCreateModalClick}>Invite New</Button>
             </Col>
         </React.Fragment>

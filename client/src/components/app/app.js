@@ -3,6 +3,7 @@ import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import axios from "axios";
 import {toast} from "react-toastify";
 import Cookies from "js-cookie";
+import tinycolor from "tinycolor2";
 
 import ErrorView from "views/errors/error-view";
 import AppContext from "context/app-context";
@@ -127,6 +128,18 @@ class App extends Component {
         });
     };
 
+    getTheme = () => {
+        let color = tinycolor(this.state.theme);
+        if(this.state.darkMode) {
+            color = color.lighten(10);
+            //if still not readable, increase again
+            if(tinycolor.readability(color, "#282828") < 2.5) {
+                color = color.lighten(25);
+            }
+        }
+        return color;
+    };
+
     onDarkModeToggle = () => {
         let darkMode = (localStorage.getItem("darkMode") === 'true');
         localStorage.setItem("darkMode", (!darkMode).toString());
@@ -160,6 +173,7 @@ class App extends Component {
             onFilteringUpdate: this.onFilteringUpdate,
             onSortingUpdate: this.onSortingUpdate,
             onDarkModeToggle: this.onDarkModeToggle,
+            getTheme: this.getTheme,
             theme: this.state.theme,
             onThemeChange: theme => this.setState({theme}),
         }}>

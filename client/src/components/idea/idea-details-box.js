@@ -7,7 +7,7 @@ import TimeAgo from "timeago-react";
 import axios from "axios";
 import AppContext from "context/app-context";
 import Spinner from "react-bootstrap/Spinner";
-import {formatUsername, getSizedAvatarByUrl, htmlDecode, increaseBrightness, isHexDark, parseMarkdown, toastError, toastSuccess} from "components/util/utils";
+import {formatUsername, getSizedAvatarByUrl, htmlDecode, parseMarkdown, toastError, toastSuccess} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import {popupSwal} from "components/util/sweetalert-utils";
 import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
@@ -15,6 +15,7 @@ import TextareaAutosize from "react-autosize-textarea";
 import {FaPen, FaRegBell, FaRegBellSlash} from "react-icons/all";
 import DeleteButton from "components/util/delete-button";
 import ClickableTip from "components/util/clickable-tip";
+import tinycolor from "tinycolor2";
 
 class IdeaDetailsBox extends Component {
 
@@ -79,13 +80,11 @@ class IdeaDetailsBox extends Component {
     }
 
     renderButton() {
-        let color = this.context.theme;
-        if (this.context.user.darkMode && isHexDark(color)) {
-            color = increaseBrightness(color, 40);
-        }
+        let color = this.context.getTheme();
+
         let vote;
         if (!this.props.ideaData.upvoted) {
-            color += "99";
+            color = color.setAlpha(.7);
             vote = <FiChevronUp style={{color}}/>;
         } else {
             vote = <FiChevronsUp style={{color}}/>;
@@ -193,7 +192,7 @@ class IdeaDetailsBox extends Component {
                               placeholder="Write a description..." required as="textarea"
                               style={{resize: "none", overflow: "hidden"}}
                               defaultValue={htmlDecode(this.state.editorValue)}/>
-            <Button className="m-0 mt-2 text-white" variant="" style={{backgroundColor: this.context.theme}}
+            <Button className="m-0 mt-2 text-white" variant="" style={{backgroundColor: this.context.getTheme()}}
                     onClick={this.onEditApply}>Save</Button>
             <Button className="m-0 mt-2 text-black-50" variant="link" onClick={this.onEditorToggle}>Cancel</Button>
         </React.Fragment>
@@ -209,7 +208,7 @@ class IdeaDetailsBox extends Component {
                     margin: "0 -10px 0 0",
                     width: 23,
                     height: 23,
-                    color: this.context.theme
+                    color: this.context.getTheme()
                 }}/>);
             }
             if (this.props.ideaData.votersAmount <= 5) {
@@ -253,22 +252,31 @@ class IdeaDetailsBox extends Component {
         return <React.Fragment>
             <div className="mt-1 text-black-75">Tags</div>
             {this.props.ideaData.tags.map(data => {
-                let color = data.color;
-                if (this.context.user.darkMode) {
-                    color += "BF";
+                let color = tinycolor(data.color);
+                if(this.context.user.darkMode) {
+                    color = color.lighten(10);
+                    return <Badge key={data.id} color="" className="mr-1" style={{
+                        transform: `translateY(-2px)`,
+                        color: color,
+                        fontWeight: "bold",
+                        backgroundColor: color.clone().setAlpha(.2)
+                    }}>{data.name}</Badge>
+                } else {
+                    return <Badge key={data.id} color="" className="mr-1" style={{
+                        transform: `translateY(-2px)`,
+                        backgroundColor: color
+                    }}>{data.name}</Badge>
                 }
-                return <Badge key={data.name} variant="" className="mr-1"
-                              style={{backgroundColor: color}}>{data.name}</Badge>
             })}
         </React.Fragment>
     }
 
     renderSubscribe() {
         if (this.props.ideaData.subscribed) {
-            return <Button variant="" size="sm" className="text-white" style={{backgroundColor: this.context.theme}}
+            return <Button variant="" size="sm" className="text-white" style={{backgroundColor: this.context.getTheme()}}
                            onClick={this.onSubscribeToggle}><FaRegBellSlash className="move-top-1px"/> Unsubscribe</Button>
         } else {
-            return <Button variant="" size="sm" className="text-white" style={{backgroundColor: this.context.theme}}
+            return <Button variant="" size="sm" className="text-white" style={{backgroundColor: this.context.getTheme()}}
                            onClick={this.onSubscribeToggle}><FaRegBell className="move-top-1px"/> Subscribe</Button>
         }
     }

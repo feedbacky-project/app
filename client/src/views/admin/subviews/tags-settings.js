@@ -60,7 +60,7 @@ class TagsSettings extends Component {
             <TagCreateModal onTagCreate={this.onTagCreate} onTagCreateModalClose={this.onTagCreateModalClose}
                             data={this.props.data} open={this.state.tagCreatorModalOpened}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={this.context.theme} title="Tags Management" description="Edit your board tags here.">
+                <ViewBox theme={this.context.getTheme()} title="Tags Management" description="Edit your board tags here.">
                     {this.renderContent()}
                 </ViewBox>
             </Col>
@@ -106,10 +106,10 @@ class TagsSettings extends Component {
         if (this.state.quotaReached) {
             return <OverlayTrigger overlay={<Tooltip id="quota-tooltip">Quota Limit Reached</Tooltip>}>
                 <Button className="text-white m-0 mt-3 float-right" variant=""
-                        style={{backgroundColor: this.context.theme}}><FaExclamation/> Add new Tag</Button>
+                        style={{backgroundColor: this.context.getTheme()}}><FaExclamation/> Add new Tag</Button>
             </OverlayTrigger>
         }
-        return <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.theme}}
+        return <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
                        onClick={this.onTagCreateModalClick}>Add new Tag</Button>
     }
 

@@ -57,7 +57,7 @@
 }
 
 .dark .form-control::placeholder {
-  color: #707070 !important;
+  color: #7e7e7e !important;
 }
 
 .dark .swal2-cancel, .dark .btn-link {
@@ -115,7 +115,7 @@
 }
 
 .dark .btn-attachment {
-  background-color: rgba(40, 40, 40, 0.98) !important;
+  background-color: #2d2d2d !important;
   box-shadow: none !important;
 }
 
@@ -129,10 +129,6 @@
 
 .dark .badge-warning {
   background-color: #e5a82d !important;
-}
-
-.dark button:not(.btn-attachment) {
-  filter: brightness(90%);
 }
 
 .dark .modal-dialog {

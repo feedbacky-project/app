@@ -63,7 +63,7 @@ class BoardContainer extends Component {
     loadIdeas() {
         if (this.state.ideas.error) {
             return <div className="text-center mt-3">
-                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
+                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.getTheme()}}/>
                 <div>
                     <strong><FaRegFrown className="mr-1"/> Failed to load ideas</strong>
                 </div>
@@ -71,7 +71,7 @@ class BoardContainer extends Component {
         }
         if (this.state.ideas.loaded && this.state.ideas.data.length === 0 && !this.state.ideas.moreToLoad) {
             return <div className="text-center mt-3">
-                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
+                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: this.context.getTheme()}}/>
                 <div>
                     <strong style={{fontSize: "1.1rem"}}>No ideas yet.</strong>
                     <br/>

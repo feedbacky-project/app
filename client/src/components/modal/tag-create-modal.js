@@ -33,7 +33,7 @@ const TagCreateModal = (props) => {
     };
 
     return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Add new Tag"
-                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.theme}} onClick={handleSubmit} className="text-white mx-0">Create New</Button>}>
+                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="text-white mx-0">Create New</Button>}>
         <Form noValidate>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>

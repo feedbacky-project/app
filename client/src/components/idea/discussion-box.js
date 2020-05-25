@@ -74,17 +74,14 @@ class DiscussionBox extends Component {
                                 {this.renderDeletionButton(data)}
                                 <br/>
                                 <span className="snarkdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(data.description)}}/>
-                                <br/>
                                 <small className="text-black-60"> {this.renderLikes(data)} · <TimeAgo datetime={data.creationDate}/></small>
                             </div>
                         </div>
                         <br/>
                     </React.Fragment>
                 }
-                let color = this.context.theme;
-                if (isHexDark(color) && this.context.user.darkMode) {
-                    color = increaseBrightness(color, 20);
-                }
+                let color = this.context.getTheme();
+
                 return <React.Fragment key={data.id}>
                     <div className="d-inline-flex my-1">
                         <div className="comment-icon mr-3" style={{backgroundColor: color, color}}>{self.retrieveSpecialCommentTypeIcon(data.specialType)}</div>
@@ -122,9 +119,9 @@ class DiscussionBox extends Component {
     renderLikes(data) {
         const likes = data.likesAmount;
         if (data.liked) {
-            return <span className="cursor-click" onClick={() => this.onCommentUnlike(data)}><FaHeart className="red"/> {likes}</span>
+            return <span className="cursor-click" onClick={() => this.onCommentUnlike(data)}><FaHeart className="red move-top-1px"/> {likes}</span>
         }
-        return <span className="cursor-click" onClick={() => this.onCommentLike(data)}><FaRegHeart/> {likes}</span>
+        return <span className="cursor-click" onClick={() => this.onCommentLike(data)}><FaRegHeart className="move-top-1px"/> {likes}</span>
     }
 
     retrieveSpecialCommentTypeIcon(type) {
@@ -146,14 +143,14 @@ class DiscussionBox extends Component {
         if (this.state.comments.loaded && this.state.comments.data.length === 0) {
             if (!this.props.ideaData.open) {
                 return <div className="my-3 text-center">
-                    <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
+                    <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.getTheme()}}/>
                     <div>
                         <strong style={{fontSize: "1.1rem"}}>No comments here.</strong>
                     </div>
                 </div>
             }
             return <div className="my-3 text-center">
-                <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.theme}}/>
+                <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.getTheme()}}/>
                 <div>
                     <strong style={{fontSize: "1.1rem"}}>No comments yet.</strong>
                     <br/>
@@ -178,7 +175,7 @@ class DiscussionBox extends Component {
                 <div className="col-12 px-0">
                     <small style={{fontWeight: "bold"}}>{formatUsername(this.context.user.data.id, this.context.user.data.username, this.props.moderators)}</small>
                     <br/>
-                    <TextareaAutosize className="form-control bg-lighter mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
+                    <TextareaAutosize className="form-control mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
                                       style={{resize: "none", overflow: "hidden"}} onChange={this.onCommentBoxKeyUp} ref={this.textarea}/>
                     {this.renderSubmitButton()}
                 </div>
@@ -191,7 +188,7 @@ class DiscussionBox extends Component {
         if (this.state.submitVisible) {
             const moderator = this.props.moderators.find(mod => mod.userId === this.context.user.data.id);
             return <React.Fragment>
-                <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: this.context.theme, fontSize: "0.75em"}}
+                <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: this.context.getTheme(), fontSize: "0.75em"}}
                         onClick={() => this.onCommentSubmit(false)}>Submit</Button>
                 {moderator && <React.Fragment>
                     <Button variant="" className="mt-2 ml-2 mr-1 mb-0 text-white" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}

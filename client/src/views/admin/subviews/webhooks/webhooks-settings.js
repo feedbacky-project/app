@@ -40,7 +40,7 @@ class WebhooksSettings extends Component {
         return <React.Fragment>
             <AdminSidebar currentNode="webhooks" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={this.context.theme} title="Webhooks"
+                <ViewBox theme={this.context.getTheme()} title="Webhooks"
                          description="Edit webhooks to integrate with other apps here.">
                     {this.renderContent()}
                 </ViewBox>
@@ -81,7 +81,7 @@ class WebhooksSettings extends Component {
                     </div>
                 })}
                 <div>
-                    <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.theme}}
+                    <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
                             as={Link} to={"/ba/" + this.props.data.discriminator + "/webhooks/create"}>Add New</Button>
                 </div>
             </Col>
@@ -102,7 +102,7 @@ class WebhooksSettings extends Component {
     renderEvents = (hook) => {
         return hook.events.map((event, i) => {
             return <React.Fragment key={hook.id}>
-                <Badge variant="" style={{backgroundColor: this.context.theme}}>{prettifyEnum(event)}</Badge>
+                <Badge variant="" style={{backgroundColor: this.context.getTheme()}}>{prettifyEnum(event)}</Badge>
                 <br/>
             </React.Fragment>
         });

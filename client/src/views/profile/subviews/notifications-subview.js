@@ -40,7 +40,7 @@ const NotificationsSubview = (props) => {
         return <React.Fragment>
             <ProfileSidebar currentNode="notifications" reRouteTo={props.reRouteTo}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={context.theme} title="Mail Notifications" description="Configure your mail notifications here.">
+                <ViewBox theme={context.getTheme()} title="Mail Notifications" description="Configure your mail notifications here.">
                     <Col className="text-center">Please log in to see contents of this page.</Col>
                 </ViewBox>
             </Col>
@@ -97,7 +97,7 @@ const NotificationsSubview = (props) => {
     return <React.Fragment>
         <ProfileSidebar currentNode="notifications" reRouteTo={props.reRouteTo}/>
         <Col xs={12} md={9}>
-            <ViewBox theme={context.theme} title="Mail Notifications" description="Configure your mail notifications here.">
+            <ViewBox theme={context.getTheme()} title="Mail Notifications" description="Configure your mail notifications here.">
                 {renderContent()}
             </ViewBox>
         </Col>

@@ -8,7 +8,7 @@ import PageNavbar from "components/navbars/page-navbar";
 
 const ProfileNavbar = (props) => {
     const context = useContext(AppContext);
-    const theme = context.user.darkMode ? context.theme + "D9" : context.theme;
+    const theme = context.getTheme();
 
     return <PageNavbar theme={theme}>
         <Container className="d-flex">

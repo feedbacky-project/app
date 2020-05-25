@@ -66,7 +66,7 @@ class ModeratorsSettings extends Component {
                                           onModInvitationCreateModalClose={this.onModInvitationCreateModalClose}
                                           data={this.props.data} session={this.context.user.session}
                                           open={this.state.modalOpened}/>
-                <ViewBox theme={this.context.theme} title="Moderators Management" description="Manage your board moderators here.">
+                <ViewBox theme={this.context.getTheme()} title="Moderators Management" description="Manage your board moderators here.">
                     {this.renderOverview()}
                     {this.renderModerators()}
                 </ViewBox>
@@ -113,7 +113,7 @@ class ModeratorsSettings extends Component {
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{mod.user.username}</small>
                             <Badge variant="" className="move-top-3px"
-                                   style={{backgroundColor: this.context.theme}}>{prettifyEnum(mod.role)}</Badge>
+                                   style={{backgroundColor: this.context.getTheme()}}>{prettifyEnum(mod.role)}</Badge>
                         </div>
                     </div>
                 })}
@@ -144,7 +144,7 @@ class ModeratorsSettings extends Component {
                 })}
             </Col>
             <Col xs={12}>
-                <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.theme}}
+                <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
                         onClick={this.onModInvitationCreateModalClick}>Invite New</Button>
             </Col>
         </React.Fragment>

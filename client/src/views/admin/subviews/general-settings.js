@@ -31,7 +31,7 @@ class GeneralSettings extends Component {
         return <React.Fragment>
             <AdminSidebar currentNode="general" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={this.context.theme} title="General Settings"
+                <ViewBox theme={this.context.getTheme()} title="General Settings"
                          description="Configure your board base settings here.">
                     {this.renderContent()}
                 </ViewBox>
@@ -110,7 +110,7 @@ class GeneralSettings extends Component {
                 <br/>
                 <div className="cursor-click" onClick={() => document.getElementById("bannerInput").click()}>
                     <div className="text-white row justify-content-center text-center" style={{position: "absolute", top: "40%", left: 0, right: 0}}>
-                        <div className="p-3 rounded-circle" style={{backgroundColor: this.context.theme + "CC", width: "90px", height: "90px"}}>
+                        <div className="p-3 rounded-circle" style={{backgroundColor: this.context.getTheme().setAlpha(.8), width: "90px", height: "90px"}}>
                             <FaUpload className="mb-1" style={{width: "1.8em", height: "1.8em"}}/>
                             <div className="text-tight">Update</div>
                         </div>

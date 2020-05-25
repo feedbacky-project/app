@@ -39,8 +39,7 @@ class SocialLinksSettings extends Component {
         return <React.Fragment>
             <AdminSidebar currentNode="social" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={this.context.theme} title="Social Links"
-                         description="Edit links visible at your board page here.">
+                <ViewBox theme={this.context.getTheme()} title="Social Links" description="Edit links visible at your board page here.">
                     {this.renderContent()}
                 </ViewBox>
             </Col>
@@ -78,7 +77,7 @@ class SocialLinksSettings extends Component {
             return <React.Fragment/>
         }
         return <Button className="text-white m-0 mt-3 float-right" variant=""
-                       style={{backgroundColor: this.context.theme}}
+                       style={{backgroundColor: this.context.getTheme()}}
                        as={Link} to={"/ba/" + this.props.data.discriminator + "/social/create"}>Add New</Button>
     }
 

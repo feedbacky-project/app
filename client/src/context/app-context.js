@@ -10,6 +10,7 @@ const AppContext = React.createContext({
     onFilteringUpdate: () => {},
     onSortingUpdate: () => {},
     onDarkModeToggle: () => {},
+    getTheme: () => {},
     theme: "#343a40",
     onThemeChange: () => {},
 });

@@ -8,6 +8,7 @@ import AppContext from "context/app-context";
 import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, truncateText} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
+import tinycolor from "tinycolor2";
 
 class IdeaBox extends Component {
 
@@ -51,13 +52,10 @@ class IdeaBox extends Component {
     }
 
     renderButton() {
-        let color = this.context.theme;
-        if (this.context.user.darkMode && isHexDark(color)) {
-            color = increaseBrightness(color, 40);
-        }
+        let color = this.context.getTheme();
         let vote;
         if (!this.state.ideaData.upvoted) {
-            color += "80";
+            color = color.setAlpha(.7);
             vote = <FiChevronUp style={{color}}/>;
         } else {
             vote = <FiChevronsUp style={{color}}/>;
@@ -94,14 +92,21 @@ class IdeaBox extends Component {
             <br className="d-sm-none"/> {" "}
             <span className="badge-container">
                 {this.state.ideaData.tags.map((tag, i) => {
-                    let color = tag.color;
-                    if (this.context.user.darkMode) {
-                        color += "BF";
+                    let color = tinycolor(tag.color);
+                    if(this.context.user.darkMode) {
+                        color = color.lighten(10);
+                        return <Badge key={i} color="" style={{
+                            transform: `translateY(-2px)`,
+                            color: color,
+                            fontWeight: "bold",
+                            backgroundColor: color.clone().setAlpha(.2)
+                        }}>{tag.name}</Badge>
+                    } else {
+                        return <Badge key={i} color="" style={{
+                            transform: `translateY(-2px)`,
+                            backgroundColor: color
+                        }}>{tag.name}</Badge>
                     }
-                    return <Badge key={i} color="" style={{
-                        transform: `translateY(-2px)`,
-                        backgroundColor: color
-                    }}>{tag.name}</Badge>
                 })}
                 </span> {" "}
             </span>

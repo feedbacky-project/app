@@ -27,11 +27,11 @@ const ModeratorInvitationModal = (props) => {
     };
 
     return <PageModal id="moderatorInvite" isOpen={props.open} onHide={props.onModInvitationCreateModalClose} title="Invite New Moderator"
-                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.theme}} onClick={handleSubmit} className="text-white mx-0">Invite</Button>}>
+                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="text-white mx-0">Invite</Button>}>
         <Form noValidate>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">User Email</Form.Label>
-                <Form.Control style={{borderColor: context.theme + "66", minHeight: 38, resize: "none"}} rows="1" required type="email"
+                <Form.Control style={{borderColor: context.getTheme() + "66", minHeight: 38, resize: "none"}} rows="1" required type="email"
                               placeholder="Existing user email." id="inviteEmailTextarea"/>
             </Form.Group>
         </Form>
