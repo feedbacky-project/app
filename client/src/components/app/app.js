@@ -28,7 +28,7 @@ toast.configure();
 class App extends Component {
 
     CLIENT_VERSION = "0.2.0-beta";
-    API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
+    API_ROUTE = process.env.REACT_APP_SERVER_IP_ADDRESS + "/api/v1";
     state = {
         session: Cookies.get("FSID"),
         search: {
@@ -42,6 +42,8 @@ class App extends Component {
     };
 
     componentDidMount() {
+        const object = {};
+        console.log(object.error.data);
         if (this.state.darkMode) {
             document.body.classList.add("dark");
         } else if (localStorage.getItem("darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
