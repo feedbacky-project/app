@@ -41,8 +41,7 @@ class IdeaBox extends Component {
                             {this.renderComments()}
                         </div>
                         {this.renderTags()}
-                        <ModeratorActions moderators={this.props.moderators} ideaData={this.state.ideaData} updateState={this.updateState}
-                                          onIdeaDelete={() => this.props.onIdeaDelete(this.state.ideaData.id)}/>
+                        <ModeratorActions ideaData={this.state.ideaData} updateState={this.updateState} onIdeaDelete={() => this.props.onIdeaDelete(this.state.ideaData.id)}/>
                     </div>
                     <small className="text-black-60" style={{letterSpacing: `-.1pt`}} dangerouslySetInnerHTML={{__html: truncateText(this.state.ideaData.description, 85)}}/>
                     {this.renderAuthor()}

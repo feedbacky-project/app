@@ -64,7 +64,7 @@ class DiscussionBox extends Component {
             hasMore={this.state.comments.moreToLoad}
             loader={<Row className="justify-content-center my-5" key={this.state.comments.data.length}><LoadingSpinner/></Row>}>
             {this.state.comments.data.map(data =>
-                <CommentComponent data={data} moderators={this.props.moderators} onCommentDelete={this.onCommentDelete} onCommentLike={this.onCommentLike} onCommentUnlike={this.onCommentUnlike}/>
+                <CommentComponent key={data.id} data={data} onCommentDelete={this.onCommentDelete} onCommentLike={this.onCommentLike} onCommentUnlike={this.onCommentUnlike}/>
             )}
         </InfiniteScroll>
     }

@@ -4,9 +4,11 @@ import {formatUsername, getSizedAvatarByUrl, parseMarkdown} from "components/uti
 import TimeAgo from "timeago-react";
 import {FaEdit, FaHeart, FaLockOpen, FaLowVision, FaRegHeart, FaTags, FaTimesCircle, FaTrashAlt} from "react-icons/all";
 import AppContext from "context/app-context";
+import BoardContext from "context/board-context";
 
-const CommentComponent = ({data, moderators, onCommentDelete, onCommentUnlike, onCommentLike}) => {
+const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike}) => {
     const context = useContext(AppContext);
+    const {moderators} = useContext(BoardContext).data;
     const retrieveSpecialCommentTypeIcon = (type) => {
         switch (type) {
             case "IDEA_CLOSED":

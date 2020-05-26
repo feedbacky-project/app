@@ -11,13 +11,13 @@ import BoardBanner from "components/board/board-banner";
 import LoadingSpinner from "components/util/loading-spinner";
 import AppContext from "context/app-context";
 import {FaEyeSlash} from "react-icons/all";
+import BoardContext from "context/board-context";
 
 class BoardView extends Component {
 
     static contextType = AppContext;
 
     state = {
-        id: this.props.match.params.id,
         board: {data: [], loaded: false, error: false},
         loginModalOpened: false,
         privatePage: false
@@ -41,7 +41,7 @@ class BoardView extends Component {
         if (this.state.board.loaded) {
             return;
         }
-        axios.get("/boards/" + this.state.id).then(res => {
+        axios.get("/boards/" + this.props.match.params.id).then(res => {
             if (res.status !== 200) {
                 this.setState({
                     board: {...this.state.board, error: true}
@@ -89,20 +89,19 @@ class BoardView extends Component {
         if (this.state.privatePage) {
             return <ErrorView icon={<FaEyeSlash className="error-icon"/>} message="This Board Is Private"/>
         }
-        return <React.Fragment>
+        return <BoardContext.Provider value={{data: this.state.board.data, loaded: this.state.board.loaded, error: this.state.board.error}}>
             <LoginModal open={this.state.loginModalOpened} image={this.state.board.data.logo}
                         boardName={this.state.board.data.name} redirectUrl={"b/" + this.state.board.data.discriminator}
                         onLoginModalClose={this.onLoginModalClose}/>
-            <BoardNavbar name={this.state.board.data.name} logoUrl={this.state.board.data.logo} onNotLoggedClick={this.onNotLoggedClick}/>
+            <BoardNavbar onNotLoggedClick={this.onNotLoggedClick}/>
             <Container className="pb-5">
                 <Row className="pb-4">
-                    <BoardBanner name={this.state.board.data.name} description={this.state.board.data.shortDescription}
-                                 bannerUrl={this.state.board.data.banner} socialLinks={this.state.board.data.socialLinks}/>
-                    <BoardSearchBar history={this.props.history} discriminator={this.state.board.data.discriminator} boardData={this.state.board.data} moderators={this.state.board.data.moderators}/>
-                    <BoardContainer boardData={this.state.board.data} id={this.state.id} onNotLoggedClick={this.onNotLoggedClick} moderators={this.state.board.data.moderators}/>
+                    <BoardBanner/>
+                    <BoardSearchBar/>
+                    <BoardContainer id={this.props.match.params.id} onNotLoggedClick={this.onNotLoggedClick}/>
                 </Row>
             </Container>
-        </React.Fragment>
+        </BoardContext.Provider>
     }
 }
 

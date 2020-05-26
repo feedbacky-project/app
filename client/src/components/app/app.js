@@ -42,8 +42,6 @@ class App extends Component {
     };
 
     componentDidMount() {
-        const object = {};
-        console.log(object.error.data);
         if (this.state.darkMode) {
             document.body.classList.add("dark");
         } else if (localStorage.getItem("darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {

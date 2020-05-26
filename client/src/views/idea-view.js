@@ -11,6 +11,7 @@ import {Col, Container, Row} from "react-bootstrap";
 import AppContext from "context/app-context";
 import {FaEyeSlash} from "react-icons/all";
 import ComponentLoader from "components/app/component-loader";
+import BoardContext from "context/board-context";
 
 class IdeaView extends Component {
 
@@ -124,10 +125,10 @@ class IdeaView extends Component {
         if (this.state.privatePage) {
             return <ErrorView icon={<FaEyeSlash className="error-icon"/>} message="This Idea Is Private"/>
         }
-        return <React.Fragment>
+        return <BoardContext.Provider value={{data: this.state.board.data, loaded: this.state.board.loaded, error: this.state.board.error}}>
             <LoginModal open={this.state.loginModalOpened} onLoginModalClose={this.onLoginModalClose}
                         image={this.state.board.data.logo} boardName={this.state.board.data.name} redirectUrl={"i/" + this.state.idea.data.id}/>
-            <IdeaNavbar boardData={this.state.board.data} onNotLoggedClick={this.onNotLoggedClick}/>
+            <IdeaNavbar onNotLoggedClick={this.onNotLoggedClick}/>
             <Container className="pb-5">
                 <Row className="justify-content-center pb-4">
                     <ComponentLoader loaded={this.state.board.loaded} component={<IdeaDetailsBox updateState={this.updateState} moderators={this.state.board.data.moderators}
@@ -139,7 +140,7 @@ class IdeaView extends Component {
                                                                ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}/>}/>
                 </Row>
             </Container>
-        </React.Fragment>
+        </BoardContext.Provider>
     }
 }
 

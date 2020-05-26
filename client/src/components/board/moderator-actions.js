@@ -12,12 +12,14 @@ import {FaEllipsisH} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
+import BoardContext from "context/board-context";
 
-const ModeratorActions = (props) => {
+const ModeratorActions = ({ideaData, updateState, onIdeaDelete = {}}) => {
     const swalGenerator = swalReact(Swal);
     const context = useContext(AppContext);
+    const {moderators} = useContext(BoardContext).data;
     const history = useHistory();
-    const visible = props.moderators.find(mod => mod.userId === context.user.data.id);
+    const visible = moderators.find(mod => mod.userId === context.user.data.id);
     const onIdeaOpen = () => {
         swalGenerator.fire({
             title: "Please confirm",
@@ -33,12 +35,12 @@ const ModeratorActions = (props) => {
             if (!willClose.value) {
                 return;
             }
-            axios.patch("/ideas/" + props.ideaData.id, {"open": true}).then(res => {
+            axios.patch("/ideas/" + ideaData.id, {"open": true}).then(res => {
                 if (res.status !== 200 && res.status !== 204) {
                     toastError();
                     return;
                 }
-                props.updateState({...props.ideaData, open: true});
+                updateState({...ideaData, open: true});
                 toastSuccess("Idea opened.");
             }).catch(err => toastError(err.response.data.errors[0]))
         });
@@ -49,37 +51,38 @@ const ModeratorActions = (props) => {
                 if (!willClose.value) {
                     return;
                 }
-                axios.patch("/ideas/" + props.ideaData.id, {"open": false}).then(res => {
+                axios.patch("/ideas/" + ideaData.id, {"open": false}).then(res => {
                     if (res.status !== 200 && res.status !== 204) {
                         toastError();
                         return;
                     }
-                    props.updateState({...props.ideaData, open: false});
+                    updateState({...ideaData, open: false});
                     toastSuccess("Idea closed.");
                 }).catch(err => toastError(err.response.data.errors[0]))
             });
     };
-    const onIdeaDelete = () => {
+    const doIdeaDelete = () => {
         popupSwal("warning", "Dangerous action", "This action is <strong>irreversible</strong> and will delete the idea, please confirm your action.",
             "Delete Idea", "#d33", willClose => {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete("/ideas/" + props.ideaData.id).then(res => {
+                axios.delete("/ideas/" + ideaData.id).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;
                     }
                     toastSuccess("Idea permanently deleted.");
-                    history.push("/b/" + props.ideaData.boardDiscriminator);
+                    history.push("/b/" + ideaData.boardDiscriminator);
+                    onIdeaDelete();
                 }).catch(err => toastError(err.response.data.errors[0]))
             });
     };
     const onTagsManage = () => {
-        axios.get("/boards/" + props.ideaData.boardDiscriminator + "/tags").then(res => {
+        axios.get("/boards/" + ideaData.boardDiscriminator + "/tags").then(res => {
             let html = [];
             res.data.forEach((tag, i) => {
-                const applied = props.ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
+                const applied = ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
                 html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<PageBadge color={tinycolor(tag.color)} text={tag.name}/>}
                                       type="checkbox" defaultChecked={applied}/>)
             });
@@ -106,12 +109,12 @@ const ModeratorActions = (props) => {
                         let obj = document.getElementById("tagManage_" + tagName);
                         data.push({name: tagName, apply: obj.checked});
                     });
-                    axios.patch("/ideas/" + props.ideaData.id + "/tags", data).then(response => {
+                    axios.patch("/ideas/" + ideaData.id + "/tags", data).then(response => {
                         if (response.status !== 200 && response.status !== 204) {
                             toastError();
                             return;
                         }
-                        props.updateState({...props.ideaData, tags: response.data});
+                        updateState({...ideaData, tags: response.data});
                         toastSuccess("Tags updated!");
                     }).catch(err => toastError(err.response.data.errors[0]));
                 }
@@ -123,24 +126,24 @@ const ModeratorActions = (props) => {
         return <React.Fragment/>;
     }
     return <Dropdown alignRight className="cursor-click" onClick={e => e.preventDefault()} as={"span"}>
-        <Dropdown.Toggle as={"span"} id={props.ideaData.id + "_mod_tools"} variant="" className="text-black-60 ml-1">
+        <Dropdown.Toggle as={"span"} id={ideaData.id + "_mod_tools"} variant="" className="text-black-60 ml-1">
             <FaEllipsisH className="move-top-1px"/>
         </Dropdown.Toggle>
         <Dropdown.Menu className="mod-tools">
             <Dropdown.Item as={"span"} onClick={onTagsManage}><FaTags className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Change Tags</Dropdown.Item>
-            {props.ideaData.open ?
+            {ideaData.open ?
                 <Dropdown.Item as={"span"} onClick={onIdeaClose}><FaLock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Close Idea</Dropdown.Item> :
                 <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Open Idea</Dropdown.Item>
             }
-            <Dropdown.Item as={"span"} onClick={onIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Delete Idea</Dropdown.Item>
+            <Dropdown.Item as={"span"} onClick={doIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Delete Idea</Dropdown.Item>
         </Dropdown.Menu>
     </Dropdown>
 };
 
 ModeratorActions.propTypes = {
-    moderators: PropTypes.array,
-    ideaData: PropTypes.object,
-    onIdeaDelete: PropTypes.func,
+    ideaData: PropTypes.object.isRequired,
+    updateState: PropTypes.func.isRequired,
+    onIdeaDelete: PropTypes.func
 };
 
 export default ModeratorActions;

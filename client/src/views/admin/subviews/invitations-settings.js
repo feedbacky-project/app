@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
@@ -11,62 +11,38 @@ import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import ViewBox from "components/viewbox/view-box";
 import ComponentLoader from "components/app/component-loader";
+import BoardContext from "context/board-context";
 
-class InvitationsSettings extends Component {
+const InvitationsSettings = ({reRouteTo}) => {
+    const context = useContext(AppContext);
+    const boardData = useContext(BoardContext).data;
+    const [pendingInvitations, setPendingInvitations] = useState({data: [], loaded: false, error: false});
+    const [invited, setInvited] = useState({data: [], loaded: false, error: false});
+    const [modalOpen, setModalOpen] = useState(false);
 
-    static contextType = AppContext;
-
-    state = {
-        data: [],
-        loaded: false,
-        error: false,
-        modalOpened: false,
-        invitedData: [],
-        invitedLoaded: false,
-        invitedError: false,
-    };
-
-    onInvitationCreateModalClick = () => {
-        this.setState({modalOpened: true});
-    };
-
-    onInvitationCreateModalClose = () => {
-        this.setState({modalOpened: false});
-    };
-
-    componentDidMount() {
-        axios.get("/boards/" + this.props.data.discriminator + "/invitations").then(res => {
+    const onInvitationCreateModalClick = () => setModalOpen(true);
+    const onInvitationCreateModalClose = () => setModalOpen(false);
+    useEffect(() => {
+        axios.get("/boards/" + boardData.discriminator + "/invitations").then(res => {
             if (res.status !== 200) {
-                this.setState({error: true});
+                setPendingInvitations({...pendingInvitations, error: true});
                 return;
             }
             const data = res.data;
-            this.setState({data, loaded: true});
-        }).catch(() => this.setState({error: true}));
-        axios.get("/boards/" + this.props.data.discriminator + "/invitedUsers").then(res => {
+            setPendingInvitations({...pendingInvitations, data, loaded: true});
+        }).catch(() => setPendingInvitations({...pendingInvitations, error: true}));
+        axios.get("/boards/" + boardData.discriminator + "/invitedUsers").then(res => {
             if (res.status !== 200) {
-                this.setState({invitedError: true});
+                setInvited({...invited, error: true});
                 return;
             }
-            const invitedData = res.data;
-            this.setState({invitedData, invitedLoaded: true});
-        }).catch(() => this.setState({invitedError: true}));
-    }
-
-    render() {
-        return <React.Fragment>
-            <AdminSidebar currentNode="invitations" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
-            <Col>
-                <ViewBox theme={this.context.getTheme()} title="Invitations"
-                         description="Invite and manage users of your private board here.">
-                    {this.renderContent()}
-                </ViewBox>
-            </Col>
-        </React.Fragment>
-    }
-
-    renderContent() {
-        if (!this.props.data.privatePage) {
+            const data = res.data;
+            setInvited({...invited, data, loaded: true});
+        }).catch(() => setInvited({...invited, error: true}));
+        // eslint-disable-next-line
+    }, []);
+    const renderContent = () => {
+        if (!boardData.privatePage) {
             return <Col xs={12}>
                 <h2 className="text-danger">Feature Disabled</h2>
                 <span><kbd>Private Board</kbd> option is disabled so you can't manage board invitations.
@@ -74,37 +50,35 @@ class InvitationsSettings extends Component {
                 </span>
             </Col>
         }
-        if (this.state.error) {
+        if (pendingInvitations.error) {
             return <span className="text-danger">Failed to obtain invitations data</span>
         }
-        return <ComponentLoader loaded={this.state.loaded} component={
+        return <ComponentLoader loaded={pendingInvitations.loaded && invited.loaded} component={
             <React.Fragment>
-                <InvitationModal onInvitationSend={this.onInvitationSend}
-                                 onInvitationCreateModalClose={this.onInvitationCreateModalClose} data={this.props.data}
-                                 session={this.context.user.session} open={this.state.modalOpened}/>
+                <InvitationModal onInvitationSend={onInvitationSend} onInvitationCreateModalClose={onInvitationCreateModalClose} data={boardData}
+                                 session={context.user.session} open={modalOpen}/>
                 <Col sm={6}>
                     <span className="mr-1 text-black-60">Pending Invitations</span>
                     <ClickableTip id="invitePending" title="Pending Invitations"
                                   description="Users whose invitations were not yet accepted."/>
-                    {this.renderInvitations()}
+                    {renderInvitations()}
                 </Col>
                 <Col sm={6} className="px-1">
                     <span className="mr-1 text-black-60">Invited Members</span>
                     <ClickableTip id="invited" title="Invited Members"
                                   description="Users who accepted invitation and can see your board. Can be kicked any time."/>
-                    {this.renderInvited()}
+                    {renderInvited()}
                 </Col>
                 <Col xs={12}>
                     <Button className="m-0 mt-3 float-right" variant=""
-                            style={{backgroundColor: this.context.getTheme()}}
-                            onClick={this.onInvitationCreateModalClick}>Invite New</Button>
+                            style={{backgroundColor: context.getTheme()}}
+                            onClick={onInvitationCreateModalClick}>Invite New</Button>
                 </Col>
             </React.Fragment>
         }/>
-    }
-
-    renderInvitations() {
-        return this.state.data.map((invite, i) => {
+    };
+    const renderInvitations = () => {
+        return pendingInvitations.data.map((invite, i) => {
             return <div className="my-1" key={i}>
                 <img className="img-responsive rounded mr-1 m"
                      src={getSizedAvatarByUrl(invite.user.avatar, 32)}
@@ -118,14 +92,13 @@ class InvitationsSettings extends Component {
                     toastSuccess("Copied to clipboard.")
                 }}>Copy Invite</a>
                 <OverlayTrigger overlay={<Tooltip id={"deleteInvite" + i + "-tooltip"}>Invalidate</Tooltip>}>
-                    <FaTrashAlt className="fa-xs ml-1" onClick={() => this.onInvalidation(invite.id)}/>
+                    <FaTrashAlt className="fa-xs ml-1" onClick={() => onInvalidation(invite.id)}/>
                 </OverlayTrigger>
             </div>
         });
-    }
-
-    renderInvited() {
-        return this.state.invitedData.map((user, i) => {
+    };
+    const renderInvited = () => {
+        return invited.data.map((user, i) => {
             return <div className="my-1" key={i}>
                 <img className="img-responsive rounded mr-1"
                      src={getSizedAvatarByUrl(user.avatar, 32)}
@@ -134,38 +107,12 @@ class InvitationsSettings extends Component {
                      height="24px" width="24px"/>
                 {user.username}
                 <OverlayTrigger overlay={<Tooltip id={"deleteInvite" + i + "-tooltip"}>Kick Out from Board</Tooltip>}>
-                    <FaTrashAlt className="fa-xs ml-1" onClick={() => this.onKick(user.id)}/>
+                    <FaTrashAlt className="fa-xs ml-1" onClick={() => onKick(user.id)}/>
                 </OverlayTrigger>
             </div>
         });
-    }
-
-    onKick = (id) => {
-        popupSwal("warning", "Dangerous action", "User will no longer be able to see this board.",
-            "Delete Invite", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/boards/" + this.props.data.discriminator + "/invitedUsers/" + id).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    const invitedData = this.state.invitedData.filter(item => item.id !== id);
-                    this.setState({invitedData});
-                    toastSuccess("Invitation removed.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
-            });
     };
-
-    onInvitationSend = (inviteData) => {
-        const data = this.state.data.concat(inviteData);
-        this.setState({data});
-    };
-
-    onInvalidation = (id) => {
+    const onInvalidation = (id) => {
         popupSwal("warning", "Dangerous action", "User will no longer be able to join the board with this invitation.",
             "Delete Invite", "#d33", willClose => {
                 if (!willClose.value) {
@@ -176,15 +123,47 @@ class InvitationsSettings extends Component {
                         toastError();
                         return;
                     }
-                    const data = this.state.data.filter(item => item.id !== id);
-                    this.setState({data});
+                    const data = pendingInvitations.data.filter(item => item.id !== id);
+                    setPendingInvitations({...pendingInvitations, data});
                     toastSuccess("Invitation removed.");
                 }).catch(err => {
                     toastError(err.response.data.errors[0]);
                 })
             });
     };
+    const onKick = (id) => {
+        popupSwal("warning", "Dangerous action", "User will no longer be able to see this board.",
+            "Delete Invite", "#d33", willClose => {
+                if (!willClose.value) {
+                    return;
+                }
+                axios.delete("/boards/" + boardData.discriminator + "/invitedUsers/" + id).then(res => {
+                    if (res.status !== 204) {
+                        toastError();
+                        return;
+                    }
+                    const data = invited.data.filter(item => item.id !== id);
+                    setInvited({...invited, data});
+                    toastSuccess("Invitation removed.");
+                }).catch(err => {
+                    toastError(err.response.data.errors[0]);
+                })
+            });
+    };
+    const onInvitationSend = (inviteData) => {
+        const data = pendingInvitations.data.concat(inviteData);
+        setPendingInvitations({...pendingInvitations, data});
+    };
 
-}
+    return <React.Fragment>
+        <AdminSidebar currentNode="invitations" reRouteTo={reRouteTo} data={boardData}/>
+        <Col>
+            <ViewBox theme={context.getTheme()} title="Invitations"
+                     description="Invite and manage users of your private board here.">
+                {renderContent()}
+            </ViewBox>
+        </Col>
+    </React.Fragment>
+};
 
 export default InvitationsSettings;

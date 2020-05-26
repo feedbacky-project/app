@@ -66,7 +66,7 @@ class IdeaDetailsBox extends Component {
             <Col md={2} xs={12}>
                 <VotersComponent votersAmount={this.props.ideaData.votersAmount} data={this.state.voters}/>
                 <TagsComponent data={this.props.ideaData.tags}/>
-                <AttachmentsComponent ideaData={this.props.ideaData} moderators={this.props.moderators} updateState={this.props.updateState}/>
+                <AttachmentsComponent ideaData={this.props.ideaData} updateState={this.props.updateState}/>
                 <MailSubscriptionComponent ideaData={this.props.ideaData} updateState={this.props.updateState} onNotLoggedClick={this.props.onNotLoggedClick}/>
             </Col>
         </React.Fragment>

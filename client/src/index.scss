@@ -404,8 +404,11 @@ a {
   color: rgba(0, 0, 0, .5);
 }
 
-.btn-attachment *:hover {
-  cursor: pointer !important;
+.btn-attachment {
+  color: black;
+  *:hover {
+    cursor: pointer !important;
+  }
 }
 
 .box-overlay {

@@ -17,9 +17,11 @@ import TextareaAutosize from "react-autosize-textarea";
 import PageModal from "components/modal/page-modal";
 import ClickableTip from "components/util/clickable-tip";
 import DeleteButton from "components/util/delete-button";
+import BoardContext from "context/board-context";
 
-const IdeaCreateModal = (props) => {
-    const context = useContext(AppContext);
+const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
+    const {getTheme} = useContext(AppContext);
+    const {discriminator} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
     const [attachment, setAttachment] = useState(null);
     const [attachmentName, setAttachmentName] = useState("No Attachment");
@@ -28,10 +30,7 @@ const IdeaCreateModal = (props) => {
         const description = document.getElementById("descriptionTextarea").value;
         let toastId = toastAwait("Posting idea...");
         axios.post("/ideas/", {
-            discriminator: props.discriminator,
-            title,
-            description: description,
-            attachment: attachment,
+            discriminator, title, description, attachment
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
@@ -39,8 +38,8 @@ const IdeaCreateModal = (props) => {
             }
             toastSuccess("Successfully posted new idea!", toastId);
             setTitle("");
-            props.onCreateIdeaModalClose();
-            props.onIdeaCreation(res.data);
+            onCreateIdeaModalClose();
+            onIdeaCreation(res.data);
         }).catch(err => {
             if (err.response === undefined) {
                 return;
@@ -76,8 +75,8 @@ const IdeaCreateModal = (props) => {
         });
     };
 
-    return <PageModal id="ideaPost" isOpen={props.open} onHide={props.onCreateIdeaModalClose} title="Post Feedback"
-                      applyButton={<Button variant="" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit}
+    return <PageModal id="ideaPost" isOpen={open} onHide={onCreateIdeaModalClose} title="Post Feedback"
+                      applyButton={<Button variant="" style={{backgroundColor: getTheme()}} onClick={handleSubmit}
                                            className="mx-0">Post Idea</Button>}>
         <Form noValidate onSubmit={e => e.preventDefault()}>
             <Form.Group className="mt-2 mb-1">

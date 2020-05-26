@@ -15,6 +15,7 @@ import WebhooksSettings from "views/admin/subviews/webhooks/webhooks-settings";
 import SocialLinksSettings from "views/admin/subviews/social/social-links-settings";
 import CreateSocialLink from "views/admin/subviews/social/create-social-link";
 import CreateWebhook from "views/admin/subviews/webhooks/create-webhook";
+import BoardContext from "context/board-context";
 
 class AdminPanelView extends Component {
 
@@ -77,26 +78,24 @@ class AdminPanelView extends Component {
             this.props.history.push("/b/" + this.state.id);
             return <React.Fragment/>;
         }
-        return <React.Fragment>
-            <IdeaNavbar boardData={this.state.board.data}/>
+        return <BoardContext.Provider value={{data: this.state.board.data, loaded: this.state.board.loaded, error: this.state.board.error}}>
+            <IdeaNavbar/>
             <Container>
                 <Row className="justify-content-center pb-4">
                     <Switch>
-                        <Route path="/ba/:id/invitations" render={() => <InvitationsSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
-                        <Route path="/ba/:id/tags" render={() => <TagsSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
-                        <Route path="/ba/:id/moderators" render={() => <ModeratorsSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
+                        <Route path="/ba/:id/invitations" render={() => <InvitationsSettings reRouteTo={this.reRouteTo}/>}/>
+                        <Route path="/ba/:id/tags" render={() => <TagsSettings reRouteTo={this.reRouteTo}/>}/>
+                        <Route path="/ba/:id/moderators" render={() => <ModeratorsSettings reRouteTo={this.reRouteTo}/>}/>
                         <Route path="/ba/:id/webhooks/create" render={() => <CreateWebhook reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
-                        <Route path="/ba/:id/webhooks" render={() => <WebhooksSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
+                        <Route path="/ba/:id/webhooks" render={() => <WebhooksSettings reRouteTo={this.reRouteTo}/>}/>
                         <Route path="/ba/:id/social/create" render={() => <CreateSocialLink reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
-                        <Route path="/ba/:id/social" render={() => <SocialLinksSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
-                        <Route path="/ba/:id/general" render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState}
-                                                                                          data={this.state.board.data} {...props}/>}/>
-                        <Route render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState}
-                                                                   data={this.state.board.data} {...props}/>}/>
+                        <Route path="/ba/:id/social" render={() => <SocialLinksSettings reRouteTo={this.reRouteTo}/>}/>
+                        <Route path="/ba/:id/general" render={() => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState}/>}/>
+                        <Route render={() => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState}/>}/>
                     </Switch>
                 </Row>
             </Container>
-        </React.Fragment>
+        </BoardContext.Provider>
     }
 
     updateState = (boardData) => {

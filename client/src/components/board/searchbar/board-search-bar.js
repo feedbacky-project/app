@@ -4,9 +4,13 @@ import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import AppContext from "context/app-context";
 import {FaAngleDown} from "react-icons/all";
+import BoardContext from "context/board-context";
+import {useHistory} from "react-router-dom";
 
 const BoardSearchBar = (props) => {
     const context = useContext(AppContext);
+    const boardContext = useContext(BoardContext);
+    const history = useHistory();
     const filters = [
         {opened: "Opened"},
         {closed: "Closed"},
@@ -32,7 +36,7 @@ const BoardSearchBar = (props) => {
                 {filters.map(val => {
                     const key = Object.keys(val)[0];
                     const value = Object.values(val)[0];
-                    return <DropdownItem key={key} onClick={() => context.onFilteringUpdate(key, props.boardData, props.history)}>{value}</DropdownItem>
+                    return <DropdownItem key={key} onClick={() => context.onFilteringUpdate(key, boardContext.data, history)}>{value}</DropdownItem>
                 })}
             </DropdownMenu>
         </Dropdown>
@@ -48,7 +52,7 @@ const BoardSearchBar = (props) => {
                 {sorts.map(val => {
                     const key = Object.keys(val)[0];
                     const value = Object.values(val)[0];
-                    return <DropdownItem key={key} onClick={() => context.onSortingUpdate(key, props.boardData, props.history)}>{value}</DropdownItem>
+                    return <DropdownItem key={key} onClick={() => context.onSortingUpdate(key, boardContext.data, history)}>{value}</DropdownItem>
                 })}
             </DropdownMenu>
         </Dropdown>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {getSizedAvatarByUrl, prettifyEnum, toastError, toastSuccess} from "components/util/utils";
@@ -12,69 +12,26 @@ import ClickableTip from "components/util/clickable-tip";
 import DeleteButton from "components/util/delete-button";
 import ViewBox from "components/viewbox/view-box";
 import PageBadge from "components/app/page-badge";
+import BoardContext from "context/board-context";
 
-class ModeratorsSettings extends Component {
-
-    static contextType = AppContext;
-
-    state = {
-        moderators: this.props.data.moderators,
-        invited: {
-            data: [],
-            loaded: false,
-            error: false,
-        },
-        modalOpened: false,
-        quotaReached: this.quotaModeratorsLimitReached(this.props.data.moderators),
-    };
-
-    onModInvitationCreateModalClick = () => {
-        this.setState({modalOpened: true});
-    };
-
-    onModInvitationCreateModalClose = () => {
-        this.setState({modalOpened: false});
-    };
-
-    componentDidMount() {
-        axios.get("/boards/" + this.props.data.discriminator + "/invitedModerators").then(res => {
+const ModeratorsSettings = ({reRouteTo}) => {
+    const context = useContext(AppContext);
+    const boardData = useContext(BoardContext).data;
+    const [moderators, setModerators] = useState(boardData.moderators);
+    const [invited, setInvited] = useState({data: [], loaded: false, error: false});
+    const [modalOpen, setModalOpen] = useState(false);
+    const getQuota = () => 10 - (boardData.moderators.length + invited.data.length);
+    useEffect(() => {
+        axios.get("/boards/" + boardData.discriminator + "/invitedModerators").then(res => {
             if (res.status !== 200) {
-                this.setState({
-                    invited: {...this.state.invited, error: true}
-                });
+                setInvited({...invited, error: true});
                 return;
             }
-            const mods = res.data;
-            this.setState({
-                invited: {...this.state.invited, data: mods, loaded: true},
-                quotaReached: this.quotaModeratorsLimitReached(this.state.quotaReached.concat(mods))
-            });
-        }).catch(() => this.setState({
-            invited: {...this.state.invited, error: true}
-        }));
-    }
-
-    quotaModeratorsLimitReached(mods) {
-        return 10 - mods.length <= 0;
-    }
-
-    render() {
-        return <React.Fragment>
-            <AdminSidebar currentNode="moderators" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
-            <Col xs={12} md={9}>
-                <ModeratorInvitationModal onModInvitationSend={this.onModInvitationSend}
-                                          onModInvitationCreateModalClose={this.onModInvitationCreateModalClose}
-                                          data={this.props.data} session={this.context.user.session}
-                                          open={this.state.modalOpened}/>
-                <ViewBox theme={this.context.getTheme()} title="Moderators Management" description="Manage your board moderators here.">
-                    {this.renderOverview()}
-                    {this.renderModerators()}
-                </ViewBox>
-            </Col>
-        </React.Fragment>
-    }
-
-    renderOverview() {
+            setInvited({...invited, data: res.data, loaded: true});
+        }).catch(() => setInvited({...invited, error: true}));
+        // eslint-disable-next-line
+    }, []);
+    const renderOverview = () => {
         return <React.Fragment>
             <span className="col-12 text-black-60">Permissions Overview</span>
             <Col xs={12} sm={6} className="mb-sm-2 mb-3">
@@ -94,25 +51,22 @@ class ModeratorsSettings extends Component {
                 </ul>
             </Col>
         </React.Fragment>
-    }
-
-    renderModerators() {
+    };
+    const renderModerators = () => {
         return <React.Fragment>
             <Col xs={12} sm={6} className="mb-sm-0 mb-3">
                 <div className="text-black-60 mb-1">
-                    <span className="mr-1">Moderators Quota ({10 - this.state.moderators.length} left)</span>
-                    <ClickableTip id="quota" title="Moderators Quota"
-                                  description="Amount of moderators your board can have."/>
+                    <span className="mr-1">Moderators Quota ({10 - moderators.length} left)</span>
+                    <ClickableTip id="quota" title="Moderators Quota" description="Amount of moderators your board can have."/>
                 </div>
-                {this.state.moderators.map((mod, i) => {
+                {moderators.map((mod, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                         <div className="text-center">
-                            <img alt="Moderator" className="rounded-circle" src={mod.user.avatar} height={35}
-                                 width={35}/>
-                            {this.renderModerationKick(mod, i)}
+                            <img alt="Moderator" className="rounded-circle" src={mod.user.avatar} height={35} width={35}/>
+                            {renderModerationKick(mod, i)}
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{mod.user.username}</small>
-                            <PageBadge color={this.context.getTheme()} text={prettifyEnum(mod.role)} className="move-top-3px"/>
+                            <PageBadge color={context.getTheme()} text={prettifyEnum(mod.role)} className="move-top-3px"/>
                         </div>
                     </div>
                 })}
@@ -120,10 +74,9 @@ class ModeratorsSettings extends Component {
             <Col xs={12} sm={6}>
                 <div className="text-black-60 mb-1">
                     <span className="mr-1">Invited Moderators</span>
-                    <ClickableTip id="invited" title="Invited Moderators"
-                                  description="Moderators that were invited and received invitation email."/>
+                    <ClickableTip id="invited" title="Invited Moderators" description="Moderators that were invited and received invitation email."/>
                 </div>
-                {this.state.invited.data.map((invited, i) => {
+                {invited.data.map((invited, i) => {
                     return <div className="my-1" key={i}>
                         <img className="img-responsive rounded mr-1 m"
                              src={getSizedAvatarByUrl(invited.user.avatar, 32)}
@@ -137,51 +90,43 @@ class ModeratorsSettings extends Component {
                             toastSuccess("Copied to clipboard.");
                         }}>Copy Invite</a>
                         <OverlayTrigger overlay={<Tooltip id={"deleteModInvite" + i + "-tooltip"}>Invalidate</Tooltip>}>
-                            <FaTrashAlt className="fa-xs ml-1" onClick={() => this.onInvalidation(invited.id)}/>
+                            <FaTrashAlt className="fa-xs ml-1" onClick={() => onInvalidation(invited.id)}/>
                         </OverlayTrigger>
                     </div>
                 })}
             </Col>
             <Col xs={12}>
-                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
-                        onClick={this.onModInvitationCreateModalClick}>Invite New</Button>
+                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}
+                        onClick={() => setModalOpen(true)}>Invite New</Button>
             </Col>
         </React.Fragment>
-    }
-
-    renderModerationKick = (mod, i) => {
+    };
+    const renderModerationKick = (mod, i) => {
         if (mod.role.toLowerCase() === "owner") {
             return;
         }
-        return <DeleteButton id={"mod_del_" + i} onClick={() => this.onPermissionsRevoke(mod)}
+        return <DeleteButton id={"mod_del_" + i} onClick={() => onPermissionsRevoke(mod)}
                              tooltipName="Revoke Permissions"/>;
     };
-
-    onPermissionsRevoke = (mod) => {
+    const onPermissionsRevoke = (mod) => {
         popupSwal("warning", "Dangerous action", "User will no longer have permissions to moderate this board.",
             "Revoke Permissions", "#d33", willClose => {
                 if (!willClose.value) {
                     return;
                 }
-                axios.delete("/boards/" + this.props.data.discriminator + "/moderators/" + mod.userId).then(res => {
+                axios.delete("/boards/" + boardData.discriminator + "/moderators/" + mod.userId).then(res => {
                     if (res.status !== 204) {
                         toastError();
                         return;
                     }
-                    const moderators = this.state.moderators.filter(item => item.userId !== mod.userId);
-                    this.setState({moderators});
+                    const data = moderators.filter(item => item.userId !== mod.userId);
+                    setModerators(data);
                     toastSuccess("Permissions revoked.");
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
-
-    onModInvitationSend = (inviteData) => {
-        this.setState({
-            invited: {...this.state.invited, data: this.state.invited.data.concat(inviteData)}
-        });
-    };
-
-    onInvalidation = (id) => {
+    const onModInvitationSend = (inviteData) => setInvited({...invited, data: invited.data.concat(inviteData)});
+    const onInvalidation = (id) => {
         popupSwal("warning", "Dangerous action", "User will no longer be able to join the board with this invitation.",
             "Delete Invite", "#d33", willClose => {
                 if (!willClose.value) {
@@ -192,14 +137,23 @@ class ModeratorsSettings extends Component {
                         toastError();
                         return;
                     }
-                    this.setState({
-                        invited: {...this.state.invited, data: this.state.invited.data.filter(item => item.id !== id)}
-                    });
+                    setInvited({...invited, data: invited.data.filter(item => item.id !== id)});
                     toastSuccess("Invitation removed.");
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
-
-}
+    return <React.Fragment>
+        <AdminSidebar currentNode="moderators" reRouteTo={reRouteTo} data={boardData}/>
+        <Col xs={12} md={9}>
+            <ModeratorInvitationModal onModInvitationSend={onModInvitationSend}
+                                      onModInvitationCreateModalClose={() => setModalOpen(false)}
+                                      data={boardData} session={context.user.session} open={modalOpen}/>
+            <ViewBox theme={context.getTheme()} title="Moderators Management" description="Manage your board moderators here.">
+                {renderOverview()}
+                {renderModerators()}
+            </ViewBox>
+        </Col>
+    </React.Fragment>
+};
 
 export default ModeratorsSettings;

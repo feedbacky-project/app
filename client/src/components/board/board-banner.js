@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Col, Jumbotron} from "react-bootstrap";
 import SafeAnchor from "components/app/safe-anchor";
+import BoardContext from "context/board-context";
 
-const BoardBanner = ({socialLinks, bannerUrl, name, description}) => {
+const BoardBanner = () => {
+    const {socialLinks, name, shortDescription, banner} = useContext(BoardContext).data;
     const renderSocialLinks = () => {
         if (socialLinks.length === 0) {
             return <React.Fragment/>
@@ -33,9 +35,9 @@ const BoardBanner = ({socialLinks, bannerUrl, name, description}) => {
 
     return <Col sm={12} className="mt-3">
         <Jumbotron className="mb-2 small-text-shadow dark-mask"
-                   style={{backgroundImage: `url("` + bannerUrl + `")`}}>
+                   style={{backgroundImage: `url("` + banner + `")`}}>
             <h3 style={{fontWeight: 500}}>{name}</h3>
-            <h5 style={{fontWeight: 300}} dangerouslySetInnerHTML={{__html: description}}/>
+            <h5 style={{fontWeight: 300}} dangerouslySetInnerHTML={{__html: shortDescription}}/>
             {renderSocialLinks()}
             {renderSocialLinksMobile()}
         </Jumbotron>
