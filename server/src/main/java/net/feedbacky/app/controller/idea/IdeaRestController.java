@@ -26,8 +26,6 @@ import javax.validation.Valid;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -38,7 +36,12 @@ import java.util.logging.Logger;
 @RestController
 public class IdeaRestController {
 
-  @Autowired private IdeaService ideaService;
+  private IdeaService ideaService;
+
+  @Autowired
+  public IdeaRestController(IdeaService ideaService) {
+    this.ideaService = ideaService;
+  }
 
   @GetMapping("v1/boards/{discriminator}/ideas")
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
