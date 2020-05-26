@@ -5,11 +5,12 @@ import {FaExclamationCircle, FaSadTear} from "react-icons/fa";
 import IdeaNavbar from "components/navbars/idea-navbar";
 import LoginModal from "components/modal/login-modal";
 import LoadingSpinner from "components/util/loading-spinner";
-import IdeaDetailsBox from "components/idea/idea-details-box";
-import DiscussionBox from "components/idea/discussion-box";
+import IdeaDetailsBox from "components/idea/details/idea-details-box";
+import DiscussionBox from "components/idea/discussion/discussion-box";
 import {Col, Container, Row} from "react-bootstrap";
 import AppContext from "context/app-context";
 import {FaEyeSlash} from "react-icons/all";
+import ComponentLoader from "components/app/component-loader";
 
 class IdeaView extends Component {
 
@@ -129,29 +130,16 @@ class IdeaView extends Component {
             <IdeaNavbar boardData={this.state.board.data} onNotLoggedClick={this.onNotLoggedClick}/>
             <Container className="pb-5">
                 <Row className="justify-content-center pb-4">
-                    {this.renderDetails()}
-                    <Col xs="12">
+                    <ComponentLoader loaded={this.state.board.loaded} component={<IdeaDetailsBox updateState={this.updateState} moderators={this.state.board.data.moderators}
+                                                                ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick} {...this.props}/>}/>
+                    <Col xs={12}>
                         <hr/>
                     </Col>
-                    {this.renderDiscussion()}
+                    <ComponentLoader loaded={this.state.idea.loaded} component={<DiscussionBox updateState={this.updateState} moderators={this.state.board.data.moderators}
+                                                               ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}/>}/>
                 </Row>
             </Container>
         </React.Fragment>
-    }
-
-    renderDetails() {
-        if (!this.state.idea.loaded) {
-            return <div className="my-5"><LoadingSpinner/></div>
-        }
-        return <IdeaDetailsBox updateState={this.updateState} moderators={this.state.board.data.moderators} ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}
-                               {...this.props}/>
-    }
-
-    renderDiscussion() {
-        if (!this.state.idea.loaded) {
-            return <div className="mt-4"><LoadingSpinner/></div>
-        }
-        return <DiscussionBox updateState={this.updateState} moderators={this.state.board.data.moderators} ideaData={this.state.idea.data} onNotLoggedClick={this.onNotLoggedClick}/>
     }
 }
 

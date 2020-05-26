@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Badge, Dropdown, Form} from "react-bootstrap";
+import {Dropdown, Form} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import axios from "axios";
@@ -10,6 +10,8 @@ import AppContext from "context/app-context";
 import {popupSwal} from "components/util/sweetalert-utils";
 import {FaEllipsisH} from "react-icons/all";
 import {useHistory} from "react-router-dom";
+import PageBadge from "components/app/page-badge";
+import tinycolor from "tinycolor2";
 
 const ModeratorActions = (props) => {
     const swalGenerator = swalReact(Swal);
@@ -78,9 +80,8 @@ const ModeratorActions = (props) => {
             let html = [];
             res.data.forEach((tag, i) => {
                 const applied = props.ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
-                html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<Badge key={i} color="" style={{
-                    backgroundColor: tag.color
-                }}>{tag.name}</Badge>} type="checkbox" defaultChecked={applied}/>)
+                html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<PageBadge color={tinycolor(tag.color)} text={tag.name}/>}
+                                      type="checkbox" defaultChecked={applied}/>)
             });
             swalGenerator.fire({
                 html: <React.Fragment>

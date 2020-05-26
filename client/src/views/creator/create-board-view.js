@@ -136,7 +136,7 @@ class CreateBoardView extends Component {
 
     renderNextButton() {
         if (this.state.step === 3) {
-            return <Button variant="success" className="text-white ml-2" onClick={this.nextStep}>Create Board</Button>
+            return <Button variant="success" className="ml-2" onClick={this.nextStep}>Create Board</Button>
         }
         return <NextStepButton nextStep={this.nextStep}/>
     }

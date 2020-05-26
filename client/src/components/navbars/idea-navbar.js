@@ -18,7 +18,7 @@ const IdeaNavbar = (props) => {
             <FaChevronLeft className="ml-2"/>
         </Link>
         <Container className="d-flex">
-            <NavbarBrand className="mr-0 text-truncate text-left flex-on" as={Link} to={{
+            <NavbarBrand as={Link} to={{
                 pathname: "/b/" + props.boardData.discriminator,
                 state: {_boardData: props.boardData}
             }}>

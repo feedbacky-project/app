@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import AppContext from "context/app-context";
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
-import LoadingSpinner from "components/util/loading-spinner";
 import {FaTrashAlt} from "react-icons/fa";
 import {getSizedAvatarByUrl, toastError, toastSuccess} from "components/util/utils";
 import InvitationModal from "components/modal/invitation-modal";
@@ -11,6 +10,7 @@ import AdminSidebar from "components/sidebar/admin-sidebar";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import ViewBox from "components/viewbox/view-box";
+import ComponentLoader from "components/app/component-loader";
 
 class InvitationsSettings extends Component {
 
@@ -68,7 +68,7 @@ class InvitationsSettings extends Component {
     renderContent() {
         if (!this.props.data.privatePage) {
             return <Col xs={12}>
-                <h2 className="h2-responsive text-danger">Feature Disabled</h2>
+                <h2 className="text-danger">Feature Disabled</h2>
                 <span><kbd>Private Board</kbd> option is disabled so you can't manage board invitations.
                     <br/>Enable it in <kbd>General</kbd> section to manage pending invitations and invited users.
                 </span>
@@ -77,31 +77,30 @@ class InvitationsSettings extends Component {
         if (this.state.error) {
             return <span className="text-danger">Failed to obtain invitations data</span>
         }
-        if (!this.state.loaded) {
-            return <LoadingSpinner/>
-        }
-        return <React.Fragment>
-            <InvitationModal onInvitationSend={this.onInvitationSend}
-                             onInvitationCreateModalClose={this.onInvitationCreateModalClose} data={this.props.data}
-                             session={this.context.user.session} open={this.state.modalOpened}/>
-            <Col sm={6}>
-                <span className="mr-1 text-black-60">Pending Invitations</span>
-                <ClickableTip id="invitePending" title="Pending Invitations"
-                              description="Users whose invitations were not yet accepted."/>
-                {this.renderInvitations()}
-            </Col>
-            <Col sm={6} className="px-1">
-                <span className="mr-1 text-black-60">Invited Members</span>
-                <ClickableTip id="invited" title="Invited Members"
-                              description="Users who accepted invitation and can see your board. Can be kicked any time."/>
-                {this.renderInvited()}
-            </Col>
-            <Col xs={12}>
-                <Button className="text-white m-0 mt-3 float-right" variant=""
-                        style={{backgroundColor: this.context.getTheme()}}
-                        onClick={this.onInvitationCreateModalClick}>Invite New</Button>
-            </Col>
-        </React.Fragment>
+        return <ComponentLoader loaded={this.state.loaded} component={
+            <React.Fragment>
+                <InvitationModal onInvitationSend={this.onInvitationSend}
+                                 onInvitationCreateModalClose={this.onInvitationCreateModalClose} data={this.props.data}
+                                 session={this.context.user.session} open={this.state.modalOpened}/>
+                <Col sm={6}>
+                    <span className="mr-1 text-black-60">Pending Invitations</span>
+                    <ClickableTip id="invitePending" title="Pending Invitations"
+                                  description="Users whose invitations were not yet accepted."/>
+                    {this.renderInvitations()}
+                </Col>
+                <Col sm={6} className="px-1">
+                    <span className="mr-1 text-black-60">Invited Members</span>
+                    <ClickableTip id="invited" title="Invited Members"
+                                  description="Users who accepted invitation and can see your board. Can be kicked any time."/>
+                    {this.renderInvited()}
+                </Col>
+                <Col xs={12}>
+                    <Button className="m-0 mt-3 float-right" variant=""
+                            style={{backgroundColor: this.context.getTheme()}}
+                            onClick={this.onInvitationCreateModalClick}>Invite New</Button>
+                </Col>
+            </React.Fragment>
+        }/>
     }
 
     renderInvitations() {

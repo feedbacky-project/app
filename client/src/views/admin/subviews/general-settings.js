@@ -14,6 +14,7 @@ import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import ViewBox from "components/viewbox/view-box";
 import {FaUpload} from "react-icons/all";
+import ActionButton from "components/app/action-button";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
@@ -31,8 +32,7 @@ class GeneralSettings extends Component {
         return <React.Fragment>
             <AdminSidebar currentNode="general" reRouteTo={this.props.reRouteTo} data={this.props.data}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={this.context.getTheme()} title="General Settings"
-                         description="Configure your board base settings here.">
+                <ViewBox theme={this.context.getTheme()} title="General Settings" description="Configure your board base settings here.">
                     {this.renderContent()}
                 </ViewBox>
                 {this.renderDangerContent()}
@@ -117,9 +117,8 @@ class GeneralSettings extends Component {
                     </div>
                     <div id="boardBannerPreview" className="jumbotron mb-2"
                          style={{backgroundImage: `url("` + this.props.data.banner + `")`, minHeight: 200}}>
-                        <h3 className="h3-responsive" style={{color: "transparent"}}>{this.props.data.name}</h3>
-                        <h5 className="h5-responsive"
-                            style={{color: "transparent"}}>{this.props.data.shortDescription}</h5>
+                        <h3 style={{color: "transparent"}}>{this.props.data.name}</h3>
+                        <h5 style={{color: "transparent"}}>{this.props.data.shortDescription}</h5>
                     </div>
                 </div>
                 <input className="small text-black-75" hidden accept="image/jpeg, image/png" id="bannerInput"
@@ -129,16 +128,12 @@ class GeneralSettings extends Component {
                 <Form.Label className="mr-1 text-black-60 mt-2">Board Logo</Form.Label>
                 <ClickableTip id="logo" title="Set Board Logo"
                               description="Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."/>
-                <br/>
-                <img alt="logo" src={this.props.data.logo} id="boardLogo" className="img-fluid mb-2"
-                     width="50px"/>
-                <br/>
+                <div><img alt="logo" src={this.props.data.logo} id="boardLogo" className="img-fluid mb-2" width={50}/></div>
                 <input className="small text-black-75" accept="image/jpeg, image/png" id="logoInput" type="file"
                        name="logo" onChange={this.onLogoChange}/>
             </Col>
             <Col xs={12}>
-                <Button className="m-0 mt-3 text-white float-right" variant=""
-                        style={{backgroundColor: this.context.theme}} onClick={this.onChangesSave}>
+                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}} onClick={this.onChangesSave}>
                     Save Settings
                 </Button>
             </Col>
@@ -146,39 +141,37 @@ class GeneralSettings extends Component {
     }
 
     renderDangerContent() {
-        return <Col className="mb-3 view-box-bg px-1 py-3 rounded mt-2 danger-shadow rounded-bottom">
-            <Row className="m-0 p-0 px-4 mb-3 mt-2">
-                <Col xs={12} sm={9} className="p-0">
-                    <h4 className="mb-1 h4-responsive">Private Board</h4>
+        return <div className="mb-3 view-box-bg px-1 py-3 rounded mt-2 danger-shadow rounded-bottom">
+            <Row noGutters className="m-0 p-0 px-4 mb-3 mt-2">
+                <Col xs={12} sm={9}>
+                    <h4 className="mb-1">Private Board</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
-                            Private board can be seen only by invited users from <kbd>Invitations</kbd> section, service staff and moderators.
+                        Private board can be seen only by invited users from <kbd>Invitations</kbd> section, service staff and moderators.
                     </span>
                 </Col>
-                <Col xs={6} sm={3} className="p-0 text-sm-right text-left my-auto">
+                <Col xs={6} sm={3} className="text-sm-right text-left my-auto">
                     {this.renderPrivateBoardButton()}
                 </Col>
             </Row>
-            <Row className="m-0 p-0 px-4 mb-2">
-                <div className="col-sm-9 col-12 p-0">
-                    <h4 className="mb-1 h4-responsive text-danger">Delete Board</h4>
+            <Row noGutters className="m-0 p-0 px-4 mb-2">
+                <Col sm={9} xs={12}>
+                    <h4 className="mb-1 text-danger">Delete Board</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
-                                Permanently delete your board and all ideas in it. <strong>Irreversible action.</strong>
-                           </span>
-                </div>
-                <div className="col-sm-3 col-6 p-0 text-sm-right text-left my-auto">
-                    <Button variant="danger" className="m-0 mt-sm-0 mt-2" onClick={() => this.onBoardDelete()}>Delete</Button>
-                </div>
+                        Permanently delete your board and all ideas in it. <strong>Irreversible action.</strong>
+                    </span>
+                </Col>
+                <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
+                    <ActionButton onClick={() => this.onBoardDelete()} variant="danger" text="Delete"/>
+                </Col>
             </Row>
-        </Col>
+        </div>
     }
 
     renderPrivateBoardButton() {
         if (this.props.data.privatePage) {
-            return <Button variant="danger" className="m-0 mt-sm-0 mt-2"
-                           onClick={() => this.onBoardPrivacyChange(false)}>Disable</Button>
+            return <ActionButton onClick={() => this.onBoardPrivacyChange(false)} variant="danger" text="Disable"/>
         }
-        return <Button variant="success" className="m-0 mt-sm-0 mt-2"
-                       onClick={() => this.onBoardPrivacyChange(true)}>Enable</Button>
+        return <ActionButton onClick={() => this.onBoardPrivacyChange(true)} variant="success" text="Enable"/>
     }
 
     onBoardDelete = () => {
@@ -221,7 +214,7 @@ class GeneralSettings extends Component {
     onBoardPrivacyChange = (state) => {
         let html;
         if (state) {
-            html = "Users will no longer be able to see this board unless you invite them.<br/>Board moderators and Feedbacky staff will still have access to this board.";
+            html = "Users will no longer be able to see this board unless you invite them.<br/>Board moderators and service staff will still have access to this board.";
         } else {
             html = "Every user will now be able to see this board and all it's ideas.";
         }
@@ -269,17 +262,7 @@ class GeneralSettings extends Component {
                 return;
             }
             err.response.data.errors.forEach(data => {
-                if (data.includes("Field 'name' must be")) {
-                    toastWarning("Board name must be longer than 4 characters.");
-                } else if (data.includes("Field 'shortDescription' must be")) {
-                    toastWarning("Short description must be longer than 10 characters.");
-                } else if (data.includes("Field 'fullDescription' must be")) {
-                    toastWarning("Full description must be longer than 10 characters.");
-                } else if (data.includes("Field 'themeColor' must")) {
-                    toastWarning("Theme color must be a valid Hex value.");
-                } else {
-                    toastWarning(data);
-                }
+                toastWarning(data);
             });
         })
     };

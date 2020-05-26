@@ -46,13 +46,7 @@ const IdeaCreateModal = (props) => {
                 return;
             }
             err.response.data.errors.forEach(data => {
-                if (data.includes("Field 'title' cannot be shorter")) {
-                    toastWarning("Title must be longer than 10 characters.", toastId);
-                } else if (data.includes("Field 'description' cannot be shorter")) {
-                    toastWarning("Description must be longer than 20 characters.", toastId);
-                } else {
-                    toastWarning(data, toastId);
-                }
+                toastWarning(data, toastId);
             });
         });
     };
@@ -84,7 +78,7 @@ const IdeaCreateModal = (props) => {
 
     return <PageModal id="ideaPost" isOpen={props.open} onHide={props.onCreateIdeaModalClose} title="Post Feedback"
                       applyButton={<Button variant="" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit}
-                                           className="text-white mx-0">Post Idea</Button>}>
+                                           className="mx-0">Post Idea</Button>}>
         <Form noValidate onSubmit={e => e.preventDefault()}>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1">Title</Form.Label>

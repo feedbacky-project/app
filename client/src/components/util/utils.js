@@ -135,42 +135,6 @@ export const prepareFilterAndSortRequests = (searchPreferences) => {
     return search;
 };
 
-export const isHexDark = (color) => {
-    color = +("0x" + color.slice(1).replace(
-        color.length < 5 && /./g, '$&$&'));
-    let r = color >> 16;
-    //eslint-disable-next-line no-mixed-operators
-    let g = color >> 8 & 255;
-    let b = color & 255;
-
-    // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
-    let hsp = Math.sqrt(
-        0.299 * (r * r) +
-        0.587 * (g * g) +
-        0.114 * (b * b)
-    );
-    return hsp <= 127.5;
-};
-
-export const increaseBrightness = (hex, percent) => {
-    // strip the leading # if it's there
-    hex = hex.replace(/^\s*#|\s*$/g, '');
-
-    // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
-    if (hex.length === 3) {
-        hex = hex.replace(/(.)/g, '$1$1');
-    }
-
-    var r = parseInt(hex.substr(0, 2), 16),
-        g = parseInt(hex.substr(2, 2), 16),
-        b = parseInt(hex.substr(4, 2), 16);
-
-    return '#' +
-        ((0 | (1 << 8) + r + (256 - r) * percent / 100).toString(16)).substr(1) +
-        ((0 | (1 << 8) + g + (256 - g) * percent / 100).toString(16)).substr(1) +
-        ((0 | (1 << 8) + b + (256 - b) * percent / 100).toString(16)).substr(1);
-};
-
 export const getBase64FromFile = (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();

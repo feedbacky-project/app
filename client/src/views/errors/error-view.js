@@ -15,7 +15,7 @@ const ErrorView = (props) => {
                         <h1 className="display-4">Oh Noes!</h1>
                         <h3>{props.message}</h3>
                         <Link to="/">
-                            <Button variant="danger" className="text-white mx-0 py-3 px-4">
+                            <Button variant="danger" className="mx-0 py-3 px-4">
                                 Back to the Main Page
                             </Button>
                         </Link>

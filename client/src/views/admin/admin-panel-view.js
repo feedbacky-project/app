@@ -89,9 +89,9 @@ class AdminPanelView extends Component {
                         <Route path="/ba/:id/webhooks" render={() => <WebhooksSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
                         <Route path="/ba/:id/social/create" render={() => <CreateSocialLink reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
                         <Route path="/ba/:id/social" render={() => <SocialLinksSettings reRouteTo={this.reRouteTo} data={this.state.board.data}/>}/>
-                        <Route path="/ba/:id/general" render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState} onThemeChange={this.onThemeChange}
+                        <Route path="/ba/:id/general" render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState}
                                                                                           data={this.state.board.data} {...props}/>}/>
-                        <Route render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState} onThemeChange={this.onThemeChange}
+                        <Route render={(props) => <GeneralSettings reRouteTo={this.reRouteTo} updateState={this.updateState}
                                                                    data={this.state.board.data} {...props}/>}/>
                     </Switch>
                 </Row>

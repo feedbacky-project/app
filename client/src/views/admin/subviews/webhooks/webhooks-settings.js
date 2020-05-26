@@ -3,13 +3,14 @@ import AppContext from "context/app-context";
 import axios from "axios";
 import {prettifyEnum, toastError, toastSuccess} from "components/util/utils";
 import AdminSidebar from "components/sidebar/admin-sidebar";
-import {Badge, Button, Col} from "react-bootstrap";
-import LoadingSpinner from "components/util/loading-spinner";
+import {Button, Col} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import DeleteButton from "components/util/delete-button";
 import ViewBox from "components/viewbox/view-box";
+import PageBadge from "components/app/page-badge";
+import ComponentLoader from "components/app/component-loader";
 
 class WebhooksSettings extends Component {
 
@@ -52,40 +53,35 @@ class WebhooksSettings extends Component {
         if (this.state.error) {
             return <span className="text-danger">Failed to obtain webhooks data</span>
         }
-        if (!this.state.loaded) {
-            return <LoadingSpinner/>
-        }
-        return this.renderWebhooks();
-    }
-
-    renderWebhooks() {
-        return <React.Fragment>
-            <Col xs={12} className="mb-sm-0 mb-3">
-                <div className="text-black-60 mb-1">
-                    <span className="mr-1">Webhooks Quota ({this.calculateLeft()} left)</span>
-                    <ClickableTip id="moderatorsQuota" title="Webhooks Quota"
-                                  description="Amount of webhooks your board can have."/>
-                </div>
-                {this.state.data.map((hook, i) => {
-                    return <div className="d-inline-flex justify-content-center mr-2" key={hook.id}>
-                        <div className="text-center">
-                            <img alt="Webhook" className="rounded bg-dark p-2" src={this.getTypeIcon(hook)} height={40}
-                                 width={40}/>
-                            <DeleteButton id={"webhook_del_" + i} onClick={() => this.onWebhookDelete(hook)}
-                                          tooltipName="Delete"/>
-                            <br/>
-                            <small className="text-truncate text-center d-block"
-                                   style={{maxWidth: 100}}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
-                            {this.renderEvents(hook)}
-                        </div>
+        return <ComponentLoader loaded={this.state.loaded} component={
+            <React.Fragment>
+                <Col xs={12} className="mb-sm-0 mb-3">
+                    <div className="text-black-60 mb-1">
+                        <span className="mr-1">Webhooks Quota ({this.calculateLeft()} left)</span>
+                        <ClickableTip id="moderatorsQuota" title="Webhooks Quota"
+                                      description="Amount of webhooks your board can have."/>
                     </div>
-                })}
-                <div>
-                    <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
-                            as={Link} to={"/ba/" + this.props.data.discriminator + "/webhooks/create"}>Add New</Button>
-                </div>
-            </Col>
-        </React.Fragment>
+                    {this.state.data.map((hook, i) => {
+                        return <div className="d-inline-flex justify-content-center mr-2" key={hook.id}>
+                            <div className="text-center">
+                                <img alt="Webhook" className="rounded bg-dark p-2" src={this.getTypeIcon(hook)} height={40}
+                                     width={40}/>
+                                <DeleteButton id={"webhook_del_" + i} onClick={() => this.onWebhookDelete(hook)}
+                                              tooltipName="Delete"/>
+                                <br/>
+                                <small className="text-truncate text-center d-block"
+                                       style={{maxWidth: 100}}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
+                                {this.renderEvents(hook)}
+                            </div>
+                        </div>
+                    })}
+                    <div>
+                        <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
+                                as={Link} to={"/ba/" + this.props.data.discriminator + "/webhooks/create"}>Add New</Button>
+                    </div>
+                </Col>
+            </React.Fragment>
+        }/>
     }
 
     getTypeIcon = (hook) => {
@@ -100,12 +96,7 @@ class WebhooksSettings extends Component {
     };
 
     renderEvents = (hook) => {
-        return hook.events.map((event, i) => {
-            return <React.Fragment key={hook.id}>
-                <Badge variant="" style={{backgroundColor: this.context.getTheme()}}>{prettifyEnum(event)}</Badge>
-                <br/>
-            </React.Fragment>
-        });
+        return hook.events.map((event, i) => <div key={hook.id}><PageBadge text={prettifyEnum(event)} color={this.context.getTheme()}/></div>);
     };
 
     onWebhookDelete = (hook) => {

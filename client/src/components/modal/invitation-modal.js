@@ -24,7 +24,7 @@ const InvitationModal = (props) => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <PageModal id="invitation" isOpen={props.open} onHide={props.onInvitationCreateModalClose} title={"Invite New User"}
-                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="text-white mx-0">Invite</Button>}>
+                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Invite</Button>}>
         <Form noValidate>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">User Email</Form.Label>

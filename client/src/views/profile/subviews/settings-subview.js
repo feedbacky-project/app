@@ -1,5 +1,5 @@
 import ProfileSidebar from "components/sidebar/profile-sidebar";
-import {Col, Form} from "react-bootstrap";
+import {Col, Form, Row} from "react-bootstrap";
 import React, {useContext, useEffect, useState} from "react";
 import {formatRemainingCharacters, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
@@ -11,8 +11,9 @@ import Swal from "sweetalert2";
 import swalReact from "sweetalert2-react-content";
 import {useHistory} from "react-router-dom";
 import ViewBox from "components/viewbox/view-box";
+import ActionButton from "components/app/action-button";
 
-const SettingsSubview = (props) => {
+const SettingsSubview = ({reRouteTo}) => {
     const context = useContext(AppContext);
     const history = useHistory();
     const swalGenerator = swalReact(Swal);
@@ -89,7 +90,7 @@ const SettingsSubview = (props) => {
     }, []);
     if (!context.user.loggedIn) {
         return <React.Fragment>
-            <ProfileSidebar currentNode="settings" reRouteTo={props.reRouteTo}/>
+            <ProfileSidebar currentNode="settings" reRouteTo={reRouteTo}/>
             <Col xs={12} md={9}>
                 <ViewBox theme={context.getTheme()} title="User Settings" description="Edit your account here.">
                     <Col className="text-center">Please log in to see contents of this page.</Col>
@@ -137,32 +138,30 @@ const SettingsSubview = (props) => {
                 </Form.Text>
             </Col>
             <Col xs={12} className="order-4">
-                <Button className="m-0 mt-3 ml-3 text-white float-right" variant="success" onClick={onChangesSave}>
+                <Button className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
                     Save Settings
                 </Button>
             </Col>
         </React.Fragment>
     };
     return <React.Fragment>
-        <ProfileSidebar currentNode="settings" reRouteTo={props.reRouteTo}/>
+        <ProfileSidebar currentNode="settings" reRouteTo={reRouteTo}/>
         <Col xs={12} md={9}>
             <ViewBox theme={context.getTheme()} title="User Settings" description="Edit your account here.">
                 {renderContent()}
             </ViewBox>
-            <Col xs={12} className="mb-3 view-box-bg rounded mt-2 danger-shadow">
-                <Form className="row py-3">
-                    <Form.Group className="row col-12 m-0 p-0 px-4">
-                        <div className="col-sm-9 col-12 p-0">
-                            <h4 className="mb-1 h4-responsive text-danger">Deactivate Account</h4>
-                            <span className="text-black-50" style={{fontSize: ".9em"}}>
-                                Personal information will be <strong>permanently removed</strong> but all your content will be anonymized. <strong>Irreversible action.</strong>
-                           </span>
-                        </div>
-                        <div className="col-sm-3 col-6 p-0 text-sm-right text-left my-auto">
-                            <Button variant="danger" className="m-0 mt-sm-0 mt-2" onClick={() => onAccountDeactivation()}>Deactivate</Button>
-                        </div>
-                    </Form.Group>
-                </Form>
+            <Col xs={12} className="mb-3 view-box-bg mt-2 danger-shadow">
+                <Row noGutters className="col-12 p-3">
+                    <Col sm={9} xs={12}>
+                        <h4 className="mb-1 text-danger">Deactivate Account</h4>
+                        <span className="text-black-50" style={{fontSize: ".9em"}}>
+                            Personal information will be <strong>permanently removed</strong> but all your content will be anonymized. <strong>Irreversible action.</strong>
+                        </span>
+                    </Col>
+                    <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
+                        <ActionButton onClick={() => onAccountDeactivation()} variant="danger" text="Deactivate"/>
+                    </Col>
+                </Row>
             </Col>
         </Col>
     </React.Fragment>

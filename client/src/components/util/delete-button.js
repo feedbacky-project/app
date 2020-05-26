@@ -3,20 +3,14 @@ import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import {FaTimes} from "react-icons/all";
 import PropTypes from "prop-types";
 
-const DeleteButton = (props) => {
-    return <OverlayTrigger overlay={<Tooltip id={props.id}>{props.tooltipName}</Tooltip>}>
+const DeleteButton = ({id, tooltipName, onClick, offsetX = "-6px", offsetY = "-6px"}) => {
+    return <OverlayTrigger overlay={<Tooltip id={id}>{tooltipName}</Tooltip>}>
         <FaTimes className="bg-dark p-1 text-white rounded-circle cursor-click"
-                 onClick={props.onClick}
-                 style={{position: "absolute", transform: "translate(" + props.offsetX + "," + props.offsetY + ")"}}/>
+                 onClick={onClick} style={{position: "absolute", transform: "translate(" + offsetX + "," + offsetY + ")"}}/>
     </OverlayTrigger>
 };
 
 export default DeleteButton;
-
-DeleteButton.defaultProps = {
-  offsetX: "-6px",
-  offsetY: "-6px"
-};
 
 DeleteButton.propTypes = {
     id: PropTypes.string.isRequired,

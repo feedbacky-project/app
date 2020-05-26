@@ -80,6 +80,18 @@
 .navbar {
   box-shadow: $box-shadow;
   font-weight: 300;
+  padding-bottom: .25rem !important;
+  padding-top: .25rem !important;
+  z-index: 3;
+}
+
+.navbar-brand {
+  margin-right: 0 !important;
+  flex: 1 1 !important;
+  text-align: left !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .dropdown-toggle::after {
@@ -99,7 +111,7 @@ hr {
   border-top: 1px solid rgba(0,0,0,.1) !important;
 }
 
-.btn:not(.vote-button):not(.dropdown-toggle):not(.btn-link) {
+.btn:not(.vote-btn):not(.dropdown-toggle):not(.btn-link) {
   box-shadow: $box-shadow;
 
   &:hover, &:active {
@@ -112,6 +124,10 @@ hr {
 }
 
 @import "~bootstrap/scss/bootstrap";
+
+.btn, .btn:hover {
+  color: white;
+}
 
 /* fixes scrollbar repositioning page */
 html {
@@ -174,8 +190,16 @@ body {
   }
 }
 
+.vote-btn {
+  line-height: 16px !important;
+  min-width: 35px !important;
+  min-height: 45px !important;
+  padding: .25rem .5rem !important;
+  margin: 0 !important;
+}
+
 @media (max-width: 576px) {
-  .vote-button {
+  .vote-btn {
     font-size: 1rem;
   }
 
@@ -192,6 +216,10 @@ body {
   transform: scale(1.15);
   color: white;
   text-decoration: none;
+}
+
+.markdown-box {
+  word-break: break-word;
 }
 
 .markdown-box a {
@@ -324,12 +352,16 @@ a {
   background-color: #0994f6 !important;
 }
 
-.social-link:first-of-type {
-  border-top-left-radius: 4px;
-}
+.social-link {
+  padding: .5rem 1rem !important;
+  background-color: rgba(0,0,0,.4);
 
-.social-link:last-child {
-  border-top-right-radius: 4px;
+  &:first-of-type {
+    border-top-left-radius: 4px;
+  }
+  &:last-child {
+    border-top-right-radius: 4px;
+  }
 }
 
 .border-chosen {
@@ -350,6 +382,22 @@ a {
 
 .modal {
   overflow-y: hidden !important;
+}
+
+.modal-header {
+  display: block;
+  border-bottom: medium none;
+  text-align: center !important;
+  padding-bottom: 0 !important;
+}
+
+.modal-body {
+  padding: .25rem 1.5rem !important;
+}
+
+.modal-footer {
+  border-top: medium none;
+  padding: .5rem 1.5rem 1rem 1.5rem !important;
 }
 
 .form-control::placeholder {
@@ -399,8 +447,32 @@ a {
   letter-spacing: -.3pt;
 }
 
+.view-box {
+  z-index: 1;
+  position: relative;
+  top: 35px;
+  color: white;
+  padding: 1rem 1.5rem !important;
+  margin-left: 1.5rem !important;
+  margin-right: 1.5rem !important;
+}
+
 .view-box-bg {
   background-color: white;
+  border-radius: .25rem !important;
+}
+
+.sidebar {
+  margin-top: 1.5rem !important;
+
+  ul {
+    padding-left: 0 !important;
+    margin-bottom: 0.25rem !important;
+    list-style: outside none none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 2rem;
+  }
 }
 
 @import "assets/scss/dark-mode";

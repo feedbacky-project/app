@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 
 const PageModal = (props) => {
     return <Modal id={props.id} show={props.isOpen} onHide={props.onHide}>
-        <Modal.Header className="text-center pb-0" style={{display: "block", borderBottom: "none"}}>
+        <Modal.Header>
             <Modal.Title><h5 className="modal-title">{props.title}</h5></Modal.Title>
         </Modal.Header>
-        <Modal.Body className="py-1 px-4">
+        <Modal.Body>
             {props.children}
         </Modal.Body>
-        <Modal.Footer style={{borderTop: "none"}} className="pt-2 pb-3 px-4">
+        <Modal.Footer>
             <Button variant="link" className="m-0 text-black-60" onClick={props.onHide}>
                 Cancel
             </Button>

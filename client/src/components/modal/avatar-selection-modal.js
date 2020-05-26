@@ -23,8 +23,7 @@ const AvatarSelectionModal = (props) => {
     return <PageModal id="avatarSelection" isOpen={props.open} onHide={props.onAvatarModalClose} title="Choose Avatar" applyButton={<React.Fragment/>}>
         <Row className="mt-3 justify-content-center">
             <Col xs={5} sm={3} className="cursor-click text-center" onClick={() => props.onAvatarChoose(process.env.REACT_APP_DEFAULT_USER_AVATAR)}>
-                <img src={process.env.REACT_APP_DEFAULT_USER_AVATAR}
-                     alt="Default Avatar" width={100} className="img-fluid img-thumbnail"/>
+                <img src={process.env.REACT_APP_DEFAULT_USER_AVATAR} alt="Default Avatar" width={100} className="img-fluid img-thumbnail"/>
                 <div className="mt-1">Default</div>
             </Col>
             <Col xs={5} sm={3} className="cursor-click text-center"

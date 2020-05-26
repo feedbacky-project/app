@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {Badge, Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
-import LoadingSpinner from "components/util/loading-spinner";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import {toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
@@ -10,6 +9,9 @@ import AdminSidebar from "components/sidebar/admin-sidebar";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import ViewBox from "components/viewbox/view-box";
+import PageBadge from "components/app/page-badge";
+import tinycolor from "tinycolor2";
+import ComponentLoader from "components/app/component-loader";
 
 class TagsSettings extends Component {
 
@@ -71,17 +73,15 @@ class TagsSettings extends Component {
         if (this.state.error) {
             return <span className="text-danger">Failed to obtain tags data</span>
         }
-        if (!this.state.loaded) {
-            return <LoadingSpinner/>
-        }
-        return <Col xs={12}>
-            <span className="mr-1 text-black-60">Tags Quota ({this.renderTagsQuota()} left)</span>
-            <ClickableTip id="quota" title="Tags Quota"
-                          description="Amount of tags your board can have, you're limited to 10 tags per board."/>
-            {this.renderTags()}
-            <br/>
-            {this.renderNewTagButton()}
-        </Col>
+        return <ComponentLoader loaded={this.state.loaded} component={
+            <Col xs={12}>
+                <span className="mr-1 text-black-60">Tags Quota ({this.renderTagsQuota()} left)</span>
+                <ClickableTip id="quota" title="Tags Quota" description="Amount of tags your board can have, you're limited to 10 tags per board."/>
+                {this.renderTags()}
+                <br/>
+                {this.renderNewTagButton()}
+            </Col>
+        }/>
     }
 
     renderTagsQuota() {
@@ -90,26 +90,23 @@ class TagsSettings extends Component {
 
     renderTags() {
         return this.state.tags.map((tag, i) => {
-            return <React.Fragment key={i}>
-                <br/>
-                <Badge color="" style={{
-                    backgroundColor: tag.color
-                }}>{tag.name}</Badge>
+            return <div key={i}>
+                <PageBadge color={tinycolor(tag.color)} text={tag.name}/>
                 <OverlayTrigger overlay={<Tooltip id={"deleteTag" + i + "-tooltip"}>Delete Tag</Tooltip>}>
                     <FaTrashAlt className="fa-xs ml-1" onClick={() => this.onTagDelete(tag.name)}/>
                 </OverlayTrigger>
-            </React.Fragment>
+            </div>
         });
     }
 
     renderNewTagButton() {
         if (this.state.quotaReached) {
             return <OverlayTrigger overlay={<Tooltip id="quota-tooltip">Quota Limit Reached</Tooltip>}>
-                <Button className="text-white m-0 mt-3 float-right" variant=""
+                <Button className="m-0 mt-3 float-right" variant=""
                         style={{backgroundColor: this.context.getTheme()}}><FaExclamation/> Add new Tag</Button>
             </OverlayTrigger>
         }
-        return <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
+        return <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
                        onClick={this.onTagCreateModalClick}>Add new Tag</Button>
     }
 

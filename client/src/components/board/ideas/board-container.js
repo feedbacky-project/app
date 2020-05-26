@@ -10,7 +10,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import {prepareFilterAndSortRequests} from "components/util/utils";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 
-//fixme
 class BoardContainer extends Component {
 
     static contextType = AppContext;
@@ -25,8 +24,7 @@ class BoardContainer extends Component {
             <Col lg={8} className="order-lg-1 order-12">
                 {this.loadIdeas()}
             </Col>
-            <BoardDetailsBox onIdeaCreation={this.onIdeaCreation} description={this.props.boardData.fullDescription} moderators={this.props.moderators}
-                             discriminator={this.props.boardData.discriminator} boardData={this.props.boardData} onNotLoggedClick={this.props.onNotLoggedClick}/>
+            <BoardDetailsBox onIdeaCreation={this.onIdeaCreation} moderators={this.props.moderators} boardData={this.props.boardData} onNotLoggedClick={this.props.onNotLoggedClick}/>
         </React.Fragment>
     }
 

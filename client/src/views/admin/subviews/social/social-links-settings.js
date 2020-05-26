@@ -4,11 +4,12 @@ import {Button, Col} from "react-bootstrap";
 import axios from "axios";
 import {toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
-import LoadingSpinner from "components/util/loading-spinner";
 import {Link} from "react-router-dom";
 import {popupSwal} from "components/util/sweetalert-utils";
 import DeleteButton from "components/util/delete-button";
 import ViewBox from "components/viewbox/view-box";
+import SafeAnchor from "components/app/safe-anchor";
+import ComponentLoader from "components/app/component-loader";
 
 class SocialLinksSettings extends Component {
 
@@ -50,33 +51,32 @@ class SocialLinksSettings extends Component {
         if (this.state.error) {
             return <span className="text-danger">Failed to obtain social links data</span>
         }
-        if (!this.state.loaded) {
-            return <LoadingSpinner/>
-        }
-        return <Col xs={12}>
-            <div className="text-black-60 mb-1">Current Social Links ({this.calculateLeft()} left)</div>
-            {this.state.data.map((link) => {
-                return <div className="d-inline-flex justify-content-center mr-2" key={link.id}>
-                    <div className="text-center" id="socialPreviewContainer">
-                        <img className="bg-dark rounded p-2" alt="Logo" src={link.logoUrl} height={40} width={40}/>
-                        <DeleteButton tooltipName="Delete" onClick={() => this.onSocialLinkDelete(link.id)}
-                                      id={"social-" + link.id + "-del"}/>
-                        <br/>
-                        <a href={link.url} target="_blank" rel="noreferrer noopener" className="text-tight">{this.extractHostname(link.url)}</a>
+        return <ComponentLoader loaded={this.state.loaded} component={
+            <Col xs={12}>
+                <div className="text-black-60 mb-1">Current Social Links ({this.calculateLeft()} left)</div>
+                {this.state.data.map((link) => {
+                    return <div className="d-inline-flex justify-content-center mr-2" key={link.id}>
+                        <div className="text-center" id="socialPreviewContainer">
+                            <img className="bg-dark rounded p-2" alt="Logo" src={link.logoUrl} height={40} width={40}/>
+                            <DeleteButton tooltipName="Delete" onClick={() => this.onSocialLinkDelete(link.id)}
+                                          id={"social-" + link.id + "-del"}/>
+                            <br/>
+                            <SafeAnchor url={link.url}>{this.extractHostname(link.url)}</SafeAnchor>
+                        </div>
                     </div>
+                })}
+                <div>
+                    {this.renderAddButton()}
                 </div>
-            })}
-            <div>
-                {this.renderAddButton()}
-            </div>
-        </Col>
+            </Col>
+        }/>
     }
 
     renderAddButton() {
         if (this.calculateLeft() <= 0) {
             return <React.Fragment/>
         }
-        return <Button className="text-white m-0 mt-3 float-right" variant=""
+        return <Button className="m-0 mt-3 float-right" variant=""
                        style={{backgroundColor: this.context.getTheme()}}
                        as={Link} to={"/ba/" + this.props.data.discriminator + "/social/create"}>Add New</Button>
     }

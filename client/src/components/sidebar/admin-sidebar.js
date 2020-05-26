@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {Col} from "react-bootstrap";
-import {increaseBrightness, isHexDark} from "components/util/utils";
 import AppContext from "context/app-context";
 import {FaAt, FaColumns, FaRegEnvelope, FaSlidersH, FaTags, FaUsersCog} from "react-icons/all";
 import {renderSidebarRoutes} from "components/sidebar/sidebar-commons";
@@ -17,10 +16,8 @@ const AdminSidebar = (props) => {
     const context = useContext(AppContext);
     const themeColor = context.getTheme();
 
-    return <Col xs={12} md={3} className="mt-4" id="sidebar">
-        <ul className="pl-0 mb-1" style={{listStyle: "none", fontSize: "1.1rem", fontWeight: 500, lineHeight: "2rem"}}>
-            {renderSidebarRoutes(routes, themeColor, props.currentNode, props.reRouteTo)}
-        </ul>
+    return <Col xs={12} md={3} className="sidebar">
+        <ul>{renderSidebarRoutes(routes, themeColor, props.currentNode, props.reRouteTo)}</ul>
     </Col>
 };
 

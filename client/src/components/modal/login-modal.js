@@ -4,8 +4,7 @@ import AppContext from "context/app-context";
 
 const LoginModal = (props) => {
     const context = useContext(AppContext);
-    return <Modal size="sm" centered id="loginModal"
-                  show={props.open} onHide={props.onLoginModalClose} dialogClassName="cascading-modal modal-avatar">
+    return <Modal size="sm" centered id="loginModal" show={props.open} onHide={props.onLoginModalClose} dialogClassName="cascading-modal modal-avatar">
         <Modal.Header className="w-100">
             <img src={props.image} alt="avatar" className="rounded-circle img-responsive img-thumbnail"/>
         </Modal.Header>

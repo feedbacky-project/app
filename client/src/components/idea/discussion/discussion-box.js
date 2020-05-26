@@ -1,17 +1,16 @@
 import React, {Component} from 'react';
-import {Button, Col, Image, OverlayTrigger, Row, Tooltip} from "react-bootstrap";
+import {Button, Col, Image, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
-import {FaEdit, FaFrown, FaLockOpen, FaTags, FaTimesCircle} from "react-icons/fa";
-import TimeAgo from "timeago-react";
-import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, parseMarkdown, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {FaFrown} from "react-icons/fa";
+import {formatUsername, getSizedAvatarByUrl, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
 import {popupSwal} from "components/util/sweetalert-utils";
-import {FaHeart, FaLowVision, FaRegHeart, FaTrashAlt} from "react-icons/all";
 import ClickableTip from "components/util/clickable-tip";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
+import CommentComponent from "components/idea/discussion/comment-component";
 
 class DiscussionBox extends Component {
 
@@ -58,87 +57,16 @@ class DiscussionBox extends Component {
         if (this.state.comments.error) {
             return <div className="text-danger mt-2 mb-3"><FaFrown/> Failed to load comments</div>
         }
-        let self = this;
         return <InfiniteScroll
             pageStart={0}
             initialLoad={true}
             loadMore={(page) => this.onLoadRequest(page)}
             hasMore={this.state.comments.moreToLoad}
             loader={<Row className="justify-content-center my-5" key={this.state.comments.data.length}><LoadingSpinner/></Row>}>
-            {this.state.comments.data.map(data => {
-                if (!data.special) {
-                    return <React.Fragment key={data.id}>
-                        <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
-                            <Image roundedCircle src={getSizedAvatarByUrl(data.user.avatar, 64)} className="mr-3 mt-2" width={30} height={30} alt="avatar"
-                                   onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
-                            <div>
-                                {this.renderCommentUsername(data)}
-                                {this.renderDeletionButton(data)}
-                                <br/>
-                                <span className="snarkdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(data.description)}}/>
-                                <small className="text-black-60"> {this.renderLikes(data)} · <TimeAgo datetime={data.creationDate}/></small>
-                            </div>
-                        </div>
-                        <br/>
-                    </React.Fragment>
-                }
-                let color = this.context.getTheme();
-
-                return <React.Fragment key={data.id}>
-                    <div className="d-inline-flex my-1">
-                        <div className="comment-icon mr-3" style={{backgroundColor: color, color}}>{self.retrieveSpecialCommentTypeIcon(data.specialType)}</div>
-                        <div>
-                            <span style={{color}} dangerouslySetInnerHTML={{__html: data.description}}/>
-                            <small className="ml-1 text-black-60"><TimeAgo datetime={data.creationDate}/></small>
-                        </div>
-                    </div>
-                    <br/>
-                </React.Fragment>
-            })}
+            {this.state.comments.data.map(data =>
+                <CommentComponent data={data} moderators={this.props.moderators} onCommentDelete={this.onCommentDelete} onCommentLike={this.onCommentLike} onCommentUnlike={this.onCommentUnlike}/>
+            )}
         </InfiniteScroll>
-    }
-
-    renderCommentUsername(data) {
-        if (data.viewType === "INTERNAL") {
-            return <React.Fragment>
-                <small style={{fontWeight: "bold"}}><span className="board-role internal">{data.user.username}</span></small>
-                <OverlayTrigger overlay={<Tooltip id={"internal" + data.id + "-tooltip"}>Internal Comment</Tooltip>}>
-                    <FaLowVision className="fa-xs ml-1"/>
-                </OverlayTrigger>
-            </React.Fragment>
-        }
-        return <small style={{fontWeight: "bold"}}>{formatUsername(data.user.id, data.user.username, this.props.moderators)}</small>
-    }
-
-    renderDeletionButton(data) {
-        const moderator = this.props.moderators.find(mod => mod.userId === this.context.user.data.id);
-        if (data.user.id !== this.context.user.data.id && !moderator) {
-            return;
-        }
-        return <FaTrashAlt className="ml-1 fa-xs cursor-click" onClick={() => this.onCommentDelete(data.id)}/>
-    }
-
-    renderLikes(data) {
-        const likes = data.likesAmount;
-        if (data.liked) {
-            return <span className="cursor-click" onClick={() => this.onCommentUnlike(data)}><FaHeart className="red move-top-1px"/> {likes}</span>
-        }
-        return <span className="cursor-click" onClick={() => this.onCommentLike(data)}><FaRegHeart className="move-top-1px"/> {likes}</span>
-    }
-
-    retrieveSpecialCommentTypeIcon(type) {
-        switch (type) {
-            case "IDEA_CLOSED":
-                return <FaTimesCircle className="icon"/>;
-            case "IDEA_OPENED":
-                return <FaLockOpen className="icon"/>;
-            case "IDEA_EDITED":
-                return <FaEdit className="icon"/>;
-            case "LEGACY":
-            case "TAGS_MANAGED":
-            default:
-                return <FaTags className="icon"/>;
-        }
     }
 
     renderNoDataImage() {
@@ -190,10 +118,10 @@ class DiscussionBox extends Component {
         if (this.state.submitVisible) {
             const moderator = this.props.moderators.find(mod => mod.userId === this.context.user.data.id);
             return <React.Fragment>
-                <Button variant="" className="mt-2 ml-0 mb-0 text-white" style={{backgroundColor: this.context.getTheme(), fontSize: "0.75em"}}
+                <Button variant="" className="mt-2 ml-0 mb-0" style={{backgroundColor: this.context.getTheme(), fontSize: "0.75em"}}
                         onClick={() => this.onCommentSubmit(false)}>Submit</Button>
                 {moderator && <React.Fragment>
-                    <Button variant="" className="mt-2 ml-2 mr-1 mb-0 text-white" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
+                    <Button variant="" className="mt-2 ml-2 mr-1 mb-0" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
                             onClick={() => this.onCommentSubmit(true)}>Submit Internal</Button>
                     <div className="d-inline-block align-top move-bottom-2px"><ClickableTip id="internalTip" title="Internal Comments" description="Comments visible only for moderators of the project, hidden from public view."/></div>
                 </React.Fragment>}

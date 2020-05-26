@@ -18,11 +18,7 @@ class BoardView extends Component {
 
     state = {
         id: this.props.match.params.id,
-        board: {
-            data: [],
-            loaded: false,
-            error: false
-        },
+        board: {data: [], loaded: false, error: false},
         loginModalOpened: false,
         privatePage: false
     };

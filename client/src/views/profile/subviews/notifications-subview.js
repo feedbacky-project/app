@@ -3,11 +3,12 @@ import AppContext from "context/app-context";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
 import ProfileSidebar from "components/sidebar/profile-sidebar";
-import {Col, Form} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import ViewBox from "components/viewbox/view-box";
 import Button from "react-bootstrap/Button";
+import ActionButton from "components/app/action-button";
 
-const NotificationsSubview = (props) => {
+const NotificationsSubview = ({reRouteTo}) => {
     const context = useContext(AppContext);
     const [moderatorsCommentsNotify, setModeratorsCommentsNotify] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notifyFromModeratorsComments : false);
     const [tagsChangeNotify, setTagsChangeNotify] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notifyFromTagsChange : false);
@@ -38,7 +39,7 @@ const NotificationsSubview = (props) => {
     };
     if (!context.user.loggedIn) {
         return <React.Fragment>
-            <ProfileSidebar currentNode="notifications" reRouteTo={props.reRouteTo}/>
+            <ProfileSidebar currentNode="notifications" reRouteTo={reRouteTo}/>
             <Col xs={12} md={9}>
                 <ViewBox theme={context.getTheme()} title="Mail Notifications" description="Configure your mail notifications here.">
                     <Col className="text-center">Please log in to see contents of this page.</Col>
@@ -48,54 +49,54 @@ const NotificationsSubview = (props) => {
     }
     const conditionalButton = (conditionEnabled, funcEnable, funcDisable) => {
         if (conditionEnabled) {
-            return <Button variant="danger" className="m-0 mt-sm-0 mt-2" onClick={funcDisable}>Disable</Button>
+            return <ActionButton onClick={funcDisable} variant="danger" text="Disable"/>
         }
-        return <Button variant="success" className="m-0 mt-sm-0 mt-2" onClick={funcEnable}>Enable</Button>
+        return <ActionButton onClick={funcEnable} variant="success" text="Enable"/>
     };
     const renderContent = () => {
         return <React.Fragment>
-            <Form.Group className="row col-12 m-0 p-0 px-4 my-2">
-                <div className="col-sm-9 col-12 p-0">
-                    <h4 className="mb-1 h4-responsive">Moderator Comments</h4>
+            <Row noGutters className="col-12 m-0 p-0 px-4 my-2">
+                <Col sm={9} xs={12}>
+                    <h4 className="mb-1">Moderator Comments</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
                         Notify me via email when moderator comments idea I'm subscribed to.
                     </span>
-                </div>
-                <div className="col-sm-3 col-6 p-0 text-sm-right text-left my-auto">
+                </Col>
+                <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
                     {conditionalButton(moderatorsCommentsNotify, () => setModeratorsCommentsNotify(true), () => setModeratorsCommentsNotify(false))}
-                </div>
-            </Form.Group>
-            <Form.Group className="row col-12 m-0 p-0 px-4 my-2">
-                <div className="col-sm-9 col-12 p-0">
-                    <h4 className="mb-1 h4-responsive">Tags Change</h4>
+                </Col>
+            </Row>
+            <Row noGutters className="col-12 m-0 p-0 px-4 my-2">
+                <Col sm={9} xs={12}>
+                    <h4 className="mb-1">Tags Change</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
                         Notify me via email when idea I'm subscribed to tags get changed.
                     </span>
-                </div>
-                <div className="col-sm-3 col-6 p-0 text-sm-right text-left my-auto">
+                </Col>
+                <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
                     {conditionalButton(tagsChangeNotify, () => setTagsChangeNotify(true), () => setTagsChangeNotify(false))}
-                </div>
-            </Form.Group>
-            <Form.Group className="row col-12 m-0 p-0 px-4 my-2">
-                <div className="col-sm-9 col-12 p-0">
-                    <h4 className="mb-1 h4-responsive">Status Change</h4>
+                </Col>
+            </Row>
+            <Row noGutters className="col-12 m-0 p-0 px-4 my-2">
+                <Col sm={9} xs={12}>
+                    <h4 className="mb-1">Status Change</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
                         Notify me via email when idea I'm subscribed to gets closed or opened.
                     </span>
-                </div>
-                <div className="col-sm-3 col-6 p-0 text-sm-right text-left my-auto">
+                </Col>
+                <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
                     {conditionalButton(statusChangeNotify, () => setStatusChangeNotify(true), () => setStatusChangeNotify(false))}
-                </div>
-            </Form.Group>
+                </Col>
+            </Row>
             <Col xs={12}>
-                <Button className="m-0 mt-3 ml-3 text-white float-right" variant="success" onClick={onChangesSave}>
+                <Button className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
                     Save Settings
                 </Button>
             </Col>
         </React.Fragment>
     };
     return <React.Fragment>
-        <ProfileSidebar currentNode="notifications" reRouteTo={props.reRouteTo}/>
+        <ProfileSidebar currentNode="notifications" reRouteTo={reRouteTo}/>
         <Col xs={12} md={9}>
             <ViewBox theme={context.getTheme()} title="Mail Notifications" description="Configure your mail notifications here.">
                 {renderContent()}

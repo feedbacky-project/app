@@ -2,16 +2,15 @@ import React from 'react';
 import {Card, Col, Row} from "react-bootstrap";
 import PropTypes from "prop-types";
 
-const ViewBox = (props) => {
+const ViewBox = ({theme, title, description, children}) => {
     return <React.Fragment>
-        <Card className="text-white px-4 mx-4 py-3 view-box"
-              style={{backgroundColor: props.theme, position: "relative", top: "35px", zIndex: 1}}>
-            <h3 className="mb-0">{props.title}</h3>
-            <div>{props.description}</div>
+        <Card className="view-box" style={{backgroundColor: theme}}>
+            <h3 className="mb-0">{title}</h3>
+            <div>{description}</div>
         </Card>
-        <Col className="view-box-bg rounded shadow">
+        <Col className="view-box-bg shadow">
             <Row className="py-4 px-3 px-0 pt-5 mb-3">
-                {props.children}
+                {children}
             </Row>
         </Col>
     </React.Fragment>
@@ -20,7 +19,8 @@ const ViewBox = (props) => {
 export default ViewBox;
 
 ViewBox.propTypes = {
-    theme: PropTypes.string.isRequired,
+    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    children: PropTypes.object.isRequired
 };

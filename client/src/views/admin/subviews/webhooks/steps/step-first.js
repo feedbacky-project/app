@@ -1,7 +1,8 @@
 import React from 'react';
-import {Card, CardDeck, Col, Row} from "react-bootstrap";
+import {CardDeck, Col, Row} from "react-bootstrap";
 import {FaDiscord, FaGlobe} from "react-icons/fa";
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
+import SetupCard from "components/app/setup-card";
 
 const type = ["DISCORD", "CUSTOM_ENDPOINT"];
 const typeName = ["Discord", "Custom Endpoint"];
@@ -17,13 +18,7 @@ const StepFirst = (props) => {
             } else {
                 classes += " border-invisible";
             }
-            return <Card key={i} className={classes} style={{minWidth: 175}} onClick={() => props.onSetupMethodCall("type", item)}>
-                <Card.Body className="text-center">
-                    {typeIcon[i]}
-                    <br className="my-3"/>
-                    <strong style={{fontSize: "1.5rem"}}>{name}</strong>
-                </Card.Body>
-            </Card>
+            return <SetupCard key={i} icon={typeIcon[i]} text={name} onClick={() => props.onSetupMethodCall("type", item)} className={classes}/>
         });
     };
 

@@ -4,7 +4,6 @@ import axios from "axios";
 import {getSizedAvatarByUrl, prettifyEnum, toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
 import {FaTrashAlt} from "react-icons/fa";
-import Badge from "react-bootstrap/Badge";
 import ModeratorInvitationModal from "components/modal/moderator-invitation-modal";
 import copy from "copy-text-to-clipboard";
 import AdminSidebar from "components/sidebar/admin-sidebar";
@@ -12,6 +11,7 @@ import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import DeleteButton from "components/util/delete-button";
 import ViewBox from "components/viewbox/view-box";
+import PageBadge from "components/app/page-badge";
 
 class ModeratorsSettings extends Component {
 
@@ -112,8 +112,7 @@ class ModeratorsSettings extends Component {
                             {this.renderModerationKick(mod, i)}
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{mod.user.username}</small>
-                            <Badge variant="" className="move-top-3px"
-                                   style={{backgroundColor: this.context.getTheme()}}>{prettifyEnum(mod.role)}</Badge>
+                            <PageBadge color={this.context.getTheme()} text={prettifyEnum(mod.role)} className="move-top-3px"/>
                         </div>
                     </div>
                 })}
@@ -144,7 +143,7 @@ class ModeratorsSettings extends Component {
                 })}
             </Col>
             <Col xs={12}>
-                <Button className="text-white m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
+                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: this.context.getTheme()}}
                         onClick={this.onModInvitationCreateModalClick}>Invite New</Button>
             </Col>
         </React.Fragment>

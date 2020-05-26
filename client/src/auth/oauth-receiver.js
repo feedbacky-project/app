@@ -7,7 +7,7 @@ import ErrorView from "views/errors/error-view";
 import {FaTimes} from "react-icons/fa";
 import Cookies from "js-cookie";
 
-const OauthReceiver = (props) => {
+const OauthReceiver = ({onLogin}) => {
     const {provider} = useParams();
     const location = useLocation();
     const [loaded, setLoaded] = useState(false);
@@ -32,7 +32,7 @@ const OauthReceiver = (props) => {
             const data = res.data;
             Cookies.set("FSID", data.token, {expires: 14});
             setLoaded(true);
-            props.onLogin(data.token);
+            onLogin(data.token);
         }).catch(() => {
             setLoaded(true);
             setError(true);

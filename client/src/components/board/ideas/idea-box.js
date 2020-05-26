@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import Button from "react-bootstrap/Button";
 import axios from "axios";
 import {FaLock, FaRegComment} from "react-icons/fa";
-import {Badge, Card} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import AppContext from "context/app-context";
-import {formatUsername, getSizedAvatarByUrl, increaseBrightness, isHexDark, toastError, truncateText} from "components/util/utils";
+import {formatUsername, getSizedAvatarByUrl, toastError, truncateText} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
-import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
 import tinycolor from "tinycolor2";
+import PageBadge from "components/app/page-badge";
+import VoteButton from "components/app/vote-button";
 
 class IdeaBox extends Component {
 
@@ -28,7 +28,7 @@ class IdeaBox extends Component {
         return <Card id={"container_idea_" + this.state.ideaData.id} className={classes} style={{borderRadius: 0, display: `block`}}>
             <Card.Body className="py-3 row">
                     <span className="my-auto mr-3">
-                        {this.renderButton()}
+                        <VoteButton votersAmount={this.state.ideaData.votersAmount} onVote={this.onUpvote} upvoted={this.state.ideaData.upvoted} justVoted={this.justVoted}/>
                     </span>
                 <Link className="d-inline col px-0 text-left hidden-anchor" to={{
                     pathname: "/i/" + this.state.ideaData.id,
@@ -41,31 +41,14 @@ class IdeaBox extends Component {
                             {this.renderComments()}
                         </div>
                         {this.renderTags()}
-                        <ModeratorActions moderators={this.props.moderators} ideaData={this.state.ideaData} onStateChange={this.onStateChange}
-                                          onTagsUpdate={this.onTagsUpdate} onIdeaDelete={() => this.props.onIdeaDelete(this.state.ideaData.id)}/>
+                        <ModeratorActions moderators={this.props.moderators} ideaData={this.state.ideaData} updateState={this.updateState}
+                                          onIdeaDelete={() => this.props.onIdeaDelete(this.state.ideaData.id)}/>
                     </div>
                     <small className="text-black-60" style={{letterSpacing: `-.1pt`}} dangerouslySetInnerHTML={{__html: truncateText(this.state.ideaData.description, 85)}}/>
                     {this.renderAuthor()}
                 </Link>
             </Card.Body>
         </Card>
-    }
-
-    renderButton() {
-        let color = this.context.getTheme();
-        let vote;
-        if (!this.state.ideaData.upvoted) {
-            color = color.setAlpha(.7);
-            vote = <FiChevronUp style={{color}}/>;
-        } else {
-            vote = <FiChevronsUp style={{color}}/>;
-        }
-        return <Button className="vote-button px-2 py-1 m-0"
-                       style={{lineHeight: '16px', minWidth: 35, minHeight: 45}}
-                       onClick={this.onUpvote} variant="">
-            {vote}
-            <strong className="d-block" style={{color: color}}>{this.state.ideaData.votersAmount}</strong>
-        </Button>
     }
 
     renderLockState() {
@@ -89,45 +72,15 @@ class IdeaBox extends Component {
             return;
         }
         return <span>
-            <br className="d-sm-none"/> {" "}
-            <span className="badge-container">
-                {this.state.ideaData.tags.map((tag, i) => {
-                    let color = tinycolor(tag.color);
-                    if(this.context.user.darkMode) {
-                        color = color.lighten(10);
-                        return <Badge key={i} color="" style={{
-                            transform: `translateY(-2px)`,
-                            color: color,
-                            fontWeight: "bold",
-                            backgroundColor: color.clone().setAlpha(.2)
-                        }}>{tag.name}</Badge>
-                    } else {
-                        return <Badge key={i} color="" style={{
-                            transform: `translateY(-2px)`,
-                            backgroundColor: color
-                        }}>{tag.name}</Badge>
-                    }
-                })}
-                </span> {" "}
+            <br className="d-sm-none"/>
+            <span className="badge-container mx-sm-1 mx-0">
+                {this.state.ideaData.tags.map((tag, i) => <PageBadge key={i} text={tag.name} color={tinycolor(tag.color)} className="move-top-2px"/>)}
             </span>
+        </span>
     }
 
-    onStateChange = (bool) => {
-        this.setState({
-            ideaData: {
-                ...this.state.ideaData,
-                open: bool,
-            }
-        });
-    };
-
-    onTagsUpdate = (data) => {
-        this.setState({
-            ideaData: {
-                ...this.state.ideaData,
-                tags: data,
-            }
-        });
+    updateState = (data) => {
+        this.setState({ideaData: {...this.state.ideaData, data}});
     };
 
     renderAuthor() {
@@ -171,11 +124,7 @@ class IdeaBox extends Component {
             }
             this.justVoted = upvoted;
             this.setState(prevState => ({
-                ideaData: {
-                    ...prevState.ideaData,
-                    upvoted,
-                    votersAmount
-                }
+                ideaData: {...prevState.ideaData, upvoted, votersAmount}
             }));
         }).catch(() => toastError());
     };

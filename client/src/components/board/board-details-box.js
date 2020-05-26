@@ -27,24 +27,24 @@ const BoardDetailsBox = (props) => {
             return;
         }
         return <Button as={Link} to={{
-            pathname: "/ba/" + props.discriminator,
+            pathname: "/ba/" + props.boardData.discriminator,
             state: {
                 _boardData: props.boardData,
             },
-        }} className="text-white mx-0 mt-0 py-1 float-right" variant="" style={{backgroundColor: context.getTheme()}}>
+        }} className="mx-0 mt-0 py-1 float-right" variant="" style={{backgroundColor: context.getTheme()}}>
             Manage <FaAlignRight className="ml-1 move-top-1px"/>
         </Button>
     };
 
     return <React.Fragment>
-        <IdeaCreateModal open={open} discriminator={props.discriminator}
+        <IdeaCreateModal open={open} discriminator={props.boardData.discriminator}
                          onCreateIdeaModalClose={onCreateIdeaModalClose} onIdeaCreation={props.onIdeaCreation}/>
         <Col id="boardDetails" lg={4} className="order-lg-12 order-1">
             <Card className="my-2 text-left" style={{borderRadius: 0}}>
                 <Card.Body className="pb-2">
-                    <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(props.description)}}/>
+                    <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(props.boardData.fullDescription)}}/>
                     <hr/>
-                    <Button className="text-white mx-0 mt-0 mb-2 py-1" variant="" style={{backgroundColor: context.getTheme()}} onClick={onCreateIdeaModalClick}>
+                    <Button className="mx-0 mt-0 mb-2 py-1" variant="" style={{backgroundColor: context.getTheme()}} onClick={onCreateIdeaModalClick}>
                         <FaPencilAlt className="mr-1 move-top-1px"/> New Idea
                     </Button>
                     {renderEditButton()}

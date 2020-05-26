@@ -1,9 +1,10 @@
 import React from 'react';
-import {Card, CardDeck, Col, Row} from "react-bootstrap";
+import {CardDeck, Col, Row} from "react-bootstrap";
 import {FaDiscord, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
 import {getBase64FromFile, validateImageWithWarning} from "components/util/utils";
 import {FaFileUpload} from "react-icons/all";
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
+import SetupCard from "components/app/setup-card";
 
 const itemsIcons = [<FaGithub className="fa-lg"/>, <FaDiscord className="fa-lg"/>, <FaPatreon className="fa-lg"/>, <FaYoutube className="fa-lg"/>,
     <FaGlobe className="fa-lg"/>, <FaFileUpload className="fa-lg"/>];
@@ -26,21 +27,10 @@ const StepFirst = (props) => {
                 classes += " border-invisible";
             }
             if (name === "Custom") {
-                return <Card key={i} className={classes} style={{minWidth: 175}} onClick={onCustomUpload}>
-                    <Card.Body className="text-center">
-                        {props.iconData === "" || !props.customIcon ? item : <img alt="Icon" src={props.iconData} className="fa-lg"/>}
-                        <br className="my-3"/>
-                        <strong style={{fontSize: "1.5rem"}}>{name}</strong>
-                    </Card.Body>
-                </Card>
+                return <SetupCard key={i} icon={props.iconData === "" || !props.customIcon ? item : <img alt="Icon" src={props.iconData} className="fa-lg"/>}
+                                  text={name} className={classes} onClick={onCustomUpload}/>
             }
-            return <Card key={i} className={classes} style={{minWidth: 175}} onClick={() => setChosen(i, props)}>
-                <Card.Body className="text-center">
-                    {item}
-                    <br className="my-3"/>
-                    <strong style={{fontSize: "1.5rem"}}>{name}</strong>
-                </Card.Body>
-            </Card>
+            return <SetupCard key={i} icon={item} text={name} onClick={() => setChosen(i, props)} className={classes}/>
         });
     };
 
@@ -50,8 +40,8 @@ const StepFirst = (props) => {
             <img alt="" src={UndrawCreateProject} className="my-2" width={150} height={150}/>
             <h2>Choose Link Icon</h2>
             <span className="text-black-60">
-                    Select icon that your Social Link will represent.
-                </span>
+                Select icon that your Social Link will represent.
+            </span>
         </Col>
         <Col xs={12} className="mt-3 px-md-5 px-3">
             <Row className="justify-content-center">

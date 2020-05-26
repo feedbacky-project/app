@@ -113,7 +113,7 @@ class CreateSocialLink extends Component {
 
     renderNextButton() {
         if (this.state.step >= 2) {
-            return <Button variant="success" className="text-white ml-2" onClick={this.nextStep}>Finish</Button>
+            return <Button variant="success" className="ml-2" onClick={this.nextStep}>Finish</Button>
         }
         return <NextStepButton nextStep={this.nextStep}/>
     }

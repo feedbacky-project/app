@@ -11,7 +11,7 @@ const BoardNavbar = (props) => {
 
     return <PageNavbar theme={theme}>
         <Container className="d-flex">
-            <NavbarBrand className="mr-0 text-truncate text-left flex-on" as={Link} to="/me">
+            <NavbarBrand as={Link} to="/me">
                 <img className="img-responsive mr-2" src={props.logoUrl}
                      height="30px"
                      width="30px" alt=""/>
