@@ -20,8 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostAttachmentDto {
 
-  @Base64(maximumKbSize = 600, mimeType = {"image/png", "image/jpeg"},
-      message = "Field 'data' must be a valid base64 encoded png image with maximum size of 600kb.")
+  @Base64(maximumKbSize = 600, mimeType = {"image/png", "image/jpeg"}, message = "Attachment must be a valid image with maximum size of 600kb.")
   private String data;
 
 }

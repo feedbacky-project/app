@@ -21,9 +21,9 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatchTagRequestDto {
 
-  @Length(min = 3, max = 20, message = "Field 'name' cannot be shorter than 3 or longer than 20 characters.")
+  @Length(min = 3, max = 20, message = "Tag name cannot be shorter than 3 or longer than 20 characters.")
   private String name;
-  @NotNull(message = "Field 'apply' cannot be null.")
+  @NotNull(message = "Specify if tag should be applied or removed.")
   private Boolean apply;
 
 }

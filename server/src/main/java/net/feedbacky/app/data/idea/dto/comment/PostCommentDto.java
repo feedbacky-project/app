@@ -27,13 +27,13 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostCommentDto {
 
-  @NotNull(message = "Field 'ideaId' cannot be null.")
+  @NotNull(message = "Idea id cannot be empty.")
   private long ideaId;
-  @NotNull(message = "Field 'description' cannot be null.")
-  @Length(min = 10, max = 650, message = "Field 'description' cannot be shorter than 10 or longer than 650 characters.")
+  @NotNull(message = "Description cannot be empty.")
+  @Length(min = 10, max = 650, message = "Description cannot be shorter than 10 or longer than 650 characters.")
   private String description;
-  @EnumValue(enumClazz = Comment.ViewType.class, message = "Field 'type' must be valid view type.")
-  @NotNull(message = "Field 'type' cannot be null.")
+  @EnumValue(enumClazz = Comment.ViewType.class, message = "Comment type must be valid view type.")
+  @NotNull(message = "Type cannot be empty.")
   private String type;
   private final Date creationDate = Calendar.getInstance().getTime();
 

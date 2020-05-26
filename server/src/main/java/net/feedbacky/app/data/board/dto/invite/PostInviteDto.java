@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostInviteDto {
 
-  @NotNull(message = "Field 'userEmail' cannot be null.")
+  @NotNull(message = "User email cannot be empty.")
   private String userEmail;
 
   public Invitation convertToEntity(User user, Board board) {

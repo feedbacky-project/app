@@ -21,8 +21,8 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatchCommentDto {
 
-  @NotNull(message = "Field 'description' cannot be null.")
-  @Length(min = 10, max = 650, message = "Field 'description' cannot be shorter than 10 or longer than 650 characters.")
+  @NotNull(message = "Description cannot be empty.")
+  @Length(min = 10, max = 650, message = "Description cannot be shorter than 10 or longer than 650 characters.")
   private String description;
 
 }

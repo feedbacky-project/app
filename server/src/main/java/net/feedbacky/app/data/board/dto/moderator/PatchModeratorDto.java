@@ -21,8 +21,8 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatchModeratorDto {
 
-  @NotNull(message = "Field 'role' cannot be null.")
-  @EnumValue(enumClazz = Moderator.Role.class, message = "Field 'role' must be valid role type.")
+  @NotNull(message = "Role cannot be empty.")
+  @EnumValue(enumClazz = Moderator.Role.class, message = "Role must be valid role type.")
   private Moderator.Role role;
 
 }

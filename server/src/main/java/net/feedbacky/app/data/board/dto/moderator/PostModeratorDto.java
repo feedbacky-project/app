@@ -26,10 +26,10 @@ import javax.validation.constraints.NotNull;
 @NotNull
 public class PostModeratorDto {
 
-  @NotNull(message = "Field 'userId' cannot be null.")
+  @NotNull(message = "User id cannot be empty.")
   private long userId;
-  @NotNull(message = "Field 'role' cannot be null.")
-  @EnumValue(enumClazz = Moderator.Role.class, message = "Field 'role' must be valid role type.")
+  @NotNull(message = "Role cannot be empty.")
+  @EnumValue(enumClazz = Moderator.Role.class, message = "Role must be valid role type.")
   private Moderator.Role role;
 
   public Moderator convertToEntity(User user, Board board) {

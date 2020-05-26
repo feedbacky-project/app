@@ -23,9 +23,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatchWebhookDto {
 
-  @URL(message = "Field 'url' must be valid URL.")
+  @URL(message = "Url must be valid URL.")
   private String url;
-  @EnumValue(enumClazz = Webhook.Type.class, message = "Field 'type' must be valid webhook type.")
+  @EnumValue(enumClazz = Webhook.Type.class, message = "Type must be valid webhook type.")
   private String type;
   private List<String> events;
 

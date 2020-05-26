@@ -24,11 +24,11 @@ import javax.validation.constraints.Email;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatchUserDto {
 
-  @Length(min = 3, max = 35, message = "Field 'username' cannot be shorter than 3 or longer than 35 characters.")
+  @Length(min = 3, max = 35, message = "Username cannot be shorter than 3 or longer than 35 characters.")
   private String username;
-  @URL(message = "Field 'avatar' must be a valid URL.")
+  @URL(message = "Avatar must be a valid URL.")
   private String avatar;
-  @Email(message = "Field 'email' must be a valid email.")
+  @Email(message = "Email must be a valid email.")
   private String email;
 
 }

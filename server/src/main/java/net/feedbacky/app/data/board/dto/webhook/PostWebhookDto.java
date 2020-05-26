@@ -29,13 +29,13 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostWebhookDto {
 
-  @URL(message = "Field 'url' must be valid URL.")
-  @NotNull(message = "Field 'url' cannot be null.")
+  @URL(message = "Url must be valid URL.")
+  @NotNull(message = "Url cannot be empty.")
   private String url;
-  @EnumValue(enumClazz = Webhook.Type.class, message = "Field 'type' must be valid webhook type.")
-  @NotNull(message = "Field 'type' cannot be null.")
+  @EnumValue(enumClazz = Webhook.Type.class, message = "Type must be valid webhook type.")
+  @NotNull(message = "Type cannot be empty.")
   private String type;
-  @NotNull(message = "Field 'events' cannot be null.")
+  @NotNull(message = "Events cannot be empty.")
   private List<String> events;
 
   public Webhook convertToEntity(Board board) {

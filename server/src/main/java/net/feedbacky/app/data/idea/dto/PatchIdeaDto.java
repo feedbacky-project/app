@@ -21,9 +21,9 @@ import org.hibernate.validator.constraints.Length;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatchIdeaDto {
 
-  @Length(min = 10, max = 50, message = "Field 'title' cannot be shorter than 10 or longer than 50 characters.")
+  @Length(min = 10, max = 50, message = "Title cannot be shorter than 10 or longer than 50 characters.")
   private String title;
-  @Length(min = 20, max = 1800, message = "Field 'description' cannot be shorter than 20 or longer than 1800 characters.")
+  @Length(min = 20, max = 1800, message = "Description cannot be shorter than 20 or longer than 1800 characters.")
   private String description;
   private Boolean open;
 

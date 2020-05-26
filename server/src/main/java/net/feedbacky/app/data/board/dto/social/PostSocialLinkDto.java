@@ -21,11 +21,10 @@ import org.hibernate.validator.constraints.URL;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostSocialLinkDto {
 
-  @Base64(maximumKbSize = 150, mimeType = {"image/png", "image/jpeg"},
-      message = "Field 'iconData' must be a valid base64 encoded png image with maximum size of 150kb.")
+  @Base64(maximumKbSize = 150, mimeType = {"image/png", "image/jpeg"}, message = "Icon must be a valid image with maximum size of 150kb.")
   private String iconData;
-  @Length(min = 10, message = "Field 'url' must be valid URL link.")
-  @URL(message = "Field 'url' must be valid URL link.")
+  @Length(min = 10, message = "Url must be valid URL link.")
+  @URL(message = "Url must be valid URL link.")
   private String url;
 
 }
