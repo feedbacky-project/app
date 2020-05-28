@@ -85,7 +85,7 @@ class IdeaBox extends Component {
     renderAuthor() {
         return <small className="author-container">
             By {" "}
-            {formatUsername(this.state.ideaData.user.id, truncateText(this.state.ideaData.user.username, 20), this.props.moderators)} {" "}
+            {formatUsername(this.state.ideaData.user.id, truncateText(this.state.ideaData.user.username, 20), this.props.boardData.moderators)} {" "}
             <img className="img-responsive m-0 rounded-circle move-top-1px" alt="avatar"
                  src={getSizedAvatarByUrl(this.state.ideaData.user.avatar, 32)}
                  onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
