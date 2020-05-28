@@ -46,6 +46,7 @@ public class Tag implements Serializable {
   private Board board;
   private String name;
   private String color;
+  private boolean roadmapIgnored = false;
 
   public FetchTagDto convertToDto() {
     return new ModelMapper().map(this, FetchTagDto.class);

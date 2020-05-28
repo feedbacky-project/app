@@ -3,8 +3,6 @@ package net.feedbacky.app.service.idea;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
-import net.feedbacky.app.data.idea.dto.attachment.FetchAttachmentDto;
-import net.feedbacky.app.data.idea.dto.attachment.PostAttachmentDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
@@ -30,17 +28,9 @@ public interface IdeaService extends FeedbackyService {
 
   ResponseEntity<FetchIdeaDto> post(PostIdeaDto dto);
 
-  ResponseEntity<FetchAttachmentDto> postAttachment(long id, PostAttachmentDto dto);
-
-  FetchUserDto postSubscribe(long id);
-
   FetchIdeaDto patch(long id, PatchIdeaDto dto);
 
   ResponseEntity delete(long id);
-
-  ResponseEntity deleteAttachment(long id);
-
-  ResponseEntity deleteSubscribe(long id);
 
   List<FetchUserDto> getAllVoters(long id);
 

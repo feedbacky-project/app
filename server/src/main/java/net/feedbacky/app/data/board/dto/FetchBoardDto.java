@@ -47,5 +47,6 @@ public class FetchBoardDto {
   private final String webhooksUrl = "/v1/boards/:id/webhooks";
   private final String invitedUsersUrl = "/v1/boards/:id/invitedUsers";
   private final String invitationsUrl = "/v1/boards/:id/invitations";
+  private final String roadmapUrl = "/v1/boards/:id/roadmap";
 
 }

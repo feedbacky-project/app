@@ -90,13 +90,6 @@ public class IdeaRestController {
     return ideaService.post(dto);
   }
 
-  //todo post attachment api
-
-  @PostMapping("v1/ideas/{id}/subscribe")
-  public FetchUserDto postSubscribe(@PathVariable long id) {
-    return ideaService.postSubscribe(id);
-  }
-
   @PatchMapping("v1/ideas/{id}")
   public FetchIdeaDto patch(@PathVariable long id, @Valid @RequestBody PatchIdeaDto dto) {
     return ideaService.patch(id, dto);
@@ -105,16 +98,6 @@ public class IdeaRestController {
   @DeleteMapping("v1/ideas/{id}")
   public ResponseEntity delete(@PathVariable long id) {
     return ideaService.delete(id);
-  }
-
-  @DeleteMapping("v1/attachments/{id}")
-  public ResponseEntity deleteAttachment(@PathVariable long id) {
-    return ideaService.deleteAttachment(id);
-  }
-
-  @DeleteMapping("v1/ideas/{id}/subscribe")
-  public ResponseEntity deleteSubscribe(@PathVariable long id) {
-    return ideaService.deleteSubscribe(id);
   }
 
   @GetMapping("v1/ideas/{id}/voters")

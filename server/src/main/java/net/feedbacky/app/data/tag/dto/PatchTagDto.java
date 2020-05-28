@@ -24,5 +24,6 @@ public class PatchTagDto {
   private String name;
   @HexValue(message = "Color must be a valid Hex value.")
   private String color;
+  private Boolean roadmapIgnored;
 
 }

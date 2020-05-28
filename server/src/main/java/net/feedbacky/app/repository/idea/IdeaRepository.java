@@ -2,6 +2,7 @@ package net.feedbacky.app.repository.idea;
 
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.tag.Tag;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,5 +29,7 @@ public interface IdeaRepository extends JpaRepository<Idea, Long> {
   Optional<Idea> findByTitleAndBoard(String title, Board board);
 
   Page<Idea> findByBoardAndTitleIgnoreCaseContaining(Board board, String title, Pageable pageable);
+
+  Page<Idea> findByBoardAndTagsIn(Board board, List<Tag> tags, Pageable pageable);
 
 }
