@@ -30,6 +30,6 @@ public interface IdeaRepository extends JpaRepository<Idea, Long> {
 
   Page<Idea> findByBoardAndTitleIgnoreCaseContaining(Board board, String title, Pageable pageable);
 
-  Page<Idea> findByBoardAndTagsIn(Board board, List<Tag> tags, Pageable pageable);
+  Page<Idea> findByBoardAndTagsInAndStatus(Board board, List<Tag> tags, Idea.IdeaStatus status, Pageable pageable);
 
 }

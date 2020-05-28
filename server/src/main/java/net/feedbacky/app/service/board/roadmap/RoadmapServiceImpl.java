@@ -62,7 +62,7 @@ public class RoadmapServiceImpl implements RoadmapService {
       }
       FetchRoadmapElement element = new FetchRoadmapElement();
       element.setTag(tag.convertToDto());
-      Page<Idea> pageData = ideaRepository.findByBoardAndTagsIn(board, Collections.singletonList(tag), PageRequest.of(page, pageSize, Sort.by("votersAmount").descending()));
+      Page<Idea> pageData = ideaRepository.findByBoardAndTagsInAndStatus(board, Collections.singletonList(tag), Idea.IdeaStatus.OPENED, PageRequest.of(page, pageSize, Sort.by("votersAmount").descending()));
       List<Idea> ideas = pageData.getContent();
       int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
       List<FetchIdeaDto> dtos = ideas.stream().map(idea -> idea.convertToDto(finalUser)).collect(Collectors.toList());

@@ -19,8 +19,7 @@ class BoardView extends Component {
 
     state = {
         board: {data: [], loaded: false, error: false},
-        loginModalOpened: false,
-        privatePage: false
+        loginModalOpened: false
     };
 
     //workaround for refs that don't properly work with react router links...
@@ -52,7 +51,6 @@ class BoardView extends Component {
             if (data.privatePage && data.name === null) {
                 this.setState({
                     board: {...this.state.board, loaded: true},
-                    privatePage: true
                 });
                 return;
             }
@@ -86,7 +84,7 @@ class BoardView extends Component {
             return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
         }
 
-        if (this.state.privatePage) {
+        if (this.state.board.data.privatePage && this.state.board.data.name === null) {
             return <ErrorView icon={<FaEyeSlash className="error-icon"/>} message="This Board Is Private"/>
         }
         return <BoardContext.Provider value={{data: this.state.board.data, loaded: this.state.board.loaded, error: this.state.board.error}}>

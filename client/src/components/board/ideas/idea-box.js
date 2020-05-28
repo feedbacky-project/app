@@ -32,7 +32,7 @@ class IdeaBox extends Component {
                     </span>
                 <Link className="d-inline col px-0 text-left hidden-anchor" to={{
                     pathname: "/i/" + this.state.ideaData.id,
-                    state: {_ideaData: this.state.ideaData, _boardData: this.props.boardData, _moderators: this.props.moderators}
+                    state: {_ideaData: this.state.ideaData, _boardData: this.props.boardData}
                 }}>
                     <div>
                         <div className="d-inline mr-1" style={{fontSize: `1.15em`}}>

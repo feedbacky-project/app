@@ -41,8 +41,7 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
             hasMore={ideas.moreToLoad}
             loader={<LoadingSpinner key={ideas.data.length}/>}>
             {ideas.data.map(ideaData => {
-                return <IdeaBox key={ideaData.id} data={ideaData} onIdeaDelete={onIdeaDelete} boardData={boardContext.data}
-                                moderators={boardContext.data.moderators} onNotLoggedClick={onNotLoggedClick}/>
+                return <IdeaBox key={ideaData.id} data={ideaData} onIdeaDelete={onIdeaDelete} boardData={boardContext.data} onNotLoggedClick={onNotLoggedClick}/>
             })}
         </InfiniteScroll>
     };

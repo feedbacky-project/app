@@ -137,7 +137,7 @@ html {
 
 /* fixes mobile minimum width */
 body, .modal {
-  min-width: 280px;
+  min-width: 310px;
 }
 
 body {
@@ -476,6 +476,16 @@ a {
     font-weight: 500;
     line-height: 2rem;
   }
+}
+
+.roadmap-col {
+  min-width: 300px;
+}
+
+.roadmap-container {
+  min-height: 310px;
+  max-height: 310px;
+  overflow: auto;
 }
 
 @import "assets/scss/dark-mode";

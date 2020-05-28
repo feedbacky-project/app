@@ -18,6 +18,7 @@ const CreateBoardView = lazy(() => retry(() => import("views/creator/create-boar
 const ModeratorInvitation = lazy(() => retry(() => import("components/board/moderator-invitation")));
 const BoardInvitation = lazy(() => retry(() => import("components/board/board-invitation")));
 const BoardView = lazy(() => retry(() => import("views/board-view")));
+const RoadmapView = lazy(() => retry(() => import("views/roadmap-view")));
 const AdminPanelView = lazy(() => retry(() => import("views/admin/admin-panel-view")));
 const IdeaView = lazy(() => retry(() => import("views/idea-view")));
 const OauthReceiver = lazy(() => retry(() => import("auth/oauth-receiver")));
@@ -28,7 +29,7 @@ toast.configure();
 class App extends Component {
 
     CLIENT_VERSION = "0.2.0-beta";
-    API_ROUTE = process.env.REACT_APP_SERVER_IP_ADDRESS + "/api/v1";
+    API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "http://165.227.222.137:8090") + "/api/v1";
     state = {
         session: Cookies.get("FSID"),
         search: {
@@ -190,6 +191,7 @@ class App extends Component {
                         <Route path="/me/" component={ProfileView}/>
                         <Route path="/moderator_invitation/:code" component={ModeratorInvitation}/>
                         <Route path="/invitation/:code" component={BoardInvitation}/>
+                        <Route path={"/b/:id/roadmap"} component={RoadmapView}/>
                         <Route path="/b/:id" component={BoardView}/>
                         {/* sneaky way to redirect from /b/ to /b/ but with different :id parameters, because it doesn't work */}
                         <Route path="/brdr/:id" render={props =>
