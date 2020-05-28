@@ -10,9 +10,6 @@ const BoardBanner = ({customName}) => {
     const context = useContext(AppContext);
     const {socialLinks, name, shortDescription, banner, discriminator} = useContext(BoardContext).data;
     const renderSocialLinks = () => {
-        if (socialLinks.length === 0) {
-            return <React.Fragment/>
-        }
         let offset = 0;
         return <div className="d-none d-sm-block" style={{position: "relative", bottom: "-72px"}}>
             {socialLinks.map(link => {
@@ -28,9 +25,6 @@ const BoardBanner = ({customName}) => {
     };
 
     const renderSocialLinksMobile = () => {
-        if (socialLinks.length === 0) {
-            return <React.Fragment/>
-        }
         return <div className="d-inline-block d-sm-none" style={{position: "relative", bottom: "-26px", height: 0}}>
             {socialLinks.map(link => {
                 return <div key={link.id} className="d-inline social-link">
