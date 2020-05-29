@@ -18,5 +18,6 @@ public class FetchTagDto {
 
   private String name;
   private String color;
+  private boolean roadmapIgnored;
 
 }

@@ -19,21 +19,22 @@ const TagCreateModal = (props) => {
             toastWarning("Tag name must be between 3 and 20 characters.");
             return;
         }
+        const roadmapIgnored = document.getElementById("roadmapIgnored").checked;
         axios.post("/boards/" + props.data.discriminator + "/tags", {
-            name, color,
+            name, color, roadmapIgnored,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
                 return;
             }
             props.onTagCreateModalClose();
-            props.onTagCreate(name, color);
+            props.onTagCreate(name, color, roadmapIgnored);
             toastSuccess("Tag with name " + name + " created.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };
 
-    return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Add new Tag"
-                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Create New</Button>}>
+    return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Edit Tag"
+                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</Button>}>
         <Form noValidate>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>
@@ -44,13 +45,19 @@ const TagCreateModal = (props) => {
                     15 Remaining
                 </Form.Text>
             </Form.Group>
-            <Form.Group className="mb-2">
+            <Form.Group className="mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Color</Form.Label>
                 <ClickableTip id="tagColor" title="Tag Color" description="Choose color of the tag. Avoid bright colors, poorly visible both in Light and Dark Themes."/>
                 <br/>
                 <Suspense fallback={<LoadingSpinner/>}>
                     <ChromePicker className="text-center" disableAlpha color={color} onChangeComplete={changedColor => setColor(changedColor.hex)}/>
                 </Suspense>
+            </Form.Group>
+            <Form.Group className="mb-2">
+                <Form.Label className="mr-1 text-black-60">Ignore Roadmap</Form.Label>
+                <ClickableTip id="tagColor" title="Ignore Roadmap" description="Select if you don't want to include show tag and ideas with this tag in roadmap view."/>
+                <br/>
+                <Form.Check id="roadmapIgnored" custom inline label="Roadmap Ignored" type="checkbox" defaultChecked={false}/>
             </Form.Group>
         </Form>
     </PageModal>

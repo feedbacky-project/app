@@ -1,4 +1,4 @@
-import React, {Component, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
@@ -13,6 +13,7 @@ import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
+import {FaEyeSlash} from "react-icons/all";
 
 const TagsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -32,8 +33,8 @@ const TagsSettings = ({reRouteTo}) => {
     }, []);
     const onTagCreateModalClick = () => setModalOpen(true);
     const onTagCreateModalClose = () => setModalOpen(false);
-    const onTagCreate = (name, color) => {
-        const data = tags.data.concat({name, color});
+    const onTagCreate = (name, color, roadmapIgnored) => {
+        const data = tags.data.concat({name, color, roadmapIgnored});
         setTags({...tags, data});
     };
     const renderContent = () => {
@@ -54,6 +55,10 @@ const TagsSettings = ({reRouteTo}) => {
         return tags.data.map((tag, i) => {
             return <div key={i}>
                 <PageBadge color={tinycolor(tag.color)} text={tag.name}/>
+                {!tag.roadmapIgnored ||
+                <OverlayTrigger overlay={<Tooltip id={"infoTag" + i + "-tooltip"}>Ignores Roadmap</Tooltip>}>
+                    <FaEyeSlash className="fa-xs ml-1"/>
+                </OverlayTrigger>}
                 <OverlayTrigger overlay={<Tooltip id={"deleteTag" + i + "-tooltip"}>Delete Tag</Tooltip>}>
                     <FaTrashAlt className="fa-xs ml-1" onClick={() => onTagDelete(tag.name)}/>
                 </OverlayTrigger>

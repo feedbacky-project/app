@@ -31,6 +31,8 @@ public class PostTagDto {
   @NotNull(message = "Color cannot be empty.")
   @HexValue(allowEmpty = true, message = "Color must be a valid Hex value.")
   private String color;
+  @NotNull(message = "Please specify if tag should be ignored in roadmap.")
+  private Boolean roadmapIgnored;
 
   public Tag convertToEntity(Board board) {
     Tag tag = new ModelMapper().map(this, Tag.class);
