@@ -13,13 +13,16 @@ import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
-import {FaEyeSlash} from "react-icons/all";
+import {FaEyeSlash, FaPen} from "react-icons/all";
+import TagEditModal from "components/modal/tag-edit-modal";
 
 const TagsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
     const [tags, setTags] = useState({data: [], loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editData, setEditData] = useState({});
     const getQuota = () => 10 - tags.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/tags").then(res => {
@@ -59,6 +62,9 @@ const TagsSettings = ({reRouteTo}) => {
                 <OverlayTrigger overlay={<Tooltip id={"infoTag" + i + "-tooltip"}>Ignores Roadmap</Tooltip>}>
                     <FaEyeSlash className="fa-xs ml-1"/>
                 </OverlayTrigger>}
+                <OverlayTrigger overlay={<Tooltip id={"deleteTag" + i + "-tooltip"}>Edit Tag</Tooltip>}>
+                    <FaPen className="fa-xs ml-1" onClick={() => onTagEdit(tag)}/>
+                </OverlayTrigger>
                 <OverlayTrigger overlay={<Tooltip id={"deleteTag" + i + "-tooltip"}>Delete Tag</Tooltip>}>
                     <FaTrashAlt className="fa-xs ml-1" onClick={() => onTagDelete(tag.name)}/>
                 </OverlayTrigger>
@@ -72,6 +78,16 @@ const TagsSettings = ({reRouteTo}) => {
             </OverlayTrigger>
         }
         return <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} onClick={onTagCreateModalClick}>Add new Tag</Button>
+    };
+    const onTagEdit = (tag) => {
+        setEditData(tag);
+        setEditModalOpen(true);
+    };
+    const onEdit = (oldTag, tag) => {
+        const data = tags.data;
+        const i = data.indexOf(oldTag);
+        data[i] = tag;
+        setTags({...tags, data});
     };
     const onTagDelete = (name) => {
         popupSwal("warning", "Dangerous action", "This action is <strong>irreversible</strong> and will delete tag from all ideas, please confirm your action.",
@@ -93,6 +109,7 @@ const TagsSettings = ({reRouteTo}) => {
     return <React.Fragment>
         <AdminSidebar currentNode="tags" reRouteTo={reRouteTo} data={boardData}/>
         <TagCreateModal onTagCreate={onTagCreate} onTagCreateModalClose={onTagCreateModalClose} data={boardData} open={modalOpen}/>
+        <TagEditModal open={editModalOpen} onClose={() => setEditModalOpen(false)} boardData={boardData} tag={editData} onEdit={onEdit}/>
         <Col xs={12} md={9}>
             <ViewBox theme={context.getTheme()} title="Tags Management" description="Edit your board tags here.">
                 {renderContent()}
