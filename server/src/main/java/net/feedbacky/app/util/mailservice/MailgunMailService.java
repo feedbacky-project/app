@@ -28,7 +28,7 @@ public class MailgunMailService implements MailService {
   }
 
   private void doSend(String to, String subject, String text, String html) throws UnirestException {
-    Unirest.post(baseUrl + "/messages")
+    Unirest.post(baseUrl)
             .basicAuth("api", apiKey)
             .queryString("from", mailSender)
             .queryString("to", to)
