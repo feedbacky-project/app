@@ -21,6 +21,8 @@ public class MailHandler {
   public void init() {
     if(mailServiceType.equalsIgnoreCase("mailgun")) {
       mailService = new MailgunMailService();
+    } else if(mailServiceType.equalsIgnoreCase("sendgrid")){
+      mailService = new SendGridMailService();
     } else {
       mailService = new SmtpMailService();
     }
