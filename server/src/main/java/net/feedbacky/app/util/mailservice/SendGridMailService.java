@@ -10,7 +10,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,21 +40,29 @@ public class SendGridMailService implements MailService {
 
   private void doSend(String to, String subject, String text, String html) throws IOException, UnirestException {
     Map<String, Object> data = new HashMap<>();
-    Map<String, String> mailReceivers = new HashMap<>();
-    mailReceivers.put("email", to);
-    data.put("personalizations", new Personalizations(mailReceivers, subject));
+    data.put("personalizations", Collections.singletonList(new Personalizations(Collections.singletonList(new To(to)), subject)));
     data.put("from", new From(mailSender));
     data.put("content", Arrays.asList(new Content("text/plain", text), new Content("text/html", html)));
     ObjectMapper mapper = new ObjectMapper();
-    Unirest.post(baseUrl).header("Authorization", "Bearer " + apiKey).body(mapper.writeValueAsString(data)).asJson();
+    Unirest.post(baseUrl)
+            .header("Authorization", "Bearer " + apiKey)
+            .header("Content-Type", "application/json")
+            .body(mapper.writeValueAsString(data)).asJson();
   }
 
   @Getter
   @Setter
   @AllArgsConstructor
   private static class Personalizations {
-    private Map<String, String> to;
+    private List<To> to;
     private String subject;
+  }
+
+  @Getter
+  @Setter
+  @AllArgsConstructor
+  private static class To {
+    private String email;
   }
 
   @Getter
