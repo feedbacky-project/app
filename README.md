@@ -36,7 +36,7 @@ Icons (from client project at /src/views/admin/subviews/webhooks/steps/StepSecon
 
 Some SVG illustrations provided by https://undraw.co/
 
-Design system used in project provided by https://mdbootstrap.com and https://getbootstrap.com/
+Design system used in project provided by https://getbootstrap.com/
 
 ## License
 Feedbacky is free and open source software under the [MIT License](https://github.com/Plajer/feedbacky-project/blob/master/LICENSE.md).
