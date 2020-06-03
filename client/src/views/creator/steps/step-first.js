@@ -4,7 +4,7 @@ import {formatRemainingCharacters} from "components/util/utils";
 import ClickableTip from "components/util/clickable-tip";
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 
-const StepFirst = (props) => {
+const StepFirst = ({updateSettings, settings}) => {
     return <React.Fragment>
         <Col xs={12} className="mt-4 text-center">
             <img alt="" src={UndrawCreateProject} className="my-2" width={150} height={150}/>
@@ -25,8 +25,11 @@ const StepFirst = (props) => {
                                   <strong>Minimum 3 and maximum of 20 characters.</strong></React.Fragment>}/>
             </div>
             <Form.Control style={{minHeight: 38, resize: "none"}} minLength="3" maxLength="20" rows="1" required type="text"
-                          placeholder="Short discriminator eg. my-project-123." id="discriminator" defaultValue={props.discriminator}
-                          onKeyUp={() => onValueInput("discriminator", "remainingDiscriminator", 20, props)}/>
+                          placeholder="Short discriminator eg. my-project-123." id="discriminator" defaultValue={settings.discriminator}
+                          onKeyUp={() => {
+                              updateSettings({...settings, discriminator: document.getElementById("discriminator").value});
+                              formatRemainingCharacters("remainingDiscriminator", "discriminator", 20);
+                          }}/>
             <Form.Text className="text-right text-black-60" id="remainingDiscriminator">
                 20 Remaining
             </Form.Text>
@@ -37,18 +40,16 @@ const StepFirst = (props) => {
                 <ClickableTip id="boardName" title="Set Board Name" description="Name of your board should be at least 4 and maximum 25 characters long."/>
             </div>
             <Form.Control style={{minHeight: 38, resize: "none"}} minLength="4" maxLength="25" rows="1" required type="text"
-                          placeholder="Short name of board." id="name" defaultValue={props.name}
-                          onKeyUp={() => onValueInput("name", "remainingName", 25, props)}/>
+                          placeholder="Short name of board." id="name" defaultValue={settings.name}
+                          onKeyUp={() => {
+                              updateSettings({...settings, name: document.getElementById("name").value});
+                              formatRemainingCharacters("remainingName", "name", 25);
+                          }}/>
             <Form.Text className="text-right text-black-60" id="remainingName">
                 25 Remaining
             </Form.Text>
         </Col>
     </React.Fragment>
-};
-
-const onValueInput = (elementId, remainingId, limit, props) => {
-    props.onSetupMethodCall(elementId, document.getElementById(elementId).value);
-    formatRemainingCharacters(remainingId, elementId, limit);
 };
 
 export default StepFirst;

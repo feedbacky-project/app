@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, {useContext, useState} from 'react';
 import AppContext from "context/app-context";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useHistory, withRouter} from "react-router-dom";
 import StepFirst from "views/admin/subviews/webhooks/steps/step-first";
 import StepSecond from "views/admin/subviews/webhooks/steps/step-second";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
@@ -11,32 +11,78 @@ import StepThird from "views/admin/subviews/webhooks/steps/step-third";
 
 import "views/Steps.css";
 import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
+import BoardContext from "context/board-context";
 
-class CreateWebhook extends Component {
-
-    static contextType = AppContext;
-
-    state = {
-        step: 1,
-        type: "",
-        listenedEvents: [],
-        url: "",
+const CreateWebhook = () => {
+    const context = useContext(AppContext);
+    const history = useHistory();
+    const boardData = useContext(BoardContext).data;
+    const [settings, setSettings] = useState({step: 1, type: "", listenedEvents: [], url: ""});
+    const updateSettings = (data) => {
+        setSettings(data);
     };
-
-    render() {
-        return <React.Fragment>
-            <Container>
-                <Row className="mt-5">
-                    {this.renderContent()}
-                </Row>
-            </Container>
-        </React.Fragment>
-    }
-
-    renderContent() {
-        return <React.Fragment>
+    const renderStep = () => {
+        switch (settings.step) {
+            case 1:
+                return <StepFirst updateSettings={updateSettings} settings={settings}/>;
+            case 2:
+                return <StepSecond updateSettings={updateSettings} settings={settings}/>;
+            case 3:
+                return <StepThird updateSettings={updateSettings} settings={settings}/>;
+            case 4:
+                let toastId = toastAwait("Adding new webhook...");
+                axios.post("/boards/" + boardData.discriminator + "/webhooks", {
+                    url: settings.url, type: settings.type, events: settings.listenedEvents,
+                }).then(res => {
+                    if (res.status !== 201) {
+                        toastWarning("Couldn't add webhook due to unknown error!", toastId);
+                        return;
+                    }
+                    toastSuccess("Added new webhook, sending sample response.", toastId);
+                    history.push("/ba/" + boardData.discriminator + "/webhooks");
+                }).catch(err => {
+                    toastError(err.response.data.errors[0], toastId);
+                    setSettings({...settings, step: 3});
+                });
+                return <StepThird updateSettings={updateSettings} settings={settings}/>;
+            default:
+                toastWarning("Setup encountered unexpected issue.");
+                setSettings({...settings, step: 1});
+                return <StepFirst updateSettings={updateSettings} settings={settings}/>;
+        }
+    };
+    const renderBackButton = () => {
+        if (settings.step === 1) {
+            return <React.Fragment/>
+        }
+        return <PreviousStepButton previousStep={previousStep}/>
+    };
+    const renderNextButton = () => {
+        if (settings.step >= 3) {
+            return <Button variant="success" className="ml-2" onClick={nextStep}>Finish</Button>
+        }
+        return <NextStepButton nextStep={nextStep}/>
+    };
+    const previousStep = () => {
+        setSettings({...settings, step: settings.step - 1});
+    };
+    const nextStep = () => {
+        if (settings.step === 1 && settings.type === "") {
+            toastWarning("Type must be chosen.");
+            return;
+        } else if (settings.step === 2 && settings.listenedEvents.length === 0) {
+            toastWarning("Events must be chosen.");
+            return;
+        } else if (settings.step === 3 && settings.url === "") {
+            toastWarning("URL must be typed.");
+            return;
+        }
+        setSettings({...settings, step: settings.step + 1});
+    };
+    return <Container>
+        <Row className="mt-5">
             <Col xs={12} className="d-none d-sm-block">
-                <Steps direction="horizontal" size="small" progressDot current={this.state.step}>
+                <Steps direction="horizontal" size="small" progressDot current={settings.step}>
                     <Step title="Select Type"/>
                     <Step title="Choose Events"/>
                     <Step title="Set URL"/>
@@ -44,108 +90,17 @@ class CreateWebhook extends Component {
                 </Steps>
             </Col>
             <Col xs={12} className="d-sm-none px-4">
-                <small>Step {this.state.step}</small>
-                <ProgressBar now={this.state.step * 25}/>
+                <small>Step {settings.step}</small>
+                <ProgressBar now={settings.step * 25}/>
             </Col>
-            {this.renderStep()}
+            {renderStep()}
             <Col xs={12} className="text-right mt-4">
-                <Button variant="link" className="text-black-60" as={Link} to={"/ba/" + this.props.data.discriminator + "/webhooks"}>Cancel</Button>
-                {this.renderBackButton()}
-                {this.renderNextButton()}
+                <Button variant="link" className="text-black-60" as={Link} to={"/ba/" + boardData.discriminator + "/webhooks"}>Cancel</Button>
+                {renderBackButton()}
+                {renderNextButton()}
             </Col>
-        </React.Fragment>
-    }
-
-
-    renderStep() {
-        switch (this.state.step) {
-            case 1:
-                return <StepFirst onSetupMethodCall={this.onSetupMethodCall} type={this.state.type}/>;
-            case 2:
-                return <StepSecond onSetupMethodCall={this.onSetupMethodCall} events={this.state.listenedEvents}/>;
-            case 3:
-                return <StepThird onSetupMethodCall={this.onSetupMethodCall} url={this.state.url}/>;
-            case 4:
-                let toastId = toastAwait("Adding new webhook...");
-                axios.post("/boards/" + this.props.data.discriminator + "/webhooks", {
-                    url: this.state.url,
-                    type: this.state.type,
-                    events: this.state.listenedEvents,
-                }).then(res => {
-                    if (res.status !== 201) {
-                        toastWarning("Couldn't add webhook due to unknown error!", toastId);
-                        return;
-                    }
-                    toastSuccess("Added new webhook, sending sample response.", toastId);
-                    this.props.history.push("/ba/" + this.props.data.discriminator + "/webhooks");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0], toastId);
-                    this.setState({step: 3});
-                });
-                return <StepThird onSetupMethodCall={this.onSetupMethodCall} url={this.state.url}/>;
-            default:
-                toastWarning("Setup encountered unexpected issue.");
-                this.setState({step: 1});
-                return <StepFirst onSetupMethodCall={this.onSetupMethodCall} chosen={this.state.chosen} customIcon={this.state.customIcon} iconData={this.state.iconData}/>;
-        }
-    }
-
-    onSetupMethodCall = (type, value) => {
-        switch (type) {
-            case "url":
-                this.setState({url: value});
-                return;
-            case "type":
-                if (value === "CUSTOM_ENDPOINT") {
-                    toastWarning("Option not yet available.");
-                    return;
-                }
-                this.setState({type: value});
-                return;
-            case "event":
-                if (this.state.listenedEvents.includes(value)) {
-                    this.setState({listenedEvents: this.state.listenedEvents.filter(item => item !== value)});
-                } else {
-                    this.setState({listenedEvents: [...this.state.listenedEvents, value]});
-                }
-                return;
-            default:
-                return;
-        }
-    };
-
-    renderBackButton() {
-        if (this.state.step === 1) {
-            return <React.Fragment/>
-        }
-        return <PreviousStepButton previousStep={this.previousStep}/>
-    }
-
-    renderNextButton() {
-        if (this.state.step >= 3) {
-            return <Button variant="success" className="ml-2" onClick={this.nextStep}>Finish</Button>
-        }
-        return <NextStepButton nextStep={this.nextStep}/>
-    }
-
-    previousStep = () => {
-        this.setState({step: this.state.step - 1});
-    };
-
-    nextStep = () => {
-        if (this.state.step === 1 && this.state.type === "") {
-            toastWarning("Type must be chosen.");
-            return;
-        } else if (this.state.step === 2 && this.state.listenedEvents.length === 0) {
-            toastWarning("Events must be chosen.");
-            return;
-        } else if (this.state.step === 3 && this.state.url === "") {
-            toastWarning("URL must be typed.");
-            return;
-        }
-        this.setState({step: this.state.step + 1});
-    };
-
-}
+        </Row>
+    </Container>
+};
 
 export default withRouter(CreateWebhook);

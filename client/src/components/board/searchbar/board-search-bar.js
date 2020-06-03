@@ -7,7 +7,7 @@ import {FaAngleDown} from "react-icons/all";
 import BoardContext from "context/board-context";
 import {useHistory} from "react-router-dom";
 
-const BoardSearchBar = (props) => {
+const BoardSearchBar = () => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
     const history = useHistory();

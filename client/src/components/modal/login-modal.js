@@ -8,7 +8,7 @@ const LoginModal = (props) => {
         <Modal.Header className="w-100">
             <img src={props.image} alt="avatar" className="rounded-circle img-responsive img-thumbnail"/>
         </Modal.Header>
-        <Modal.Body className="text-center pt-2 text-black-75">
+        <Modal.Body className="text-center pt-2 my-3 text-black-75">
             <div className="mb-2">Sign in to {props.boardName} with</div>
             {context.serviceData.loginProviders.map((data, i) => {
                 let provider = data.providerData;

@@ -1,136 +1,114 @@
-import React, {Component} from 'react';
-import AppContext from "context/app-context";
+import React, {useContext, useState} from 'react';
 import StepFirst from "views/admin/subviews/social/steps/step-first";
 import StepSecond from "views/admin/subviews/social//steps/step-second";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
 import Steps, {Step} from "rc-steps";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useHistory, withRouter} from "react-router-dom";
 
 import "views/Steps.css";
 import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
+import BoardContext from "context/board-context";
 
-class CreateSocialLink extends Component {
-
-    static contextType = AppContext;
-
-    state = {
-        step: 1,
-        iconData: "",
-        url: "",
-        chosen: -1,
-        customIcon: false,
-    };
-
-    render() {
-        return <React.Fragment>
-            <Container>
-                <Row className="mt-5">
-                    {this.renderContent()}
-                </Row>
-            </Container>
-        </React.Fragment>
-    }
-
-    renderContent() {
-        return <React.Fragment>
-            <Col xs={12} className="d-none d-sm-block">
-                <Steps direction="horizontal" size="small" progressDot current={this.state.step}>
-                    <Step title="Choose Icon"/>
-                    <Step title="Set Link"/>
-                    <Step title="Finish" state="finish"/>
-                </Steps>
-            </Col>
-            <Col xs={12} className="d-sm-none px-4">
-                <small>Step {this.state.step}</small>
-                <ProgressBar now={this.state.step * 33.3}/>
-            </Col>
-            {this.renderStep()}
-            <Col xs={12} className="text-right mt-4">
-                <Button variant="link" className="text-black-60" as={Link} to={"/ba/" + this.props.data.discriminator + "/social"}>Cancel</Button>
-                {this.renderBackButton()}
-                {this.renderNextButton()}
-            </Col>
-        </React.Fragment>
-    }
-
-    renderStep() {
-        switch (this.state.step) {
+const CreateSocialLink = () => {
+    const boardData = useContext(BoardContext).data;
+    const history = useHistory();
+    const [settings, setSettings] = useState({step: 1, iconData: "", url: "", chosen: -1, customIcon: false});
+    const renderStep = () => {
+        switch (settings.step) {
             case 1:
-                return <StepFirst onSetupMethodCall={this.onSetupMethodCall} chosen={this.state.chosen} customIcon={this.state.customIcon} iconData={this.state.iconData}/>;
+                return <StepFirst updateSettings={updateSettings} settings={settings}/>;
             case 2:
-                return <StepSecond onSetupMethodCall={this.onSetupMethodCall} banner={this.state.banner} logo={this.state.logo}/>;
+                return <StepSecond updateSettings={updateSettings} settings={settings}/>;
             case 3:
                 let toastId = toastAwait("Adding new social link...");
-                axios.post("/boards/" + this.props.data.discriminator + "/socialLinks", {
-                    iconData: this.state.iconData,
-                    url: this.state.url
+                axios.post("/boards/" + boardData.discriminator + "/socialLinks", {
+                    iconData: settings.iconData, url: settings.url
                 }).then(res => {
                     if (res.status !== 201) {
                         toastWarning("Couldn't add social link due to unknown error!", toastId);
                         return;
                     }
                     toastSuccess("Added new social link.", toastId);
-                    this.props.history.push("/ba/" + this.props.data.discriminator + "/social");
+                    history.push("/ba/" + boardData.discriminator + "/social");
                 }).catch(err => {
                     toastError(err.response.data.errors[0], toastId);
-                    this.setState({step: 2});
+                    setSettings({...settings, step: 2});
                 });
-                return <StepSecond onSetupMethodCall={this.onSetupMethodCall} banner={this.state.banner} logo={this.state.logo}/>;
+                return <StepSecond onSetupMethodCall={onSetupMethodCall}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");
-                this.setState({step: 1});
-                return <StepFirst onSetupMethodCall={this.onSetupMethodCall} chosen={this.state.chosen} customIcon={this.state.customIcon} iconData={this.state.iconData}/>;
+                setSettings({...settings, step: 1});
+                return <StepFirst onSetupMethodCall={onSetupMethodCall} chosen={settings.chosen} customIcon={settings.customIcon} iconData={settings.iconData}/>;
         }
-    }
-
-    onSetupMethodCall = (type, value) => {
+    };
+    const updateSettings = (data) => {
+        setSettings(data);
+    };
+    const onSetupMethodCall = (type, value) => {
         switch (type) {
             case "iconData":
-                this.setState({iconData: value});
+                setSettings({...settings, iconData: value});
                 return;
             case "url":
-                this.setState({url: value});
+                setSettings({...settings, url: value});
                 return;
             case "customIcon":
-                this.setState({customIcon: value});
+                setSettings({...settings, customIcon: value});
                 return;
             case "chosen":
-                this.setState({chosen: value});
+                setSettings({...settings, chosen: value});
                 return;
             default:
                 return;
         }
     };
-
-    renderBackButton() {
-        if (this.state.step === 1) {
+    const renderBackButton = () => {
+        if (settings.step === 1) {
             return <React.Fragment/>
         }
-        return <PreviousStepButton previousStep={this.previousStep}/>
-    }
-
-    renderNextButton() {
-        if (this.state.step >= 2) {
-            return <Button variant="success" className="ml-2" onClick={this.nextStep}>Finish</Button>
-        }
-        return <NextStepButton nextStep={this.nextStep}/>
-    }
-
-    previousStep = () => {
-        this.setState({step: this.state.step - 1});
+        return <PreviousStepButton previousStep={previousStep}/>
     };
-
-    nextStep = () => {
-        if (this.state.step === 1) {
-            if (this.state.iconData === "") {
+    const renderNextButton = () => {
+        if (settings.step >= 2) {
+            return <Button variant="success" className="ml-2" onClick={nextStep}>Finish</Button>
+        }
+        return <NextStepButton nextStep={nextStep}/>
+    };
+    const previousStep = () => {
+        setSettings({...settings, step: settings.step - 1});
+    };
+    const nextStep = () => {
+        if (settings.step === 1) {
+            if (settings.iconData === "") {
                 toastWarning("Icon must be chosen.");
                 return;
             }
         }
-        this.setState({step: this.state.step + 1});
+        setSettings({...settings, step: settings.step + 1});
     };
-}
+    return <Container>
+        <Row className="mt-5">
+            <Col xs={12} className="d-none d-sm-block">
+                <Steps direction="horizontal" size="small" progressDot current={settings.step}>
+                    <Step title="Choose Icon"/>
+                    <Step title="Set Link"/>
+                    <Step title="Finish" state="finish"/>
+                </Steps>
+            </Col>
+            <Col xs={12} className="d-sm-none px-4">
+                <small>Step {settings.step}</small>
+                <ProgressBar now={settings.step * 33.3}/>
+            </Col>
+            {renderStep()}
+            <Col xs={12} className="text-right mt-4">
+                <Button variant="link" className="text-black-60" as={Link} to={"/ba/" + boardData.discriminator + "/social"}>Cancel</Button>
+                {renderBackButton()}
+                {renderNextButton()}
+            </Col>
+        </Row>
+    </Container>
+};
 
 export default withRouter(CreateSocialLink);

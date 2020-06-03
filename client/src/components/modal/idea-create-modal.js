@@ -2,15 +2,7 @@ import React, {useContext, useState} from 'react';
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {FaRegImage} from "react-icons/fa";
-import {
-    formatRemainingCharacters,
-    getBase64FromFile,
-    toastAwait,
-    toastError,
-    toastSuccess,
-    toastWarning,
-    validateImageWithWarning
-} from "components/util/utils";
+import {formatRemainingCharacters, getBase64FromFile, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";

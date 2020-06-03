@@ -8,6 +8,7 @@ import axios from "axios";
 import AppContext from "context/app-context";
 
 export const SimpleIdeaCard = ({data, onNotLoggedClick}) => {
+    const cardRef = React.createRef();
     const [idea, setIdea] = useState(data);
     const boardData = useContext(BoardContext).data;
     const context = useContext(AppContext);
@@ -53,10 +54,15 @@ export const SimpleIdeaCard = ({data, onNotLoggedClick}) => {
                 toastError();
                 return;
             }
+            if(upvoted) {
+                cardRef.current.classList.add("upvote-animation");
+            } else {
+                cardRef.current.classList.remove("upvote-animation");
+            }
             setIdea({...idea, upvoted, votersAmount});
         }).catch(() => toastError());
     };
-    return <div id={"container_idea_" + idea.id} className="m-3" style={{borderRadius: 0, display: `block`}}>
+    return <div ref={cardRef} id={"container_idea_" + idea.id} className="m-3" style={{borderRadius: 0, display: `block`}}>
         <div className="row">
             <span className="my-auto mr-2">
                 <VoteButton votersAmount={idea.votersAmount} onVote={onVote} upvoted={idea.upvoted}/>

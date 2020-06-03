@@ -2,7 +2,7 @@ import React from 'react';
 import {Col, Form} from "react-bootstrap";
 import UndrawSetUrl from "assets/svg/undraw/set_url.svg";
 
-const StepSecond = (props) => {
+const StepSecond = ({settings, updateSettings}) => {
     return <React.Fragment>
         <Col xs={12} className="mt-4 text-center">
             <img alt="" src={UndrawSetUrl} className="my-2" width={150} height={150}/>
@@ -16,8 +16,8 @@ const StepSecond = (props) => {
                 Social URL
             </div>
             <Form.Control style={{minHeight: 38, resize: "none"}} rows="1" required type="text"
-                          placeholder="URL to target site, include http/https:// state." id="url" defaultValue={props.url}
-                          onChange={() => props.onSetupMethodCall("url", document.getElementById("url").value)}/>
+                          placeholder="URL to target site, include http/https:// state." id="url" defaultValue={settings.url}
+                          onChange={() => updateSettings({...settings, url: document.getElementById("url").value})}/>
         </Col>
     </React.Fragment>
 };

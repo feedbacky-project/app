@@ -4,7 +4,7 @@ import AppContext from "context/app-context";
 import {FiChevronsUp, FiChevronUp} from "react-icons/all";
 import PropTypes from "prop-types";
 
-const VoteButton = ({upvoted, votersAmount, onVote, justVoted = false}) => {
+const VoteButton = ({upvoted, votersAmount, onVote}) => {
     const context = useContext(AppContext);
     let color = context.getTheme();
 
@@ -15,12 +15,8 @@ const VoteButton = ({upvoted, votersAmount, onVote, justVoted = false}) => {
     } else {
         vote = <FiChevronsUp style={{color}}/>;
     }
-    let classes = "vote-btn";
-    if (justVoted) {
-        classes += " upvote-animation";
-    }
     return <span className="my-auto">
-        <Button className={classes} onClick={onVote} variant="">
+        <Button className="vote-btn" onClick={onVote} variant="">
             {vote}
             <strong className="d-block" style={{color: color}}>{votersAmount}</strong>
         </Button>
@@ -30,8 +26,7 @@ const VoteButton = ({upvoted, votersAmount, onVote, justVoted = false}) => {
 VoteButton.propTypes = {
     upvoted: PropTypes.bool.isRequired,
     votersAmount: PropTypes.number.isRequired,
-    onVote: PropTypes.func.isRequired,
-    justVoted: PropTypes.bool
+    onVote: PropTypes.func.isRequired
 };
 
 export default VoteButton;

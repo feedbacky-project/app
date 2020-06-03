@@ -14,7 +14,6 @@ import {SvgNotice} from "components/app/svg-notice";
 
 const BoardContainer = ({id, onNotLoggedClick}) => {
     const context = useContext(AppContext);
-    const boardContext = useContext(BoardContext);
     const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
     const loadIdeas = () => {
@@ -30,7 +29,7 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
             hasMore={ideas.moreToLoad}
             loader={<LoadingSpinner key={ideas.data.length}/>}>
             {ideas.data.map(ideaData => {
-                return <IdeaCard key={ideaData.id} data={ideaData} onIdeaDelete={onIdeaDelete} boardData={boardContext.data} onNotLoggedClick={onNotLoggedClick}/>
+                return <IdeaCard key={ideaData.id} data={ideaData} onIdeaDelete={onIdeaDelete} onNotLoggedClick={onNotLoggedClick}/>
             })}
         </InfiniteScroll>
     };

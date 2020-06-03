@@ -45,7 +45,7 @@ const IdeaView = () => {
         if (location.state == null) {
             axios.get("/ideas/" + id).then(res => {
                 if (res.status !== 200) {
-                    setIdea({...idea, error: true, loaded: true});
+                    setIdea({...idea, error: true});
                     return;
                 }
                 const ideaData = res.data;
@@ -55,7 +55,7 @@ const IdeaView = () => {
                     return;
                 }
                 ideaData.tags.sort((a, b) => a.name.localeCompare(b.name));
-                setIdea({...idea, ideaData, loaded: true});
+                setIdea({...idea, data: ideaData, loaded: true});
                 loadBoardDataCascade(ideaData);
             }).catch(() => setIdea({...idea, loaded: true, error: true}));
         } else {
@@ -88,7 +88,7 @@ const IdeaView = () => {
                     <hr/>
                 </Col>
                 <ComponentLoader loaded={idea.loaded} component={
-                    <DiscussionBox updateState={updateState} moderators={board.data.moderators} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
+                    <DiscussionBox updateState={updateState} moderators={board.data.moderators} ideaData={idea.data}/>
                 }/>
             </Row>
         </Container>

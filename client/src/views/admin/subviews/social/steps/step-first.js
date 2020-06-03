@@ -16,26 +16,45 @@ const itemData = ["data:image/png;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXN
     "data:image/png;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImZhcyIgZGF0YS1pY29uPSJnbG9iZSIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIGZhLWdsb2JlIGZhLXctMTYiIHJvbGU9ImltZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDk2IDUxMiI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMzM2LjUgMTYwQzMyMiA3MC43IDI4Ny44IDggMjQ4IDhzLTc0IDYyLjctODguNSAxNTJoMTc3ek0xNTIgMjU2YzAgMjIuMiAxLjIgNDMuNSAzLjMgNjRoMTg1LjNjMi4xLTIwLjUgMy4zLTQxLjggMy4zLTY0cy0xLjItNDMuNS0zLjMtNjRIMTU1LjNjLTIuMSAyMC41LTMuMyA0MS44LTMuMyA2NHptMzI0LjctOTZjLTI4LjYtNjcuOS04Ni41LTEyMC40LTE1OC0xNDEuNiAyNC40IDMzLjggNDEuMiA4NC43IDUwIDE0MS42aDEwOHpNMTc3LjIgMTguNEMxMDUuOCAzOS42IDQ3LjggOTIuMSAxOS4zIDE2MGgxMDhjOC43LTU2LjkgMjUuNS0xMDcuOCA0OS45LTE0MS42ek00ODcuNCAxOTJIMzcyLjdjMi4xIDIxIDMuMyA0Mi41IDMuMyA2NHMtMS4yIDQzLTMuMyA2NGgxMTQuNmM1LjUtMjAuNSA4LjYtNDEuOCA4LjYtNjRzLTMuMS00My41LTguNS02NHpNMTIwIDI1NmMwLTIxLjUgMS4yLTQzIDMuMy02NEg4LjZDMy4yIDIxMi41IDAgMjMzLjggMCAyNTZzMy4yIDQzLjUgOC42IDY0aDExNC42Yy0yLTIxLTMuMi00Mi41LTMuMi02NHptMzkuNSA5NmMxNC41IDg5LjMgNDguNyAxNTIgODguNSAxNTJzNzQtNjIuNyA4OC41LTE1MmgtMTc3em0xNTkuMyAxNDEuNmM3MS40LTIxLjIgMTI5LjQtNzMuNyAxNTgtMTQxLjZoLTEwOGMtOC44IDU2LjktMjUuNiAxMDcuOC01MCAxNDEuNnpNMTkuMyAzNTJjMjguNiA2Ny45IDg2LjUgMTIwLjQgMTU4IDE0MS42LTI0LjQtMzMuOC00MS4yLTg0LjctNTAtMTQxLjZoLTEwOHoiPjwvcGF0aD48L3N2Zz4=",
 ];
 
-const StepFirst = (props) => {
+const StepFirst = ({settings, updateSettings}) => {
     const renderCards = () => {
         return itemsIcons.map((item, i) => {
             let name = itemNames[i];
             let classes = "rounded-xl m-2";
-            if (props.chosen === i) {
+            if (settings.chosen === i) {
                 classes += " border-chosen";
             } else {
                 classes += " border-invisible";
             }
             if (name === "Custom") {
-                return <SetupCard key={i} icon={props.iconData === "" || !props.customIcon ? item : <img alt="Icon" src={props.iconData} className="fa-lg"/>}
+                return <SetupCard key={i} icon={settings.iconData === "" || !settings.customIcon ? item : <img alt="Icon" src={settings.iconData} className="fa-lg"/>}
                                   text={name} className={classes} onClick={onCustomUpload}/>
             }
-            return <SetupCard key={i} icon={item} text={name} onClick={() => setChosen(i, props)} className={classes}/>
+            return <SetupCard key={i} icon={item} text={name} onClick={() => setChosen(i)} className={classes}/>
+        });
+    };
+    const onCustomUpload = () => {
+        document.getElementById("logoInput").click();
+    };
+    const onUpload = (e) => {
+        if (!validateImageWithWarning(e, "logoInput", 150)) {
+            return;
+        }
+        let file = e.target.files[0];
+        getBase64FromFile(file).then(data => {
+            updateSettings({
+                ...settings, chosen: 5, customIcon: true, iconData: data
+            });
+        });
+    };
+    const setChosen = (item) => {
+        updateSettings({
+            ...settings, chosen: item, customIcon: false, iconData: itemData[item]
         });
     };
 
     return <React.Fragment>
-        <input id="logoInput" type="file" accept="image/jpeg, image/png" className="d-none" name="logo" onChange={e => onUpload(e, props)}/>
+        <input id="logoInput" type="file" accept="image/jpeg, image/png" className="d-none" name="logo" onChange={e => onUpload(e)}/>
         <Col xs={12} className="mt-4 text-center">
             <img alt="" src={UndrawCreateProject} className="my-2" width={150} height={150}/>
             <h2>Choose Link Icon</h2>
@@ -52,27 +71,4 @@ const StepFirst = (props) => {
         </Col>
     </React.Fragment>
 };
-
-const onCustomUpload = () => {
-    document.getElementById("logoInput").click();
-};
-
-const onUpload = (e, props) => {
-    if (!validateImageWithWarning(e, "logoInput", 150)) {
-        return;
-    }
-    let file = e.target.files[0];
-    getBase64FromFile(file).then(data => {
-        props.onSetupMethodCall("chosen", 5);
-        props.onSetupMethodCall("customIcon", true);
-        props.onSetupMethodCall("iconData", data);
-    });
-};
-
-const setChosen = (item, props) => {
-    props.onSetupMethodCall("chosen", item);
-    props.onSetupMethodCall("customIcon", false);
-    props.onSetupMethodCall("iconData", itemData[item]);
-};
-
 export default StepFirst;
