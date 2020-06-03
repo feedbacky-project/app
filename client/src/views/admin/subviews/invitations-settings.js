@@ -1,4 +1,4 @@
-import React, {Component, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";

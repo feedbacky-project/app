@@ -1,4 +1,4 @@
-import React, {Component, lazy, Suspense, useContext, useState} from 'react';
+import React, {lazy, Suspense, useContext, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
 import axios from "axios";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "components/util/utils";

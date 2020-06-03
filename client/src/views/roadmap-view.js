@@ -7,10 +7,8 @@ import {Container, Row} from "react-bootstrap";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaExclamationCircle, FaEyeSlash} from "react-icons/all";
 import LoginModal from "components/modal/login-modal";
-import BoardNavbar from "components/navbars/board-navbar";
 import BoardContext from "context/board-context";
 import {BoardRoadmap} from "components/roadmap/board-roadmap";
-import PageBadge from "components/app/page-badge";
 import IdeaNavbar from "components/navbars/idea-navbar";
 
 const RoadmapView = () => {

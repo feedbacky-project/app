@@ -10,46 +10,39 @@ import Cookies from "js-cookie";
 const OauthReceiver = ({onLogin}) => {
     const {provider} = useParams();
     const location = useLocation();
-    const [loaded, setLoaded] = useState(false);
-    const [error, setError] = useState(false);
-    const [status, setStatus] = useState(0);
+    const [data, setData] = useState({loaded: false, error: false, status: 0});
     const logIn = () => {
-        if (loaded) {
+        if (data.loaded) {
             return;
         }
         const qsData = qs.parse(location.search);
         if ("error" in qsData) {
-            setError(true);
+            setData({...data, error: true});
         }
         axios.get("/service/" + provider + "?code=" + qsData.code).then(res => {
             if (res.status !== 200) {
                 console.log("Failed to connect " + res.error.message);
-                setLoaded(true);
-                setError(true);
-                setStatus(res.status);
+                setData({...data, loaded: true, error: true, status: res.status});
                 return;
             }
-            const data = res.data;
-            Cookies.set("FSID", data.token, {expires: 14});
-            setLoaded(true);
-            onLogin(data.token);
-        }).catch(() => {
-            setLoaded(true);
-            setError(true);
-            setStatus(-1);
-        });
+            const response = res.data;
+            Cookies.set("FSID", response.token, {expires: 14});
+            setData({...data, loaded: true});
+            onLogin(response.token);
+        }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
     };
 
-    if (error && status !== 403) {
+    if (data.error && data.status !== 403) {
         return <ErrorView message="Unknown Login Error" icon={<FaTimes className="error-icon"/>}/>
-    } else if (error && status === 403) {
+    } else if (data.error && data.status === 403) {
         return <ErrorView message="Login Refused. Sign in with other service." icon={<FaTimes className="error-icon"/>}/>
     }
-    if (!loaded) {
+    const state = qs.parse(location.search).state;
+    if (!data.loaded) {
         logIn();
         return <div className="row justify-content-center vertical-center"><LoadingSpinner/></div>
     }
-    return <Redirect from={"/auth/" + provider} to={"/" + qs.parse(location.search).state}/>
+    return <Redirect from={"/auth/" + provider} to={"/" + state}/>
 };
 
 export default OauthReceiver;
