@@ -19,3 +19,4 @@
 * Server side messages when editing/updating stuff will now return more user friendly messages on failure
 * In case of client app crash, error crash view will be displayed now
 * Mailgun url at MAIL_MAILGUN_API_BASE_URL in .env has changed and now requires /messages at the end to use API properly 
+* Added support for SendGrid mail provider

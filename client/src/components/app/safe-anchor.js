@@ -9,5 +9,5 @@ export default SafeAnchor;
 
 SafeAnchor.propTypes = {
   url: PropTypes.string.isRequired,
-  children: PropTypes.object.isRequired
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired
 };

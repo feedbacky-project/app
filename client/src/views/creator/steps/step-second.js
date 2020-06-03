@@ -10,8 +10,8 @@ const StepSecond = (props) => {
             <img alt="" src={UndrawBrandProject} className="my-2" width={150} height={150}/>
             <h2>Brand Your Board</h2>
             <span className="text-black-60">
-                    Upload your board logo and banner. This step is required.
-                </span>
+                Upload your board logo and banner. This step is required.
+            </span>
         </Col>
         <Col xs={12} sm={6} className="mt-4 px-md-5 px-3">
             <Form.Label className="mr-1 text-black-60">Board Banner</Form.Label>

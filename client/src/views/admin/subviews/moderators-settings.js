@@ -149,8 +149,10 @@ const ModeratorsSettings = ({reRouteTo}) => {
                                       onModInvitationCreateModalClose={() => setModalOpen(false)}
                                       data={boardData} session={context.user.session} open={modalOpen}/>
             <ViewBox theme={context.getTheme()} title="Moderators Management" description="Manage your board moderators here.">
-                {renderOverview()}
-                {renderModerators()}
+                <React.Fragment>
+                    {renderOverview()}
+                    {renderModerators()}
+                </React.Fragment>
             </ViewBox>
         </Col>
     </React.Fragment>

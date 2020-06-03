@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import IdeaBox from "./idea-box";
+import IdeaCard from "components/board/ideas/idea-card";
 import axios from 'axios';
 import {Col} from "react-bootstrap";
 import {FaRegFrown} from "react-icons/fa";
@@ -10,6 +10,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import {prepareFilterAndSortRequests} from "components/util/utils";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 import BoardContext from "context/board-context";
+import {SvgNotice} from "components/app/svg-notice";
 
 const BoardContainer = ({id, onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -18,22 +19,10 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
     const [scrollTo, setScrollTo] = useState(null);
     const loadIdeas = () => {
         if (ideas.error) {
-            return <div className="text-center mt-3">
-                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: context.getTheme()}}/>
-                <div>
-                    <strong><FaRegFrown className="mr-1"/> Failed to load ideas</strong>
-                </div>
-            </div>
+            return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className="mr-1"/> Failed to load ideas</React.Fragment>}/>
         }
         if (ideas.loaded && ideas.data.length === 0 && !ideas.moreToLoad) {
-            return <div className="text-center mt-3">
-                <UndrawNoIdeas style={{maxWidth: 150, maxHeight: 120, color: context.getTheme()}}/>
-                <div>
-                    <strong style={{fontSize: "1.1rem"}}>No ideas yet.</strong>
-                    <br/>
-                    <span className="text-black-60">How about creating one?</span>
-                </div>
-            </div>
+            return <SvgNotice Component={UndrawNoIdeas} title="No ideas yet." description="How about creating one?"/>
         }
         return <InfiniteScroll
             pageStart={0}
@@ -41,7 +30,7 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
             hasMore={ideas.moreToLoad}
             loader={<LoadingSpinner key={ideas.data.length}/>}>
             {ideas.data.map(ideaData => {
-                return <IdeaBox key={ideaData.id} data={ideaData} onIdeaDelete={onIdeaDelete} boardData={boardContext.data} onNotLoggedClick={onNotLoggedClick}/>
+                return <IdeaCard key={ideaData.id} data={ideaData} onIdeaDelete={onIdeaDelete} boardData={boardContext.data} onNotLoggedClick={onNotLoggedClick}/>
             })}
         </InfiniteScroll>
     };

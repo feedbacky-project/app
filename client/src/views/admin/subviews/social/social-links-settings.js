@@ -1,4 +1,4 @@
-import React, {Component, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AdminSidebar from "components/sidebar/admin-sidebar";
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
@@ -12,6 +12,8 @@ import SafeAnchor from "components/app/safe-anchor";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
 import {FaExclamation} from "react-icons/all";
+import {SvgNotice} from "components/app/svg-notice";
+import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 
 const SocialLinksSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -29,6 +31,22 @@ const SocialLinksSettings = ({reRouteTo}) => {
         // eslint-disable-next-line
     }, []);
 
+    const renderSocialLinks = () => {
+        if (socialLinks.data.length === 0) {
+            return <SvgNotice Component={UndrawNoData} title="No social links yet." description="How about creating one?"/>
+        }
+        return socialLinks.data.map((link) => {
+            return <div className="d-inline-flex justify-content-center mr-2" key={link.id}>
+                <div className="text-center" id="socialPreviewContainer">
+                    <img className="bg-dark rounded p-2" alt="Logo" src={link.logoUrl} height={40} width={40}/>
+                    <DeleteButton tooltipName="Delete" onClick={() => onSocialLinkDelete(link.id)}
+                                  id={"social-" + link.id + "-del"}/>
+                    <br/>
+                    <SafeAnchor url={link.url}>{extractHostname(link.url)}</SafeAnchor>
+                </div>
+            </div>
+        })
+    };
     const renderContent = () => {
         if (socialLinks.error) {
             return <span className="text-danger">Failed to obtain social links data</span>
@@ -36,17 +54,7 @@ const SocialLinksSettings = ({reRouteTo}) => {
         return <ComponentLoader loaded={socialLinks.loaded} component={
             <Col xs={12}>
                 <div className="text-black-60 mb-1">Current Social Links ({getQuota()} left)</div>
-                {socialLinks.data.map((link) => {
-                    return <div className="d-inline-flex justify-content-center mr-2" key={link.id}>
-                        <div className="text-center" id="socialPreviewContainer">
-                            <img className="bg-dark rounded p-2" alt="Logo" src={link.logoUrl} height={40} width={40}/>
-                            <DeleteButton tooltipName="Delete" onClick={() => onSocialLinkDelete(link.id)}
-                                          id={"social-" + link.id + "-del"}/>
-                            <br/>
-                            <SafeAnchor url={link.url}>{extractHostname(link.url)}</SafeAnchor>
-                        </div>
-                    </div>
-                })}
+                {renderSocialLinks()}
                 <div>
                     {renderAddButton()}
                 </div>

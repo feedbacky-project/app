@@ -10,7 +10,7 @@ import tinycolor from "tinycolor2";
 import PageBadge from "components/app/page-badge";
 import VoteButton from "components/app/vote-button";
 
-class IdeaBox extends Component {
+class IdeaCard extends Component {
 
     static contextType = AppContext;
     justVoted = false;
@@ -130,4 +130,4 @@ class IdeaBox extends Component {
 
 }
 
-export default IdeaBox;
+export default IdeaCard;

@@ -15,6 +15,8 @@ import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
 import {FaEyeSlash, FaPen} from "react-icons/all";
 import TagEditModal from "components/modal/tag-edit-modal";
+import {SvgNotice} from "components/app/svg-notice";
+import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 
 const TagsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -55,6 +57,9 @@ const TagsSettings = ({reRouteTo}) => {
         }/>
     };
     const renderTags = () => {
+        if(tags.data.length === 0) {
+            return <SvgNotice Component={UndrawNoData} title="No tags yet." description="How about creating one?"/>
+        }
         return tags.data.map((tag, i) => {
             return <div key={i}>
                 <PageBadge color={tinycolor(tag.color)} text={tag.name}/>
@@ -74,10 +79,10 @@ const TagsSettings = ({reRouteTo}) => {
     const renderNewTagButton = () => {
         if (getQuota() <= 0) {
             return <OverlayTrigger overlay={<Tooltip id="quota-tooltip">Quota Limit Reached</Tooltip>}>
-                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}><FaExclamation/> Add new Tag</Button>
+                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}><FaExclamation/> Add New</Button>
             </OverlayTrigger>
         }
-        return <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} onClick={onTagCreateModalClick}>Add new Tag</Button>
+        return <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} onClick={onTagCreateModalClick}>Add New</Button>
     };
     const onTagEdit = (tag) => {
         setEditData(tag);

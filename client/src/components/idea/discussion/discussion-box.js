@@ -11,6 +11,7 @@ import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import CommentComponent from "components/idea/discussion/comment-component";
+import {SvgNotice} from "components/app/svg-notice";
 
 class DiscussionBox extends Component {
 
@@ -72,21 +73,9 @@ class DiscussionBox extends Component {
     renderNoDataImage() {
         if (this.state.comments.loaded && this.state.comments.data.length === 0) {
             if (!this.props.ideaData.open) {
-                return <div className="my-3 text-center">
-                    <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.getTheme()}}/>
-                    <div>
-                        <strong style={{fontSize: "1.1rem"}}>No comments here.</strong>
-                    </div>
-                </div>
+                return <SvgNotice Component={UndrawNoData} title="No comments here."/>
             }
-            return <div className="my-3 text-center">
-                <UndrawNoData style={{maxWidth: 150, maxHeight: 120, color: this.context.getTheme()}}/>
-                <div>
-                    <strong style={{fontSize: "1.1rem"}}>No comments yet.</strong>
-                    <br/>
-                    <span className="text-black-60">Maybe it's time to write one?</span>
-                </div>
-            </div>
+            return <SvgNotice Component={UndrawNoData} title="No comments here." description="Maybe it's time to write one?"/>
         }
         return <React.Fragment/>
     }

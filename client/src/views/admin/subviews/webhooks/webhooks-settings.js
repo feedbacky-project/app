@@ -12,6 +12,8 @@ import ViewBox from "components/viewbox/view-box";
 import PageBadge from "components/app/page-badge";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
+import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
+import {SvgNotice} from "components/app/svg-notice";
 
 const WebhooksSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -29,7 +31,25 @@ const WebhooksSettings = ({reRouteTo}) => {
         }).catch(() => setWebhooks({...webhooks, error: true}));
         // eslint-disable-next-line
     }, []);
-
+    const renderWebhooks = () => {
+        if(webhooks.data.length === 0) {
+            return <SvgNotice Component={UndrawNoData} title="No webhooks yet." description="How about creating one?"/>
+        }
+        return webhooks.data.map((hook, i) => {
+            return <div className="d-inline-flex justify-content-center mr-2" key={hook.id}>
+                <div className="text-center">
+                    <img alt="Webhook" className="rounded bg-dark p-2" src={getTypeIcon(hook)} height={40}
+                         width={40}/>
+                    <DeleteButton id={"webhook_del_" + i} onClick={() => onWebhookDelete(hook)}
+                                  tooltipName="Delete"/>
+                    <br/>
+                    <small className="text-truncate text-center d-block"
+                           style={{maxWidth: 100}}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
+                    {renderEvents(hook)}
+                </div>
+            </div>
+        })
+    };
     const renderContent = () => {
         if (webhooks.error) {
             return <span className="text-danger">Failed to obtain webhooks data</span>
@@ -42,20 +62,7 @@ const WebhooksSettings = ({reRouteTo}) => {
                         <ClickableTip id="moderatorsQuota" title="Webhooks Quota"
                                       description="Amount of webhooks your board can have."/>
                     </div>
-                    {webhooks.data.map((hook, i) => {
-                        return <div className="d-inline-flex justify-content-center mr-2" key={hook.id}>
-                            <div className="text-center">
-                                <img alt="Webhook" className="rounded bg-dark p-2" src={getTypeIcon(hook)} height={40}
-                                     width={40}/>
-                                <DeleteButton id={"webhook_del_" + i} onClick={() => onWebhookDelete(hook)}
-                                              tooltipName="Delete"/>
-                                <br/>
-                                <small className="text-truncate text-center d-block"
-                                       style={{maxWidth: 100}}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
-                                {renderEvents(hook)}
-                            </div>
-                        </div>
-                    })}
+                    {renderWebhooks()}
                     <div>
                         <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}
                                 as={Link} to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</Button>

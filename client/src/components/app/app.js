@@ -29,7 +29,7 @@ toast.configure();
 class App extends Component {
 
     CLIENT_VERSION = "0.2.0-beta";
-    API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "http://165.227.222.137:8090") + "/api/v1";
+    API_ROUTE = process.env.REACT_APP_SERVER_IP_ADDRESS + "/api/v1";
     state = {
         session: Cookies.get("FSID"),
         search: {
