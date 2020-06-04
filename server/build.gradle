@@ -57,7 +57,7 @@ dependencies {
     compile 'com.github.MrPowerGamerBR:TemmieWebhook:59de40c3b6'
     compile 'javax.mail:mail:1.4.7'
     runtime 'mysql:mysql-connector-java:8.0.20'
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.2'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.6.2'
 }
 
 group = 'pl.plajer'
