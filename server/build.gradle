@@ -34,7 +34,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
-    compile 'org.hibernate:hibernate-core:5.4.5.Final'
+    compile 'org.hibernate:hibernate-core:5.4.17.Final'
     compile 'org.springframework.boot:spring-boot-starter-data-jdbc:2.2.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.2.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-jdbc:2.2.4.RELEASE'
@@ -57,7 +57,7 @@ dependencies {
     compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'com.github.MrPowerGamerBR:TemmieWebhook:59de40c3b6'
     compile 'javax.mail:mail:1.4.7'
-    runtime 'mysql:mysql-connector-java:8.0.18'
+    runtime 'mysql:mysql-connector-java:8.0.20'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.2'
 }
 
