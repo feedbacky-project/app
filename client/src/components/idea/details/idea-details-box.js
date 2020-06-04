@@ -33,6 +33,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
             const data = res.data;
             setVoters({...voters, data, loaded: true});
         }).catch(() => setVoters({...voters, error: true}));
+        // eslint-disable-next-line
     }, []);
 
     const onEditApply = () => {

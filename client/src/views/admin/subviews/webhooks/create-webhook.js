@@ -1,5 +1,4 @@
 import React, {useContext, useState} from 'react';
-import AppContext from "context/app-context";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
 import {Link, useHistory, withRouter} from "react-router-dom";
@@ -14,7 +13,6 @@ import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons
 import BoardContext from "context/board-context";
 
 const CreateWebhook = () => {
-    const context = useContext(AppContext);
     const history = useHistory();
     const boardData = useContext(BoardContext).data;
     const [settings, setSettings] = useState({step: 1, type: "", listenedEvents: [], url: ""});

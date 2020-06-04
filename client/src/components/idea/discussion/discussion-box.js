@@ -1,4 +1,4 @@
-import React, {Component, useContext, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Col, Image, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";

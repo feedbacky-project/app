@@ -56,7 +56,7 @@ const ModeratorsSettings = ({reRouteTo}) => {
         return <React.Fragment>
             <Col xs={12} sm={6} className="mb-sm-0 mb-3">
                 <div className="text-black-60 mb-1">
-                    <span className="mr-1">Moderators Quota ({10 - moderators.length} left)</span>
+                    <span className="mr-1">Moderators Quota ({getQuota()} left)</span>
                     <ClickableTip id="quota" title="Moderators Quota" description="Amount of moderators your board can have."/>
                 </div>
                 {moderators.map((mod, i) => {

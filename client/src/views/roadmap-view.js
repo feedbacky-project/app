@@ -58,6 +58,7 @@ const RoadmapView = () => {
             setBoard({...board, data, loaded: true});
         }).catch(() => setBoard({...board, error: true}));
         loadRoadmapData();
+        // eslint-disable-next-line
     }, []);
     if (board.error || roadmap.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>

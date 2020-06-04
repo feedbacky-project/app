@@ -71,6 +71,7 @@ const App = () => {
                 setUserData({...userData, loaded: true, loggedIn: false, loading: false, error: true});
             });
         }
+        // eslint-disable-next-line
     }, [serviceData, userData]);
     const onLogin = (token) => {
         setSession(token);

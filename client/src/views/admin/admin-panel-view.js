@@ -1,9 +1,9 @@
-import React, {Component, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Container, Row} from "react-bootstrap";
 import {FaExclamationCircle} from "react-icons/fa";
 import axios from "axios";
 import GeneralSettings from "views/admin/subviews/general-settings";
-import {Route, Switch, useLocation, useParams, useHistory} from "react-router-dom";
+import {Route, Switch, useHistory, useLocation, useParams} from "react-router-dom";
 import IdeaNavbar from "components/navbars/idea-navbar";
 import LoadingSpinner from "components/util/loading-spinner";
 import ErrorView from "views/errors/error-view";
@@ -36,6 +36,7 @@ const AdminPanelView = () => {
         } else {
             resolvePassedData();
         }
+        // eslint-disable-next-line
     }, []);
 
     const resolvePassedData = () => {

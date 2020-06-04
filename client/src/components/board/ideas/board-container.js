@@ -9,7 +9,6 @@ import BoardDetailsBox from "components/board/board-details-box";
 import InfiniteScroll from 'react-infinite-scroller';
 import {prepareFilterAndSortRequests} from "components/util/utils";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
-import BoardContext from "context/board-context";
 import {SvgNotice} from "components/app/svg-notice";
 
 const BoardContainer = ({id, onNotLoggedClick}) => {

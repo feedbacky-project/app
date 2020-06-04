@@ -63,6 +63,7 @@ const IdeaView = () => {
             setIdea({...idea, data: location.state._ideaData, loaded: true});
             setBoard({...board, data: location.state._boardData, loaded: true});
         }
+        // eslint-disable-next-line
     }, []);
     if (idea.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>

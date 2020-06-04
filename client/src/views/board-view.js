@@ -40,6 +40,7 @@ const BoardView = () => {
             context.onThemeChange(location.state._boardData.themeColor || "#343a40");
             setBoard({...board, data: location.state._boardData, loaded: true});
         }
+        // eslint-disable-next-line
     }, []);
     if (board.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>
