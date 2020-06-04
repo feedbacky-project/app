@@ -42,7 +42,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
-    compile 'org.springframework.boot:spring-boot-starter-undertow:2.2.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-undertow:2.3.0.RELEASE'
     compile 'com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.2.0'
     compile 'org.springframework.boot:spring-boot-starter-cache:2.2.4.RELEASE'
     compile 'javax.cache:cache-api:1.1.1'
