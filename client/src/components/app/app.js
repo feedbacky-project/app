@@ -52,6 +52,7 @@ const App = () => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + session;
         if (!serviceData.loaded) {
             axios.get("/service/about").then(res => {
+                console.log("Service link established, running client version " + CLIENT_VERSION);
                 setServiceData({...serviceData, loaded: true, loading: false, data: res.data});
             }).catch(() => setServiceData({...serviceData, loading: false, error: true}));
         }
