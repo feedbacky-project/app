@@ -49,12 +49,12 @@ import java.util.stream.Collectors;
 @Service
 public class BoardServiceImpl implements BoardService {
 
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
-  private IdeaRepository ideaRepository;
-  private TagRepository tagRepository;
-  private ObjectStorage objectStorage;
-  private MailHandler mailHandler;
+  private final BoardRepository boardRepository;
+  private final UserRepository userRepository;
+  private final IdeaRepository ideaRepository;
+  private final TagRepository tagRepository;
+  private final ObjectStorage objectStorage;
+  private final MailHandler mailHandler;
 
   @Autowired
   //todo too big constuctor

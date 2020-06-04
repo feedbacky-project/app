@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 @Component
 public class CheetahoCompressor implements Compressor {
 
-  private String apiKey = System.getenv("IMAGE_COMPRESSION_CHEETAHO_API_KEY");
-  private String baseUrl = "http://api.cheetaho.com/api/v1/media";
+  private final String apiKey = System.getenv("IMAGE_COMPRESSION_CHEETAHO_API_KEY");
+  private final String baseUrl = "http://api.cheetaho.com/api/v1/media";
 
   @Override
   public void compressFile(String localPath) {

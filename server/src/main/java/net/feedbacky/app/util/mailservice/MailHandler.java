@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class MailHandler {
 
-  private String mailServiceType = System.getenv("MAIL_SERVICE_TYPE");
+  private final String mailServiceType = System.getenv("MAIL_SERVICE_TYPE");
   @Getter private MailService mailService;
 
   @PostConstruct

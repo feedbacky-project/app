@@ -31,10 +31,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
 
-  private IdeaRepository ideaRepository;
-  private AttachmentRepository attachmentRepository;
-  private UserRepository userRepository;
-  private ObjectStorage objectStorage;
+  private final IdeaRepository ideaRepository;
+  private final AttachmentRepository attachmentRepository;
+  private final UserRepository userRepository;
+  private final ObjectStorage objectStorage;
 
   @Autowired
   public AttachmentServiceImpl(IdeaRepository ideaRepository, AttachmentRepository attachmentRepository, UserRepository userRepository, ObjectStorage objectStorage) {

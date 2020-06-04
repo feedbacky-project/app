@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -29,7 +27,7 @@ import java.util.logging.Logger;
 @Component
 public class RequestFilter extends OncePerRequestFilter {
 
-  private FeedbackyUserDetailsService userDetailsService;
+  private final FeedbackyUserDetailsService userDetailsService;
 
   @Autowired
   public RequestFilter(FeedbackyUserDetailsService userDetailsService) {

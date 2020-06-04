@@ -55,7 +55,7 @@ public class Webhook implements Serializable {
   public enum Type {
     CUSTOM_ENDPOINT(0), DISCORD(1);
 
-    private int id;
+    private final int id;
 
     Type(int id) {
       this.id = id;
@@ -73,8 +73,8 @@ public class Webhook implements Serializable {
     IDEA_OPEN(7, "Idea Opened - `${idea.name}`"), IDEA_CLOSE(8, "Idea Closed - `${idea.name}`"),
     SAMPLE_EVENT(9, "I am alive! Sample request received.");
 
-    private int id;
-    private String message;
+    private final int id;
+    private final String message;
 
     Event(int id, String message) {
       this.id = id;

@@ -38,10 +38,10 @@ import java.util.stream.Collectors;
 @Service
 public class BoardInviteServiceImpl implements BoardInviteService {
 
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
-  private InvitationRepository invitationRepository;
-  private MailHandler mailHandler;
+  private final BoardRepository boardRepository;
+  private final UserRepository userRepository;
+  private final InvitationRepository invitationRepository;
+  private final MailHandler mailHandler;
 
   @Autowired
   public BoardInviteServiceImpl(BoardRepository boardRepository, UserRepository userRepository, InvitationRepository invitationRepository, MailHandler mailHandler) {

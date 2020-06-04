@@ -27,7 +27,7 @@ import java.util.UUID;
 @Component
 public class ObjectStorage {
 
-  private ImageCompressor imageCompressor;
+  private final ImageCompressor imageCompressor;
 
   @Autowired
   public ObjectStorage(ImageCompressor imageCompressor) {

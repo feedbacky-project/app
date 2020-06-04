@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class WebhookExecutor {
 
-  private Board board;
+  private final Board board;
 
   public WebhookExecutor(Board board) {
     this.board = board;
@@ -105,7 +105,7 @@ public class WebhookExecutor {
     IDEA_DESCRIPTION("idea_description"), IDEA_LINK("idea_link"), IDEA_ID("idea_id"),
     COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"), TAGS_CHANGED("tags_changed");
 
-    private String name;
+    private final String name;
 
     WebhookMapData(String name) {
       this.name = name;

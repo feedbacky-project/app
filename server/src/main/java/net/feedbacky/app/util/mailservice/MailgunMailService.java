@@ -13,9 +13,9 @@ import java.util.logging.Logger;
  */
 public class MailgunMailService implements MailService {
 
-  private static String apiKey = System.getenv("MAIL_MAILGUN_API_KEY");
-  private static String baseUrl = System.getenv("MAIL_MAILGUN_API_BASE_URL");
-  private static String mailSender = System.getenv("MAIL_SENDER");
+  private static final String apiKey = System.getenv("MAIL_MAILGUN_API_KEY");
+  private static final String baseUrl = System.getenv("MAIL_MAILGUN_API_BASE_URL");
+  private static final String mailSender = System.getenv("MAIL_SENDER");
 
   @Override
   public void send(String to, String subject, String text, String html) {

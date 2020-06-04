@@ -24,12 +24,12 @@ import java.util.logging.Logger;
  */
 public class SmtpMailService implements MailService {
 
-  private static String smtpUsername = System.getenv("MAIL_SMTP_USERNAME");
-  private static String smtpPassword = System.getenv("MAIL_SMTP_PASSWORD");
-  private static String smtpHost = System.getenv("MAIL_SMTP_HOST");
-  private static String smtpPort = System.getenv("MAIL_SMTP_PORT");
-  private static String mailSender = System.getenv("MAIL_SENDER");
-  private Properties properties;
+  private static final String smtpUsername = System.getenv("MAIL_SMTP_USERNAME");
+  private static final String smtpPassword = System.getenv("MAIL_SMTP_PASSWORD");
+  private static final String smtpHost = System.getenv("MAIL_SMTP_HOST");
+  private static final String smtpPort = System.getenv("MAIL_SMTP_PORT");
+  private static final String mailSender = System.getenv("MAIL_SENDER");
+  private final Properties properties;
 
   public SmtpMailService() {
     properties = System.getProperties();

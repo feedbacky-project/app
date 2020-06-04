@@ -38,10 +38,10 @@ public interface MailService {
     SUBSCRIBE_STATUS_CHANGE("mail_templates/subscription/idea_state_changed.html", "", "Subscribed Idea Status Changed",
             "Idea you're subscribed to status was changed. (HTML not supported, default message sent)");
 
-    private String html;
-    private String inviteLink;
-    private String subject;
-    private String legacyText;
+    private final String html;
+    private final String inviteLink;
+    private final String subject;
+    private final String legacyText;
 
     EmailTemplate(String templateFile, String inviteLink, String subject, String legacyText) {
       this.html = readLineByLine(templateFile);

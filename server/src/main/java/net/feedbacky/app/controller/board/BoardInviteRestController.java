@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 public class BoardInviteRestController {
 
-  private BoardInviteService boardInviteService;
+  private final BoardInviteService boardInviteService;
 
   @Autowired
   public BoardInviteRestController(BoardInviteService boardInviteService) {

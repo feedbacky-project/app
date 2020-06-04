@@ -12,7 +12,6 @@ import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
-import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.user.User;
@@ -40,11 +39,11 @@ import java.util.stream.Collectors;
 @Service
 public class BoardModeratorServiceImpl implements BoardModeratorService {
 
-  private BoardRepository boardRepository;
-  private ModeratorRepository moderatorRepository;
-  private UserRepository userRepository;
-  private InvitationRepository invitationRepository;
-  private MailHandler mailHandler;
+  private final BoardRepository boardRepository;
+  private final ModeratorRepository moderatorRepository;
+  private final UserRepository userRepository;
+  private final InvitationRepository invitationRepository;
+  private final MailHandler mailHandler;
 
   @Autowired
   public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository,

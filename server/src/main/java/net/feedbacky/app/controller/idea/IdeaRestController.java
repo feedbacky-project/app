@@ -36,7 +36,7 @@ import java.util.Map;
 @RestController
 public class IdeaRestController {
 
-  private IdeaService ideaService;
+  private final IdeaService ideaService;
 
   @Autowired
   public IdeaRestController(IdeaService ideaService) {

@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class SubscriptionDataBuilder {
 
-  private Map<String, String> data = new HashMap<>();
+  private final Map<String, String> data = new HashMap<>();
 
   public SubscriptionDataBuilder withUser(User user) {
     data.put(SubscriptionExecutor.SubscriptionMapData.USER_NAME.getName(), user.getUsername());

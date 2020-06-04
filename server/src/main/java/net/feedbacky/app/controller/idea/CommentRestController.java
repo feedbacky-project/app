@@ -34,7 +34,7 @@ import java.util.Map;
 @RestController
 public class CommentRestController {
 
-  private CommentService commentService;
+  private final CommentService commentService;
 
   @Autowired
   public CommentRestController(CommentService commentService) {

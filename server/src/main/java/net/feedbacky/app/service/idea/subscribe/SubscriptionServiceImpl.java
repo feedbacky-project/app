@@ -25,8 +25,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-  private IdeaRepository ideaRepository;
-  private UserRepository userRepository;
+  private final IdeaRepository ideaRepository;
+  private final UserRepository userRepository;
 
   @Autowired
   public SubscriptionServiceImpl(IdeaRepository ideaRepository, UserRepository userRepository) {

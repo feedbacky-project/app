@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class Base64ValueValidator implements ConstraintValidator<Base64, String> {
 
-  private Pattern base64Pattern = Pattern.compile("^(.*?)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
+  private final Pattern base64Pattern = Pattern.compile("^(.*?)([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
   private Base64 annotation;
 
   @Override

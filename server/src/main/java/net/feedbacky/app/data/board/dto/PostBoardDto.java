@@ -7,7 +7,6 @@ import net.feedbacky.app.annotation.alphanumeric.Alphanumeric;
 import net.feedbacky.app.annotation.base64.Base64;
 import net.feedbacky.app.annotation.hex.HexValue;
 import net.feedbacky.app.data.board.Board;
-import net.feedbacky.app.util.Constants;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

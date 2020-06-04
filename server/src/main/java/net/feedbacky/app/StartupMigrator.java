@@ -30,9 +30,9 @@ import java.util.logging.Logger;
 public class StartupMigrator {
 
   public static final int FILE_VERSION = 2;
+  private final Logger logger = Logger.getLogger("Migrator");
+  private final UserRepository userRepository;
   private int version = -1;
-  private Logger logger = Logger.getLogger("Migrator");
-  private UserRepository userRepository;
   private File versionFile;
 
   @Autowired
@@ -54,7 +54,7 @@ public class StartupMigrator {
       String content = new String(Files.readAllBytes(versionFile.toPath()), StandardCharsets.UTF_8);
       version = Integer.parseInt(content);
     } catch(IOException e) {
-      logger.log(Level.WARNING, "Failed to get version file contents! Migrator won't run.");
+      logger.log(Level.WARNING, "Failed to get version file contents! Migrator will not run.");
       e.printStackTrace();
     }
     if(version == FILE_VERSION) {

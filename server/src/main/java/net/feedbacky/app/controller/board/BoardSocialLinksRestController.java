@@ -27,7 +27,7 @@ import java.util.List;
 @CrossOrigin
 public class BoardSocialLinksRestController {
 
-  private BoardSocialLinksService socialLinksService;
+  private final BoardSocialLinksService socialLinksService;
 
   @Autowired
   public BoardSocialLinksRestController(BoardSocialLinksService socialLinksService) {

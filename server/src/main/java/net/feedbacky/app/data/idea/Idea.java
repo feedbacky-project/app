@@ -30,7 +30,6 @@ import javax.persistence.Table;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
@@ -112,7 +111,7 @@ public class Idea implements Serializable {
   public enum IdeaStatus {
     OPENED(true), CLOSED(false);
 
-    private boolean value;
+    private final boolean value;
 
     IdeaStatus(boolean value) {
       this.value = value;

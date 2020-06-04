@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class SubscriptionExecutor {
 
-  private MailHandler mailHandler;
+  private final MailHandler mailHandler;
 
   @Autowired
   public SubscriptionExecutor(MailHandler mailHandler) {
@@ -101,7 +101,7 @@ public class SubscriptionExecutor {
     COMMENT_USER_AVATAR("comment_user_avatar"),
     NEW_STATUS("new_status"), TAGS_CHANGED("tags_changed");
 
-    private String name;
+    private final String name;
 
     SubscriptionMapData(String name) {
       this.name = name;

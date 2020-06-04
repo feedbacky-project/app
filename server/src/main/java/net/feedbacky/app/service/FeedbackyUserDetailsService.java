@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 public class FeedbackyUserDetailsService {
 
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
 
   @Autowired
   public FeedbackyUserDetailsService(UserRepository userRepository) {

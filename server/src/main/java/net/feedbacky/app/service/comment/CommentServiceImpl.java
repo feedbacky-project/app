@@ -48,10 +48,10 @@ import java.util.stream.Collectors;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-  private CommentRepository commentRepository;
-  private IdeaRepository ideaRepository;
-  private UserRepository userRepository;
-  private SubscriptionExecutor subscriptionExecutor;
+  private final CommentRepository commentRepository;
+  private final IdeaRepository ideaRepository;
+  private final UserRepository userRepository;
+  private final SubscriptionExecutor subscriptionExecutor;
 
   @Autowired
   public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor) {

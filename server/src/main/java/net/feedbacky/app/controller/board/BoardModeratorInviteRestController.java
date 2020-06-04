@@ -3,7 +3,6 @@ package net.feedbacky.app.controller.board;
 import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
-import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.service.board.moderator.BoardModeratorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ import java.util.List;
 @RestController
 public class BoardModeratorInviteRestController {
 
-  private BoardModeratorService boardModeratorService;
+  private final BoardModeratorService boardModeratorService;
 
   @Autowired
   public BoardModeratorInviteRestController(BoardModeratorService boardModeratorService) {

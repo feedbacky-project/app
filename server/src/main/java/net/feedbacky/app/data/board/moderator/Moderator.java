@@ -67,7 +67,7 @@ public class Moderator implements Serializable {
     @Deprecated //shouldn't be used anymore
     ADMINISTRATOR(1), OWNER(0);
 
-    private int id;
+    private final int id;
 
     Role(int id) {
       this.id = id;

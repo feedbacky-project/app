@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  */
 public class FeedbackyRestException extends RuntimeException {
 
-  private HttpStatus httpStatus;
+  private final HttpStatus httpStatus;
 
   public FeedbackyRestException(HttpStatus status) {
     super();

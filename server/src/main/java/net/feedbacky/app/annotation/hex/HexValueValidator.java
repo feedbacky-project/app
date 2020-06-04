@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class HexValueValidator implements ConstraintValidator<HexValue, String> {
 
-  private Pattern hexPattern = Pattern.compile("#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})");
+  private final Pattern hexPattern = Pattern.compile("#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})");
   private HexValue annotation;
 
   @Override

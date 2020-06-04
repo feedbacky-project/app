@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class LoginProviderRegistry {
 
-  private List<AbstractLoginProvider> registeredProviders = new ArrayList<>();
+  private final List<AbstractLoginProvider> registeredProviders = new ArrayList<>();
 
   public List<AbstractLoginProvider> getRegisteredProviders() {
     return Collections.unmodifiableList(registeredProviders);

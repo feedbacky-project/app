@@ -99,7 +99,7 @@ public class Board implements Serializable {
 
   public static class FetchProjectRequest {
 
-    private Board preDto;
+    private final Board preDto;
 
     public FetchProjectRequest(Board preDto) {
       this.preDto = preDto;

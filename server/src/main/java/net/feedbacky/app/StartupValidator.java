@@ -47,7 +47,7 @@ public class StartupValidator {
     IMAGE_COMPRESSION_CHEETAHO_API_KEY("0.1.0-beta"),
     MAIL_SENDGRID_API_KEY("0.2.0-beta"), MAIL_SENDGRID_API_BASE_URL("0.2.0-beta");
 
-    private String sinceVersion;
+    private final String sinceVersion;
 
     EnvironmentVariables(String sinceVersion) {
       this.sinceVersion = sinceVersion;

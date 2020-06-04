@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
 import net.feedbacky.app.data.user.dto.FetchMailPreferences;
 
 import org.modelmapper.ModelMapper;

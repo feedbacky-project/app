@@ -69,7 +69,7 @@ public class User implements Serializable {
   //a way to avoid convertToDto(boolean) as it doesn't explain this does
   public static class FetchUserRequest {
 
-    private FetchUserDto dto;
+    private final FetchUserDto dto;
 
     public FetchUserRequest(FetchUserDto dto) {
       this.dto = dto;

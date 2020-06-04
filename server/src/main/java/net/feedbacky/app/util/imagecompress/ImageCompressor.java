@@ -14,8 +14,8 @@ import javax.annotation.PostConstruct;
 @Component
 public class ImageCompressor {
 
-  private boolean enabled = Boolean.parseBoolean(System.getenv("IMAGE_COMPRESSION_ENABLED"));
-  private String compressorType = System.getenv("IMAGE_COMPRESSION_TYPE");
+  private final boolean enabled = Boolean.parseBoolean(System.getenv("IMAGE_COMPRESSION_ENABLED"));
+  private final String compressorType = System.getenv("IMAGE_COMPRESSION_TYPE");
   @Getter private Compressor compressor = getDefaultCompressor();
 
   @PostConstruct
@@ -29,10 +29,8 @@ public class ImageCompressor {
   }
 
   private Compressor getDefaultCompressor() {
-    return new Compressor() {
-      @Override
-      public void compressFile(String localPath) {
-      }
+    //default compressor does nothing
+    return localPath -> {
     };
   }
 

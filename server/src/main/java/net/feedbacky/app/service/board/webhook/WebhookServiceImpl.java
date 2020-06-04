@@ -36,9 +36,9 @@ import java.util.stream.Collectors;
 @Service
 public class WebhookServiceImpl implements WebhookService {
 
-  private BoardRepository boardRepository;
-  private WebhookRepository webhookRepository;
-  private UserRepository userRepository;
+  private final BoardRepository boardRepository;
+  private final WebhookRepository webhookRepository;
+  private final UserRepository userRepository;
 
   @Autowired
   public WebhookServiceImpl(BoardRepository boardRepository, WebhookRepository webhookRepository, UserRepository userRepository) {

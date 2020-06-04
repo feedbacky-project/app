@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.feedbacky.app.annotation.enumvalue.EnumValue;
-import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.idea.comment.Comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

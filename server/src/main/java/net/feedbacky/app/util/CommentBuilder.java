@@ -11,7 +11,7 @@ import net.feedbacky.app.data.user.User;
  */
 public class CommentBuilder {
 
-  private Comment comment = new Comment();
+  private final Comment comment = new Comment();
 
   public CommentBuilder of(Idea idea) {
     comment.setIdea(idea);

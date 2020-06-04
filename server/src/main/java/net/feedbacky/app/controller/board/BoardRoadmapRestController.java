@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 public class BoardRoadmapRestController {
 
-  private RoadmapService roadmapService;
+  private final RoadmapService roadmapService;
 
   @Autowired
   public BoardRoadmapRestController(RoadmapService roadmapService) {

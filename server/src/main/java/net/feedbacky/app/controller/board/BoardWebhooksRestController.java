@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 public class BoardWebhooksRestController {
 
-  private WebhookService webhookService;
+  private final WebhookService webhookService;
 
   @Autowired
   public BoardWebhooksRestController(WebhookService webhookService) {

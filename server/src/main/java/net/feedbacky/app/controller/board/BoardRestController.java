@@ -36,7 +36,7 @@ import java.util.Map;
 @RestController
 public class BoardRestController {
 
-  private BoardService boardService;
+  private final BoardService boardService;
 
   @Autowired
   public BoardRestController(BoardService boardService) {

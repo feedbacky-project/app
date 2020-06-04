@@ -62,14 +62,14 @@ import java.util.stream.Collectors;
 @Service
 public class IdeaServiceImpl implements IdeaService {
 
-  private IdeaRepository ideaRepository;
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
-  private TagRepository tagRepository;
-  private CommentRepository commentRepository;
-  private AttachmentRepository attachmentRepository;
-  private ObjectStorage objectStorage;
-  private SubscriptionExecutor subscriptionExecutor;
+  private final IdeaRepository ideaRepository;
+  private final BoardRepository boardRepository;
+  private final UserRepository userRepository;
+  private final TagRepository tagRepository;
+  private final CommentRepository commentRepository;
+  private final AttachmentRepository attachmentRepository;
+  private final ObjectStorage objectStorage;
+  private final SubscriptionExecutor subscriptionExecutor;
 
   @Autowired
   //todo too big constructor

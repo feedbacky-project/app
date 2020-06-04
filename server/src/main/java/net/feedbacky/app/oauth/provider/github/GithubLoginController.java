@@ -48,11 +48,11 @@ import java.util.Set;
 @RestController
 public class GithubLoginController implements AbstractLoginProvider {
 
-  private String redirectUri = System.getenv().getOrDefault("OAUTH_GITHUB_REDIRECT_URI", "");
-  private String clientId = System.getenv().getOrDefault("OAUTH_GITHUB_CLIENT_ID", "");
-  private String clientSecret = System.getenv().getOrDefault("OAUTH_GITHUB_CLIENT_SECRET", "");
-  private boolean enabled = Boolean.parseBoolean(System.getenv().getOrDefault("OAUTH_GITHUB_ENABLED", "false"));
-  private UserRepository userRepository;
+  private final String redirectUri = System.getenv().getOrDefault("OAUTH_GITHUB_REDIRECT_URI", "");
+  private final String clientId = System.getenv().getOrDefault("OAUTH_GITHUB_CLIENT_ID", "");
+  private final String clientSecret = System.getenv().getOrDefault("OAUTH_GITHUB_CLIENT_SECRET", "");
+  private final boolean enabled = Boolean.parseBoolean(System.getenv().getOrDefault("OAUTH_GITHUB_ENABLED", "false"));
+  private final UserRepository userRepository;
   private AuthProviderData providerData;
 
   @Autowired

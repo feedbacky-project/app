@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class IdeaAttachmentRestController {
 
-  private AttachmentService attachmentService;
+  private final AttachmentService attachmentService;
 
   @Autowired
   public IdeaAttachmentRestController(AttachmentService attachmentService) {

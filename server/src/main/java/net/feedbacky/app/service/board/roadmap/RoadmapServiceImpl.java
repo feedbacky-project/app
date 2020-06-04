@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 @Service
 public class RoadmapServiceImpl implements RoadmapService {
 
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
-  private IdeaRepository ideaRepository;
+  private final BoardRepository boardRepository;
+  private final UserRepository userRepository;
+  private final IdeaRepository ideaRepository;
 
   @Autowired
   public RoadmapServiceImpl(BoardRepository boardRepository, UserRepository userRepository, IdeaRepository ideaRepository) {

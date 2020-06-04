@@ -7,8 +7,6 @@ import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.data.board.dto.moderator.FetchUserPermissionDto;
-import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
@@ -45,8 +43,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-  private UserRepository userRepository;
-  private MailHandler mailHandler;
+  private final UserRepository userRepository;
+  private final MailHandler mailHandler;
 
   @Autowired
   public UserServiceImpl(UserRepository userRepository, MailHandler mailHandler) {

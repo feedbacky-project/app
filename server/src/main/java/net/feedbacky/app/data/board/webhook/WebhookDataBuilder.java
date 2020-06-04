@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class WebhookDataBuilder {
 
-  private Map<String, String> data = new HashMap<>();
+  private final Map<String, String> data = new HashMap<>();
 
   public WebhookDataBuilder withUser(User user) {
     data.put(WebhookExecutor.WebhookMapData.USER_NAME.getName(), user.getUsername());

@@ -1,6 +1,5 @@
 package net.feedbacky.app.controller;
 
-import net.feedbacky.app.data.board.dto.moderator.FetchUserPermissionDto;
 import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.data.user.dto.PatchMailPreferences;
@@ -30,7 +29,7 @@ import java.util.List;
 @RestController
 public class UserRestController {
 
-  private UserService userService;
+  private final UserService userService;
 
   @Autowired
   public UserRestController(UserService userService) {

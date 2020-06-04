@@ -50,10 +50,10 @@ public class Base64Util {
     ATTACHMENT("attachments", "png", -1, -1),
     SOCIAL_ICON("projects/social", "png", 32, 32);
 
-    private String name;
-    private String extension;
-    private int width;
-    private int height;
+    private final String name;
+    private final String extension;
+    private final int width;
+    private final int height;
 
     ImageType(String name, String extension, int width, int height) {
       this.name = name;

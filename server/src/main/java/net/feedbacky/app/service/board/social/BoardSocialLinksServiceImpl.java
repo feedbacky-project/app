@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
 @Service
 public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
-  private BoardRepository boardRepository;
-  private SocialLinksRepository socialLinksRepository;
-  private UserRepository userRepository;
-  private ObjectStorage objectStorage;
+  private final BoardRepository boardRepository;
+  private final SocialLinksRepository socialLinksRepository;
+  private final UserRepository userRepository;
+  private final ObjectStorage objectStorage;
 
   @Autowired
   public BoardSocialLinksServiceImpl(BoardRepository boardRepository, SocialLinksRepository socialLinksRepository, UserRepository userRepository, ObjectStorage objectStorage) {
@@ -71,7 +71,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     SocialLink socialLink = new SocialLink();
 
     String data = Base64Util.extractBase64Data(dto.getIconData());
-    if(!Constants.DEFAULT_ICONS.keySet().contains(data)) {
+    if(!Constants.DEFAULT_ICONS.containsKey(data)) {
       socialLink.setLogoUrl(objectStorage.storeImage(data, ObjectStorage.ImageType.PROJECT_SOCIAL_ICON));
     } else {
       socialLink.setLogoUrl(Constants.DEFAULT_ICONS.get(data));
