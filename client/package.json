@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.0",
     "copy-text-to-clipboard": "^2.1.1",
     "js-cookie": "^2.2.1",
     "marked": "^1.1.0",
