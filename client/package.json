@@ -53,7 +53,7 @@
   "devDependencies": {
     "prop-types": "latest",
     "source-map-explorer": "^2.4.1",
-    "webpack-bundle-analyzer": "^3.6.1",
+    "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.11"
   }
 }
