@@ -81,7 +81,7 @@ const App = () => {
     }, [userData]);
     const onLogin = (token) => {
         setSession(token);
-        axios.defaults.headers.common["Authorization"] = "Bearer " + session;
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         //force rerender
         setUserData({...userData, loaded: false});
     };
