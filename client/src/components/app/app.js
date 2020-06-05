@@ -45,19 +45,24 @@ const App = () => {
             document.body.classList.add("dark");
             localStorage.setItem("darkMode", "true");
         }
-        if (userData.loaded && serviceData.loaded) {
-            return;
-        }
         axios.defaults.baseURL = API_ROUTE;
         axios.defaults.headers.common["Authorization"] = "Bearer " + session;
-        if (!serviceData.loaded) {
-            axios.get("/service/about").then(res => {
-                console.log("Service link established, running client version " + CLIENT_VERSION);
-                setServiceData({...serviceData, loaded: true, data: res.data});
-            }).catch(() => setServiceData({...serviceData, loaded: true, error: true}));
+    }, []);
+    useEffect(() => {
+        if(serviceData.loaded) {
+            return;
         }
-        if (session == null) {
-            setUserData({...userData, loaded: true});
+        axios.get("/service/about").then(res => {
+            console.log("Service link established, running client version " + CLIENT_VERSION);
+            setServiceData({...serviceData, loaded: true, data: res.data});
+        }).catch(() => setServiceData({...serviceData, loaded: true, error: true}));
+    }, [serviceData]);
+    useEffect(() => {
+        if (userData.loaded) {
+            return;
+        }
+        if (session == null && !userData.loaded) {
+            setUserData({...userData, loaded: true, loggedIn: false});
             return;
         }
         if (!userData.loaded) {
@@ -72,7 +77,7 @@ const App = () => {
             });
         }
         // eslint-disable-next-line
-    }, [serviceData, userData]);
+    }, [userData]);
     const onLogin = (token) => {
         setSession(token);
         //force rerender
