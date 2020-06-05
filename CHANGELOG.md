@@ -1,4 +1,4 @@
-### 0.2.0-beta (X, 2020)
+### 0.2.0-beta (June 5, 2020)
 * Fixed bug with board admin panel losing theme color after page refresh
 * Removed MDBootstrap dependency (client CSS size reduced)
 * Moved css to sass and compiling bootstrap there to reduce unused css (client CSS size reduced)
@@ -21,3 +21,4 @@
 * Mailgun url at MAIL_MAILGUN_API_BASE_URL in .env has changed and now requires /messages at the end to use API properly 
 * Added support for SendGrid mail provider
 * Admin panel won't blink any longer when switching between sections (data passing works better now)
+* Updated all dependencies both for frontend and backend
