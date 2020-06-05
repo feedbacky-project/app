@@ -31,6 +31,21 @@ Mail templates can be edited [in this folder](https://github.com/Plajer/feedback
 This section will contain information about variables you need to put to .env file to make Feedbacky work after you update it.
 It might include other information as well. 
 
+### Updating to 0.2.0
+**!!!** New `.env` variables were added and are required to start, add them to the file and save:
+```
+MAIL_SENDGRID_API_KEY=apiKey
+MAIL_SENDGRID_API_BASE_URL=baseUrl
+```
+If you don't plan to use SendGrid as a mail provider there is no need to modify these values.
+
+Roadmaps were added in this version but Hibernate will automagically include it in database.
+Migrator will migrate every user automatically to enable mail preferences for a new Mail Notifications feature.
+
+**!!!** When using Mailgun as a mail provider add `/messages` at the end of `MAIL_MAILGUN_API_BASE_URL` env variable,
+we no longer add this part in code.
+
+
 ## Attribution note
 Icons (from client project at /src/views/admin/subviews/webhooks/steps/StepSecond.jsx) made by [Prosymbols](https://www.flaticon.com/authors/prosymbols) from www.flaticon.com
 
