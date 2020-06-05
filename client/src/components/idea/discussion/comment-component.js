@@ -52,7 +52,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         return <React.Fragment key={data.id}>
             <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
                 <Image roundedCircle src={getSizedAvatarByUrl(data.user.avatar, 64)} className="mr-3 mt-2" width={30} height={30} alt="avatar"
-                       onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+                       onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} style={{minWidth: "30px"}}/>
                 <div>
                     {renderCommentUsername(data)}
                     {renderDeletionButton(data)}
@@ -68,7 +68,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
 
     return <React.Fragment key={data.id}>
         <div className="d-inline-flex my-1">
-            <div className="comment-icon mr-3" style={{backgroundColor: color, color}}>{retrieveSpecialCommentTypeIcon(data.specialType)}</div>
+            <div className="comment-icon mr-3" style={{backgroundColor: color, color, minWidth: 30}}>{retrieveSpecialCommentTypeIcon(data.specialType)}</div>
             <div>
                 <span style={{color}} dangerouslySetInnerHTML={{__html: data.description}}/>
                 <small className="ml-1 text-black-60"><TimeAgo datetime={data.creationDate}/></small>
