@@ -53,8 +53,8 @@ const App = () => {
         if (!serviceData.loaded) {
             axios.get("/service/about").then(res => {
                 console.log("Service link established, running client version " + CLIENT_VERSION);
-                setServiceData({...serviceData, loaded: true, loading: false, data: res.data});
-            }).catch(() => setServiceData({...serviceData, loading: false, error: true}));
+                setServiceData({...serviceData, loaded: true, data: res.data});
+            }).catch(() => setServiceData({...serviceData, loaded: true, error: true}));
         }
         if (session == null) {
             setUserData({...userData, loaded: true});
@@ -62,13 +62,13 @@ const App = () => {
         }
         if (!userData.loaded) {
             axios.get("/users/@me").then(res => {
-                setUserData({...userData, data: res.data, loaded: true, loggedIn: true, loading: false});
+                setUserData({...userData, data: res.data, loaded: true, loggedIn: true});
             }).catch(err => {
                 if (err.response === undefined || err.response.status === 401 || err.response.status === 403 || (err.response.status >= 500 && err.response.status <= 599)) {
-                    setUserData({...userData, loaded: true, loggedIn: false, loading: false});
+                    setUserData({...userData, loaded: true, loggedIn: false});
                     return;
                 }
-                setUserData({...userData, loaded: true, loggedIn: false, loading: false, error: true});
+                setUserData({...userData, loaded: true, loggedIn: false, error: true});
             });
         }
         // eslint-disable-next-line
