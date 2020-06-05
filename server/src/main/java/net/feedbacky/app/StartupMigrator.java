@@ -69,6 +69,9 @@ public class StartupMigrator {
         case 1:
           logger.log(Level.INFO, "Migrating Feedbacky from version 1 to 2...");
           for(User user : userRepository.findAll()) {
+            if(user.getMailPreferences() != null) {
+              continue;
+            }
             MailPreferences defaultPreferences = new MailPreferences();
             defaultPreferences.setNotifyFromModeratorsComments(true);
             defaultPreferences.setNotifyFromStatusChange(true);
