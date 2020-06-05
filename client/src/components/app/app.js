@@ -47,6 +47,7 @@ const App = () => {
         }
         axios.defaults.baseURL = API_ROUTE;
         axios.defaults.headers.common["Authorization"] = "Bearer " + session;
+        // eslint-disable-next-line
     }, []);
     useEffect(() => {
         if(serviceData.loaded) {
