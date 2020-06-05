@@ -20,3 +20,4 @@
 * In case of client app crash, error crash view will be displayed now
 * Mailgun url at MAIL_MAILGUN_API_BASE_URL in .env has changed and now requires /messages at the end to use API properly 
 * Added support for SendGrid mail provider
+* Admin panel won't blink any longer when switching between sections (data passing works better now)

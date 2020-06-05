@@ -34,6 +34,7 @@ const AdminPanelView = () => {
                 context.onThemeChange(data.themeColor);
             }).catch(() => setBoard({...board, error: true}));
         } else {
+            console.log("resolve");
             resolvePassedData();
         }
         // eslint-disable-next-line
@@ -41,12 +42,12 @@ const AdminPanelView = () => {
 
     const resolvePassedData = () => {
         const state = location.state;
-        context.onThemeChange(state._boardData.themeColor);
         setBoard({...board, data: state._boardData, loaded: true});
+        context.onThemeChange(state._boardData.themeColor);
     };
     const reRouteTo = (destination) => {
         history.push({
-            pathname: "/bardr/" + board.data.discriminator + "/" + destination,
+            pathname: "/ba/" + board.data.discriminator + "/" + destination,
             state: {_boardData: board.data},
         });
     };

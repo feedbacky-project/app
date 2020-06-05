@@ -172,11 +172,6 @@ const App = () => {
                             state: props.location.state,
                         }}/>}/>
                     <Route path="/ba/:id" component={AdminPanelView}/>
-                    <Route path="/bardr/:id/:section" render={props =>
-                        <Redirect to={{
-                            pathname: "/ba/" + props.match.params.id + "/" + props.match.params.section,
-                            state: props.location.state,
-                        }}/>}/>
                     <Route path="/i/:id" component={IdeaView}/>
                     <Route path="/unsubscribe/:id/:code" component={UnsubscribeView}/>
                     <Route path="/auth/:provider" render={() => <OauthReceiver onLogin={onLogin}/>}/>
