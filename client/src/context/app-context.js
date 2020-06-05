@@ -13,6 +13,7 @@ const AppContext = React.createContext({
     getTheme: () => {},
     theme: "#343a40",
     onThemeChange: () => {},
+    clientVersion: ""
 });
 
 export default AppContext;

@@ -54,7 +54,7 @@ const App = () => {
             return;
         }
         axios.get("/service/about").then(res => {
-            console.log("Service link established, running client version " + CLIENT_VERSION);
+            console.log("Service link established, running client version " + CLIENT_VERSION + ", server version " + res.data.serverVersion);
             setServiceData({...serviceData, loaded: true, data: res.data});
         }).catch(() => setServiceData({...serviceData, loaded: true, error: true}));
     }, [serviceData]);
@@ -148,6 +148,7 @@ const App = () => {
             getTheme: getTheme,
             theme: theme,
             onThemeChange: theme => setTheme(theme),
+            clientVersion: CLIENT_VERSION
         }}>
             <Suspense fallback={<Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>}>
                 <Switch>
