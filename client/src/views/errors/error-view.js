@@ -5,7 +5,7 @@ import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 
-const ErrorView = ({icon, message, notes = ""}) => {
+const ErrorView = ({icon, message, notes = "", onBackButtonClick = () => {}}) => {
     return <Container>
         <Row className="vertical-center">
             <Col className="text-md-left justify-content-center text-center d-sm-flex d-block">
@@ -14,7 +14,7 @@ const ErrorView = ({icon, message, notes = ""}) => {
                     <h1 className="display-4">Oh Noes!</h1>
                     <h3 className="mb-0">{message}</h3>
                     {notes && <div className="my-1">{notes}</div>}
-                    <Link to="/">
+                    <Link to="/" onClick={onBackButtonClick}>
                         <Button variant="danger" className="mx-0 py-3 px-4 mt-1">
                             Back to the Main Page
                         </Button>
@@ -28,7 +28,8 @@ const ErrorView = ({icon, message, notes = ""}) => {
 ErrorView.propTypes = {
     icon: PropTypes.object.isRequired,
     message: PropTypes.string.isRequired,
-    notes: PropTypes.string
+    notes: PropTypes.string,
+    onBackButtonClick: PropTypes.func
 };
 
 export default ErrorView;

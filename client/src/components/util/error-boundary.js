@@ -17,7 +17,8 @@ class ErrorBoundary extends Component {
             console.error("-- APPLICATION HAS CRASHED --");
             console.error("Crash log:");
             console.error(this.state.data);
-            return <ErrorView icon={<FaBomb className="error-icon"/>} message="Application Has Crashed, Please Refresh The Page" notes="Additionally, crash log has been printed in the console."/>
+            return <ErrorView icon={<FaBomb className="error-icon"/>} message="Application Has Crashed, Please Refresh The Page"
+                              notes="Additionally, crash log has been printed in the console." onBackButtonClick={() => this.setState({hasError: false})}/>
         }
         return this.props.children;
     }
