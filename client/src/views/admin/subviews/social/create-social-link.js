@@ -40,7 +40,7 @@ const CreateSocialLink = () => {
             default:
                 toastWarning("Setup encountered unexpected issue.");
                 setSettings({...settings, step: 1});
-                return <StepFirst onSetupMethodCall={onSetupMethodCall} chosen={settings.chosen} customIcon={settings.customIcon} iconData={settings.iconData}/>;
+                return <StepFirst updateSettings={updateSettings} settings={settings}/>;
         }
     };
     const updateSettings = (data) => {
