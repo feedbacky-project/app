@@ -36,7 +36,7 @@ const CreateSocialLink = () => {
                     toastError(err.response.data.errors[0], toastId);
                     setSettings({...settings, step: 2});
                 });
-                return <StepSecond onSetupMethodCall={onSetupMethodCall}/>;
+                return <StepSecond updateSettings={updateSettings} settings={settings}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");
                 setSettings({...settings, step: 1});
@@ -45,24 +45,6 @@ const CreateSocialLink = () => {
     };
     const updateSettings = (data) => {
         setSettings(data);
-    };
-    const onSetupMethodCall = (type, value) => {
-        switch (type) {
-            case "iconData":
-                setSettings({...settings, iconData: value});
-                return;
-            case "url":
-                setSettings({...settings, url: value});
-                return;
-            case "customIcon":
-                setSettings({...settings, customIcon: value});
-                return;
-            case "chosen":
-                setSettings({...settings, chosen: value});
-                return;
-            default:
-                return;
-        }
     };
     const renderBackButton = () => {
         if (settings.step === 1) {
