@@ -135,7 +135,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
             <ModeratorActions moderators={moderators} ideaData={ideaData}
                               updateState={updateState}/>
             {renderDeletionButton()}
-            {ideaData.user.id === context.user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
+            {ideaData.user.id !== context.user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
             <Image roundedCircle className="mr-1" src={getSizedAvatarByUrl(ideaData.user.avatar, 32)}
                    width={18} height={18} style={{maxWidth: "none"}}
