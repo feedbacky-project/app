@@ -23,7 +23,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
     "react-toastify": "^6.0.5",
-    "sweetalert2": "^9.14.0",
+    "sweetalert2": "^9.14.2",
     "sweetalert2-react-content": "^3.0.1",
     "timeago-react": "^3.0.0",
     "tinycolor2": "^1.4.1"
