@@ -41,7 +41,7 @@ const BoardView = () => {
             setBoard({...board, data: location.state._boardData, loaded: true});
         }
         // eslint-disable-next-line
-    }, []);
+    }, [id]);
     if (board.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>
     }

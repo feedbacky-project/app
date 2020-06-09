@@ -17,7 +17,7 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
     const [scrollTo, setScrollTo] = useState(null);
     useEffect(() => {
         onLoadRequest(0, true);
-    }, [context.user.searchPreferences]);
+    }, [id, context.user.searchPreferences]);
     const loadIdeas = () => {
         if (ideas.error) {
             return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className="mr-1"/> Failed to load ideas</React.Fragment>}/>

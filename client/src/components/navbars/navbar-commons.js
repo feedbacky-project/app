@@ -57,7 +57,7 @@ const renderModeratedBoards = (context) => {
         </DropdownItem>
         <div className="my-1"/>
         {context.user.data.permissions.map(data => {
-            return <DropdownItem key={data.boardDiscriminator} as={Link} to={"/brdr/" + data.boardDiscriminator}>{data.boardName}</DropdownItem>
+            return <DropdownItem key={data.boardDiscriminator} as={Link} to={"/b/" + data.boardDiscriminator}>{data.boardName}</DropdownItem>
         })}
     </React.Fragment>
 };

@@ -144,30 +144,19 @@ const App = () => {
             onDarkModeToggle: onDarkModeToggle,
             getTheme: getTheme,
             theme: theme,
-            onThemeChange: theme => setTheme(theme),
+            onThemeChange: newTheme => setTheme(newTheme),
             clientVersion: CLIENT_VERSION
         }}>
             <Suspense fallback={<Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>}>
                 <Switch>
                     <Route exact path="/" component={ProfileView}/>
                     <Route exact path="/admin/create" component={CreateBoardView}/>
-                    <Route path="/merdr/:section" render={(props) =>
-                        <Redirect to={{
-                            pathname: "/me/" + props.match.params.section,
-                            state: props.location.state,
-                        }}/>}/>
                     <Route path="/me/:section" component={ProfileView}/>
                     <Route path="/me/" component={ProfileView}/>
                     <Route path="/moderator_invitation/:code" component={ModeratorInvitation}/>
                     <Route path="/invitation/:code" component={BoardInvitation}/>
                     <Route path={"/b/:id/roadmap"} component={RoadmapView}/>
                     <Route path="/b/:id" component={BoardView}/>
-                    {/* sneaky way to redirect from /b/ to /b/ but with different :id parameters, because it doesn't work */}
-                    <Route path="/brdr/:id" render={props =>
-                        <Redirect to={{
-                            pathname: "/b/" + props.match.params.id,
-                            state: props.location.state,
-                        }}/>}/>
                     <Route path="/ba/:id" component={AdminPanelView}/>
                     <Route path="/i/:id" component={IdeaView}/>
                     <Route path="/unsubscribe/:id/:code" component={UnsubscribeView}/>

@@ -17,7 +17,7 @@ const ProfileView = () => {
     };
     const reRouteTo = (destination) => {
         history.push({
-            pathname: "/merdr/" + destination,
+            pathname: "/me/" + destination,
         });
     };
 
