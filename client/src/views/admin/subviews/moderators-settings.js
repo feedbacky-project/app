@@ -1,9 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Button, Col} from "react-bootstrap";
 import axios from "axios";
 import {getSizedAvatarByUrl, prettifyEnum, toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
-import {FaTrashAlt} from "react-icons/fa";
 import ModeratorInvitationModal from "components/modal/moderator-invitation-modal";
 import copy from "copy-text-to-clipboard";
 import AdminSidebar from "components/sidebar/admin-sidebar";
@@ -13,6 +12,7 @@ import DeleteButton from "components/util/delete-button";
 import ViewBox from "components/viewbox/view-box";
 import PageBadge from "components/app/page-badge";
 import BoardContext from "context/board-context";
+import tinycolor from "tinycolor2";
 
 const ModeratorsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -62,7 +62,8 @@ const ModeratorsSettings = ({reRouteTo}) => {
                 {moderators.map((mod, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                         <div className="text-center">
-                            <img alt="Moderator" className="rounded-circle" src={mod.user.avatar} height={35} width={35}/>
+                            <img alt="Moderator" className="rounded-circle" src={getSizedAvatarByUrl(mod.user.avatar, 32)}
+                                 onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} height={35} width={35}/>
                             {renderModerationKick(mod, i)}
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{mod.user.username}</small>
@@ -77,21 +78,18 @@ const ModeratorsSettings = ({reRouteTo}) => {
                     <ClickableTip id="invited" title="Invited Moderators" description="Moderators that were invited and received invitation email."/>
                 </div>
                 {invited.data.map((invited, i) => {
-                    return <div className="my-1" key={i}>
-                        <img className="img-responsive rounded mr-1 m"
-                             src={getSizedAvatarByUrl(invited.user.avatar, 32)}
-                             onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
-                             alt="avatar"
-                             height="24px" width="24px"/>
-                        {invited.user.username}
-                        {" - "}
-                        <a href="#!" className="text-black-60" onClick={() => {
-                            copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
-                            toastSuccess("Copied to clipboard.");
-                        }}>Copy Invite</a>
-                        <OverlayTrigger overlay={<Tooltip id={"deleteModInvite" + i + "-tooltip"}>Invalidate</Tooltip>}>
-                            <FaTrashAlt className="fa-xs ml-1" onClick={() => onInvalidation(invited.id)}/>
-                        </OverlayTrigger>
+                    return <div className="d-inline-flex justify-content-center mr-2" key={i}>
+                        <div className="text-center">
+                            <img alt="Moderator" className="rounded-circle" src={getSizedAvatarByUrl(invited.user.avatar, 32)}
+                                 onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} height={35} width={35}/>
+                            <DeleteButton id={"invite_del_" + invited.user.id} onClick={() => onInvalidation(invited.id)} tooltipName="Invalidate"/>
+                            <br/>
+                            <small className="text-truncate d-block" style={{maxWidth: 100}}>{invited.user.username}</small>
+                            <div className="cursor-click" onClick={() => {
+                                copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
+                                toastSuccess("Copied to clipboard.");
+                            }}><PageBadge color={tinycolor("#0994f6")} text="Copy Invite" className="move-top-3px"/></div>
+                        </div>
                     </div>
                 })}
             </Col>
