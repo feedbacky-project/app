@@ -1,4 +1,4 @@
-import React, {Suspense, useContext, useState} from "react";
+import React, {Suspense, useContext, useEffect, useState} from "react";
 import AppContext from "context/app-context";
 import {formatRemainingCharacters, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
@@ -12,6 +12,9 @@ import {ChromePicker} from "react-color";
 const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
     const context = useContext(AppContext);
     const [color, setColor] = useState(tag.color);
+    useEffect(() => {
+        setColor(tag.color);
+    }, [tag]);
 
     const handleSubmit = () => {
         const name = document.getElementById("tagNameTextarea").value;
