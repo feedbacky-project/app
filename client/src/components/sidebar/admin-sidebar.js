@@ -19,7 +19,7 @@ const AdminSidebar = (props) => {
     return <Col xs={12} md={3} className="sidebar">
         <ul>{renderSidebarRoutes(routes, themeColor, props.currentNode, props.reRouteTo)}</ul>
         <div className="small text-black-60">
-            Running <img alt='logo' src='https://cdn.feedbacky.net/static/img/logo.png' width='16px' height='16px'/> <a href='https://feedbacky.net' target='_blank' rel="noopener noreferrer" className="text-muted">Feedbacky</a>
+            Running <img alt='logo' src='https://cdn.feedbacky.net/static/img/logo.png' width='16px' height='16px'/> <a href='https://feedbacky.net' target='_blank' rel="noopener noreferrer" className="text-black-60">Feedbacky</a>
             <span className="text-black-75">{" "}v{context.clientVersion}</span>
             <br/>
             Server Version <span className="text-black-75">v{context.serviceData.serverVersion}</span>
