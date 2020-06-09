@@ -6,7 +6,7 @@ import Image from "react-bootstrap/Image";
 import TimeAgo from "timeago-react";
 import axios from "axios";
 import AppContext from "context/app-context";
-import {formatUsername, getSizedAvatarByUrl, htmlDecode, parseMarkdown, toastError, toastSuccess} from "components/util/utils";
+import {formatUsername, getSizedAvatarByUrl, htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import {popupSwal} from "components/util/sweetalert-utils";
 import TextareaAutosize from "react-autosize-textarea";
@@ -38,6 +38,11 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
 
     const onEditApply = () => {
         let description = document.getElementById("editorBox").value;
+        if(ideaData.description === description) {
+            setEditor({enabled: false, value: htmlDecode(description)});
+            toastWarning("Content not changed.");
+            return;
+        }
         axios.patch("/ideas/" + ideaData.id, {
             description
         }).then(res => {
