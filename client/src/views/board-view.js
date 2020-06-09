@@ -10,7 +10,6 @@ import LoginModal from "components/modal/login-modal";
 import BoardBanner from "components/board/board-banner";
 import LoadingSpinner from "components/util/loading-spinner";
 import AppContext from "context/app-context";
-import {FaEyeSlash} from "react-icons/all";
 import BoardContext from "context/board-context";
 import {useLocation, useParams} from "react-router-dom";
 
@@ -28,10 +27,6 @@ const BoardView = () => {
                     return;
                 }
                 const data = res.data;
-                if (data.privatePage && data.name === null) {
-                    setBoard({...board, loaded: true});
-                    return;
-                }
                 data.socialLinks.sort((a, b) => (a.id > b.id) ? 1 : -1);
                 context.onThemeChange(data.themeColor || "#343a40");
                 setBoard({...board, data, loaded: true});
@@ -47,9 +42,6 @@ const BoardView = () => {
     }
     if (!board.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
-    }
-    if (board.data.privatePage && board.data.name === null) {
-        return <ErrorView icon={<FaEyeSlash className="error-icon"/>} message="This Board Is Private"/>
     }
     return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
         <LoginModal open={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onLoginModalClose={() => setModalOpen(false)}/>

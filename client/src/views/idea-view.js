@@ -20,7 +20,7 @@ const IdeaView = () => {
     const history = useHistory();
     const location = useLocation();
     const [idea, setIdea] = useState({data: [], loaded: false, error: false});
-    const [board, setBoard] = useState({data: [], loaded: false, error: false, privatePage: false});
+    const [board, setBoard] = useState({data: [], loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const updateState = (data) => {
         setIdea({...idea, data});
@@ -49,11 +49,6 @@ const IdeaView = () => {
                     return;
                 }
                 const ideaData = res.data;
-                if (ideaData.title === null && ideaData.user === null) {
-                    setIdea({...idea, loaded: true});
-                    setBoard({...board, loaded: true, privatePage: true});
-                    return;
-                }
                 ideaData.tags.sort((a, b) => a.name.localeCompare(b.name));
                 setIdea({...idea, data: ideaData, loaded: true});
                 loadBoardDataCascade(ideaData);
@@ -73,9 +68,6 @@ const IdeaView = () => {
     }
     if (!board.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
-    }
-    if (board.privatePage) {
-        return <ErrorView icon={<FaEyeSlash className="error-icon"/>} message="This Idea Is Private"/>
     }
     return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
         <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name} redirectUrl={"i/" + idea.data.id}/>

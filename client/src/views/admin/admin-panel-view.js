@@ -9,7 +9,6 @@ import LoadingSpinner from "components/util/loading-spinner";
 import ErrorView from "views/errors/error-view";
 import AppContext from "context/app-context";
 import TagsSettings from "views/admin/subviews/tags-settings";
-import InvitationsSettings from "views/admin/subviews/invitations-settings";
 import ModeratorsSettings from "views/admin/subviews/moderators-settings";
 import WebhooksSettings from "views/admin/subviews/webhooks/webhooks-settings";
 import SocialLinksSettings from "views/admin/subviews/social/social-links-settings";
@@ -68,7 +67,6 @@ const AdminPanelView = () => {
         <Container>
             <Row className="justify-content-center pb-4">
                 <Switch>
-                    <Route path="/ba/:id/invitations" render={() => <InvitationsSettings reRouteTo={reRouteTo}/>}/>
                     <Route path="/ba/:id/tags" render={() => <TagsSettings reRouteTo={reRouteTo}/>}/>
                     <Route path="/ba/:id/moderators" render={() => <ModeratorsSettings reRouteTo={reRouteTo}/>}/>
                     <Route path="/ba/:id/webhooks/create" render={() => <CreateWebhook reRouteTo={reRouteTo} data={board.data}/>}/>

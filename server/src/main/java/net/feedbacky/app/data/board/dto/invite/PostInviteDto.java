@@ -28,14 +28,6 @@ public class PostInviteDto {
   @NotNull(message = "User email cannot be empty.")
   private String userEmail;
 
-  public Invitation convertToEntity(User user, Board board) {
-    Invitation invitation = new ModelMapper().map(this, Invitation.class);
-    invitation.setUser(user);
-    invitation.setBoard(board);
-    invitation.setCode(user.getId() + "_" + RandomStringUtils.randomAlphabetic(10));
-    return invitation;
-  }
-
   public Invitation convertToEntity(User user, Board board, String codeData) {
     Invitation invitation = new ModelMapper().map(this, Invitation.class);
     invitation.setUser(user);

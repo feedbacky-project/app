@@ -5,7 +5,7 @@ import {useLocation, useParams} from "react-router-dom";
 import ErrorView from "views/errors/error-view";
 import {Container, Row} from "react-bootstrap";
 import LoadingSpinner from "components/util/loading-spinner";
-import {FaExclamationCircle, FaEyeSlash} from "react-icons/all";
+import {FaExclamationCircle} from "react-icons/all";
 import LoginModal from "components/modal/login-modal";
 import BoardContext from "context/board-context";
 import {BoardRoadmap} from "components/roadmap/board-roadmap";
@@ -49,10 +49,6 @@ const RoadmapView = () => {
                 return;
             }
             const data = res.data;
-            if (data.privatePage && data.name === null) {
-                setBoard({...board, data, loaded: true});
-                return;
-            }
             data.socialLinks.sort((a, b) => (a.id > b.id) ? 1 : -1);
             context.onThemeChange(data.themeColor || "#343a40");
             setBoard({...board, data, loaded: true});
@@ -65,9 +61,6 @@ const RoadmapView = () => {
     }
     if (!board.loaded || !roadmap.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
-    }
-    if (board.data.privatePage && board.data.name === null) {
-        return <ErrorView icon={<FaEyeSlash className="error-icon"/>} message="This Board Is Private"/>
     }
     return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
         <LoginModal open={modalOpen} image={board.data.logo}

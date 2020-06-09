@@ -86,7 +86,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     board.getModerators().add(moderator);
     boardRepository.save(board);
     invitationRepository.delete(invitation);
-    return board.convertToDto().ensureViewExplicit();
+    return board.convertToDto();
   }
 
   @Override

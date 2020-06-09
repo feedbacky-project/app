@@ -21,8 +21,6 @@ public interface MailService {
   void send(String to, String subject, String text, String html);
 
   enum EmailTemplate {
-    BOARD_INVITATION("mail_templates/invitation_join.html", HOST_ADDRESS + "/invitation/", "${board.name} - Invitation",
-            "You've been invited to private ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
     MODERATOR_INVITATION("mail_templates/moderator_invitation.html", HOST_ADDRESS + "/moderator_invitation/", "${board.name} - Moderator Invitation",
             "You've been invited to moderate ${board.name} board. Join here ${invite.link} (HTML not supported, default message sent)"),
     MODERATOR_KICKED("mail_templates/moderator_kicked.html", "", "${board.name} - Moderator Privileges Revoked",

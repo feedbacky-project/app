@@ -16,7 +16,6 @@ import ComponentLoader from "components/app/component-loader";
 const ProfileView = lazy(() => retry(() => import("views/profile/profile-view")));
 const CreateBoardView = lazy(() => retry(() => import("views/creator/create-board-view")));
 const ModeratorInvitation = lazy(() => retry(() => import("components/board/moderator-invitation")));
-const BoardInvitation = lazy(() => retry(() => import("components/board/board-invitation")));
 const BoardView = lazy(() => retry(() => import("views/board-view")));
 const RoadmapView = lazy(() => retry(() => import("views/roadmap-view")));
 const AdminPanelView = lazy(() => retry(() => import("views/admin/admin-panel-view")));
@@ -154,8 +153,7 @@ const App = () => {
                     <Route path="/me/:section" component={ProfileView}/>
                     <Route path="/me/" component={ProfileView}/>
                     <Route path="/moderator_invitation/:code" component={ModeratorInvitation}/>
-                    <Route path="/invitation/:code" component={BoardInvitation}/>
-                    <Route path={"/b/:id/roadmap"} component={RoadmapView}/>
+                    <Route path="/b/:id/roadmap" component={RoadmapView}/>
                     <Route path="/b/:id" component={BoardView}/>
                     <Route path="/ba/:id" component={AdminPanelView}/>
                     <Route path="/i/:id" component={IdeaView}/>

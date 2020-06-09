@@ -70,30 +70,18 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public PaginableRequest<List<FetchBoardDto>> getAll(int page, int pageSize) {
-    User user = null;
-    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
-      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
-    }
-    final User finalUser = user;
     Page<Board> pageData = boardRepository.findAll(PageRequest.of(page, pageSize));
     List<Board> boards = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
-            boards.stream().map(board -> board.convertToDto().ensureViewPermission(finalUser)).collect(Collectors.toList()));
+            boards.stream().map(Board::convertToDto).collect(Collectors.toList()));
   }
 
   @Override
   public FetchBoardDto getOne(String discriminator) {
-    User user = null;
-    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
-      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
-    }
-    final User finalUser = user;
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    return board.convertToDto().ensureViewPermission(finalUser);
+    return board.convertToDto();
   }
 
   @Override
@@ -137,7 +125,7 @@ public class BoardServiceImpl implements BoardService {
     node.setUser(user);
     user.getPermissions().add(node);
     userRepository.save(user);
-    return ResponseEntity.status(HttpStatus.CREATED).body(board.convertToDto().ensureViewExplicit());
+    return ResponseEntity.status(HttpStatus.CREATED).body(board.convertToDto());
   }
 
   @Override
@@ -179,7 +167,7 @@ public class BoardServiceImpl implements BoardService {
     board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
 
     boardRepository.save(board);
-    return board.convertToDto().ensureViewExplicit();
+    return board.convertToDto();
   }
 
   @Override

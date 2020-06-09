@@ -40,7 +40,6 @@ public class FetchBoardDto {
   private String themeColor;
   private String logo;
   private String banner;
-  private boolean privatePage;
 
   private final String ideasUrl = "/v1/boards/:id/ideas";
   private final String tagsUrl = "/v1/boards/:id/tags";

@@ -7,7 +7,6 @@ import swalReact from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import AdminSidebar from "components/sidebar/admin-sidebar";
 import {retry} from "components/util/lazy-init";
-import {popupSwal} from "components/util/sweetalert-utils";
 import ViewBox from "components/viewbox/view-box";
 import ActionButton from "components/app/action-button";
 import BoardContext from "context/board-context";
@@ -122,17 +121,6 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
     };
     const renderDangerContent = () => {
         return <div className="mb-3 view-box-bg px-1 py-3 rounded mt-2 danger-shadow rounded-bottom">
-            <Row noGutters className="m-0 p-0 px-4 mb-3 mt-2">
-                <Col xs={12} sm={9}>
-                    <h4 className="mb-1">Private Board</h4>
-                    <span className="text-black-50" style={{fontSize: ".9em"}}>
-                        Private board can be seen only by invited users from <kbd>Invitations</kbd> section, service staff and moderators.
-                    </span>
-                </Col>
-                <Col xs={6} sm={3} className="text-sm-right text-left my-auto">
-                    {renderPrivateBoardButton()}
-                </Col>
-            </Row>
             <Row noGutters className="m-0 p-0 px-4 mb-2">
                 <Col sm={9} xs={12}>
                     <h4 className="mb-1 text-danger">Delete Board</h4>
@@ -145,12 +133,6 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                 </Col>
             </Row>
         </div>
-    };
-    const renderPrivateBoardButton = () => {
-        if (boardData.privatePage) {
-            return <ActionButton onClick={() => onBoardPrivacyChange(false)} variant="danger" text="Disable"/>
-        }
-        return <ActionButton onClick={() => onBoardPrivacyChange(true)} variant="success" text="Enable"/>
     };
     const onBoardDelete = () => {
         swalGenerator.fire({
@@ -187,30 +169,6 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                 toastSuccess("Board permanently deleted.", toastId);
             }).catch(err => toastError(err.response.data.errors[0]));
         });
-    };
-    const onBoardPrivacyChange = (state) => {
-        let html;
-        if (state) {
-            html = "Users will no longer be able to see this board unless you invite them.<br/>Board moderators and service staff will still have access to this board.";
-        } else {
-            html = "Every user will now be able to see this board and all it's ideas.";
-        }
-        popupSwal("warning", "Dangerous action", html, "Change Privacy", "#d33",
-            willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.patch("/boards/" + boardData.discriminator, {privatePage: state}).then(res => {
-                    if (res.status !== 200) {
-                        toastError();
-                        return;
-                    }
-                    updateState({
-                        ...boardData, privatePage: state
-                    });
-                    toastSuccess("Board visibility toggled.");
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
     };
     const onChangesSave = () => {
         const banner = bannerInput;

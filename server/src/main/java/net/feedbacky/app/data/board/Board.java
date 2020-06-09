@@ -65,7 +65,6 @@ public class Board implements Serializable {
   private String themeColor;
   private String logo;
   private String banner;
-  private boolean privatePage;
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Idea> ideas = new LinkedHashSet<>();
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "board", orphanRemoval = true)
@@ -76,52 +75,14 @@ public class Board implements Serializable {
   private Set<Tag> tags = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Webhook> webhooks = new HashSet<>();
-  @OneToMany(fetch = FetchType.LAZY)
-  private Set<User> invitedUsers = new HashSet<>();
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
-  private Set<Invitation> invitations = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<SocialLink> socialLinks = new HashSet<>();
 
-  public boolean canView(User user) {
-    if(privatePage) {
-      if(user == null) {
-        return false;
-      }
-      return user.isServiceStaff() || getInvitedUsers().contains(user) || getModerators().stream().anyMatch(mod -> mod.getUser().equals(user));
-    }
-    return true;
-  }
-
-  public FetchProjectRequest convertToDto() {
-    return new FetchProjectRequest(this);
-  }
-
-  public static class FetchProjectRequest {
-
-    private final Board preDto;
-
-    public FetchProjectRequest(Board preDto) {
-      this.preDto = preDto;
-    }
-
-    public FetchBoardDto ensureViewPermission(User user) {
-      if(preDto.canView(user)) {
-        FetchBoardDto dto = new ModelMapper().map(preDto, FetchBoardDto.class);
-        dto.setSocialLinks(preDto.getSocialLinks().stream().map(SocialLink::convertToDto).collect(Collectors.toList()));
-        dto.setModerators(preDto.getModerators().stream().map(Moderator::convertToModeratorDto).collect(Collectors.toList()));
-        return dto;
-      }
-      FetchBoardDto dto = new FetchBoardDto();
-      dto.setId(preDto.getId());
-      dto.setDiscriminator(preDto.getDiscriminator());
-      dto.setPrivatePage(true);
-      return dto;
-    }
-
-    public FetchBoardDto ensureViewExplicit() {
-      return new ModelMapper().map(preDto, FetchBoardDto.class);
-    }
+  public FetchBoardDto convertToDto() {
+    FetchBoardDto dto = new ModelMapper().map(this, FetchBoardDto.class);
+    dto.setSocialLinks(getSocialLinks().stream().map(SocialLink::convertToDto).collect(Collectors.toList()));
+    dto.setModerators(getModerators().stream().map(Moderator::convertToModeratorDto).collect(Collectors.toList()));
+    return dto;
   }
 
 }
