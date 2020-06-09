@@ -34,7 +34,6 @@ const AdminPanelView = () => {
                 context.onThemeChange(data.themeColor);
             }).catch(() => setBoard({...board, error: true}));
         } else {
-            console.log("resolve");
             resolvePassedData();
         }
         // eslint-disable-next-line
