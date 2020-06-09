@@ -70,9 +70,6 @@ public class CommentServiceImpl implements CommentService {
     }
     Idea idea = ideaRepository.findById(ideaId)
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + ideaId + " does not exist."));
-    if(!idea.getBoard().canView(user)) {
-      return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, 0, pageSize), new ArrayList<>());
-    }
     Page<Comment> pageData = commentRepository.findByIdea(idea, PageRequest.of(page, pageSize, Sort.by("id").ascending()));
     List<Comment> comments = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
@@ -93,11 +90,6 @@ public class CommentServiceImpl implements CommentService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
-    if(!comment.getIdea().getBoard().canView(user)) {
-      FetchCommentDto dto = new FetchCommentDto();
-      dto.setId(id);
-      return dto;
-    }
     final User finalUser = user;
     boolean isModerator = comment.getIdea().getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
     if(comment.getViewType() == Comment.ViewType.INTERNAL && !isModerator) {
@@ -113,15 +105,11 @@ public class CommentServiceImpl implements CommentService {
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(dto.getIdeaId())
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + dto.getIdeaId() + " does not exist."));
-    if(!idea.getBoard().canView(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment to this idea.");
-    }
     boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(user));
     //internal type is for moderators only
     if(Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL && !isModerator) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment with internal view type.");
     }
-
     Comment comment = new ModelMapper().map(this, Comment.class);
     comment.setId(null);
     comment.setIdea(idea);

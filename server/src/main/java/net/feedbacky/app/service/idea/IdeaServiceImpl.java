@@ -94,9 +94,6 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if(!board.canView(user)) {
-      return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, 0, pageSize), new ArrayList<>());
-    }
     //not using board.getIdeas() because it would load all, we need paged limited list
     Page<Idea> pageData;
     switch(filter) {
@@ -128,9 +125,6 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if(!board.canView(user)) {
-      return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, 0, pageSize), new ArrayList<>());
-    }
     final User finalUser = user;
     Page<Idea> pageData = ideaRepository.findByBoardAndTitleIgnoreCaseContaining(board, query, PageRequest.of(page, pageSize));
     List<Idea> ideas = pageData.getContent();
@@ -147,12 +141,6 @@ public class IdeaServiceImpl implements IdeaService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Idea idea = ideaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " not found"));
-    if(!idea.getBoard().canView(user)) {
-      FetchIdeaDto dto = new FetchIdeaDto();
-      dto.setId(idea.getId());
-      dto.setBoardDiscriminator(idea.getBoard().getDiscriminator());
-      return dto;
-    }
     return idea.convertToDto(user);
   }
 
@@ -163,9 +151,6 @@ public class IdeaServiceImpl implements IdeaService {
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(dto.getDiscriminator())
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + dto.getDiscriminator() + " not found."));
-    if(!board.canView(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post ideas in this board.");
-    }
     Optional<Idea> optional = ideaRepository.findByTitleAndBoard(dto.getTitle(), board);
     if(optional.isPresent() && optional.get().getBoard().getId().equals(board.getId())) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with that title in that board already exists.");
@@ -297,9 +282,6 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Idea idea = ideaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
-    if(!idea.getBoard().canView(user)) {
-      return new ArrayList<>();
-    }
     return idea.getVoters().stream().map(usr -> usr.convertToDto().exposeSensitiveData(false)).collect(Collectors.toList());
   }
 
@@ -311,9 +293,6 @@ public class IdeaServiceImpl implements IdeaService {
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
-    if(!idea.getBoard().canView(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to vote to that idea.");
-    }
     if(idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is already upvoted by you.");
     }
@@ -332,9 +311,6 @@ public class IdeaServiceImpl implements IdeaService {
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Idea idea = ideaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
-    if(!idea.getBoard().canView(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to vote to that idea.");
-    }
     if(!idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is not upvoted by you.");
     }
