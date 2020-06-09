@@ -32,20 +32,19 @@ const WebhooksSettings = ({reRouteTo}) => {
         // eslint-disable-next-line
     }, []);
     const renderWebhooks = () => {
-        if(webhooks.data.length === 0) {
+        if (webhooks.data.length === 0) {
             return <SvgNotice Component={UndrawNoData} title="No webhooks yet." description="How about creating one?"/>
         }
         return webhooks.data.map((hook, i) => {
             return <div className="d-inline-flex justify-content-center mr-2" key={hook.id}>
                 <div className="text-center">
-                    <img alt="Webhook" className="rounded bg-dark p-2" src={getTypeIcon(hook)} height={40}
-                         width={40}/>
-                    <DeleteButton id={"webhook_del_" + i} onClick={() => onWebhookDelete(hook)}
-                                  tooltipName="Delete"/>
+                    <img alt="Webhook" className="rounded bg-dark p-2" src={getTypeIcon(hook)} height={40} width={40}/>
+                    <DeleteButton id={"webhook_del_" + i} onClick={() => onWebhookDelete(hook)} tooltipName="Delete"/>
                     <br/>
-                    <small className="text-truncate text-center d-block"
-                           style={{maxWidth: 100}}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
-                    {renderEvents(hook)}
+                    <small className="text-truncate text-center d-block">{prettifyEnum(hook.type) + " #" + hook.id}</small>
+                    <div className="disable-scrollbars" style={{maxHeight: 80, overflowY: "scroll"}}>
+                        {renderEvents(hook)}
+                    </div>
                 </div>
             </div>
         })
@@ -82,7 +81,7 @@ const WebhooksSettings = ({reRouteTo}) => {
         }
     };
     const renderEvents = (hook) => {
-        return hook.events.map(event => <div key={hook.id + event}><PageBadge text={prettifyEnum(event)} color={context.getTheme()}/></div>);
+        return hook.events.map(event => <div key={hook.id + event}><PageBadge className="d-block my-1" text={prettifyEnum(event)} color={context.getTheme()}/></div>);
     };
     const onWebhookDelete = (hook) => {
         popupSwal("warning", "Dangerous action", "Webhook will be permanently removed and won't send data to target URL.",
