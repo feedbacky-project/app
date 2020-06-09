@@ -1,3 +1,14 @@
+### 0.3.0-beta (June 9, 2020)
+Initially planned to release it as 0.2.1 but since we removed Private Boards it should be marked as a bigger release.
+Private Boards feature was removed due to being unpopular and unused feature and contained security exploit.
+This version also aims to fix regressions caused by previous update.
+* Page no longer blinks and reloads when switching filtering or sorting
+* Page no longer blinks when switching between boards in navbar
+* Tag edit/create modal roadmap ignore option is now inline on desktop view (UI improvement)
+* Social links should be now properly sorted and added without any problems through admin page
+* Smaller admin page UI improvements
+* Removed Private Boards feature
+
 ### 0.2.0-beta (June 5, 2020)
 * Fixed bug with board admin panel losing theme color after page refresh
 * Removed MDBootstrap dependency (client CSS size reduced)
