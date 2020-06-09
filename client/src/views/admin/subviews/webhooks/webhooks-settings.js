@@ -82,7 +82,7 @@ const WebhooksSettings = ({reRouteTo}) => {
         }
     };
     const renderEvents = (hook) => {
-        return hook.events.map(event => <div key={hook.id}><PageBadge text={prettifyEnum(event)} color={context.getTheme()}/></div>);
+        return hook.events.map(event => <div key={hook.id + event}><PageBadge text={prettifyEnum(event)} color={context.getTheme()}/></div>);
     };
     const onWebhookDelete = (hook) => {
         popupSwal("warning", "Dangerous action", "Webhook will be permanently removed and won't send data to target URL.",
