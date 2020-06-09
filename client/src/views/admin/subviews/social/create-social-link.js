@@ -31,7 +31,10 @@ const CreateSocialLink = () => {
                         return;
                     }
                     toastSuccess("Added new social link.", toastId);
-                    history.push("/ba/" + boardData.discriminator + "/social");
+                    history.push({
+                        pathname: "/ba/" + boardData.discriminator + "/social",
+                        state: null
+                    });
                 }).catch(err => {
                     toastError(err.response.data.errors[0], toastId);
                     setSettings({...settings, step: 2});

@@ -27,6 +27,7 @@ const SocialLinksSettings = ({reRouteTo}) => {
                 setSocialLinks({...socialLinks, error: true});
                 return;
             }
+            res.data.sort((a, b) => (a.id > b.id) ? 1 : -1);
             setSocialLinks({...socialLinks, data: res.data, loaded: true});
         }).catch(() => setSocialLinks({...socialLinks, error: true}));
         // eslint-disable-next-line
