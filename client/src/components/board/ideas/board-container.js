@@ -15,6 +15,9 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
+    useEffect(() => {
+        onLoadRequest(0, true);
+    }, [context]);
     const loadIdeas = () => {
         if (ideas.error) {
             return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className="mr-1"/> Failed to load ideas</React.Fragment>}/>
@@ -39,11 +42,15 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
     const onIdeaDelete = (id) => {
         setIdeas({...ideas, data: ideas.data.filter(item => item.id !== id)});
     };
-    const onLoadRequest = (page) => {
+    const onLoadRequest = (page, override = false) => {
         return axios.get("/boards/" + id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(context.user.searchPreferences)).then(res => {
             const data = res.data.data;
             data.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
-            setIdeas({...ideas, data: ideas.data.concat(data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
+            if(override) {
+                setIdeas({...ideas, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
+            } else {
+                setIdeas({...ideas, data: ideas.data.concat(data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
+            }
         }).catch(() => setIdeas({...ideas, error: true}));
     };
     useEffect(() => {

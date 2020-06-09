@@ -101,10 +101,7 @@ const App = () => {
         boardRedirect(history, boardData);
     };
     const boardRedirect = (history, boardData) => {
-        history.push({
-            pathname: "/brdr/" + boardData.discriminator,
-            state: {_boardData: boardData},
-        });
+
     };
     const getTheme = () => {
         let color = tinycolor(theme);
