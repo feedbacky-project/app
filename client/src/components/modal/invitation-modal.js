@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import {toastError, toastSuccess} from "components/util/utils";
+import {getSizedAvatarByUrl, toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
 import PageModal from "components/modal/page-modal";
 
@@ -20,7 +20,11 @@ const InvitationModal = (props) => {
             }
             props.onInvitationCreateModalClose();
             props.onInvitationSend(res.data);
-            toastSuccess("Invitation for user " + res.data.user.username + " sent.");
+            const toastMsg = <span>
+                Invitation for user <img alt="Invite" className="rounded-circle" src={getSizedAvatarByUrl(res.data.user.avatar, 16)} onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} height={16} width={16}/>
+                {" " + res.data.user.username} sent.
+            </span>;
+            toastSuccess(toastMsg);
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <PageModal id="invitation" isOpen={props.open} onHide={props.onInvitationCreateModalClose} title={"Invite New User"}

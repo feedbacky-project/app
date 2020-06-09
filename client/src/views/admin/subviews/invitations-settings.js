@@ -12,6 +12,9 @@ import ClickableTip from "components/util/clickable-tip";
 import ViewBox from "components/viewbox/view-box";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
+import DeleteButton from "components/util/delete-button";
+import PageBadge from "components/app/page-badge";
+import tinycolor from "tinycolor2";
 
 const InvitationsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -59,56 +62,47 @@ const InvitationsSettings = ({reRouteTo}) => {
                                  session={context.user.session} open={modalOpen}/>
                 <Col sm={6}>
                     <span className="mr-1 text-black-60">Pending Invitations</span>
-                    <ClickableTip id="invitePending" title="Pending Invitations"
-                                  description="Users whose invitations were not yet accepted."/>
-                    {renderInvitations()}
+                    <ClickableTip id="invitePending" title="Pending Invitations" description="Users whose invitations were not yet accepted."/>
+                    <div className="mt-1">{renderInvitations()}</div>
                 </Col>
                 <Col sm={6} className="px-1">
                     <span className="mr-1 text-black-60">Invited Members</span>
-                    <ClickableTip id="invited" title="Invited Members"
-                                  description="Users who accepted invitation and can see your board. Can be kicked any time."/>
-                    {renderInvited()}
+                    <ClickableTip id="invited" title="Invited Members" description="Users who accepted invitation and can see your board. Can be kicked any time."/>
+                    <div className="mt-1">{renderInvited()}</div>
                 </Col>
                 <Col xs={12}>
-                    <Button className="m-0 mt-3 float-right" variant=""
-                            style={{backgroundColor: context.getTheme()}}
-                            onClick={onInvitationCreateModalClick}>Invite New</Button>
+                    <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} onClick={onInvitationCreateModalClick}>Invite New</Button>
                 </Col>
             </React.Fragment>
         }/>
     };
     const renderInvitations = () => {
         return pendingInvitations.data.map((invite, i) => {
-            return <div className="my-1" key={i}>
-                <img className="img-responsive rounded mr-1 m"
-                     src={getSizedAvatarByUrl(invite.user.avatar, 32)}
-                     onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
-                     alt="avatar"
-                     height="24px" width="24px"/>
-                {invite.user.username}
-                {" - "}
-                <a href="#!" className="text-black-60" onClick={() => {
-                    copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/invitation/" + invite.code);
-                    toastSuccess("Copied to clipboard.")
-                }}>Copy Invite</a>
-                <OverlayTrigger overlay={<Tooltip id={"deleteInvite" + i + "-tooltip"}>Invalidate</Tooltip>}>
-                    <FaTrashAlt className="fa-xs ml-1" onClick={() => onInvalidation(invite.id)}/>
-                </OverlayTrigger>
+            return <div className="d-inline-flex justify-content-center mr-2" key={i}>
+                <div className="text-center">
+                    <img alt="Invited" className="rounded-circle" src={getSizedAvatarByUrl(invite.user.avatar, 32)}
+                         onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} height={35} width={35}/>
+                    <DeleteButton id={"deleteInvite_" + invite.user.id} onClick={() => onInvalidation(invite.id)} tooltipName="Invalidate"/>
+                    <br/>
+                    <small className="text-truncate d-block" style={{maxWidth: 100}}>{invite.user.username}</small>
+                    <div className="cursor-click" onClick={() => {
+                        copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/invitation/" + invite.code);
+                        toastSuccess("Copied to clipboard.");
+                    }}><PageBadge color={tinycolor(context.getTheme())} text="Copy Invite" className="move-top-3px"/></div>
+                </div>
             </div>
         });
     };
     const renderInvited = () => {
         return invited.data.map((user, i) => {
-            return <div className="my-1" key={i}>
-                <img className="img-responsive rounded mr-1"
-                     src={getSizedAvatarByUrl(user.avatar, 32)}
-                     onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
-                     alt="avatar"
-                     height="24px" width="24px"/>
-                {user.username}
-                <OverlayTrigger overlay={<Tooltip id={"deleteInvite" + i + "-tooltip"}>Kick Out from Board</Tooltip>}>
-                    <FaTrashAlt className="fa-xs ml-1" onClick={() => onKick(user.id)}/>
-                </OverlayTrigger>
+            return <div className="d-inline-flex justify-content-center mr-2" key={i}>
+                <div className="text-center">
+                    <img alt="Invited" className="rounded-circle" src={getSizedAvatarByUrl(user.avatar, 32)}
+                         onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} height={35} width={35}/>
+                    <DeleteButton id={"deleteInvited_" + user.id} onClick={() => onKick(user.id)} tooltipName="Kick Out"/>
+                    <br/>
+                    <small className="text-truncate d-block" style={{maxWidth: 100}}>{user.username}</small>
+                </div>
             </div>
         });
     };
