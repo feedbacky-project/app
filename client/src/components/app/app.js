@@ -120,12 +120,12 @@ const App = () => {
     const onDarkModeToggle = () => {
         let darkModeEnabled = (localStorage.getItem("darkMode") === 'true');
         localStorage.setItem("darkMode", (!darkModeEnabled).toString());
-        setDarkMode(darkModeEnabled);
-        if (darkModeEnabled) {
+        if (darkMode) {
             document.body.classList.remove("dark");
         } else {
             document.body.classList.add("dark");
         }
+        setDarkMode(!darkMode);
     };
     if (serviceData.error) {
         return <BrowserRouter><ErrorView icon={<FaDizzy className="error-icon"/>} message="Service Is Temporarily Unavailable"/></BrowserRouter>
