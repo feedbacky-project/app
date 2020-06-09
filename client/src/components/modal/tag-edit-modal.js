@@ -8,6 +8,7 @@ import Form from "react-bootstrap/Form";
 import ClickableTip from "components/util/clickable-tip";
 import LoadingSpinner from "components/util/loading-spinner";
 import {ChromePicker} from "react-color";
+import {Col, Row} from "react-bootstrap";
 
 const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
     const context = useContext(AppContext);
@@ -38,8 +39,8 @@ const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
 
     return <PageModal id="tagCreate" isOpen={open} onHide={onClose} title="Edit Tag"
                       applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</Button>}>
-        <Form noValidate>
-            <Form.Group className="mt-2 mb-1">
+        <Row>
+            <Col xs={12} className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>
                 <ClickableTip id="tagName" title="Tag Name" description="Descriptive and under 20 characters name of tag."/>
                 <Form.Control style={{minHeight: 38, resize: "none"}} minLength="2" maxLength="15" rows="1" required type="text" defaultValue={tag.name}
@@ -47,22 +48,22 @@ const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
                 <Form.Text className="text-right text-black-60" id="remainingTag">
                     15 Remaining
                 </Form.Text>
-            </Form.Group>
-            <Form.Group className="mb-2">
+            </Col>
+            <Col xs={12} sm={6} className="mb-2">
                 <Form.Label className="mr-1 text-black-60">Tag Color</Form.Label>
                 <ClickableTip id="tagColor" title="Tag Color" description="Choose color of the tag. Avoid bright colors, poorly visible both in Light and Dark Themes."/>
                 <br/>
                 <Suspense fallback={<LoadingSpinner/>}>
                     <ChromePicker className="text-center" disableAlpha color={color} onChangeComplete={changedColor => setColor(changedColor.hex)}/>
                 </Suspense>
-            </Form.Group>
-            <Form.Group className="mb-2">
+            </Col>
+            <Col xs={12} sm={6} className="mb-2">
                 <Form.Label className="mr-1 text-black-60">Ignore Roadmap</Form.Label>
                 <ClickableTip id="tagColor" title="Ignore Roadmap" description="Select if you don't want to include show tag and ideas with this tag in roadmap view."/>
                 <br/>
                 <Form.Check id="roadmapIgnored" custom inline label="Roadmap Ignored" type="checkbox" defaultChecked={tag.roadmapIgnored}/>
-            </Form.Group>
-        </Form>
+            </Col>
+        </Row>
     </PageModal>
 };
 
