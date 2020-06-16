@@ -10,6 +10,7 @@ import LoginModal from "components/modal/login-modal";
 import BoardContext from "context/board-context";
 import {BoardRoadmap} from "components/roadmap/board-roadmap";
 import IdeaNavbar from "components/navbars/idea-navbar";
+import ComponentLoader from "components/app/component-loader";
 
 const RoadmapView = () => {
     const context = useContext(AppContext);
@@ -59,7 +60,7 @@ const RoadmapView = () => {
     if (board.error || roadmap.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>
     }
-    if (!board.loaded || !roadmap.loaded) {
+    if (!board.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
     return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
@@ -69,7 +70,7 @@ const RoadmapView = () => {
         <IdeaNavbar onNotLoggedClick={() => setModalOpen(true)}/>
         <Container className="pb-5">
             <Row className="pb-4 justify-content-center">
-                <BoardRoadmap data={roadmap.data} onNotLoggedClick={() => setModalOpen(true)}/>
+                <ComponentLoader loaded={roadmap.loaded} component={<BoardRoadmap data={roadmap.data} onNotLoggedClick={() => setModalOpen(true)}/>}/>
             </Row>
         </Container>
     </BoardContext.Provider>

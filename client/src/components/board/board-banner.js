@@ -8,6 +8,7 @@ import AppContext from "context/app-context";
 
 const BoardBanner = ({customName}) => {
     const context = useContext(AppContext);
+    const boardData = useContext(BoardContext).data;
     const {socialLinks, name, shortDescription, banner, discriminator} = useContext(BoardContext).data;
     const renderSocialLinks = () => {
         let offset = 0;
@@ -19,7 +20,10 @@ const BoardBanner = ({customName}) => {
                 </div>
             })}
             <div className="d-inline social-link" style={{position: "absolute", bottom: "8px", left: (offset) + "px", backgroundColor: context.getTheme().setAlpha(.4)}}>
-                <Link to={"/b/" + discriminator + "/roadmap"}><FaMap style={{color: "white"}}/></Link>
+                <Link to={{
+                    pathname: "/b/" + discriminator + "/roadmap",
+                    state: {_boardData: boardData}
+                }}><FaMap style={{color: "white"}}/></Link>
             </div>
         </div>
     };
@@ -32,7 +36,10 @@ const BoardBanner = ({customName}) => {
                 </div>
             })}
             <div className="d-inline social-link" style={{backgroundColor: context.getTheme().setAlpha(.4)}}>
-                <Link to={"/b/" + discriminator + "/roadmap"}><FaMap style={{color: "white"}}/></Link>
+                <Link to={{
+                    pathname: "/b/" + discriminator + "/roadmap",
+                    state: {_boardData: boardData}
+                }}><FaMap style={{color: "white"}}/></Link>
             </div>
         </div>
     };
