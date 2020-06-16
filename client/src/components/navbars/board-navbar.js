@@ -14,7 +14,7 @@ const BoardNavbar = ({onNotLoggedClick}) => {
     return <PageNavbar theme={theme}>
         <Container className="d-flex">
             <NavbarBrand as={Link} to="/me">
-                <img className="img-responsive mr-2" src={boardContext.data.logo}
+                <img className="mr-2" src={boardContext.data.logo}
                      height="30px"
                      width="30px" alt=""/>
                 <span>{boardContext.data.name}</span>

@@ -2,9 +2,9 @@ import React, {useContext} from 'react';
 import {Container, NavbarBrand} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import AppContext from "context/app-context";
-import {getSizedAvatarByUrl} from "components/util/utils";
 import {renderLogIn} from "components/navbars/navbar-commons";
 import PageNavbar from "components/navbars/page-navbar";
+import {PageAvatar} from "components/app/page-avatar";
 
 const ProfileNavbar = (props) => {
     const context = useContext(AppContext);
@@ -25,17 +25,14 @@ const ProfileNavbar = (props) => {
 const renderHello = (context) => {
     if (!context.user.loggedIn) {
         return <React.Fragment>
-            <img className="img-responsive rounded mr-2" alt="avatar"
+            <img className="rounded mr-2" alt="avatar"
                  src={process.env.REACT_APP_DEFAULT_USER_AVATAR}
                  width={30} height={30}/>
             <span>Hello User</span>
         </React.Fragment>
     }
     return <React.Fragment>
-        <img className="img-responsive rounded mr-2" alt="avatar"
-             src={getSizedAvatarByUrl(context.user.data.avatar, 64)}
-             onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
-             width={30} height={30}/>
+        <PageAvatar className="mr-2" rounded url={context.user.data.avatar} size={30}/>
         <span>Hello {context.user.data.username}</span>
     </React.Fragment>
 };

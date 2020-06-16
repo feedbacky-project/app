@@ -2,9 +2,10 @@ import React, {useContext} from 'react';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import {getSizedAvatarByUrl, toastError, toastSuccess} from "components/util/utils";
+import {toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
 import PageModal from "components/modal/page-modal";
+import {PageAvatar} from "components/app/page-avatar";
 
 const ModeratorInvitationModal = (props) => {
     const context = useContext(AppContext);
@@ -23,7 +24,7 @@ const ModeratorInvitationModal = (props) => {
             mod.role = "moderator";
             props.onModInvitationSend(mod);
             const toastMsg = <span>
-                Invitation for user <img alt="Invite" className="rounded-circle" src={getSizedAvatarByUrl(res.data.user.avatar, 16)} onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} height={16} width={16}/>
+                Invitation for user <PageAvatar circle url={res.data.user.avatar} size={16}/>
                 {" " + res.data.user.username} sent.
             </span>;
             toastSuccess(toastMsg);

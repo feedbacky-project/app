@@ -1,10 +1,11 @@
 import React, {useContext} from "react";
-import {Image, OverlayTrigger, Tooltip} from "react-bootstrap";
-import {formatUsername, getSizedAvatarByUrl, parseMarkdown} from "components/util/utils";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
+import {formatUsername, parseMarkdown} from "components/util/utils";
 import TimeAgo from "timeago-react";
 import {FaEdit, FaHeart, FaLockOpen, FaLowVision, FaRegHeart, FaTags, FaTimesCircle, FaTrashAlt} from "react-icons/all";
 import AppContext from "context/app-context";
 import BoardContext from "context/board-context";
+import {PageAvatar} from "components/app/page-avatar";
 
 const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike}) => {
     const context = useContext(AppContext);
@@ -51,8 +52,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
     if (!data.special) {
         return <React.Fragment key={data.id}>
             <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
-                <Image roundedCircle src={getSizedAvatarByUrl(data.user.avatar, 64)} className="mr-3 mt-2" width={30} height={30} alt="avatar"
-                       onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} style={{minWidth: "30px"}}/>
+                <PageAvatar circle className="mr-3 mt-2" size={30} url={data.user.avatar} style={{minWidth: "30px"}}/>
                 <div>
                     {renderCommentUsername(data)}
                     {renderDeletionButton(data)}

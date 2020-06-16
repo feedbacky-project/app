@@ -89,18 +89,13 @@ const App = () => {
         setSession(null);
         setUserData({...userData, data: [], loaded: true, loggedIn: false});
     };
-    const onFilteringUpdate = (filter, boardData, history) => {
+    const onFilteringUpdate = (filter) => {
         localStorage.setItem("searchFilter", filter);
         setSearchPrefs({...searchPrefs, filter});
-        boardRedirect(history, boardData);
     };
-    const onSortingUpdate = (sort, boardData, history) => {
+    const onSortingUpdate = (sort) => {
         localStorage.setItem("searchSort", sort);
         setSearchPrefs({...searchPrefs, sort});
-        boardRedirect(history, boardData);
-    };
-    const boardRedirect = (history, boardData) => {
-
     };
     const getTheme = () => {
         let color = tinycolor(theme);

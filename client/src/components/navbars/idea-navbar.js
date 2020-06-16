@@ -24,7 +24,7 @@ const IdeaNavbar = ({onNotLoggedClick}) => {
                 pathname: "/b/" + boardData.discriminator,
                 state: {_boardData: boardData}
             }}>
-                <img className="img-responsive mr-2" src={boardData.logo}
+                <img className="mr-2" src={boardData.logo}
                      height="30px"
                      width="30px" alt=""/>
                 <span>{boardData.name}</span>

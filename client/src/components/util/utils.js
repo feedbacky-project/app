@@ -9,14 +9,6 @@ export const parseMarkdown = (html) => {
     return parseEmojis(marked(html, {breaks: true}));
 };
 
-export const getSizedAvatarByUrl = (url, sizing) => {
-    if (url.includes("googleusercontent")) {
-        return url + "=h" + sizing;
-    } else /* for discord and github */ {
-        return url + "?size=" + sizing;
-    }
-};
-
 export const popupToast = (content, type, toastId) => {
     if (toastId == null) {
         return toast(content, {

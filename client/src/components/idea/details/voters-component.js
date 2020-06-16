@@ -1,9 +1,8 @@
 import React, {useContext} from "react";
 import Spinner from "react-bootstrap/Spinner";
-import Image from "react-bootstrap/Image";
-import {getSizedAvatarByUrl} from "components/util/utils";
 import {FaFrown} from "react-icons/all";
 import AppContext from "context/app-context";
+import {PageAvatar} from "components/app/page-avatar";
 
 const VotersComponent = ({votersAmount, data}) => {
     const context = useContext(AppContext);
@@ -21,9 +20,7 @@ const VotersComponent = ({votersAmount, data}) => {
             }
             return <React.Fragment>
                 {spinners}
-                <span className="d-inline-block text-tight" style={{
-                    marginLeft: 10, fontSize: 13, transform: "translateY(-4px)"
-                }}> + {votersAmount - 5} more</span>
+                <span className="d-inline-block voters-and-more" style={{transform: "translateY(-4px)"}}> + {votersAmount - 5} more</span>
             </React.Fragment>
         }
         if (data.error) {
@@ -31,9 +28,7 @@ const VotersComponent = ({votersAmount, data}) => {
         }
         return <div>
             {data.data.slice(0, 5).map(data => {
-                return <Image roundedCircle key={data.id} alt="avatar" className="merged"
-                              src={getSizedAvatarByUrl(data.avatar, 32)} width={25} height={25}
-                              onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+                return <PageAvatar key={data.id} className="merged" circle url={data.avatar} size={25}/>
             })}
             {renderAndMore()}
         </div>
@@ -43,10 +38,7 @@ const VotersComponent = ({votersAmount, data}) => {
         if (data.data.length <= 5) {
             return;
         }
-        return <span className="d-inline text-tight" style={{
-            marginLeft: 10,
-            fontSize: 13
-        }}> + {data.data.length - 5} more</span>
+        return <span className="voters-and-more"> + {data.data.length - 5} more</span>
     };
     return <React.Fragment>
         <div className="mt-4 text-black-75">Voters ({votersAmount} votes)</div>

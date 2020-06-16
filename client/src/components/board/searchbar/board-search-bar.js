@@ -4,13 +4,9 @@ import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import AppContext from "context/app-context";
 import {FaAngleDown} from "react-icons/all";
-import BoardContext from "context/board-context";
-import {useHistory} from "react-router-dom";
 
 const BoardSearchBar = () => {
     const context = useContext(AppContext);
-    const boardContext = useContext(BoardContext);
-    const history = useHistory();
     const filters = [
         {opened: "Opened"},
         {closed: "Closed"},
@@ -36,12 +32,12 @@ const BoardSearchBar = () => {
                 {filters.map(val => {
                     const key = Object.keys(val)[0];
                     const value = Object.values(val)[0];
-                    return <DropdownItem key={key} onClick={() => context.onFilteringUpdate(key, boardContext.data, history)}>{value}</DropdownItem>
+                    return <DropdownItem key={key} onClick={() => context.onFilteringUpdate(key)}>{value}</DropdownItem>
                 })}
             </DropdownMenu>
         </Dropdown>
         and Sorting {" "}
-        <Dropdown className="d-inline move-top-1px" style={{zIndex: 1}}>
+        <Dropdown className="d-inline" style={{zIndex: 1}}>
             <DropdownToggle id="sort" variant="" className="btn btn-link m-0 p-0 text-dark font-weight-bold move-top-1px">
                 <u>{Object.values(sorts.find(obj => {
                     return Object.keys(obj)[0] === (context.user.searchPreferences.sort || "trending")
@@ -52,7 +48,7 @@ const BoardSearchBar = () => {
                 {sorts.map(val => {
                     const key = Object.keys(val)[0];
                     const value = Object.values(val)[0];
-                    return <DropdownItem key={key} onClick={() => context.onSortingUpdate(key, boardContext.data, history)}>{value}</DropdownItem>
+                    return <DropdownItem key={key} onClick={() => context.onSortingUpdate(key)}>{value}</DropdownItem>
                 })}
             </DropdownMenu>
         </Dropdown>

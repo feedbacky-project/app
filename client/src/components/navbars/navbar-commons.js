@@ -1,11 +1,12 @@
 import {Dropdown, DropdownItem, NavItem} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
-import {getSizedAvatarByUrl, isServiceAdmin} from "components/util/utils";
+import {isServiceAdmin} from "components/util/utils";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import React from "react";
 import {Link} from "react-router-dom";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
 import {FaAngleDown} from "react-icons/all";
+import {PageAvatar} from "components/app/page-avatar";
 
 export const renderLogIn = (onNotLoggedClick, context) => {
     if (!context.user.loggedIn) {
@@ -16,10 +17,7 @@ export const renderLogIn = (onNotLoggedClick, context) => {
     return <NavItem>
         <Dropdown>
             <DropdownToggle id="userOptions" variant="" className="btn btn-link m-0 pr-1 text-white">
-                <img className="img-responsive rounded mr-1"
-                     src={getSizedAvatarByUrl(context.user.data.avatar, 64)}
-                     onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
-                     alt="avatar" height="24px" width="24px"/>
+                <PageAvatar className="mr-1" rounded url={context.user.data.avatar} size={24}/>
                 <FaAngleDown/>
             </DropdownToggle>
             <DropdownMenu alignRight>

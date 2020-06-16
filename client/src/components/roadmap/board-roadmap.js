@@ -1,13 +1,11 @@
 import React, {useContext} from "react";
-import {Badge, Col} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import BoardContext from "context/board-context";
 import BoardBanner from "components/board/board-banner";
-import AppContext from "context/app-context";
 import {SimpleIdeaCard} from "components/roadmap/simple-idea-card";
 
 export const BoardRoadmap = ({data, onNotLoggedClick}) => {
     const boardData = useContext(BoardContext).data;
-    const context = useContext(AppContext);
     const renderRoadmap = () => data.map(element => {
         return <Col className="mt-4 roadmap-col" key={element.tag.name}>
             <h3>
@@ -23,7 +21,6 @@ export const BoardRoadmap = ({data, onNotLoggedClick}) => {
     return <React.Fragment>
         <BoardBanner customName={<React.Fragment>
             {boardData.name} - Roadmap
-            <Badge className="ml-2 move-top-3px" variant="" style={{backgroundColor: context.getTheme()}}>Beta</Badge>
         </React.Fragment>}/>
         {renderRoadmap()}
     </React.Fragment>

@@ -2,11 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import Button from "react-bootstrap/Button";
 import {Col} from "react-bootstrap";
 import {FaLock, FaTrash} from "react-icons/fa";
-import Image from "react-bootstrap/Image";
 import TimeAgo from "timeago-react";
 import axios from "axios";
 import AppContext from "context/app-context";
-import {formatUsername, getSizedAvatarByUrl, htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {formatUsername, htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import {popupSwal} from "components/util/sweetalert-utils";
 import TextareaAutosize from "react-autosize-textarea";
@@ -17,6 +16,7 @@ import AttachmentsComponent from "components/idea/details/attachments-component"
 import MailSubscriptionComponent from "components/idea/details/mail-subscription-component";
 import VoteButton from "components/app/vote-button";
 import {useHistory} from "react-router-dom";
+import {PageAvatar} from "components/app/page-avatar";
 
 const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -38,7 +38,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
 
     const onEditApply = () => {
         let description = document.getElementById("editorBox").value;
-        if(ideaData.description === description) {
+        if (ideaData.description === description) {
             setEditor({enabled: false, value: htmlDecode(description)});
             toastWarning("Content not changed.");
             return;
@@ -142,9 +142,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
             {renderDeletionButton()}
             {ideaData.user.id !== context.user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
-            <Image roundedCircle className="mr-1" src={getSizedAvatarByUrl(ideaData.user.avatar, 32)}
-                   width={18} height={18} style={{maxWidth: "none"}}
-                   onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+            <PageAvatar circle className="mr-1" url={ideaData.user.avatar} size={18} style={{maxWidth: "none"}}/>
             <small>{formatUsername(ideaData.user.id, ideaData.user.username, moderators)} ·{" "}</small>
             <small className="text-black-60"><TimeAgo datetime={ideaData.creationDate}/></small>
             {!ideaData.edited || <small className="text-black-60"> · edited</small>}

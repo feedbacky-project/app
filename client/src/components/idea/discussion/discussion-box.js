@@ -1,9 +1,9 @@
 import React, {useContext, useState} from 'react';
-import {Button, Col, Image, Row} from "react-bootstrap";
+import {Button, Col, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaFrown} from "react-icons/fa";
-import {formatUsername, getSizedAvatarByUrl, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {formatUsername, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
@@ -12,6 +12,7 @@ import ClickableTip from "components/util/clickable-tip";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import CommentComponent from "components/idea/discussion/comment-component";
 import {SvgNotice} from "components/app/svg-notice";
+import {PageAvatar} from "components/app/page-avatar";
 
 const DiscussionBox = ({ideaData, updateState, moderators}) => {
     const context = useContext(AppContext);
@@ -53,8 +54,7 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
         if (context.user.loggedIn) {
             return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
                 <div className="text-center mr-3 pt-2">
-                    <Image roundedCircle src={getSizedAvatarByUrl(context.user.data.avatar, 64)} width={30} height={30} alt="avatar"
-                           onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+                    <PageAvatar circle size={30} url={context.user.data.avatar}/>
                     <br/>
                 </div>
                 <div className="col-12 px-0">

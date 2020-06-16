@@ -4,12 +4,13 @@ import {FaLock, FaRegComment} from "react-icons/fa";
 import {Card} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import AppContext from "context/app-context";
-import {formatUsername, getSizedAvatarByUrl, toastError, truncateText} from "components/util/utils";
+import {formatUsername, toastError, truncateText} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import tinycolor from "tinycolor2";
 import PageBadge from "components/app/page-badge";
 import VoteButton from "components/app/vote-button";
 import BoardContext from "context/board-context";
+import {PageAvatar} from "components/app/page-avatar";
 
 const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
     const cardRef = React.createRef();
@@ -39,10 +40,7 @@ const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
         return <small className="author-container">
             By {" "}
             {formatUsername(idea.user.id, truncateText(idea.user.username, 20), boardData.moderators)} {" "}
-            <img className="img-responsive m-0 rounded-circle move-top-1px" alt="avatar"
-                 src={getSizedAvatarByUrl(idea.user.avatar, 32)}
-                 onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}
-                 width={16} height={16}/>
+            <PageAvatar className="m-0 move-top-1px" circle url={idea.user.avatar} size={16}/>
         </small>
     };
     const updateState = (data) => {
@@ -76,7 +74,7 @@ const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
                 toastError();
                 return;
             }
-            if(upvoted) {
+            if (upvoted) {
                 cardRef.current.classList.add("upvote-animation");
             } else {
                 cardRef.current.classList.remove("upvote-animation");
