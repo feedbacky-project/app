@@ -1,5 +1,5 @@
 import React, {lazy, Suspense, useEffect, useState} from 'react';
-import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import axios from "axios";
 import {toast} from "react-toastify";
 import Cookies from "js-cookie";
@@ -49,7 +49,7 @@ const App = () => {
         // eslint-disable-next-line
     }, []);
     useEffect(() => {
-        if(serviceData.loaded) {
+        if (serviceData.loaded) {
             return;
         }
         axios.get("/service/about").then(res => {

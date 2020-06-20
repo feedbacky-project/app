@@ -493,13 +493,22 @@ a {
   min-height: 310px;
   max-height: 310px;
   overflow: auto;
+  scrollbar-width: thin; /* firefox property */
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+    background: #f0f0f0;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+  }
 }
 
 .disable-scrollbars {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE 10+ */
   &::-webkit-scrollbar {
-    width: 0px;
+    width: 0;
     background: transparent; /* Chrome/Safari/Webkit */
   }
 }

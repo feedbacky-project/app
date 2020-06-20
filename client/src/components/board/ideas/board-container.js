@@ -16,7 +16,8 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
     const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
     useEffect(() => {
-        onLoadRequest(0, true);
+        onLoadRequest(1, true);
+        // eslint-disable-next-line
     }, [id, context.user.searchPreferences]);
     const loadIdeas = () => {
         if (ideas.error) {

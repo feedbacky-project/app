@@ -9,7 +9,6 @@ import IdeaDetailsBox from "components/idea/details/idea-details-box";
 import DiscussionBox from "components/idea/discussion/discussion-box";
 import {Col, Container, Row} from "react-bootstrap";
 import AppContext from "context/app-context";
-import {FaEyeSlash} from "react-icons/all";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
 import {useHistory, useLocation, useParams} from "react-router-dom";

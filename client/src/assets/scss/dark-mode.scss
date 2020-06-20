@@ -286,3 +286,13 @@
 .dark .danger-shadow {
   box-shadow: 0 3px 5px 0 rgba(255, 57, 50, .5);
 }
+
+.dark .roadmap-container::-webkit-scrollbar {
+  scrollbar-color: rgb(100, 100, 100) #2e2e2e; /* firefox property */
+  &::-webkit-scrollbar {
+    background: #2e2e2e;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgb(100, 100, 100);
+  }
+}
