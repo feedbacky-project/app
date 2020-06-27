@@ -67,7 +67,7 @@ const CreateBoardView = () => {
         return <PreviousStepButton previousStep={previousStep}/>
     };
     const renderNextButton = () => {
-        if (settings.step === 3) {
+        if (settings.step >= 3) {
             return <Button variant="success" className="ml-2" onClick={nextStep}>Create Board</Button>
         }
         return <NextStepButton nextStep={nextStep}/>
