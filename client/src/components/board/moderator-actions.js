@@ -114,7 +114,6 @@ const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
                             toastError();
                             return;
                         }
-                        console.log(response.data);
                         updateState({...ideaData, tags: response.data});
                         toastSuccess("Tags updated!");
                     }).catch(err => toastError(err.response.data.errors[0]));
