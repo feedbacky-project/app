@@ -43,8 +43,8 @@ const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
             <PageAvatar className="m-0 move-top-1px" circle url={idea.user.avatar} size={16}/>
         </small>
     };
-    const updateState = (data) => {
-        setIdea({...idea, data});
+    const updateState = (newData) => {
+        setIdea(newData);
     };
     const onUpvote = () => {
         if (!context.user.loggedIn) {
