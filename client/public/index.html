@@ -18,9 +18,8 @@
             background-color: #f8f9fa;
         }
 
-        @font-face {
-            font-family: 'Roboto', sans-serif;
-            font-display: swap;
+        .dark {
+            background-color: #202328;
         }
 
         .vertical-center {
@@ -29,6 +28,11 @@
 
             display: flex;
             align-items: center;
+        }
+
+        html {
+            overflow-x: hidden;
+            margin-right: calc(-1 * (100vw - 100%));
         }
 
         .load-spinner {
@@ -42,8 +46,14 @@
             animation: sk-scaleout 1.0s infinite ease-in-out;
         }
 
+        .dark .load-spinner {
+            background-color: #f2f2f2;
+        }
+
         @-webkit-keyframes sk-scaleout {
-            0% { -webkit-transform: scale(0) }
+            0% {
+                -webkit-transform: scale(0)
+            }
             100% {
                 -webkit-transform: scale(1.0);
                 opacity: 0;
@@ -54,16 +64,26 @@
             0% {
                 -webkit-transform: scale(0);
                 transform: scale(0);
-            } 100% {
-                  -webkit-transform: scale(1.0);
-                  transform: scale(1.0);
-                  opacity: 0;
-              }
+            }
+            100% {
+                -webkit-transform: scale(1.0);
+                transform: scale(1.0);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body class="bg-main">
 <noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"><div class="vertical-center"><div class="load-spinner"></div></div></div>
+<script>
+    if (localStorage.getItem("darkMode") === 'true') {
+        document.body.classList.add("dark");
+    }
+</script>
+<div id="root">
+    <div class="vertical-center">
+        <div class="load-spinner"></div>
+    </div>
+</div>
 </body>
 </html>

@@ -97,9 +97,9 @@ const App = () => {
         localStorage.setItem("searchSort", sort);
         setSearchPrefs({...searchPrefs, sort});
     };
-    const getTheme = () => {
+    const getTheme = (adjustColor = true) => {
         let color = tinycolor(theme);
-        if (darkMode) {
+        if (darkMode && adjustColor) {
             color = color.lighten(10);
             //if still not readable, increase again
             if (tinycolor.readability(color, "#282828") < 2.5) {

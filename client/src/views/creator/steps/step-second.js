@@ -47,8 +47,8 @@ const StepSecond = ({updateSettings, settings}) => {
             <br/>
             {/* simulate real board jumbotron to show properly sized image */}
             <div id="boardBanner" className="jumbotron mb-2" style={{backgroundImage: `url("` + settings.banner + `")`}}>
-                <h3 style={{color: "transparent"}}>Feedbacky Board</h3>
-                <h5 style={{color: "transparent"}}>Feedbacky example Board</h5>
+                <h3 style={{color: "transparent"}}>Example Board</h3>
+                <h5 style={{color: "transparent"}}>Descriptive example Board</h5>
             </div>
             <input className="small" accept="image/jpeg, image/png" id="bannerInput" type="file" name="banner" onChange={e => onBannerChange(e)}/>
         </Col>

@@ -8,7 +8,7 @@ import {PageAvatar} from "components/app/page-avatar";
 
 const ProfileNavbar = (props) => {
     const context = useContext(AppContext);
-    const theme = context.getTheme();
+    const theme = context.getTheme(false);
 
     return <PageNavbar theme={theme}>
         <Container className="d-flex">
@@ -32,7 +32,7 @@ const renderHello = (context) => {
         </React.Fragment>
     }
     return <React.Fragment>
-        <PageAvatar className="mr-2" rounded url={context.user.data.avatar} size={30}/>
+        <PageAvatar className="mr-2" circle url={context.user.data.avatar} size={30}/>
         <span>Hello {context.user.data.username}</span>
     </React.Fragment>
 };

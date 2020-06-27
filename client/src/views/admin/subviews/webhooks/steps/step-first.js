@@ -20,7 +20,7 @@ const StepFirst = ({updateSettings, settings}) => {
     const renderCards = () => {
         return type.map((item, i) => {
             let name = typeName[i];
-            let classes = "rounded-xl mb-3";
+            let classes = "mb-3";
             if (settings.type === item) {
                 classes += " border-chosen";
             } else {

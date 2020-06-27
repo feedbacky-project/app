@@ -17,7 +17,7 @@ export const renderLogIn = (onNotLoggedClick, context) => {
     return <NavItem>
         <Dropdown>
             <DropdownToggle id="userOptions" variant="" className="btn btn-link m-0 pr-1 text-white">
-                <PageAvatar className="mr-1" rounded url={context.user.data.avatar} size={24}/>
+                <PageAvatar className="mr-1" circle url={context.user.data.avatar} size={24}/>
                 <FaAngleDown/>
             </DropdownToggle>
             <DropdownMenu alignRight>

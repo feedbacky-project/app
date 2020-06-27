@@ -92,7 +92,7 @@ const SettingsSubview = ({reRouteTo}) => {
         return <React.Fragment>
             <ProfileSidebar currentNode="settings" reRouteTo={reRouteTo}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={context.getTheme()} title="User Settings" description="Edit your account here.">
+                <ViewBox theme={context.getTheme(false)} title="User Settings" description="Edit your account here.">
                     <Col className="text-center">Please log in to see contents of this page.</Col>
                 </ViewBox>
             </Col>
@@ -124,7 +124,7 @@ const SettingsSubview = ({reRouteTo}) => {
             <Col xs={12} lg={6} className="order-lg-2 order-1">
                 <Form.Label className="mr-1 text-black-60">Avatar</Form.Label>
                 <br/>
-                <img alt="avatar" src={avatar} className="img-fluid rounded" width={100}/>
+                <img alt="avatar" src={avatar} className="img-fluid rounded-circle" width={100}/>
                 <Button variant="success" className="align-top mx-3 my-0"
                         onClick={() => setModalOpened(true)}>Change</Button>
             </Col>
@@ -147,10 +147,10 @@ const SettingsSubview = ({reRouteTo}) => {
     return <React.Fragment>
         <ProfileSidebar currentNode="settings" reRouteTo={reRouteTo}/>
         <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme()} title="User Settings" description="Edit your account here.">
+            <ViewBox theme={context.getTheme(false)} title="User Settings" description="Edit your account here.">
                 {renderContent()}
             </ViewBox>
-            <Col xs={12} className="mb-3 view-box-bg mt-2 danger-shadow">
+            <Col xs={12} className="mb-3 view-box-bg mt-2 py-2 danger-shadow">
                 <Row noGutters className="col-12 p-3">
                     <Col sm={9} xs={12}>
                         <h4 className="mb-1 text-danger">Deactivate Account</h4>

@@ -14,7 +14,7 @@ import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
 import BoardContext from "context/board-context";
 
-const ModeratorActions = ({ideaData, updateState, onIdeaDelete = {}}) => {
+const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
     const swalGenerator = swalReact(Swal);
     const context = useContext(AppContext);
     const {moderators} = useContext(BoardContext).data;

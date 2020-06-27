@@ -10,7 +10,7 @@ const ProfileSidebar = (props) => {
         {notifications: (data) => <React.Fragment><FaRegBell className="mr-1 move-top-1px" style={data}/> Notifications</React.Fragment>},
     ];
     const context = useContext(AppContext);
-    const themeColor = context.user.darkMode ? "#00c851" : "#00a040";
+    const themeColor = context.user.darkMode ? "#00e25b" : "#00a040";
 
     return <Col xs={12} md={3} className="sidebar">
         <ul>{renderSidebarRoutes(routes, themeColor, props.currentNode, props.reRouteTo)}</ul>

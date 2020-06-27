@@ -16,7 +16,7 @@ const IdeaNavbar = ({onNotLoggedClick}) => {
         <Link to={{
             pathname: "/b/" + boardData.discriminator,
             state: {_boardData: boardData}
-        }} className="d-none d-md-block go-back-button justify-content-start" style={{position: "absolute"}}>
+        }} className="d-none d-md-block go-back-button hoverable-option justify-content-start" style={{position: "absolute"}}>
             <FaChevronLeft className="ml-2"/>
         </Link>
         <Container className="d-flex">

@@ -22,10 +22,10 @@ const BoardSearchBar = () => {
     return <Col sm={12} className="my-1 text-left">
         Filtering {" "}
         <Dropdown className="d-inline mr-1" style={{zIndex: 1}}>
-            <DropdownToggle id="filter" variant="" className="btn btn-link m-0 p-0 text-dark font-weight-bold move-top-1px">
-                <u>{Object.values(filters.find(obj => {
+            <DropdownToggle id="filter" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
+                <span>{Object.values(filters.find(obj => {
                     return Object.keys(obj)[0] === (context.user.searchPreferences.filter || "opened")
-                }))[0]}</u>
+                }))[0]}</span>
                 <FaAngleDown/>
             </DropdownToggle>
             <DropdownMenu alignRight>
@@ -38,10 +38,10 @@ const BoardSearchBar = () => {
         </Dropdown>
         and Sorting {" "}
         <Dropdown className="d-inline" style={{zIndex: 1}}>
-            <DropdownToggle id="sort" variant="" className="btn btn-link m-0 p-0 text-dark font-weight-bold move-top-1px">
-                <u>{Object.values(sorts.find(obj => {
+            <DropdownToggle id="sort" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
+                <span>{Object.values(sorts.find(obj => {
                     return Object.keys(obj)[0] === (context.user.searchPreferences.sort || "trending")
-                }))}</u>
+                }))}</span>
                 <FaAngleDown/>
             </DropdownToggle>
             <DropdownMenu alignRight>

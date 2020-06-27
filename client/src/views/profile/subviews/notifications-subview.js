@@ -41,7 +41,7 @@ const NotificationsSubview = ({reRouteTo}) => {
         return <React.Fragment>
             <ProfileSidebar currentNode="notifications" reRouteTo={reRouteTo}/>
             <Col xs={12} md={9}>
-                <ViewBox theme={context.getTheme()} title="Mail Notifications" description="Configure your mail notifications here.">
+                <ViewBox theme={context.getTheme(false)} title="Mail Notifications" description="Configure your mail notifications here.">
                     <Col className="text-center">Please log in to see contents of this page.</Col>
                 </ViewBox>
             </Col>
@@ -55,7 +55,7 @@ const NotificationsSubview = ({reRouteTo}) => {
     };
     const renderContent = () => {
         return <React.Fragment>
-            <Row noGutters className="col-12 m-0 p-0 px-4 my-2">
+            <Row noGutters className="col-12 m-0 p-0 px-3 my-2">
                 <Col sm={9} xs={12}>
                     <h4 className="mb-1">Moderator Comments</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
@@ -66,7 +66,7 @@ const NotificationsSubview = ({reRouteTo}) => {
                     {conditionalButton(moderatorsCommentsNotify, () => setModeratorsCommentsNotify(true), () => setModeratorsCommentsNotify(false))}
                 </Col>
             </Row>
-            <Row noGutters className="col-12 m-0 p-0 px-4 my-2">
+            <Row noGutters className="col-12 m-0 p-0 px-3 my-2">
                 <Col sm={9} xs={12}>
                     <h4 className="mb-1">Tags Change</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
@@ -77,7 +77,7 @@ const NotificationsSubview = ({reRouteTo}) => {
                     {conditionalButton(tagsChangeNotify, () => setTagsChangeNotify(true), () => setTagsChangeNotify(false))}
                 </Col>
             </Row>
-            <Row noGutters className="col-12 m-0 p-0 px-4 my-2">
+            <Row noGutters className="col-12 m-0 p-0 px-3 my-2">
                 <Col sm={9} xs={12}>
                     <h4 className="mb-1">Status Change</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
@@ -98,7 +98,7 @@ const NotificationsSubview = ({reRouteTo}) => {
     return <React.Fragment>
         <ProfileSidebar currentNode="notifications" reRouteTo={reRouteTo}/>
         <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme()} title="Mail Notifications" description="Configure your mail notifications here.">
+            <ViewBox theme={context.getTheme(false)} title="Mail Notifications" description="Configure your mail notifications here.">
                 {renderContent()}
             </ViewBox>
         </Col>

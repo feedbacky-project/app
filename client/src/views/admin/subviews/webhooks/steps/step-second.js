@@ -19,7 +19,7 @@ const StepSecond = ({updateSettings, settings}) => {
     const renderCards = () => {
         return events.map((item, i) => {
             let name = eventNames[i];
-            let classes = "rounded-xl mb-3 mx-2";
+            let classes = "mb-3 mx-2";
             if (settings.listenedEvents.includes(item)) {
                 classes += " border-chosen";
             } else {

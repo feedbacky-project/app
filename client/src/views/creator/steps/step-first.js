@@ -10,7 +10,7 @@ const StepFirst = ({updateSettings, settings}) => {
             <img alt="" src={UndrawCreateProject} className="my-2" width={150} height={150}/>
             <h2>Choose Name and Discriminator</h2>
             <span className="text-black-60">
-                Type how your board will be named and discriminator under which users will access it on Feedbacky.
+                Type how your board will be named and discriminator under which users will access it.
             </span>
         </Col>
         <Col xs={12} sm={6} className="mt-4 px-md-5 px-3">

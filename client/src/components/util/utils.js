@@ -21,6 +21,7 @@ export const popupToast = (content, type, toastId) => {
             pauseOnFocusLoss: false,
             draggable: true,
             transition: Slide,
+            closeButton: false,
             className: "toast-style " + type,
         });
     } else {

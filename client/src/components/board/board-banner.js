@@ -19,7 +19,7 @@ const BoardBanner = ({customName}) => {
                     <SafeAnchor url={link.url}><img src={link.logoUrl} alt="Social Icon" width={18} height={18}/></SafeAnchor>
                 </div>
             })}
-            <div className="d-inline social-link" style={{position: "absolute", bottom: "8px", left: (offset) + "px", backgroundColor: context.getTheme().setAlpha(.4)}}>
+            <div className="d-inline social-link" style={{position: "absolute", bottom: "8px", left: (offset) + "px", backgroundColor: context.getTheme().setAlpha(.5)}}>
                 <Link to={{
                     pathname: "/b/" + discriminator + "/roadmap",
                     state: {_boardData: boardData}
@@ -35,7 +35,7 @@ const BoardBanner = ({customName}) => {
                     <SafeAnchor url={link.url}><img src={link.logoUrl} alt="Social Icon" width={18} height={18} className="img-fluid"/></SafeAnchor>
                 </div>
             })}
-            <div className="d-inline social-link" style={{backgroundColor: context.getTheme().setAlpha(.4)}}>
+            <div className="d-inline social-link" style={{backgroundColor: context.getTheme().setAlpha(.5)}}>
                 <Link to={{
                     pathname: "/b/" + discriminator + "/roadmap",
                     state: {_boardData: boardData}
@@ -45,8 +45,7 @@ const BoardBanner = ({customName}) => {
     };
 
     return <Col sm={12} className="mt-3">
-        <Jumbotron className="mb-2 small-text-shadow dark-mask"
-                   style={{backgroundImage: `url("` + banner + `")`}}>
+        <Jumbotron className="mb-2 small-text-shadow" style={{backgroundImage: `url("` + banner + `")`}}>
             <h3 style={{fontWeight: 500}}>{customName || name}</h3>
             <h5 style={{fontWeight: 300}} dangerouslySetInnerHTML={{__html: shortDescription}}/>
             {renderSocialLinks()}
