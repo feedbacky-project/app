@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import {isServiceAdmin, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
@@ -16,6 +16,9 @@ const CreateBoardView = () => {
     const context = useContext(AppContext);
     const history = useHistory();
     const [settings, setSettings] = useState({step: 1, name: "", discriminator: "", banner: null, logo: null, themeColor: "#2d3436"});
+    useEffect(() => context.onThemeChange("343a40"),
+        //eslint-disable-next-line
+        []);
     if (!context.user.loggedIn || !isServiceAdmin(context)) {
         history.push("/me");
         return <React.Fragment/>
