@@ -45,8 +45,7 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
     const renderAttachmentButton = () => {
         return <React.Fragment>
             <Button variant="attachment" className="col-1 align-top d-inline-block m-0 p-0" style={{height: 38}}>
-                <input accept="image/jpeg, image/png" type="file" className="d-none" id="attachmentUpload"
-                       onChange={onAttachmentUpload}/>
+                <input accept="image/jpeg, image/png" type="file" className="d-none" id="attachmentUpload" onChange={onAttachmentUpload}/>
                 <label htmlFor="attachmentUpload" className="mb-0 p-2"><FaRegImage className="fa-attachment"/></label>
             </Button>
             {attachment != null ? <DeleteButton id="attachment-del" tooltipName="Remove" onClick={() => {
@@ -102,10 +101,9 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
                     Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
                     Please keep under 1800 characters.
                 </React.Fragment>}/>
-                <TextareaAutosize className="form-control" id="descriptionTextarea" rows={3} maxRows={9}
-                                  placeholder="Detailed description." minLength="10" maxLength="1800" required
-                                  as="textarea"
-                                  style={{resize: "none", overflow: "hidden"}}
+                <TextareaAutosize className="form-control" id="descriptionTextarea" rows={5} maxRows={10}
+                                  placeholder="Detailed and meaningful description." minLength="10" maxLength="1800" required
+                                  as="textarea" style={{resize: "none", overflow: "hidden"}}
                                   onKeyUp={() => formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800)}/>
                 <Form.Text className="d-inline float-left text-black-60" id="remainingDescription">
                     1800 Remaining
