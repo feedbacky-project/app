@@ -76,7 +76,8 @@
 <body class="bg-main">
 <noscript>You need to enable JavaScript to run this app.</noscript>
 <script>
-    if (localStorage.getItem("darkMode") === 'true') {
+    if (localStorage.getItem("darkMode") === 'true' ||
+        (localStorage.getItem("darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add("dark");
     }
 </script>
