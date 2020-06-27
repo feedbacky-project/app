@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 public class FeedbackyApplication {
 
-  public static final String BACKEND_VERSION = "0.3.0-beta";
+  public static final String BACKEND_VERSION = "0.3.1-beta";
 
   public static void main(String[] args) {
     if(!new StartupValidator().validateStartup()) {
