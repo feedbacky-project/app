@@ -64,7 +64,7 @@ const StepSecond = ({updateSettings, settings}) => {
                 </strong>
             </React.Fragment>}/>
             <br/>
-            <img alt="logo" src={settings.logo} id="boardLogo" className="img-fluid mb-2" width="50px"/>
+            <img alt="logo" src={settings.logo} id="boardLogo" className="mb-2" width={50} height={50}/>
             <br/>
             <input className="small" accept="image/jpeg, image/png" id="logoInput" type="file" name="logo" onChange={e => onLogoChange(e)}/>
         </Col>
