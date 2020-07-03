@@ -93,6 +93,7 @@ public class Idea implements Serializable {
 
   public String toViewLink() {
     String slug = title;
+    slug = slug.toLowerCase();
     slug = slug.replaceAll("[\\W_]", "-")
             .replaceAll("(\\W)\\1+", "-")
             .replaceAll("^(-)", "")
