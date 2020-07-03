@@ -21,13 +21,13 @@ public class MailPlaceholderParser {
   }
 
   public static String parseSubscribeStatusPlaceholder(String text, Idea idea, Map<String, String> data) {
-      String parsedText = text;
-      parsedText = StringUtils.replace(parsedText, "${idea.viewLink}", MailService.HOST_ADDRESS + "/i/" + idea.getId());
-      parsedText = StringUtils.replace(parsedText, "${idea.name}", idea.getTitle());
-      parsedText = StringUtils.replace(parsedText, "${status.change}", data.get("status"));
-      parsedText = StringUtils.replace(parsedText, "${status.user.avatar}", data.get(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_AVATAR.getName()));
-      parsedText = StringUtils.replace(parsedText, "${status.username}", data.get(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_NAME.getName()));
-      return parsedText;
+    String parsedText = text;
+    parsedText = StringUtils.replace(parsedText, "${idea.viewLink}", idea.toViewLink());
+    parsedText = StringUtils.replace(parsedText, "${idea.name}", idea.getTitle());
+    parsedText = StringUtils.replace(parsedText, "${status.change}", data.get("status"));
+    parsedText = StringUtils.replace(parsedText, "${status.user.avatar}", data.get(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_AVATAR.getName()));
+    parsedText = StringUtils.replace(parsedText, "${status.username}", data.get(SubscriptionExecutor.SubscriptionMapData.COMMENT_USER_NAME.getName()));
+    return parsedText;
   }
 
   public static String parseAllAvailablePlaceholders(String text, MailService.EmailTemplate template, Board board, User user, Invitation invitation) {

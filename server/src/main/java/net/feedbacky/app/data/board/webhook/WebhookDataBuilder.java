@@ -29,7 +29,7 @@ public class WebhookDataBuilder {
   public WebhookDataBuilder withIdea(Idea idea) {
     data.put(WebhookExecutor.WebhookMapData.IDEA_NAME.getName(), idea.getTitle());
     data.put(WebhookExecutor.WebhookMapData.IDEA_DESCRIPTION.getName(), StringEscapeUtils.unescapeHtml4(idea.getDescription()));
-    data.put(WebhookExecutor.WebhookMapData.IDEA_LINK.getName(), MailService.HOST_ADDRESS + "/i/" + idea.getId());
+    data.put(WebhookExecutor.WebhookMapData.IDEA_LINK.getName(), idea.toViewLink());
     data.put(WebhookExecutor.WebhookMapData.IDEA_ID.getName(), String.valueOf(idea.getId()));
     return this;
   }

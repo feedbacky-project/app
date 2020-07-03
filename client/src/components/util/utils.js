@@ -5,6 +5,17 @@ import Spinner from "react-bootstrap/Spinner";
 import {parseEmojis} from "components/util/emoji-filter";
 import marked from "marked";
 
+export const convertIdeaToSlug = (ideaData) => {
+    let slug = ideaData.title.toLowerCase();
+    /* replace non alphanumeric characters with dash, replace repeated dashes with one dash
+    and replace dash if slug starts or ends with it */
+    slug = slug.replace(/[\W_]/g, '-')
+        .replace(/(\W)\1+/g, '-')
+        .replace(/^(-)/, "")
+        .replace(/(-)$/, "");
+    return slug + "." + ideaData.id;
+};
+
 export const parseMarkdown = (html) => {
     return parseEmojis(marked(html, {breaks: true}));
 };

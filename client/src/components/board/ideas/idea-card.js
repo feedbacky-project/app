@@ -4,7 +4,7 @@ import {FaLock, FaRegComment} from "react-icons/fa";
 import {Card} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import AppContext from "context/app-context";
-import {formatUsername, toastError, truncateText} from "components/util/utils";
+import {convertIdeaToSlug, formatUsername, toastError, truncateText} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import tinycolor from "tinycolor2";
 import PageBadge from "components/app/page-badge";
@@ -88,7 +88,7 @@ const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
                 <VoteButton votersAmount={idea.votersAmount} onVote={onUpvote} upvoted={idea.upvoted}/>
             </span>
             <Link className="d-inline col px-0 text-left hidden-anchor" to={{
-                pathname: "/i/" + idea.id,
+                pathname: "/i/" + convertIdeaToSlug(idea),
                 state: {_ideaData: idea, _boardData: boardData}
             }}>
                 <div>

@@ -12,11 +12,18 @@ import AppContext from "context/app-context";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
 import {useHistory, useLocation, useParams} from "react-router-dom";
+import {convertIdeaToSlug} from "components/util/utils";
 
 const IdeaView = () => {
-    const context = useContext(AppContext);
-    const {id} = useParams();
     const history = useHistory();
+    const extractIdeaId = (id) => {
+        if (id.includes(".")) {
+            return id.split(".")[1];
+        }
+        return id;
+    };
+    const context = useContext(AppContext);
+    const id = extractIdeaId(useParams().id);
     const location = useLocation();
     const [idea, setIdea] = useState({data: [], loaded: false, error: false});
     const [board, setBoard] = useState({data: [], loaded: false, error: false});
@@ -69,7 +76,8 @@ const IdeaView = () => {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
     return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
-        <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name} redirectUrl={"i/" + idea.data.id}/>
+        <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
+                    redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
         <IdeaNavbar onNotLoggedClick={() => setModalOpen(true)}/>
         <Container className="pb-5">
             <Row className="justify-content-center pb-4">

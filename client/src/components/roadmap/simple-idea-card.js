@@ -1,7 +1,7 @@
 import React, {useContext, useState} from "react";
 import VoteButton from "components/app/vote-button";
 import {Link} from "react-router-dom";
-import {toastError, truncateText} from "components/util/utils";
+import {convertIdeaToSlug, toastError, truncateText} from "components/util/utils";
 import BoardContext from "context/board-context";
 import {FaLock, FaRegComment} from "react-icons/all";
 import axios from "axios";
@@ -68,7 +68,7 @@ export const SimpleIdeaCard = ({data, onNotLoggedClick}) => {
                 <VoteButton votersAmount={idea.votersAmount} onVote={onVote} upvoted={idea.upvoted}/>
             </span>
             <Link className="d-inline col px-0 text-left hidden-anchor" to={{
-                pathname: "/i/" + idea.id,
+                pathname: "/i/" + convertIdeaToSlug(idea),
                 state: {_ideaData: idea, _boardData: boardData}
             }}>
                 <div>

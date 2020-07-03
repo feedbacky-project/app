@@ -29,7 +29,7 @@ public class SubscriptionDataBuilder {
   public SubscriptionDataBuilder withIdea(Idea idea) {
     data.put(SubscriptionExecutor.SubscriptionMapData.IDEA_NAME.getName(), idea.getTitle());
     data.put(SubscriptionExecutor.SubscriptionMapData.IDEA_DESCRIPTION.getName(), StringEscapeUtils.unescapeHtml4(idea.getDescription()));
-    data.put(SubscriptionExecutor.SubscriptionMapData.IDEA_LINK.getName(), MailService.HOST_ADDRESS + "/i/" + idea.getId());
+    data.put(SubscriptionExecutor.SubscriptionMapData.IDEA_LINK.getName(), idea.toViewLink());
     data.put(SubscriptionExecutor.SubscriptionMapData.IDEA_ID.getName(), String.valueOf(idea.getId()));
     data.put(SubscriptionExecutor.SubscriptionMapData.NEW_STATUS.getName(), idea.getStatus().name());
     return this;

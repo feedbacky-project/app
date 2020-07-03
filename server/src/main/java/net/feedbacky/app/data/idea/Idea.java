@@ -12,7 +12,9 @@ import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.util.mailservice.MailService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.modelmapper.ModelMapper;
 
@@ -87,6 +89,15 @@ public class Idea implements Serializable {
 
   public double getCalculatedTrendScore() {
     return ((double) voters.size() - 1.0) / Math.pow(ChronoUnit.DAYS.between(creationDate.toInstant(), Instant.now()) + 2.0, 1.8);
+  }
+
+  public String toViewLink() {
+    String slug = title;
+    slug = slug.replaceAll("[\\W_]", "-")
+            .replaceAll("(\\W)\\1+", "-")
+            .replaceAll("^(-)", "")
+            .replaceAll("(-)$", "");
+    return MailService.HOST_ADDRESS + "/i/" + slug + "." + id;
   }
 
   public FetchIdeaDto convertToDto(User user) {
