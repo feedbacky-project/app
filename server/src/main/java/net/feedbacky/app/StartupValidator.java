@@ -40,7 +40,7 @@ public class StartupValidator {
   //OAuth variables not included on purpose, unused providers can be removed from .env safely
   private enum EnvironmentVariables {
     REACT_APP_SERVER_IP_ADDRESS("0.1.0-beta"), REACT_APP_SERVICE_NAME("0.1.0-beta"), REACT_APP_DEFAULT_USER_AVATAR("0.1.0-beta"),
-    CLIENT_APP_PORT("0.1.0-beta"), SERVER_APP_PORT("0.1.0-beta"), SETTINGS_MAINTENANCE_MODE("0.1.0-beta"), JWT_SECRET("0.1.0-beta"),
+    CLIENT_APP_PORT("0.1.0-beta"), SERVER_APP_PORT("0.1.0-beta"), JWT_SECRET("0.1.0-beta"),
     MYSQL_USERNAME("0.1.0-beta"), MYSQL_PASSWORD("0.1.0-beta"), MYSQL_URL("0.1.0-beta"), MAIL_SENDER("0.1.0-beta"), MAIL_SERVICE_TYPE("0.1.0-beta"),
     MAIL_MAILGUN_API_KEY("0.1.0-beta"), MAIL_MAILGUN_API_BASE_URL("0.1.0-beta"), MAIL_SMTP_USERNAME("0.1.0-beta"), MAIL_SMTP_PASSWORD("0.1.0-beta"),
     MAIL_SMTP_HOST("0.1.0-beta"), MAIL_SMTP_PORT("0.1.0-beta"), IMAGE_COMPRESSION_ENABLED("0.1.0-beta"), IMAGE_COMPRESSION_TYPE("0.1.0-beta"),
