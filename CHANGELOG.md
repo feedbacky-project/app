@@ -1,3 +1,27 @@
+### 0.3.1-beta (July 6, 2020)
+* **[FEATURE]** Added slugs to idea links (eg. https://app.feedbacky.net/i/this-is-a-demo-page-feel-free-to-test.66)
+* **[IMPROVEMENT]** UI was updated to be consistent across all the pages
+    * Bootstrap modals are now centered with same shadows as modals from sweetalert2
+    * Made stuff more rounded so its consistent across all the pages
+    * Profile page theme color in dark mode is now the same as in light mode
+    * Added few more rows to idea create modal description field - looks better
+    * Dark more is now updated with more enjoyable color palette and minor fixes
+    * Removed `!important` hell from CSS files
+* **[IMPROVEMENT]** Dark mode will now be enabled in early page load if requested
+(if dark mode is enabled or color scheme preference is dark), page won't blink white anymore
+* **[IMPROVEMENT]** Editing ideas within 5 minutes after their creation won't mark idea as edited now
+It's a feature for typo fixes so no spam in comments about edits is posted
+* **[IMPROVEMENT]** Empty roadmap will now show no content image instead empty page
+* **[IMPROVEMENT]** Added color brightness warning when creating new tag, too bright or too dark colors will be warned
+because they're bad either for light or dark modes
+* **[FIX]** App won't crash anymore when deleting idea and viewing it at the same time
+* **[FIX]** Fixed theme color didn't set properly when creating new board
+* **[FIX]** `Create Board` button won't change into `Next` when finalizing create new board process
+* **[FIX]** Board creator no longer uses previously set page theme, uses own one now
+* **[FIX]** Fixed issue when settings weren't applied when tags were edited or idea was closed/opened
+* **[FIX]** Webhooks will now use REACT_APP_SERVER_IP_ADDRESS instead hardcoded `https://app.feedbacky.net` for links
+* **[FIX]** Removed SETTINGS_MAINTENANCE_MODE unused env variable which was required before
+
 ### 0.3.0-beta (June 9, 2020)
 Initially planned to release it as 0.2.1 but since we removed Private Boards it should be marked as a bigger release.
 Private Boards feature was removed due to being unpopular and unused feature and contained security exploit.
