@@ -1,6 +1,7 @@
 package net.feedbacky.app.data.board.webhook;
 
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.util.mailservice.MailService;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -50,9 +51,9 @@ public class WebhookExecutor {
     embedObject.setTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.IDEA_NAME.getName(), "")));
     embedObject.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
     if(event == Webhook.Event.IDEA_DELETE) {
-      embedObject.setUrl("https://app.feedbacky.net/b/" + board.getDiscriminator());
+      embedObject.setUrl(MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator());
     } else {
-      embedObject.setUrl("https://app.feedbacky.net/i/" + data.get(WebhookMapData.IDEA_ID.getName()));
+      embedObject.setUrl(data.get(WebhookMapData.IDEA_LINK.getName()));
     }
     switch(event) {
       case IDEA_CREATE:
