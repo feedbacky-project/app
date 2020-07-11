@@ -1,3 +1,6 @@
+### future logs
+* Profile settings won't display loading spinner anymore, loading button for avatar change will show instead
+
 ### 0.3.1-beta (July 6, 2020)
 * **[FEATURE]** Added slugs to idea links (eg. https://app.feedbacky.net/i/this-is-a-demo-page-feel-free-to-test.66)
 * **[IMPROVEMENT]** UI was updated to be consistent across all the pages

@@ -8,8 +8,11 @@ import PageModal from "components/modal/page-modal";
 
 const AvatarSelectionModal = (props) => {
     const context = useContext(AppContext);
+    if(props.connectedAccounts.error) {
+        return <React.Fragment/>
+    }
     const renderConnectedAccounts = () => {
-        return props.connectedAccounts.map((conn, i) => {
+        return props.connectedAccounts.data.map((conn, i) => {
             let data = JSON.parse(conn.data);
             if (data.AVATAR === undefined) {
                 return <React.Fragment key={i}/>
