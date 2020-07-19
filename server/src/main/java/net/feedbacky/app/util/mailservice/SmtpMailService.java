@@ -36,6 +36,7 @@ public class SmtpMailService implements MailService {
     properties.put("mail.smtp.host", smtpHost);
     properties.put("mail.smtp.auth", "true");
     properties.put("mail.smtp.port", smtpPort);
+    properties.put("mail.smtp.starttls.enable", "true");
   }
 
   @Override
