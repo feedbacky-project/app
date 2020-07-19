@@ -22,6 +22,10 @@ $border-radius: .35rem;
   font-weight: 400 !important;
   box-shadow: $box-shadow;
   border-radius: $border-radius !important;
+  transition: $hover-transition;
+  &:hover {
+    transform: $hover-transform-scale;
+  }
 }
 
 .swal2-actions {

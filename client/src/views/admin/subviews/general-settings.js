@@ -90,8 +90,8 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                 <Form.Label className="mr-1 text-black-60 mt-2">Board Banner</Form.Label>
                 <ClickableTip id="banner" title="Set Board Banner" description="Suggested size: 1120x400. Maximum size 500 kb, PNG and JPG only."/>
                 <br/>
-                <div className="cursor-click" onClick={() => document.getElementById("bannerInput").click()}>
-                    <div className="text-white row justify-content-center text-center hoverable-option" style={{position: "absolute", top: "40%", left: 0, right: 0}}>
+                <div onClick={() => document.getElementById("bannerInput").click()}>
+                    <div className="text-white row justify-content-center text-center hoverable-option" style={{cursor: "pointer", position: "absolute", top: "40%", left: 0, right: 0}}>
                         <div className="p-3 rounded-circle" style={{backgroundColor: context.getTheme().setAlpha(.8), width: "90px", height: "90px"}}>
                             <FaUpload className="mb-1" style={{width: "1.8em", height: "1.8em"}}/>
                             <div className="text-tight">Update</div>

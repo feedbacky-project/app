@@ -1,11 +1,13 @@
+$hover-transition: all .2s ease-in-out;
+$hover-transform-scale: scale(1.05);
+$border-radius: .35rem;
+$font-color: #212529;
+
 @import "~react-toastify/dist/ReactToastify.css";
 @import "assets/scss/override-variables";
 @import "assets/scss/align-utils";
 @import "assets/scss/font-face";
 @import "assets/scss/swal-override";
-
-$border-radius: .35rem;
-$font-color: #212529;
 
 @font-face {
   font-family: 'Roboto', sans-serif;
@@ -56,11 +58,17 @@ $font-color: #212529;
   box-shadow: 0 3px 5px 0 rgba(204, 51, 0, .5);
 }
 
+.btn-link:hover {
+  color: inherit;
+}
+
 .btn:not(.vote-btn):not(.dropdown-toggle):not(.btn-link) {
   box-shadow: $box-shadow;
+  transition: $hover-transition;
 
   &:hover, &:active {
     box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, .3);
+    transform: $hover-transform-scale;
   }
 }
 
@@ -231,6 +239,10 @@ body {
   min-height: 45px;
   padding: .25rem .5rem;
   margin: 0;
+  transition: .2s ease-in-out;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 @media (max-width: 576px) {
@@ -258,6 +270,9 @@ body {
 
 .markdown-box a {
   color: #09c;
+  &:hover {
+    color: #0f4580;
+  }
 }
 
 .hidden-anchor {
@@ -382,6 +397,7 @@ a {
 .social-link {
   padding: .5rem 1rem;
   background-color: rgba(0, 0, 0, .5);
+  transition: .2s ease-in-out;
 
   &:first-of-type {
     border-top-left-radius: 4px;
@@ -389,6 +405,9 @@ a {
 
   &:last-child {
     border-top-right-radius: 4px;
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, .25);
   }
 }
 
@@ -453,6 +472,10 @@ a {
 
 .cursor-click {
   cursor: pointer;
+  transition: $hover-transition;
+  &:hover {
+    transform: $hover-transform-scale;
+  }
 }
 
 .error-icon {
@@ -500,6 +523,13 @@ a {
     font-size: 1.1rem;
     font-weight: 500;
     line-height: 2rem;
+
+    a {
+      transition: $hover-transition;
+      &:hover {
+        transform: $hover-transform-scale;
+      }
+    }
   }
 }
 
@@ -544,7 +574,7 @@ a {
 }
 
 .hoverable-option {
-  transition: all .2s ease-in-out;
+  transition: $hover-transition;
 
   &:hover {
     transform: scale(1.2);

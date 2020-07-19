@@ -125,9 +125,9 @@ const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
     if (!visible) {
         return <React.Fragment/>;
     }
-    return <Dropdown alignRight className="cursor-click" onClick={e => e.preventDefault()} as={"span"}>
+    return <Dropdown alignRight onClick={e => e.preventDefault()} as={"span"}>
         <Dropdown.Toggle as={"span"} id={ideaData.id + "_mod_tools"} variant="" className="text-black-60 ml-1">
-            <FaEllipsisH className="move-top-1px"/>
+            <FaEllipsisH className="move-top-1px cursor-click"/>
         </Dropdown.Toggle>
         <Dropdown.Menu className="mod-tools">
             <Dropdown.Item as={"span"} onClick={onTagsManage}><FaTags className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Change Tags</Dropdown.Item>

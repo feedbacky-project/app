@@ -108,6 +108,9 @@ $dark-comment-internal: #3299ff;
   }
   #commentContainer a, #socialPreviewContainer a, .markdown-box a:not(.pre-href), .markdown-box a *, .snarkdown-box a:not(.pre-href) {
     color: #3ea6ff !important;
+    &:hover {
+      color: #007bff !important;
+    }
   }
   .toast-style, .popover-body {
     background-color: $dark-secondary;
