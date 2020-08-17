@@ -1,7 +1,5 @@
-import {Dropdown, DropdownItem, NavItem} from "react-bootstrap";
-import DropdownToggle from "react-bootstrap/DropdownToggle";
+import {Dropdown, NavItem} from "react-bootstrap";
 import {isServiceAdmin} from "components/util/utils";
-import DropdownMenu from "react-bootstrap/DropdownMenu";
 import React from "react";
 import {Link} from "react-router-dom";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
@@ -16,29 +14,29 @@ export const renderLogIn = (onNotLoggedClick, context) => {
     }
     return <NavItem>
         <Dropdown>
-            <DropdownToggle id="userOptions" variant="" className="btn btn-link m-0 pr-1 text-white">
+            <Dropdown.Toggle id="userOptions" variant="" className="btn btn-link m-0 pr-1 text-white">
                 <PageAvatar className="mr-1" circle url={context.user.data.avatar} size={24}/>
                 <FaAngleDown/>
-            </DropdownToggle>
-            <DropdownMenu alignRight>
-                <DropdownItem>
+            </Dropdown.Toggle>
+            <Dropdown.Menu alignRight>
+                <Dropdown.Item>
                     <FaUserAlt className="mr-2 move-top-1px"/>
                     <strong className="d-inline-block align-middle text-truncate" style={{maxWidth: 100}}>{context.user.data.username}</strong>
-                </DropdownItem>
+                </Dropdown.Item>
                 <div className="my-1"/>
-                <DropdownItem className="d-inline-block" onClick={context.onDarkModeToggle}>
+                <Dropdown.Item className="d-inline-block" onClick={context.onDarkModeToggle}>
                     {context.user.darkMode ? "🌔 Light Mode" : "🌘 Dark Mode"}
-                </DropdownItem>
-                <DropdownItem as={Link} to="/me">
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to="/me">
                     View Profile
-                </DropdownItem>
-                <DropdownItem onClick={context.user.onLogOut}>
+                </Dropdown.Item>
+                <Dropdown.Item onClick={context.user.onLogOut}>
                     Log Out
-                </DropdownItem>
+                </Dropdown.Item>
                 {renderModeratedBoards(context)}
                 <div className="my-1"/>
                 {renderCreateBoardSection(context)}
-            </DropdownMenu>
+            </Dropdown.Menu>
         </Dropdown>
     </NavItem>
 };
@@ -49,13 +47,13 @@ const renderModeratedBoards = (context) => {
     }
     return <React.Fragment>
         <div className="my-1"/>
-        <DropdownItem>
+        <Dropdown.Item>
             <FaCogs className="mr-2 move-top-1px"/>
             <strong>Moderated Boards</strong>
-        </DropdownItem>
+        </Dropdown.Item>
         <div className="my-1"/>
         {context.user.data.permissions.map(data => {
-            return <DropdownItem key={data.boardDiscriminator} as={Link} to={"/b/" + data.boardDiscriminator}>{data.boardName}</DropdownItem>
+            return <Dropdown.Item key={data.boardDiscriminator} as={Link} to={"/b/" + data.boardDiscriminator}>{data.boardName}</Dropdown.Item>
         })}
     </React.Fragment>
 };
@@ -64,7 +62,7 @@ const renderCreateBoardSection = (context) => {
     if (!isServiceAdmin(context)) {
         return <React.Fragment/>
     }
-    return <DropdownItem as={Link} to="/admin/create">
+    return <Dropdown.Item as={Link} to="/admin/create">
         <strong>Create Own Board</strong>
-    </DropdownItem>
+    </Dropdown.Item>
 };
