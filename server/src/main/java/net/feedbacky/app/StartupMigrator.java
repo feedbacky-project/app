@@ -99,6 +99,9 @@ public class StartupMigrator {
   }
 
   private int parseIntOrDefault(String string, int defaultValue) {
+    if(string.equals("")) {
+      return defaultValue;
+    }
     try {
       return Integer.parseInt(string);
     } catch(Exception ex) {
