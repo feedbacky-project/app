@@ -13,9 +13,10 @@ import BoardContext from "context/board-context";
 import ClickableTip from "components/util/clickable-tip";
 import TextareaAutosize from "react-autosize-textarea";
 import LoadingSpinner from "components/util/loading-spinner";
-import {FaUpload} from "react-icons/all";
+import {FaEllipsisH, FaUpload} from "react-icons/all";
 import Button from "react-bootstrap/Button";
 import {useHistory} from "react-router-dom";
+import ColorSelectionModal from "components/modal/color-selection-modal";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
@@ -26,8 +27,10 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
     const swalGenerator = swalReact(Swal);
     const [bannerInput, setBannerInput] = useState(null);
     const [logoInput, setLogoInput] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
     const renderContent = () => {
         return <React.Fragment>
+            <ColorSelectionModal open={modalOpen} onClose={() => setModalOpen(false)} onUpdate={(color) => context.onThemeChange(color.hex)}/>
             <Col xs={12} lg={6}>
                 <Form.Label className="mr-1 text-black-60">Board Name</Form.Label>
                 <ClickableTip id="boardName" title="Set Board Name" description="Name of your board should be at least 4 and maximum 25 characters long."/>
@@ -76,14 +79,25 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
             </Col>
             <Col xs={12} lg={6}>
                 <Form.Label className="mr-1 text-black-60 mt-2">Theme Color</Form.Label>
-                <ClickableTip id="themeColor" title="Set Theme Color" description="Configure theme color of your board. It will affect elements of your board."/>
+                <ClickableTip id="themeColor" title="Set Theme Color" description="Configure theme color of your board. It will affect elements of your board. Colors might look differently across Light and Dark Themes."/>
                 <br/>
                 <Suspense fallback={<LoadingSpinner/>}>
                     <CirclePicker
-                        colors={["#202428", "#2d3436", "#2c3e50", "#d35400", "#e74c3c", "#e67e22", "#8e44ad", "#2980b9", "#3498db", "#f39c12", "#f1c40f", "#27ae60", "#2ecc71", "#16a085", "#1abc9c", "#95a5a6"]}
+                        colors={["#2d3436", "#2c3e50", "#d35400", "#e74c3c", "#eb3b5a", "#e67e22", "#f39c12", "#fd9644", "#8e44ad", "#2980b9", "#3498db", "#27ae60", "#2ecc71", "#16a085", "#1abc9c", "#95a5a6"]}
                         className="text-center color-picker-admin"
                         circleSpacing={4} color={context.theme}
-                        onChangeComplete={(color) => context.onThemeChange(color.hex)}/>
+                        onChangeComplete={(color) => context.onThemeChange(color.hex)}>
+                    </CirclePicker>
+                    <div className="hoverable-option" style={{width: 28, height: 28, marginRight: 4, marginTop: 4}} onClick={() => setModalOpen(true)}>
+                        <span>
+                        <div style={{
+                            background: "transparent none repeat scroll 0% 0%", height: "100%", width: "100%", cursor: "pointer", position: "relative",
+                            outline: "currentcolor none medium", borderRadius: "50%", boxShadow: context.getTheme() + " 0px 0px 0px 15px inset"
+                        }}>
+                            <FaEllipsisH className="text-white" style={{left: 0, right: 0, bottom: 0, top: 0, margin: "auto", position: "absolute"}}/>
+                        </div>
+                        </span>
+                    </div>
                 </Suspense>
             </Col>
             <Col xs={12} lg={8}>
@@ -91,26 +105,36 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                 <ClickableTip id="banner" title="Set Board Banner" description="Suggested size: 1120x400. Maximum size 500 kb, PNG and JPG only."/>
                 <br/>
                 <div onClick={() => document.getElementById("bannerInput").click()}>
-                    <div className="text-white row justify-content-center text-center hoverable-option" style={{cursor: "pointer", position: "absolute", top: "40%", left: 0, right: 0}}>
-                        <div className="p-3 rounded-circle" style={{backgroundColor: context.getTheme().setAlpha(.8), width: "90px", height: "90px"}}>
+                    <div id="boardBannerPreview" className="jumbotron mb-2"
+                         style={{backgroundImage: `url("` + boardData.banner + `")`, minHeight: 200, position: "relative"}}>
+                        <h3 style={{color: "transparent"}}>{boardData.name}</h3>
+                        <h5 style={{color: "transparent"}}>{boardData.shortDescription}</h5>
+                        <div className="p-3 rounded-circle hoverable-option" style={{
+                            backgroundColor: context.getTheme().setAlpha(.8), cursor: "pointer",
+                            width: "90px", height: "90px", position: "absolute", inset: 0, margin: "auto"
+                        }}>
                             <FaUpload className="mb-1" style={{width: "1.8em", height: "1.8em"}}/>
                             <div className="text-tight">Update</div>
                         </div>
                     </div>
-                    <div id="boardBannerPreview" className="jumbotron mb-2"
-                         style={{backgroundImage: `url("` + boardData.banner + `")`, minHeight: 200}}>
-                        <h3 style={{color: "transparent"}}>{boardData.name}</h3>
-                        <h5 style={{color: "transparent"}}>{boardData.shortDescription}</h5>
-                    </div>
                 </div>
-                <input className="small text-black-75" hidden accept="image/jpeg, image/png" id="bannerInput" type="file" name="banner" onChange={onBannerChange}/>
+                <input hidden accept="image/jpeg, image/png" id="bannerInput" type="file" name="banner" onChange={onBannerChange}/>
             </Col>
             <Col xs={12} lg={4}>
                 <Form.Label className="mr-1 text-black-60 mt-2">Board Logo</Form.Label>
                 <ClickableTip id="logo" title="Set Board Logo"
                               description="Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."/>
-                <div><img alt="logo" src={boardData.logo} id="boardLogo" className="img-fluid mb-2" width={50}/></div>
-                <input className="small text-black-75" accept="image/jpeg, image/png" id="logoInput" type="file" name="logo" onChange={onLogoChange}/>
+                <div style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
+                    <img alt="logo" src={boardData.logo} id="boardLogo" className="img-fluid mb-2" style={{height: 200}}/>
+                    <div className="p-3 rounded-circle hoverable-option text-center text-white" style={{
+                        backgroundColor: context.getTheme().setAlpha(.8), cursor: "pointer",
+                        width: "90px", height: "90px", position: "absolute", inset: 0, margin: "auto"
+                    }}>
+                        <FaUpload className="mb-1" style={{width: "1.8em", height: "1.8em"}}/>
+                        <div className="text-tight">Update</div>
+                    </div>
+                </div>
+                <input hidden accept="image/jpeg, image/png" id="logoInput" type="file" name="logo" onChange={onLogoChange}/>
             </Col>
             <Col xs={12}>
                 <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} onClick={onChangesSave}>

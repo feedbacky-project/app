@@ -1,4 +1,4 @@
-import React, {Suspense, useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import AppContext from "context/app-context";
 import {formatRemainingCharacters, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
@@ -6,16 +6,12 @@ import PageModal from "components/modal/page-modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import ClickableTip from "components/util/clickable-tip";
-import LoadingSpinner from "components/util/loading-spinner";
-import {ChromePicker} from "react-color";
 import {Col, Row} from "react-bootstrap";
-import tinycolor from "tinycolor2";
-import {FaExclamationCircle} from "react-icons/all";
+import ColorSelectionHelper from "components/modal/color-selection-helper";
 
 const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
     const context = useContext(AppContext);
     const [color, setColor] = useState(tag.color);
-    const colorWarning = tinycolor.readability(color, "#fff") < 2.0 || tinycolor.readability(tinycolor(color).lighten(10), "#292c30") < 2.0;
     useEffect(() => {
         setColor(tag.color);
     }, [tag]);
@@ -40,7 +36,6 @@ const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
 
-    const textClass = colorWarning ? "text-danger" : "text-black-60";
     return <PageModal id="tagCreate" isOpen={open} onHide={onClose} title="Edit Tag"
                       applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</Button>}>
         <Row>
@@ -54,14 +49,7 @@ const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
                 </Form.Text>
             </Col>
             <Col xs={12} sm={6} className="mb-2">
-                <Form.Label className={"mr-1 " + textClass}>Tag Color</Form.Label>
-                <ClickableTip id="tagColor" title="Tag Color" description="Choose color of the tag. Avoid too bright and too dark colors, poorly visible in Light and Dark Themes."/>
-                {!colorWarning || <ClickableTip id="colorWarn" title="Color Warning" description="This color is considered either too dark or too bright and might look bad on Light or Dark Mode."
-                                                icon={<FaExclamationCircle className="fa-xs text-danger move-top-1px ml-1"/>}/>}
-                <br/>
-                <Suspense fallback={<LoadingSpinner/>}>
-                    <ChromePicker className="text-center" disableAlpha color={color} onChangeComplete={changedColor => setColor(changedColor.hex)}/>
-                </Suspense>
+                <ColorSelectionHelper title="Tag Color" color={color} setColor={setColor} colorWarning={true}/>
             </Col>
             <Col xs={12} sm={6} className="mb-2">
                 <Form.Label className="mr-1 text-black-60">Ignore Roadmap</Form.Label>
