@@ -18,7 +18,7 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
     useEffect(() => {
         onLoadRequest(1, true);
         // eslint-disable-next-line
-    }, [id, context.user.searchPreferences]);
+    }, [id, context.user.localPreferences]);
     const loadIdeas = () => {
         if (ideas.error) {
             return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className="mr-1"/> Failed to load ideas</React.Fragment>}/>
@@ -44,7 +44,7 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
         setIdeas({...ideas, data: ideas.data.filter(item => item.id !== id)});
     };
     const onLoadRequest = (page, override = false) => {
-        return axios.get("/boards/" + id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(context.user.searchPreferences)).then(res => {
+        return axios.get("/boards/" + id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(context.user.localPreferences.ideas)).then(res => {
             const data = res.data.data;
             data.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
             if(override) {

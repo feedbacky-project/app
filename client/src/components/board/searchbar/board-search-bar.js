@@ -22,7 +22,7 @@ const BoardSearchBar = () => {
         <Dropdown className="d-inline mr-1" style={{zIndex: 1}}>
             <Dropdown.Toggle id="filter" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
                 <span>{Object.values(filters.find(obj => {
-                    return Object.keys(obj)[0] === (context.user.searchPreferences.filter || "opened")
+                    return Object.keys(obj)[0] === (!context.user.localPreferences.ideas.filter || "opened")
                 }))[0]}</span>
                 <FaAngleDown/>
             </Dropdown.Toggle>
@@ -30,7 +30,7 @@ const BoardSearchBar = () => {
                 {filters.map(val => {
                     const key = Object.keys(val)[0];
                     const value = Object.values(val)[0];
-                    return <Dropdown.Item key={key} onClick={() => context.onFilteringUpdate(key)}>{value}</Dropdown.Item>
+                    return <Dropdown.Item key={key} onClick={() => context.onLocalPreferencesUpdate({...context.user.localPreferences, ideas: {...context.user.localPreferences.ideas, filter: key}})}>{value}</Dropdown.Item>
                 })}
             </Dropdown.Menu>
         </Dropdown>
@@ -38,7 +38,7 @@ const BoardSearchBar = () => {
         <Dropdown className="d-inline" style={{zIndex: 1}}>
             <Dropdown.Toggle id="sort" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
                 <span>{Object.values(sorts.find(obj => {
-                    return Object.keys(obj)[0] === (context.user.searchPreferences.sort || "trending")
+                    return Object.keys(obj)[0] === (!context.user.localPreferences.ideas.sort || "trending")
                 }))}</span>
                 <FaAngleDown/>
             </Dropdown.Toggle>
@@ -46,7 +46,7 @@ const BoardSearchBar = () => {
                 {sorts.map(val => {
                     const key = Object.keys(val)[0];
                     const value = Object.values(val)[0];
-                    return <Dropdown.Item key={key} onClick={() => context.onSortingUpdate(key)}>{value}</Dropdown.Item>
+                    return <Dropdown.Item key={key} onClick={() => context.onLocalPreferencesUpdate({...context.user.localPreferences, ideas: {...context.user.localPreferences.ideas, sort: key}})}>{value}</Dropdown.Item>
                 })}
             </Dropdown.Menu>
         </Dropdown>

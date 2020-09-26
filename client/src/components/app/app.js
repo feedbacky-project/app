@@ -30,7 +30,10 @@ const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedb
 
 const App = () => {
     const [session, setSession] = useState(Cookies.get("FSID"));
-    const [searchPrefs, setSearchPrefs] = useState({filter: localStorage.getItem("searchFilter"), sort: localStorage.getItem("searchSort")});
+    const [localPrefs, setLocalPrefs] = useState({
+        ideas: {filter: localStorage.getItem("searchFilter"), sort: localStorage.getItem("searchSort")},
+        comments: {sort: localStorage.getItem("comments_sort")}
+    });
     const [serviceData, setServiceData] = useState({loaded: false, data: [], error: false});
     const [userData, setUserData] = useState({loaded: false, data: [], error: false});
     const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === 'true');
@@ -89,13 +92,11 @@ const App = () => {
         setSession(null);
         setUserData({...userData, data: [], loaded: true, loggedIn: false});
     };
-    const onFilteringUpdate = (filter) => {
-        localStorage.setItem("searchFilter", filter);
-        setSearchPrefs({...searchPrefs, filter});
-    };
-    const onSortingUpdate = (sort) => {
-        localStorage.setItem("searchSort", sort);
-        setSearchPrefs({...searchPrefs, sort});
+    const onLocalPreferencesUpdate = (data) => {
+        localStorage.setItem("searchFilter", data.ideas.filter);
+        localStorage.setItem("searchSort", data.ideas.sort);
+        localStorage.setItem("comments_sort", data.comments.sort);
+        setLocalPrefs(data);
     };
     const getTheme = (adjustColor = true) => {
         let color = tinycolor(theme);
@@ -128,13 +129,12 @@ const App = () => {
                 data: userData.data,
                 loggedIn: userData.loggedIn,
                 session: session,
-                searchPreferences: searchPrefs,
+                localPreferences: localPrefs,
                 darkMode: darkMode,
                 onLogOut: onLogOut,
             },
             serviceData: serviceData.data,
-            onFilteringUpdate: onFilteringUpdate,
-            onSortingUpdate: onSortingUpdate,
+            onLocalPreferencesUpdate: onLocalPreferencesUpdate,
             onDarkModeToggle: onDarkModeToggle,
             getTheme: getTheme,
             theme: theme,

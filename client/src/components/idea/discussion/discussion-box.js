@@ -1,9 +1,9 @@
-import React, {useContext, useState} from 'react';
-import {Button, Col, Row} from "react-bootstrap";
+import React, {useContext, useEffect, useState} from 'react';
+import {Button, Col, Dropdown, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaFrown} from "react-icons/fa";
-import {formatUsername, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {formatUsername, prepareFilterAndSortRequests, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
@@ -13,14 +13,27 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import CommentComponent from "components/idea/discussion/comment-component";
 import {SvgNotice} from "components/app/svg-notice";
 import {PageAvatar} from "components/app/page-avatar";
+import {FaAngleDown} from "react-icons/all";
 
 const DiscussionBox = ({ideaData, updateState, moderators}) => {
     const context = useContext(AppContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
-    const onLoadRequest = (page) => {
-        return axios.get("/ideas/" + ideaData.id + "/comments?page=" + (page - 1)).then(res => {
-            setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
+    const sorts = [
+        {oldest: "Oldest"},
+        {newest: "Newest"}
+    ];
+    useEffect(() => {
+        onLoadRequest(1, true);
+        // eslint-disable-next-line
+    }, [context.user.localPreferences]);
+    const onLoadRequest = (page, override) => {
+        return axios.get("/ideas/" + ideaData.id + "/comments?page=" + (page - 1) + prepareFilterAndSortRequests(context.user.localPreferences.comments)).then(res => {
+            if(override) {
+                setComments({...comments, data: res.data.data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
+            } else {
+                setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
+            }
         }).catch(() => setComments({...comments, loaded: true, error: true}));
     };
     const renderComments = () => {
@@ -175,7 +188,24 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
         });
     };
     return <Col xs={12}>
-        <span className="text-black-75">Discussion ({ideaData.commentsAmount} comments)</span>
+        <div>
+            <div className="d-inline-block text-black-75 mr-1">Discussion ({ideaData.commentsAmount} comments)</div>
+            <Dropdown className="d-inline-block" style={{zIndex: 1}}>
+                <Dropdown.Toggle id="sort" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
+                <span>{Object.values(sorts.find(obj => {
+                    return Object.keys(obj)[0] === (!context.user.localPreferences.comments.sort || "oldest");
+                }))}</span>
+                    <FaAngleDown/>
+                </Dropdown.Toggle>
+                <Dropdown.Menu alignRight>
+                    {sorts.map(val => {
+                        const key = Object.keys(val)[0];
+                        const value = Object.values(val)[0];
+                        return <Dropdown.Item key={key} onClick={() => context.onLocalPreferencesUpdate({...context.user.localPreferences, comments: {...context.user.localPreferences.comments, sort: key}})}>{value}</Dropdown.Item>
+                    })}
+                </Dropdown.Menu>
+            </Dropdown>
+        </div>
         <Col xs={12} sm={10} md={6} className="p-0 mb-1 mt-1" id="commentBox">
             {renderCommentBox()}
             {renderNoDataImage()}

@@ -104,13 +104,13 @@ export const formatUsername = (userId, userName, moderators = []) => {
     }
 };
 
-export const prepareFilterAndSortRequests = (searchPreferences) => {
+export const prepareFilterAndSortRequests = (preferences) => {
     let search = "";
-    if (searchPreferences.sort != null) {
-        search += "&sort=" + searchPreferences.sort;
+    if (preferences.sort != null) {
+        search += "&sort=" + preferences.sort;
     }
-    if (searchPreferences.filter != null) {
-        search += "&filter=" + searchPreferences.filter;
+    if (preferences.filter != null) {
+        search += "&filter=" + preferences.filter;
     }
     return search;
 };

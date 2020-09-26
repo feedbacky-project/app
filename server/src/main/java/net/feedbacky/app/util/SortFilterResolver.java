@@ -1,5 +1,6 @@
 package net.feedbacky.app.util;
 
+import net.feedbacky.app.service.comment.CommentService;
 import net.feedbacky.app.service.idea.IdeaService;
 
 import org.springframework.data.domain.Sort;
@@ -14,7 +15,17 @@ public class SortFilterResolver {
   private SortFilterResolver() {
   }
 
-  public static Sort resolveSorting(IdeaService.SortType sortType) {
+  public static Sort resolveCommentsSorting(CommentService.SortType sortType) {
+    switch(sortType) {
+      case NEWEST:
+        return Sort.by(Sort.Direction.DESC, "creationDate");
+      case OLDEST:
+      default:
+        return Sort.by(Sort.Direction.ASC, "creationDate");
+    }
+  }
+
+  public static Sort resolveIdeaSorting(IdeaService.SortType sortType) {
     switch(sortType) {
       case NEWEST:
         return Sort.by(Sort.Direction.DESC, "creationDate");

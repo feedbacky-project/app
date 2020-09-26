@@ -22,6 +22,7 @@ import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.SortFilterResolver;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
@@ -62,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize) {
+  public PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize, SortType sortType) {
     User user = null;
     if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
       UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
@@ -70,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
     }
     Idea idea = ideaRepository.findById(ideaId)
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + ideaId + " does not exist."));
-    Page<Comment> pageData = commentRepository.findByIdea(idea, PageRequest.of(page, pageSize, Sort.by("id").ascending()));
+    Page<Comment> pageData = commentRepository.findByIdea(idea, PageRequest.of(page, pageSize, SortFilterResolver.resolveCommentsSorting(sortType)));
     List<Comment> comments = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     final User finalUser = user;

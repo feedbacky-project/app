@@ -5,6 +5,7 @@ import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.comment.CommentService;
+import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.util.PaginableRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -58,7 +59,14 @@ public class CommentRestController {
         pageSize = 1;
       }
     }
-    return commentService.getAllForIdea(ideaId, page, pageSize);
+    CommentService.SortType sortType = CommentService.SortType.OLDEST;
+    if(requestParams.containsKey("sort")) {
+      try {
+        sortType = CommentService.SortType.valueOf(requestParams.get("sort").toUpperCase());
+      } catch(Exception ignoredInvalid) {
+      }
+    }
+    return commentService.getAllForIdea(ideaId, page, pageSize, sortType);
   }
 
   //todo needed? remove /v1/comments?

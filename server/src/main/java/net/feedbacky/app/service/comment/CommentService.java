@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface CommentService extends FeedbackyService {
 
-  PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize);
+  PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize, SortType sortType);
 
   FetchCommentDto getOne(long id);
 
@@ -31,5 +31,9 @@ public interface CommentService extends FeedbackyService {
   ResponseEntity delete(long id);
 
   ResponseEntity deleteLike(long id);
+
+  enum SortType {
+    NEWEST, OLDEST
+  }
 
 }
