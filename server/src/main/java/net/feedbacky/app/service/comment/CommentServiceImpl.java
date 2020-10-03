@@ -131,7 +131,8 @@ public class CommentServiceImpl implements CommentService {
       WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
       idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT, webhookBuilder.build());
 
-      if(isModerator) {
+      //notify only if moderator and not author of the idea
+      if(isModerator && !idea.getCreator().equals(user)) {
         SubscriptionDataBuilder subscribeBuilder = new SubscriptionDataBuilder().withUser(user).withComment(comment).withIdea(idea);
         subscriptionExecutor.notifySubscribers(idea, SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, subscribeBuilder.build());
       }
