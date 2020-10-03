@@ -114,7 +114,9 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
                 return;
             }
             if(context.user.localPreferences.comments.sort === "newest") {
-                setComments({...comments, data: res.data.push(comments.data)});
+                const newData = comments.data;
+                newData.unshift(res.data);
+                setComments({...comments, data: newData});
             } else {
                 setComments({...comments, data: [...comments.data, res.data]});
             }
