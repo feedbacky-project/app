@@ -113,7 +113,11 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
                 toastError();
                 return;
             }
-            setComments({...comments, data: [...comments.data, res.data]});
+            if(context.user.localPreferences.comments.sort === "newest") {
+                setComments({...comments, data: res.data.push(comments.data)});
+            } else {
+                setComments({...comments, data: [...comments.data, res.data]});
+            }
             setSubmitOpen(false);
             document.getElementById("commentMessage").value = "";
             updateState({...ideaData, commentsAmount: ideaData.commentsAmount + 1});
