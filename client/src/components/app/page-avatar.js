@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "react-bootstrap/Image";
 
-export const PageAvatar = ({rounded = false, circle = false, className = "", url, size, style = {}}) => {
+export const PageAvatar = (props) => {
     const getSizedAvatarByUrl = (url, sizing) => {
         if (url.includes("googleusercontent")) {
             return url + "=h" + sizing;
@@ -18,7 +18,7 @@ export const PageAvatar = ({rounded = false, circle = false, className = "", url
         }
         return 32;
     };
-    return <Image roundedCircle={circle} rounded={rounded} alt="Avatar" className={className} style={style}
-                  src={getSizedAvatarByUrl(url, getNearestAvatarSize(size))} width={size} height={size}
-                  onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+    return <Image roundedCircle={props.circle} rounded={props.rounded} alt="Avatar" className={props.className} style={props.style}
+                  src={getSizedAvatarByUrl(props.url, getNearestAvatarSize(props.size))} width={props.size} height={props.size}
+                  onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} {...props}/>
 };

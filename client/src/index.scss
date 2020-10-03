@@ -306,9 +306,14 @@ body {
   z-index: 1;
 }
 
-.merged {
+.voter-merged {
   margin: 0 -12px 0 0;
   border: 2px solid #f8f9fa;
+  transition: .2s ease-in-out;
+}
+
+.voter-merged:hover {
+  margin: 0 -5px 0 0;
 }
 
 .snarkdown-box p {
