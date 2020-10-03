@@ -25,7 +25,7 @@ const UnsubscribeView = lazy(() => retry(() => import("views/unsubscribe-view"))
 
 toast.configure();
 
-const CLIENT_VERSION = "0.3.1-beta";
+const CLIENT_VERSION = "0.4.0-beta";
 const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
 
 const App = () => {
