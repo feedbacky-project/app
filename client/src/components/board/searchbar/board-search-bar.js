@@ -22,7 +22,7 @@ const BoardSearchBar = () => {
         <Dropdown className="d-inline mr-1" style={{zIndex: 1}}>
             <Dropdown.Toggle id="filter" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
                 <span>{Object.values(filters.find(obj => {
-                    return Object.keys(obj)[0] === (!context.user.localPreferences.ideas.filter || "opened")
+                    return Object.keys(obj)[0] === (context.user.localPreferences.ideas.filter || "opened")
                 }))[0]}</span>
                 <FaAngleDown/>
             </Dropdown.Toggle>
@@ -38,7 +38,7 @@ const BoardSearchBar = () => {
         <Dropdown className="d-inline" style={{zIndex: 1}}>
             <Dropdown.Toggle id="sort" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
                 <span>{Object.values(sorts.find(obj => {
-                    return Object.keys(obj)[0] === (!context.user.localPreferences.ideas.sort || "trending")
+                    return Object.keys(obj)[0] === (context.user.localPreferences.ideas.sort || "trending")
                 }))}</span>
                 <FaAngleDown/>
             </Dropdown.Toggle>

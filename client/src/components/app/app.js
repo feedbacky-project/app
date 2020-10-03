@@ -93,9 +93,15 @@ const App = () => {
         setUserData({...userData, data: [], loaded: true, loggedIn: false});
     };
     const onLocalPreferencesUpdate = (data) => {
-        localStorage.setItem("searchFilter", data.ideas.filter);
-        localStorage.setItem("searchSort", data.ideas.sort);
-        localStorage.setItem("comments_sort", data.comments.sort);
+        if (data.ideas.filter != null) {
+            localStorage.setItem("searchFilter", data.ideas.filter);
+        }
+        if (data.ideas.sort != null) {
+            localStorage.setItem("searchSort", data.ideas.sort);
+        }
+        if (data.comments.sort != null) {
+            localStorage.setItem("comments_sort", data.comments.sort);
+        }
         setLocalPrefs(data);
     };
     const getTheme = (adjustColor = true) => {

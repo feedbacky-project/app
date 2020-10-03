@@ -193,7 +193,7 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
             <Dropdown className="d-inline-block" style={{zIndex: 1}}>
                 <Dropdown.Toggle id="sort" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
                 <span>{Object.values(sorts.find(obj => {
-                    return Object.keys(obj)[0] === (!context.user.localPreferences.comments.sort || "oldest");
+                    return Object.keys(obj)[0] === (context.user.localPreferences.comments.sort || "oldest");
                 }))}</span>
                     <FaAngleDown/>
                 </Dropdown.Toggle>
