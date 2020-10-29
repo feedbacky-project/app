@@ -103,6 +103,9 @@ $dark-comment-internal: #3299ff;
   {
     background-color: #007bff !important;
   }
+  .rc-steps-item-title {
+    color: $dark-font-color !important;
+  }
   .rc-steps-item-wait .rc-steps-item-icon > .rc-steps-icon .rc-steps-icon-dot {
     background-color: $dark-font-color !important;
   }
