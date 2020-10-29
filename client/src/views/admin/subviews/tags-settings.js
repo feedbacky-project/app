@@ -65,13 +65,13 @@ const TagsSettings = ({reRouteTo}) => {
                 <PageBadge color={tinycolor(tag.color)} text={tag.name}/>
                 {!tag.roadmapIgnored ||
                 <OverlayTrigger overlay={<Tooltip id={"infoTag" + i + "-tooltip"}>Ignores Roadmap</Tooltip>}>
-                    <FaEyeSlash className="fa-xs ml-1"/>
+                    <FaEyeSlash className="fa-xs ml-1 red"/>
                 </OverlayTrigger>}
                 <OverlayTrigger overlay={<Tooltip id={"deleteTag" + i + "-tooltip"}>Edit Tag</Tooltip>}>
-                    <FaPen className="fa-xs ml-1" onClick={() => onTagEdit(tag)}/>
+                    <FaPen className="fa-xs ml-1 hoverable-option" onClick={() => onTagEdit(tag)}/>
                 </OverlayTrigger>
                 <OverlayTrigger overlay={<Tooltip id={"deleteTag" + i + "-tooltip"}>Delete Tag</Tooltip>}>
-                    <FaTrashAlt className="fa-xs ml-1" onClick={() => onTagDelete(tag.name)}/>
+                    <FaTrashAlt className="fa-xs ml-1 hoverable-option" onClick={() => onTagDelete(tag.name)}/>
                 </OverlayTrigger>
             </div>
         });
