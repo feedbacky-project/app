@@ -4,9 +4,13 @@ import AppContext from "context/app-context";
 import {Badge} from "react-bootstrap";
 import tinycolor from "tinycolor2";
 
-const PageBadge = ({color, text, className = ""}) => {
-    const context = useContext(AppContext);
-    if (context.user.darkMode) {
+// fixme sneaky workaround for missing context when inserting html directly
+const PageBadge = ({color, text, className = "", context = null}) => {
+    let appContext = useContext(AppContext);
+    if(context != null) {
+        appContext = context;
+    }
+    if (appContext.user.darkMode) {
         color = color.lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(color, "#282828") < 2.5) {

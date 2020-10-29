@@ -83,7 +83,7 @@ const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
             let html = [];
             res.data.forEach((tag, i) => {
                 const applied = ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
-                html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<PageBadge color={tinycolor(tag.color)} text={tag.name}/>}
+                html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<PageBadge color={tinycolor(tag.color)} text={tag.name} context={context}/>}
                                       type="checkbox" defaultChecked={applied}/>)
             });
             swalGenerator.fire({
