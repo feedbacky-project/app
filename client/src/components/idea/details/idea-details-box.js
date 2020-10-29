@@ -123,7 +123,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
                               placeholder="Write a description..." required as="textarea"
                               style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
             <Button className="m-0 mt-2" variant="" style={{backgroundColor: context.getTheme()}} onClick={onEditApply}>Save</Button>
-            <Button className="m-0 mt-2 text-black-50" variant="link" onClick={() => setEditor({...editor, enabled: false})}>Cancel</Button>
+            <Button className="m-0 mt-2 text-black-50 btn-cancel" variant="link" onClick={() => setEditor({...editor, enabled: false})}>Cancel</Button>
         </React.Fragment>
     };
     const renderDeletionButton = () => {

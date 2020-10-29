@@ -121,7 +121,7 @@ const CreateBoardView = () => {
                 </Col>
                 {renderStep()}
                 <Col xs={12} className="text-right mt-4">
-                    <Button variant="link" className="text-black-60" as={Link} to="/me">Cancel</Button>
+                    <Button variant="link" className="text-black-60 btn-cancel" as={Link} to="/me">Cancel</Button>
                     {renderBackButton()}
                     {renderNextButton()}
                 </Col>
