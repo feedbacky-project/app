@@ -72,6 +72,13 @@ $font-color: #212529;
   }
 }
 
+.btn-cancel {
+  transition: $hover-transition !important;
+  &:hover {
+    transform: $hover-transform-scale;
+  }
+}
+
 @import "~bootstrap/scss/bootstrap";
 
 .dropdown-toggle::after {

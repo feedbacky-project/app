@@ -12,7 +12,7 @@ const PageModal = (props) => {
             {props.children}
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="link" className="m-0 text-black-60" onClick={props.onHide}>
+            <Button variant="link" className="m-0 text-black-60 btn-cancel" onClick={props.onHide}>
                 Cancel
             </Button>
             {props.applyButton}
