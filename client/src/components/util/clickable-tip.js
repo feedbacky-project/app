@@ -3,7 +3,7 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import {FaQuestionCircle} from "react-icons/all";
 import PropTypes from 'prop-types';
 
-const ClickableTip = ({id, title, description, icon = <FaQuestionCircle className="fa-xs text-black-50 move-top-1px"/>}) => {
+const ClickableTip = ({id, title, description, icon = <FaQuestionCircle className="fa-xs text-black-50 move-top-1px hoverable-option"/>}) => {
     return <OverlayTrigger
         trigger="click" placement="top" rootClose={true} rootCloseEvent="click"
         overlay={
