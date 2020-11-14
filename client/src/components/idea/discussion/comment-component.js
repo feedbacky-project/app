@@ -6,6 +6,7 @@ import {FaEdit, FaHeart, FaLockOpen, FaLowVision, FaRegHeart, FaTags, FaTimesCir
 import AppContext from "context/app-context";
 import BoardContext from "context/board-context";
 import {PageAvatar} from "components/app/page-avatar";
+import parseComment from "components/idea/discussion/comment-parser";
 
 const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike}) => {
     const context = useContext(AppContext);
@@ -70,7 +71,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         <div className="d-inline-flex my-1">
             <div className="comment-icon mr-3" style={{backgroundColor: color, color, minWidth: 30}}>{retrieveSpecialCommentTypeIcon(data.specialType)}</div>
             <div>
-                <span style={{color}} dangerouslySetInnerHTML={{__html: data.description}}/>
+                <span style={{color}}>{parseComment(data.description, moderators, context.data.tags)}</span>
                 <small className="ml-1 text-black-60"><TimeAgo datetime={data.creationDate}/></small>
             </div>
         </div>

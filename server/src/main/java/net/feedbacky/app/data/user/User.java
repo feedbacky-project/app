@@ -66,6 +66,10 @@ public class User implements Serializable {
     return new FetchUserRequest(dto);
   }
 
+  public String convertToSpecialCommentMention() {
+    return "{data_user;" + id + ";" + username + "}";
+  }
+
   //a way to avoid convertToDto(boolean) as it doesn't explain this does
   public static class FetchUserRequest {
 

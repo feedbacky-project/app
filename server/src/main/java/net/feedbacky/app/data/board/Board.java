@@ -81,6 +81,7 @@ public class Board implements Serializable {
   public FetchBoardDto convertToDto() {
     FetchBoardDto dto = new ModelMapper().map(this, FetchBoardDto.class);
     dto.setSocialLinks(getSocialLinks().stream().map(SocialLink::convertToDto).collect(Collectors.toList()));
+    dto.setTags(getTags().stream().map(Tag::convertToDto).collect(Collectors.toList()));
     dto.setModerators(getModerators().stream().map(Moderator::convertToModeratorDto).collect(Collectors.toList()));
     return dto;
   }

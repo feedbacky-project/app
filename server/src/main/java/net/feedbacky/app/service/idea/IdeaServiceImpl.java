@@ -218,7 +218,7 @@ public class IdeaServiceImpl implements IdeaService {
               .of(idea)
               .by(user)
               .type(Comment.SpecialType.IDEA_EDITED)
-              .message(user.getUsername() + " has edited description of the idea.")
+              .message(user.convertToSpecialCommentMention() + " has edited description of the idea.")
               .build();
       WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
       idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_EDIT, builder.build());
@@ -228,7 +228,7 @@ public class IdeaServiceImpl implements IdeaService {
                 .of(idea)
                 .by(user)
                 .type(Comment.SpecialType.IDEA_CLOSED)
-                .message(user.getUsername() + " has closed the idea.")
+                .message(user.convertToSpecialCommentMention() + " has closed the idea.")
                 .build();
         WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
         idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_CLOSE, builder.build());
@@ -237,7 +237,7 @@ public class IdeaServiceImpl implements IdeaService {
                 .of(idea)
                 .by(user)
                 .type(Comment.SpecialType.IDEA_OPENED)
-                .message(user.getUsername() + " has reopened the idea.")
+                .message(user.convertToSpecialCommentMention() + " has reopened the idea.")
                 .build();
         WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
         idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_OPEN, builder.build());
@@ -381,14 +381,14 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   private String prepareTagChangeMessage(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean htmlDisplay) {
-    StringBuilder builder = new StringBuilder(user.getUsername() + " has ");
+    StringBuilder builder = new StringBuilder(user.convertToSpecialCommentMention() + " has ");
     if(!addedTags.isEmpty()) {
       builder.append("added");
       for(Tag tag : addedTags) {
         idea.getTags().add(tag);
         builder.append(" ");
         if(htmlDisplay) {
-          builder.append(tag.getHtmlDisplay());
+          builder.append(tag.convertToSpecialCommentMention());
         } else {
           builder.append("`").append(tag.getName()).append("`");
         }
@@ -410,7 +410,7 @@ public class IdeaServiceImpl implements IdeaService {
         idea.getTags().remove(tag);
         builder.append(" ");
         if(htmlDisplay) {
-          builder.append(tag.getHtmlDisplay());
+          builder.append(tag.convertToSpecialCommentMention());
         } else {
           builder.append("`").append(tag.getName()).append("`");
         }

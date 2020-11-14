@@ -52,8 +52,8 @@ public class Tag implements Serializable {
     return new ModelMapper().map(this, FetchTagDto.class);
   }
 
-  public String getHtmlDisplay() {
-    return "<span class='badge' style='background-color: " + color + "'>" + name + "</span>";
+  public String convertToSpecialCommentMention() {
+    return "{data_tag;" + id + ";" + name + ";" + color + "}";
   }
 
 }
