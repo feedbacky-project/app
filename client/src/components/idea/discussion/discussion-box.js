@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Button, Col, Dropdown, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
@@ -23,8 +23,13 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
         {oldest: "Oldest"},
         {newest: "Newest"}
     ];
+    const isInitialMount = useRef(true);
     useEffect(() => {
-        onLoadRequest(1, true);
+        if(isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            onLoadRequest(1, true);
+        }
         // eslint-disable-next-line
     }, [context.user.localPreferences]);
     const onLoadRequest = (page, override) => {

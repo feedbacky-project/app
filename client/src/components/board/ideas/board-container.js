@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import IdeaCard from "components/board/ideas/idea-card";
 import axios from 'axios';
 import {Col} from "react-bootstrap";
@@ -15,8 +15,13 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
+    const isInitialMount = useRef(true);
     useEffect(() => {
-        onLoadRequest(1, true);
+        if(isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            onLoadRequest(1, true);
+        }
         // eslint-disable-next-line
     }, [id, context.user.localPreferences]);
     const loadIdeas = () => {
