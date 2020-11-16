@@ -63,7 +63,7 @@ const ModeratorsSettings = ({reRouteTo}) => {
                 {moderators.map((mod, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                         <div className="text-center">
-                            <PageAvatar circle url={mod.user.avatar} size={35}/>
+                            <PageAvatar roundedCircle url={mod.user.avatar} size={35}/>
                             {renderModerationKick(mod, i)}
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{mod.user.username}</small>
@@ -80,7 +80,7 @@ const ModeratorsSettings = ({reRouteTo}) => {
                 {invited.data.map((invited, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                         <div className="text-center">
-                            <PageAvatar circle url={invited.user.avatar} size={35}/>
+                            <PageAvatar roundedCircle url={invited.user.avatar} size={35}/>
                             <DeleteButton id={"invite_del_" + invited.user.id} onClick={() => onInvalidation(invited.id)} tooltipName="Invalidate"/>
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{invited.user.username}</small>

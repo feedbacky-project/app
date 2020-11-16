@@ -24,7 +24,7 @@ const ModeratorInvitationModal = (props) => {
             mod.role = "moderator";
             props.onModInvitationSend(mod);
             const toastMsg = <span>
-                Invitation for user <PageAvatar circle url={res.data.user.avatar} size={16}/>
+                Invitation for user <PageAvatar roundedCircle url={res.data.user.avatar} size={16}/>
                 {" " + res.data.user.username} sent.
             </span>;
             toastSuccess(toastMsg);

@@ -53,7 +53,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
     if (!data.special) {
         return <React.Fragment key={data.id}>
             <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
-                <PageAvatar circle className="mr-3 mt-2" size={30} url={data.user.avatar} style={{minWidth: "30px"}}/>
+                <PageAvatar roundedCircle className="mr-3 mt-2" size={30} url={data.user.avatar} style={{minWidth: "30px"}}/>
                 <div>
                     {renderCommentUsername(data)}
                     {renderDeletionButton(data)}

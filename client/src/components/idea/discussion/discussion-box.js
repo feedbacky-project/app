@@ -67,7 +67,7 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
         if (context.user.loggedIn) {
             return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
                 <div className="text-center mr-3 pt-2">
-                    <PageAvatar circle size={30} url={context.user.data.avatar}/>
+                    <PageAvatar roundedCircle size={30} url={context.user.data.avatar}/>
                     <br/>
                 </div>
                 <div className="col-12 px-0">

@@ -32,7 +32,7 @@ const renderHello = (context) => {
         </React.Fragment>
     }
     return <React.Fragment>
-        <PageAvatar className="mr-2" circle url={context.user.data.avatar} size={30}/>
+        <PageAvatar className="mr-2" roundedCircle url={context.user.data.avatar} size={30}/>
         <span>Hello {context.user.data.username}</span>
     </React.Fragment>
 };

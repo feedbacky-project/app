@@ -142,7 +142,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
             {renderDeletionButton()}
             {ideaData.user.id !== context.user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
-            <PageAvatar circle className="mr-1" url={ideaData.user.avatar} size={18} style={{maxWidth: "none"}}/>
+            <PageAvatar roundedCircle className="mr-1" url={ideaData.user.avatar} size={18} style={{maxWidth: "none"}}/>
             <small>{formatUsername(ideaData.user.id, ideaData.user.username, moderators)} ·{" "}</small>
             <small className="text-black-60"><TimeAgo datetime={ideaData.creationDate}/></small>
             {!ideaData.edited || <small className="text-black-60"> · edited</small>}

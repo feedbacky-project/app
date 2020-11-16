@@ -18,7 +18,7 @@ export const PageAvatar = (props) => {
         }
         return 32;
     };
-    return <Image roundedCircle={props.circle} rounded={props.rounded} alt="Avatar" className={props.className} style={props.style}
+    return <Image roundedCircle={props.roundedCircle} rounded={props.rounded} alt="Avatar" className={props.className} style={props.style}
                   src={getSizedAvatarByUrl(props.url, getNearestAvatarSize(props.size))} width={props.size} height={props.size}
                   onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} {...props}/>
 };
