@@ -24,6 +24,8 @@ $border-radius: .35rem;
   box-shadow: $box-shadow;
   border-radius: $border-radius !important;
   transition: $hover-transition;
+  border: 1px solid transparent !important;
+  margin: 0 !important;
   &:hover {
     transform: $hover-transform-scale;
     background-image: none !important;
