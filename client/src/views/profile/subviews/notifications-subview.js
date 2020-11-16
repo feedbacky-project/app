@@ -7,6 +7,7 @@ import {Col, Row} from "react-bootstrap";
 import ViewBox from "components/viewbox/view-box";
 import Button from "react-bootstrap/Button";
 import ActionButton from "components/app/action-button";
+import ExecutableButton from "components/app/executable-button";
 
 const NotificationsSubview = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -15,7 +16,7 @@ const NotificationsSubview = ({reRouteTo}) => {
     const [statusChangeNotify, setStatusChangeNotify] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notifyFromStatusChange : false);
     const onChangesSave = () => {
         let toastId = toastAwait("Saving changes...");
-        axios.patch("/users/@me/mailPreferences", {
+        return axios.patch("/users/@me/mailPreferences", {
             notifyFromModeratorsComments: moderatorsCommentsNotify,
             notifyFromTagsChange: tagsChangeNotify,
             notifyFromStatusChange: statusChangeNotify
@@ -89,9 +90,9 @@ const NotificationsSubview = ({reRouteTo}) => {
                 </Col>
             </Row>
             <Col xs={12}>
-                <Button className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
+                <ExecutableButton className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
                     Save Settings
-                </Button>
+                </ExecutableButton>
             </Col>
         </React.Fragment>
     };

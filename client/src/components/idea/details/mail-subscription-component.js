@@ -1,20 +1,21 @@
 import React, {useContext} from "react";
 import ClickableTip from "components/util/clickable-tip";
-import Button from "react-bootstrap/Button";
 import {FaRegBell, FaRegBellSlash} from "react-icons/all";
 import AppContext from "context/app-context";
 import axios from "axios";
 import {toastError, toastSuccess} from "components/util/utils";
+import ExecutableButton from "components/app/executable-button";
 
 const MailSubscriptionComponent = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const onSubscribeToggle = () => {
         if (!context.user.loggedIn) {
             onNotLoggedClick();
-            return;
+            return new Promise(() => {
+            });
         }
         const request = ideaData.subscribed ? "DELETE" : "POST";
-        axios({
+        return axios({
             method: request,
             url: "/ideas/" + ideaData.id + "/subscribe",
             headers: {
@@ -33,11 +34,11 @@ const MailSubscriptionComponent = ({ideaData, updateState, onNotLoggedClick}) =>
     };
     const renderButton = () => {
         if (ideaData.subscribed) {
-            return <Button variant="" size="sm" style={{backgroundColor: context.getTheme()}}
-                           onClick={onSubscribeToggle}><FaRegBellSlash className="move-top-1px"/> Unsubscribe</Button>
+            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}}
+                                     onClick={onSubscribeToggle}><FaRegBellSlash className="move-top-1px"/> Unsubscribe</ExecutableButton>
         } else {
-            return <Button variant="" size="sm" style={{backgroundColor: context.getTheme()}}
-                           onClick={onSubscribeToggle}><FaRegBell className="move-top-1px"/> Subscribe</Button>
+            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}}
+                                     onClick={onSubscribeToggle}><FaRegBell className="move-top-1px"/> Subscribe</ExecutableButton>
         }
     };
     return <React.Fragment>

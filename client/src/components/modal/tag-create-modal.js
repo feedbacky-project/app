@@ -8,6 +8,7 @@ import PageModal from "components/modal/page-modal";
 import ClickableTip from "components/util/clickable-tip";
 import {Col, Row} from "react-bootstrap";
 import ColorSelectionHelper from "components/modal/color-selection-helper";
+import ExecutableButton from "components/app/executable-button";
 
 const TagCreateModal = (props) => {
     const context = useContext(AppContext);
@@ -17,10 +18,10 @@ const TagCreateModal = (props) => {
         const name = document.getElementById("tagNameTextarea").value;
         if (name.length < 3 || name.length > 20) {
             toastWarning("Tag name must be between 3 and 20 characters.");
-            return;
+            return Promise.resolve();
         }
         const roadmapIgnored = document.getElementById("roadmapIgnored").checked;
-        axios.post("/boards/" + props.data.discriminator + "/tags", {
+        return axios.post("/boards/" + props.data.discriminator + "/tags", {
             name, color, roadmapIgnored,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
@@ -33,7 +34,7 @@ const TagCreateModal = (props) => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Add new Tag"
-                      applyButton={<Button variant="" type="submit" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</Button>}>
+                      applyButton={<ExecutableButton variant=""  style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
         <Row>
             <Col xs={12} className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>

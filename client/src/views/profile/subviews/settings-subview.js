@@ -12,6 +12,7 @@ import {useHistory} from "react-router-dom";
 import ViewBox from "components/viewbox/view-box";
 import ActionButton from "components/app/action-button";
 import ComponentLoader from "components/app/component-loader";
+import ExecutableButton from "components/app/executable-button";
 
 const SettingsSubview = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -23,7 +24,7 @@ const SettingsSubview = ({reRouteTo}) => {
     const [modalOpened, setModalOpened] = useState(false);
     const onChangesSave = () => {
         let toastId = toastAwait("Saving changes...");
-        axios.patch("/users/@me", {
+        return axios.patch("/users/@me", {
             username, avatar
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
@@ -43,7 +44,7 @@ const SettingsSubview = ({reRouteTo}) => {
         });
     };
     const onAccountDeactivation = () => {
-        swalGenerator.fire({
+        return swalGenerator.fire({
             title: "Irreversible action!",
             html: "Hold on, <strong>this is one way road</strong>.<br/>All your content <strong>will be anonymized</strong> and you won't be able to log into this account anymore." +
                 "<br/><br/>Type your email (" + context.user.data.email + ") to confirm deactivation and continue.",
@@ -140,9 +141,9 @@ const SettingsSubview = ({reRouteTo}) => {
                 </Form.Text>
             </Col>
             <Col xs={12} className="order-4">
-                <Button className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
+                <ExecutableButton className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
                     Save Settings
-                </Button>
+                </ExecutableButton>
             </Col>
         </React.Fragment>
     };
@@ -161,7 +162,9 @@ const SettingsSubview = ({reRouteTo}) => {
                         </span>
                     </Col>
                     <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
-                        <ActionButton onClick={() => onAccountDeactivation()} variant="danger" text="Deactivate"/>
+                        <ExecutableButton onClick={onAccountDeactivation} variant="danger">
+                            Deactivate
+                        </ExecutableButton>
                     </Col>
                 </Row>
             </Col>

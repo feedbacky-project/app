@@ -10,6 +10,7 @@ import PageModal from "components/modal/page-modal";
 import ClickableTip from "components/util/clickable-tip";
 import DeleteButton from "components/util/delete-button";
 import BoardContext from "context/board-context";
+import ExecutableButton from "components/app/executable-button";
 
 const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
     const {getTheme} = useContext(AppContext);
@@ -21,7 +22,7 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
     const handleSubmit = () => {
         const description = document.getElementById("descriptionTextarea").value;
         let toastId = toastAwait("Posting idea...");
-        axios.post("/ideas/", {
+        return axios.post("/ideas/", {
             discriminator, title, description, attachment
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
@@ -67,8 +68,8 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
     };
 
     return <PageModal id="ideaPost" isOpen={open} onHide={onCreateIdeaModalClose} title="Post Feedback"
-                      applyButton={<Button variant="" style={{backgroundColor: getTheme()}} onClick={handleSubmit}
-                                           className="mx-0">Post Idea</Button>}>
+                      applyButton={<ExecutableButton variant="" style={{backgroundColor: getTheme()}} onClick={handleSubmit}
+                                                     className="mx-0">Post Idea</ExecutableButton>}>
         <Form noValidate onSubmit={e => e.preventDefault()}>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1">Title</Form.Label>
