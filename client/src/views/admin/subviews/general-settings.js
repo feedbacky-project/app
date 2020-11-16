@@ -191,6 +191,8 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                     toastError();
                     return;
                 }
+                //user no longer owns this board, remove from local context
+                context.user.data.permissions = context.user.data.permissions.filter(board => board.boardDiscriminator !== boardData.discriminator);
                 history.push("/me");
                 toastSuccess("Board permanently deleted.", toastId);
             }).catch(err => toastError(err.response.data.errors[0]));
