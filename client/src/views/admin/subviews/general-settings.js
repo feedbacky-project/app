@@ -30,7 +30,7 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
     const [modalOpen, setModalOpen] = useState(false);
     const renderContent = () => {
         return <React.Fragment>
-            <ColorSelectionModal open={modalOpen} onClose={() => setModalOpen(false)} onUpdate={(color) => context.onThemeChange(color.hex)}/>
+            <ColorSelectionModal open={modalOpen} onClose={() => setModalOpen(false)} onUpdate={(color) => context.onThemeChange(color)}/>
             <Col xs={12} lg={6}>
                 <Form.Label className="mr-1 text-black-60">Board Name</Form.Label>
                 <ClickableTip id="boardName" title="Set Board Name" description="Name of your board should be at least 4 and maximum 25 characters long."/>
