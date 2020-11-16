@@ -10,7 +10,7 @@ import parseComment from "components/idea/discussion/comment-parser";
 
 const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike}) => {
     const context = useContext(AppContext);
-    const {moderators} = useContext(BoardContext).data;
+    const boardContext = useContext(BoardContext).data;
     const retrieveSpecialCommentTypeIcon = (type) => {
         switch (type) {
             case "IDEA_CLOSED":
@@ -34,10 +34,10 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
                 </OverlayTrigger>
             </React.Fragment>
         }
-        return <small style={{fontWeight: "bold"}}>{formatUsername(data.user.id, data.user.username, moderators)}</small>
+        return <small style={{fontWeight: "bold"}}>{formatUsername(data.user.id, data.user.username, boardContext.moderators)}</small>
     };
     const renderDeletionButton = () => {
-        const moderator = moderators.find(mod => mod.userId === context.user.data.id);
+        const moderator = boardContext.moderators.find(mod => mod.userId === context.user.data.id);
         if (data.user.id !== context.user.data.id && !moderator) {
             return;
         }
@@ -71,7 +71,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         <div className="d-inline-flex my-1">
             <div className="comment-icon mr-3" style={{backgroundColor: color, color, minWidth: 30}}>{retrieveSpecialCommentTypeIcon(data.specialType)}</div>
             <div>
-                <span style={{color}}>{parseComment(data.description, moderators, context.data.tags)}</span>
+                <span style={{color}}>{parseComment(data.description, boardContext.moderators, boardContext.tags)}</span>
                 <small className="ml-1 text-black-60"><TimeAgo datetime={data.creationDate}/></small>
             </div>
         </div>

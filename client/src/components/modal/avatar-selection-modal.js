@@ -44,7 +44,7 @@ AvatarSelectionModal.propTypes = {
     onAvatarModalClose: PropTypes.func,
     open: PropTypes.bool,
     onAvatarChoose: PropTypes.func,
-    connectedAccounts: PropTypes.array,
+    connectedAccounts: PropTypes.object,
 };
 
 export default AvatarSelectionModal;
