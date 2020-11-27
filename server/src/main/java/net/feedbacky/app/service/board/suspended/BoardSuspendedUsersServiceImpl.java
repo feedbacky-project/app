@@ -7,6 +7,7 @@ import net.feedbacky.app.data.board.dto.suspended.PostSuspendedUserDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.suspended.SuspendedUser;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -64,6 +66,10 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to post suspended users to this board.");
+    }
+    Optional<Boolean> isSuspended = board.getSuspensedList().stream().map(suspended -> suspended.getUser().getId() == dto.getUserId()).findAny();
+    if(isSuspended.isPresent() && isSuspended.get()) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is already suspended.");
     }
     User targetUser = userRepository.findById(dto.getUserId())
             .orElseThrow(() -> new ResourceNotFoundException("User with id " + dto.getUserId() + " not found"));

@@ -14,9 +14,11 @@ import CommentComponent from "components/idea/discussion/comment-component";
 import {SvgNotice} from "components/app/svg-notice";
 import {PageAvatar} from "components/app/page-avatar";
 import {FaAngleDown} from "react-icons/all";
+import BoardContext from "context/board-context";
 
 const DiscussionBox = ({ideaData, updateState, moderators}) => {
     const context = useContext(AppContext);
+    const boardData = useContext(BoardContext).data;
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
     const sorts = [
@@ -52,7 +54,8 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
             hasMore={comments.moreToLoad}
             loader={<Row className="justify-content-center my-5" key={comments.data.length}><LoadingSpinner/></Row>}>
             {comments.data.map(data =>
-                <CommentComponent key={data.id} data={data} onCommentDelete={onCommentDelete} onCommentLike={onCommentLike} onCommentUnlike={onCommentUnlike}/>
+                <CommentComponent key={data.id} data={data} onCommentDelete={onCommentDelete} onCommentLike={onCommentLike}
+                                  onCommentUnlike={onCommentUnlike} onSuspend={onSuspend}/>
             )}
         </InfiniteScroll>
     };
@@ -145,9 +148,29 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
             setSubmitOpen(false);
         }
     };
+    const onSuspend = (commentData) => {
+        popupSwal("warning", "Dangerous action", "Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.",
+            "Suspend", "#d33", willClose => {
+                if (!willClose.value) {
+                    return;
+                }
+                //todo finite suspension dates
+                const date = new Date();
+                axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
+                    userId: commentData.user.id,
+                    suspensionEndDate: date.getDate + "/" + (date.getMonth() + 1) + "/" + (date.getFullYear() + 10) + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                }).then(res => {
+                    if (res.status !== 204) {
+                        toastError();
+                        return;
+                    }
+                    toastSuccess("User suspended.");
+                }).catch(err => toastError(err.response.data.errors[0]));
+            });
+    };
     const onCommentDelete = (id) => {
         popupSwal("warning", "Dangerous action",
-            "This action is <strong>irreversible</strong> and will delete your comment, please confirm your action.",
+            "This action is <strong>irreversible</strong> and will delete this comment, please confirm your action.",
             "Delete Comment", "#d33", willClose => {
                 if (!willClose.value) {
                     return;

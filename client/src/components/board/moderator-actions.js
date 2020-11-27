@@ -8,18 +8,21 @@ import swalReact from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import AppContext from "context/app-context";
 import {popupSwal} from "components/util/sweetalert-utils";
-import {FaEllipsisH} from "react-icons/all";
+import {FaEllipsisH, FaUserLock} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
 import BoardContext from "context/board-context";
 
-const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
+const ModeratorActions = ({
+                              ideaData, updateState, onIdeaDelete = () => {
+    }
+                          }) => {
     const swalGenerator = swalReact(Swal);
     const context = useContext(AppContext);
-    const {moderators} = useContext(BoardContext).data;
+    const boardData = useContext(BoardContext).data;
     const history = useHistory();
-    const visible = moderators.find(mod => mod.userId === context.user.data.id);
+    const visible = boardData.moderators.find(mod => mod.userId === context.user.data.id);
     const onIdeaOpen = () => {
         swalGenerator.fire({
             title: "Please confirm",
@@ -42,7 +45,7 @@ const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
                 }
                 updateState({...ideaData, open: true});
                 toastSuccess("Idea opened.");
-            }).catch(err => toastError(err.response.data.errors[0]))
+            }).catch(err => toastError(err.response.data.errors[0]));
         });
     };
     const onIdeaClose = () => {
@@ -58,7 +61,7 @@ const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
                     }
                     updateState({...ideaData, open: false});
                     toastSuccess("Idea closed.");
-                }).catch(err => toastError(err.response.data.errors[0]))
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
     const doIdeaDelete = () => {
@@ -75,7 +78,27 @@ const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
                     toastSuccess("Idea permanently deleted.");
                     history.push("/b/" + ideaData.boardDiscriminator);
                     onIdeaDelete();
-                }).catch(err => toastError(err.response.data.errors[0]))
+                }).catch(err => toastError(err.response.data.errors[0]));
+            });
+    };
+    const doSuspendUser = () => {
+        popupSwal("warning", "Dangerous action", "Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.",
+            "Suspend", "#d33", willClose => {
+                if (!willClose.value) {
+                    return;
+                }
+                //todo finite suspension dates
+                const date = new Date();
+                axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
+                    userId: ideaData.user.id,
+                    suspensionEndDate: date.getDate + "/" + (date.getMonth() + 1) + "/" + (date.getFullYear() + 10) + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                }).then(res => {
+                    if (res.status !== 204) {
+                        toastError();
+                        return;
+                    }
+                    toastSuccess("User suspended.");
+                }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
     const onTagsManage = () => {
@@ -136,6 +159,9 @@ const ModeratorActions = ({ideaData, updateState, onIdeaDelete = () => {}}) => {
                 <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Open Idea</Dropdown.Item>
             }
             <Dropdown.Item as={"span"} onClick={doIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Delete Idea</Dropdown.Item>
+            <Dropdown.Item as={"span"} onClick={doSuspendUser} className="text-danger">
+                <FaUserLock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Suspend User
+            </Dropdown.Item>
         </Dropdown.Menu>
     </Dropdown>
 };
