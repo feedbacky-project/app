@@ -73,6 +73,9 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
     }
     User targetUser = userRepository.findById(dto.getUserId())
             .orElseThrow(() -> new ResourceNotFoundException("User with id " + dto.getUserId() + " not found"));
+    if(targetUser.isServiceStaff() || board.getCreator().equals(targetUser) || board.getModerators().stream().anyMatch(mod -> mod.getUser().equals(targetUser))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user cannot be suspended.");
+    }
     SuspendedUser suspendedUser = dto.convertToEntity(targetUser, board);
     suspendedUser = suspendedUserRepository.save(suspendedUser);
     board.getSuspensedList().add(suspendedUser);
