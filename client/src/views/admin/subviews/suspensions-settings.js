@@ -6,7 +6,6 @@ import ComponentLoader from "components/app/component-loader";
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
-import PageBadge from "components/app/page-badge";
 import {PageAvatar} from "components/app/page-avatar";
 import {toastError, toastSuccess} from "components/util/utils";
 import DeleteButton from "components/util/delete-button";
@@ -35,11 +34,14 @@ const SuspensionSettings = ({reRouteTo}) => {
         return <ComponentLoader loaded={suspended.loaded} component={
             <Col xs={12}>
                 <span className="mr-1 text-black-60">Suspended Users</span>
-                {renderSuspensions()}
-                <br/>
-                <OverlayTrigger overlay={<Tooltip id={"suspensionButtonSoon"}>Suspend users manually through moderator tools.</Tooltip>}>
-                    <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} disabled>Add New</Button>
-                </OverlayTrigger>
+                <Col xs={12} sm={6} className="mb-sm-0 mb-3">
+                    {renderSuspensions()}
+                </Col>
+                <Col xs={12}>
+                    <OverlayTrigger overlay={<Tooltip id={"suspensionButtonSoon"}>Suspend users manually through moderator tools.</Tooltip>}>
+                        <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} disabled>Add New</Button>
+                    </OverlayTrigger>
+                </Col>
             </Col>
         }/>
     };
@@ -51,10 +53,9 @@ const SuspensionSettings = ({reRouteTo}) => {
             return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                 <div className="text-center">
                     <PageAvatar roundedCircle url={suspended.user.avatar} size={35}/>
-                    <DeleteButton id={"mod_del_" + i} onClick={() => onUnsuspension(suspended)} tooltipName="Unsuspend"/>;
+                    <DeleteButton id={"mod_del_" + i} onClick={() => onUnsuspension(suspended)} tooltipName="Unsuspend"/>
                     <br/>
                     <small className="text-truncate d-block" style={{maxWidth: 100}}>{suspended.user.username}</small>
-                    <PageBadge color={context.getTheme()} text={suspended.suspensionEndDate} className="move-top-3px"/>
                 </div>
             </div>
         });
