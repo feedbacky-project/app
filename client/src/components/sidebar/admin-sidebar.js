@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {Col} from "react-bootstrap";
 import AppContext from "context/app-context";
-import {FaAt, FaColumns, FaSlidersH, FaTags, FaUsersCog} from "react-icons/all";
+import {FaAt, FaColumns, FaSlidersH, FaTags, FaUserLock, FaUsersCog} from "react-icons/all";
 import {renderSidebarRoutes} from "components/sidebar/sidebar-commons";
 
 const AdminSidebar = (props) => {
@@ -10,7 +10,8 @@ const AdminSidebar = (props) => {
         {tags: (data) => <React.Fragment><FaTags className="mr-1 move-top-1px" style={data}/> Tags</React.Fragment>},
         {social: (data) => <React.Fragment><FaAt className="mr-1 move-top-1px" style={data}/> Social Links</React.Fragment>},
         {webhooks: (data) => <React.Fragment><FaColumns className="mr-1 move-top-1px" style={data}/> Webhooks</React.Fragment>},
-        {moderators: (data) => <React.Fragment><FaUsersCog className="mr-1 move-top-1px" style={data}/> Moderators</React.Fragment>}
+        {moderators: (data) => <React.Fragment><FaUsersCog className="mr-1 move-top-1px" style={data}/> Moderators</React.Fragment>},
+        {suspended: (data) => <React.Fragment><FaUserLock className="mr-1 move-top-1px" style={data}/> Suspensions</React.Fragment>}
     ];
     const context = useContext(AppContext);
     const themeColor = context.getTheme();

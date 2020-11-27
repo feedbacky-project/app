@@ -15,6 +15,7 @@ import SocialLinksSettings from "views/admin/subviews/social/social-links-settin
 import CreateSocialLink from "views/admin/subviews/social/create-social-link";
 import CreateWebhook from "views/admin/subviews/webhooks/create-webhook";
 import BoardContext from "context/board-context";
+import SuspensionSettings from "views/admin/subviews/suspensions-settings";
 
 const AdminPanelView = () => {
     const context = useContext(AppContext);
@@ -73,6 +74,7 @@ const AdminPanelView = () => {
                     <Route path="/ba/:id/webhooks" render={() => <WebhooksSettings reRouteTo={reRouteTo}/>}/>
                     <Route path="/ba/:id/social/create" render={() => <CreateSocialLink reRouteTo={reRouteTo} data={board.data}/>}/>
                     <Route path="/ba/:id/social" render={() => <SocialLinksSettings reRouteTo={reRouteTo}/>}/>
+                    <Route path="/ba/:id/suspended" render={() => <SuspensionSettings reRouteTo={reRouteTo}/>}/>
                     <Route path="/ba/:id/general" render={() => <GeneralSettings reRouteTo={reRouteTo} updateState={(data) => setBoard({...board, data})}/>}/>
                     <Route render={() => <GeneralSettings reRouteTo={reRouteTo} updateState={(data) => setBoard({...board, data})}/>}/>
                 </Switch>
