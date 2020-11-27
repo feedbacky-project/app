@@ -16,7 +16,7 @@ public class DateTimestampValidator implements ConstraintValidator<DateTimestamp
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     try {
       Date date = format.parse(value);
       return value.equals(format.format(date));

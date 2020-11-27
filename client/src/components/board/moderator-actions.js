@@ -91,7 +91,7 @@ const ModeratorActions = ({
                 const date = new Date();
                 axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
                     userId: ideaData.user.id,
-                    suspensionEndDate: (date.getFullYear() + 10) + "/" + (date.getMonth() + 1) + "/" + date.getDate()
+                    suspensionEndDate: (date.getFullYear() + 10) + "-" + (date.getMonth() + 1) + "-" + date.getDate()
                 }).then(res => {
                     if (res.status !== 204) {
                         toastError();
