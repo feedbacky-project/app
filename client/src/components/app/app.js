@@ -82,6 +82,14 @@ const App = () => {
         }
         // eslint-disable-next-line
     }, [userData]);
+    const hardResetData = () => {
+        Cookies.remove("prefs_searchFilter");
+        Cookies.remove("prefs_searchSort");
+        Cookies.remove("prefs_comments_sort");
+        Cookies.remove("prefs_darkMode");
+        onLogOut();
+        setServiceData({...serviceData, data: [], loaded: false, error: false});
+    };
     const onLogin = (token) => {
         setSession(token);
         axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -139,6 +147,7 @@ const App = () => {
                 localPreferences: localPrefs,
                 darkMode: darkMode,
                 onLogOut: onLogOut,
+                hardResetData: hardResetData,
             },
             serviceData: serviceData.data,
             onLocalPreferencesUpdate: onLocalPreferencesUpdate,
