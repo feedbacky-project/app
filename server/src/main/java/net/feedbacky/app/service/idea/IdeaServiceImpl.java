@@ -156,7 +156,7 @@ public class IdeaServiceImpl implements IdeaService {
     if(optional.isPresent() && optional.get().getBoard().getId().equals(board.getId())) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with that title in that board already exists.");
     }
-    if(board.getSuspensedList().contains(user)) {
+    if(board.getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You've been suspended, please contact board owner for more information.");
     }
     ModelMapper mapper = new ModelMapper();
@@ -303,7 +303,7 @@ public class IdeaServiceImpl implements IdeaService {
     if(idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is already upvoted by you.");
     }
-    if(idea.getBoard().getSuspensedList().contains(user)) {
+    if(idea.getBoard().getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You've been suspended, please contact board owner for more information.");
     }
     Set<User> voters = idea.getVoters();
@@ -324,7 +324,7 @@ public class IdeaServiceImpl implements IdeaService {
     if(!idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is not upvoted by you.");
     }
-    if(idea.getBoard().getSuspensedList().contains(user)) {
+    if(idea.getBoard().getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You've been suspended, please contact board owner for more information.");
     }
     Set<User> voters = idea.getVoters();
