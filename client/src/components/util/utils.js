@@ -4,6 +4,15 @@ import {FaCheck, FaExclamation, FaExclamationTriangle} from "react-icons/fa";
 import Spinner from "react-bootstrap/Spinner";
 import {parseEmojis} from "components/util/emoji-filter";
 import marked from "marked";
+import Cookies from "js-cookie";
+
+export const getCookieOrDefault = (name, defaultValue) => {
+    const cookie = Cookies.get(name);
+    if(cookie == null) {
+        return defaultValue;
+    }
+    return cookie;
+};
 
 export const convertIdeaToSlug = (ideaData) => {
     let slug = ideaData.title.toLowerCase();

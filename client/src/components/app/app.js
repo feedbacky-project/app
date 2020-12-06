@@ -12,6 +12,7 @@ import {FaDizzy, FaExclamationCircle} from "react-icons/fa";
 import {Row} from "react-bootstrap";
 import {retry} from "components/util/lazy-init";
 import ComponentLoader from "components/app/component-loader";
+import {getCookieOrDefault} from "components/util/utils";
 
 const ProfileView = lazy(() => retry(() => import("views/profile/profile-view")));
 const CreateBoardView = lazy(() => retry(() => import("views/creator/create-board-view")));
@@ -31,21 +32,21 @@ const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedb
 const App = () => {
     const [session, setSession] = useState(Cookies.get("FSID"));
     const [localPrefs, setLocalPrefs] = useState({
-        ideas: {filter: localStorage.getItem("searchFilter"), sort: localStorage.getItem("searchSort")},
-        comments: {sort: localStorage.getItem("comments_sort")}
+        ideas: {filter: getCookieOrDefault("prefs_searchFilter", ""), sort: getCookieOrDefault("prefs_searchSort", "")},
+        comments: {sort: getCookieOrDefault("prefs_comments_sort", "")}
     });
     const [serviceData, setServiceData] = useState({loaded: false, data: [], error: false});
     const [userData, setUserData] = useState({loaded: false, data: [], error: false});
-    const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === 'true');
+    const [darkMode, setDarkMode] = useState(getCookieOrDefault("prefs_darkMode", "false") === 'true');
     const [theme, setTheme] = useState("#343a40");
 
     useEffect(() => {
         if (darkMode) {
             document.body.classList.add("dark");
-        } else if (localStorage.getItem("darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        } else if (getCookieOrDefault("prefs_darkMode", null) == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             setDarkMode(true);
             document.body.classList.add("dark");
-            localStorage.setItem("darkMode", "true");
+            Cookies.set("prefs_darkMode", "true", {expires: 10 * 365 * 7 /* 10 years */});
         }
         axios.defaults.baseURL = API_ROUTE;
         axios.defaults.headers.common["Authorization"] = "Bearer " + session;
@@ -94,13 +95,13 @@ const App = () => {
     };
     const onLocalPreferencesUpdate = (data) => {
         if (data.ideas.filter != null) {
-            localStorage.setItem("searchFilter", data.ideas.filter);
+            Cookies.set("prefs_searchFilter", data.ideas.filter, {expires: 10 * 365 * 7 /* 10 years */});
         }
         if (data.ideas.sort != null) {
-            localStorage.setItem("searchSort", data.ideas.sort);
+            Cookies.set("prefs_searchSort", data.ideas.sort, {expires: 10 * 365 * 7 /* 10 years */});
         }
         if (data.comments.sort != null) {
-            localStorage.setItem("comments_sort", data.comments.sort);
+            Cookies.set("prefs_comments_sort", data.comments.sort, {expires: 10 * 365 * 7 /* 10 years */});
         }
         setLocalPrefs(data);
     };
@@ -116,8 +117,8 @@ const App = () => {
         return color;
     };
     const onDarkModeToggle = () => {
-        let darkModeEnabled = (localStorage.getItem("darkMode") === 'true');
-        localStorage.setItem("darkMode", (!darkModeEnabled).toString());
+        let darkModeEnabled = (getCookieOrDefault("prefs_darkMode", "false") === 'true');
+        Cookies.set("prefs_darkMode", (!darkModeEnabled).toString(), {expires: 10 * 365 * 7 /* 10 years */});
         if (darkMode) {
             document.body.classList.remove("dark");
         } else {

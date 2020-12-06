@@ -49,13 +49,13 @@ const SuspensionSettings = ({reRouteTo}) => {
         if (suspended.data.length === 0) {
             return <SvgNotice Component={UndrawNoData} title="No suspensions yet." description="Lets hope nobody will never appear here."/>
         }
-        return suspended.data.map((suspended, i) => {
+        return suspended.data.map((suspendedUser, i) => {
             return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                 <div className="text-center">
-                    <PageAvatar roundedCircle url={suspended.user.avatar} size={35}/>
-                    <DeleteButton id={"mod_del_" + i} onClick={() => onUnsuspension(suspended)} tooltipName="Unsuspend"/>
+                    <PageAvatar roundedCircle url={suspendedUser.user.avatar} size={35}/>
+                    <DeleteButton id={"mod_del_" + i} onClick={() => onUnsuspension(suspendedUser)} tooltipName="Unsuspend"/>
                     <br/>
-                    <small className="text-truncate d-block" style={{maxWidth: 100}}>{suspended.user.username}</small>
+                    <small className="text-truncate d-block" style={{maxWidth: 100}}>{suspendedUser.user.username}</small>
                 </div>
             </div>
         });
