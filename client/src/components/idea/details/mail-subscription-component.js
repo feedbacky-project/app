@@ -11,8 +11,7 @@ const MailSubscriptionComponent = ({ideaData, updateState, onNotLoggedClick}) =>
     const onSubscribeToggle = () => {
         if (!context.user.loggedIn) {
             onNotLoggedClick();
-            return new Promise(() => {
-            });
+            return Promise.resolve();
         }
         const request = ideaData.subscribed ? "DELETE" : "POST";
         return axios({
@@ -34,10 +33,10 @@ const MailSubscriptionComponent = ({ideaData, updateState, onNotLoggedClick}) =>
     };
     const renderButton = () => {
         if (ideaData.subscribed) {
-            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}}
+            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}} className="m-0 mt-sm-0"
                                      onClick={onSubscribeToggle}><FaRegBellSlash className="move-top-1px"/> Unsubscribe</ExecutableButton>
         } else {
-            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}}
+            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}} className="m-0 mt-sm-0"
                                      onClick={onSubscribeToggle}><FaRegBell className="move-top-1px"/> Subscribe</ExecutableButton>
         }
     };

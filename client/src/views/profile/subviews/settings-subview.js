@@ -10,7 +10,6 @@ import Swal from "sweetalert2";
 import swalReact from "sweetalert2-react-content";
 import {useHistory} from "react-router-dom";
 import ViewBox from "components/viewbox/view-box";
-import ActionButton from "components/app/action-button";
 import ComponentLoader from "components/app/component-loader";
 import ExecutableButton from "components/app/executable-button";
 
@@ -95,7 +94,7 @@ const SettingsSubview = ({reRouteTo}) => {
             <ProfileSidebar currentNode="settings" reRouteTo={reRouteTo}/>
             <Col xs={12} md={9}>
                 <ViewBox theme={context.getTheme(false)} title="User Settings" description="Edit your account here.">
-                    <Col className="text-center">Please log in to see contents of this page.</Col>
+                    <Col className="text-center py-4">Please log in to see contents of this page.</Col>
                 </ViewBox>
             </Col>
         </React.Fragment>

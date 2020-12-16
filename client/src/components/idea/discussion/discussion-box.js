@@ -16,7 +16,7 @@ import {PageAvatar} from "components/app/page-avatar";
 import {FaAngleDown} from "react-icons/all";
 import BoardContext from "context/board-context";
 
-const DiscussionBox = ({ideaData, updateState, moderators}) => {
+const DiscussionBox = ({ideaData, updateState, moderators, onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
@@ -87,7 +87,18 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
                 </div>
             </div>
         }
-        return <React.Fragment/>
+        return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
+            <div className="text-center mr-3 pt-2">
+                <PageAvatar roundedCircle size={30} url={process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+                <br/>
+            </div>
+            <div className="col-12 px-0">
+                <small style={{fontWeight: "bold"}}>{formatUsername(-1, "Anonymous", [])}</small>
+                <br/>
+                <TextareaAutosize className="form-control mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
+                                  style={{resize: "none", overflow: "hidden"}} onChange={onNotLoggedClick} onClick={onNotLoggedClick}/>
+            </div>
+        </div>
     };
     const renderSubmitButton = () => {
         if (!submitOpen) {
@@ -187,6 +198,10 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
             });
     };
     const onCommentLike = (data) => {
+        if(!context.user.loggedIn) {
+            onNotLoggedClick();
+            return;
+        }
         axios.post("/comments/" + data.id + "/likers", {}).then(res => {
             if (res.status !== 200) {
                 toastWarning("Failed to like comment.");
@@ -205,6 +220,10 @@ const DiscussionBox = ({ideaData, updateState, moderators}) => {
         });
     };
     const onCommentUnlike = (data) => {
+        if(!context.user.loggedIn) {
+            onNotLoggedClick();
+            return;
+        }
         axios.delete("/comments/" + data.id + "/likers").then(res => {
             if (res.status !== 204) {
                 toastWarning("Failed to unlike comment.");

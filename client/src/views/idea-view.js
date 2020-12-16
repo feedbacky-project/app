@@ -88,7 +88,7 @@ const IdeaView = () => {
                     <hr/>
                 </Col>
                 <ComponentLoader loaded={idea.loaded} component={
-                    <DiscussionBox updateState={updateState} moderators={board.data.moderators} ideaData={idea.data}/>
+                    <DiscussionBox updateState={updateState} moderators={board.data.moderators} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
                 }/>
             </Row>
         </Container>

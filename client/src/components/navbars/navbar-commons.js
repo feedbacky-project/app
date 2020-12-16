@@ -9,7 +9,7 @@ import {PageAvatar} from "components/app/page-avatar";
 export const renderLogIn = (onNotLoggedClick, context) => {
     if (!context.user.loggedIn) {
         return <NavItem>
-            <a className="button btn active text-white mx-0 z-depth-0 py-0" href="#!" onClick={onNotLoggedClick}><FaSignInAlt/></a>
+            <a className="button btn active text-white shadow-none mx-0 z-depth-0 py-0" href="#!" onClick={onNotLoggedClick}><FaSignInAlt/></a>
         </NavItem>
     }
     return <NavItem>
