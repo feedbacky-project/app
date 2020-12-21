@@ -76,8 +76,23 @@
 <body class="bg-main">
 <noscript>You need to enable JavaScript to run this app.</noscript>
 <script>
-    if (localStorage.getItem("darkMode") === 'true' ||
-        (localStorage.getItem("darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return null;
+    }
+    if (getCookie("prefs_darkMode") ||
+        (getCookie("prefs_darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add("dark");
     }
 </script>
