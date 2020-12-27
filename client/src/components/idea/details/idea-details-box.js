@@ -18,9 +18,11 @@ import VoteButton from "components/app/vote-button";
 import {useHistory} from "react-router-dom";
 import {PageAvatar} from "components/app/page-avatar";
 import ExecutableButton from "components/app/executable-button";
+import BoardContext from "context/board-context";
 
-const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) => {
+const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
+    const boardData = useContext(BoardContext).data;
     const voteRef = React.createRef();
     const history = useHistory();
     const [voters, setVoters] = useState({data: [], loaded: false, error: false});
@@ -120,7 +122,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <TextareaAutosize className="form-control bg-lighter" id="editorBox" rows={1} maxRows={12}
+            <TextareaAutosize className="form-control bg-lighter" id="editorBox" rows={4} maxRows={12}
                               placeholder="Write a description..." required as="textarea"
                               style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
             <ExecutableButton className="m-0 mt-2" variant="" style={{backgroundColor: context.getTheme()}} onClick={onEditApply}>Save</ExecutableButton>
@@ -129,7 +131,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
     };
     const renderDeletionButton = () => {
         //if moderator, then moderator actions component can handle that
-        if (ideaData.user.id !== context.user.data.id || moderators.find(mod => mod.userId === context.user.data.id)) {
+        if (ideaData.user.id !== context.user.data.id || boardData.moderators.find(mod => mod.userId === context.user.data.id)) {
             return;
         }
         return <FaTrash className="ml-1 fa-xs cursor-click move-top-2px" onClick={onDelete}/>
@@ -138,13 +140,12 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
         return <React.Fragment>
             <span className="mr-1 text-tight" style={{fontSize: "1.45rem"}}
                   dangerouslySetInnerHTML={{__html: ideaData.title}}/>
-            <ModeratorActions moderators={moderators} ideaData={ideaData}
-                              updateState={updateState}/>
+            <ModeratorActions moderators={boardData.moderators} ideaData={ideaData} updateState={updateState}/>
             {renderDeletionButton()}
             {ideaData.user.id !== context.user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
             <PageAvatar roundedCircle className="mr-1" url={ideaData.user.avatar} size={18} style={{maxWidth: "none"}}/>
-            <small>{formatUsername(ideaData.user.id, ideaData.user.username, moderators)} ·{" "}</small>
+            <small>{formatUsername(ideaData.user.id, ideaData.user.username, boardData.moderators, boardData.suspendedUsers)} ·{" "}</small>
             <small className="text-black-60"><TimeAgo datetime={ideaData.creationDate}/></small>
             {!ideaData.edited || <small className="text-black-60"> · edited</small>}
         </React.Fragment>

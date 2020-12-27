@@ -147,7 +147,10 @@ const ModeratorActions = ({
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     const isSuspendable = () => {
-        return boardContext.data.suspendedUsers.find(suspended => suspended.user.id === ideaData.user.id);
+        if(boardContext.data.moderators.find(mod => mod.user.id === ideaData.user.id)) {
+            return false;
+        }
+        return !boardContext.data.suspendedUsers.find(suspended => suspended.user.id === ideaData.user.id);
     };
 
     if (!visible) {
@@ -164,7 +167,7 @@ const ModeratorActions = ({
                 <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Open Idea</Dropdown.Item>
             }
             <Dropdown.Item as={"span"} onClick={doIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Delete Idea</Dropdown.Item>
-            {!isSuspendable() && <Dropdown.Item as={"span"} onClick={doSuspendUser} className="text-danger">
+            {isSuspendable() && <Dropdown.Item as={"span"} onClick={doSuspendUser} className="text-danger">
                 <FaUserLock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Suspend User
             </Dropdown.Item>
             }

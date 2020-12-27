@@ -477,6 +477,10 @@ a {
     color: #4cbb17;
   }
 
+  &.suspended {
+    color: rgba(0, 0, 0, .5);
+  }
+
   &.internal {
     color: #0080FF;
   }

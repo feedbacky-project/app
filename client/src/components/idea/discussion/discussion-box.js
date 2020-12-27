@@ -16,7 +16,7 @@ import {PageAvatar} from "components/app/page-avatar";
 import {FaAngleDown} from "react-icons/all";
 import BoardContext from "context/board-context";
 
-const DiscussionBox = ({ideaData, updateState, moderators, onNotLoggedClick}) => {
+const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
@@ -79,7 +79,7 @@ const DiscussionBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =>
                     <br/>
                 </div>
                 <div className="col-12 px-0">
-                    <small style={{fontWeight: "bold"}}>{formatUsername(context.user.data.id, context.user.data.username, moderators)}</small>
+                    <small style={{fontWeight: "bold"}}>{formatUsername(context.user.data.id, context.user.data.username, boardData.moderators, boardData.suspendedUsers)}</small>
                     <br/>
                     <TextareaAutosize className="form-control mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
                                       style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp}/>
@@ -104,7 +104,7 @@ const DiscussionBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =>
         if (!submitOpen) {
             return <React.Fragment/>
         }
-        const moderator = moderators.find(mod => mod.userId === context.user.data.id);
+        const moderator = boardData.moderators.find(mod => mod.userId === context.user.data.id);
         return <React.Fragment>
             <Button variant="" className="mt-2 ml-0 mb-0" style={{backgroundColor: context.getTheme(), fontSize: "0.75em"}}
                     onClick={() => onCommentSubmit(false)}>Submit</Button>

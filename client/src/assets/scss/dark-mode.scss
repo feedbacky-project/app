@@ -8,6 +8,7 @@ $dark-hover: #424853;
 
 $dark-role-admin: #fd413c;
 $dark-role-moderator: #3cfd41;
+$dark-role-suspended: #a9a9a9;
 $dark-comment-internal: #3299ff;
 
 .dark {
@@ -132,6 +133,10 @@ $dark-comment-internal: #3299ff;
 
     &.moderator {
       color: $dark-role-moderator;
+    }
+
+    &.suspended {
+      color: $dark-role-suspended;
     }
 
     &.internal {

@@ -87,13 +87,13 @@ const IdeaView = () => {
         <Container className="pb-5">
             <Row className="justify-content-center pb-4">
                 <ComponentLoader loaded={board.loaded} component={
-                    <IdeaDetailsBox updateState={updateState} moderators={board.data.moderators} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
+                    <IdeaDetailsBox updateState={updateState} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
                 }/>
                 <Col xs={12}>
                     <hr/>
                 </Col>
                 <ComponentLoader loaded={idea.loaded} component={
-                    <DiscussionBox updateState={updateState} moderators={board.data.moderators} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
+                    <DiscussionBox updateState={updateState} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
                 }/>
             </Row>
         </Container>
