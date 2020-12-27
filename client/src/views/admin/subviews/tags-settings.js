@@ -21,7 +21,7 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 const TagsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const [tags, setTags] = useState({data: [], loaded: false, error: false});
+    const [tags, setTags] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState({});

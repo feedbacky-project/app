@@ -19,7 +19,7 @@ const SettingsSubview = ({reRouteTo}) => {
     const swalGenerator = swalReact(Swal);
     const [username, setUsername] = useState(context.user.data.username);
     const [avatar, setAvatar] = useState(context.user.data.avatar);
-    const [connectedAccounts, setConnectedAccounts] = useState({data: [], loaded: false, error: false});
+    const [connectedAccounts, setConnectedAccounts] = useState({data: {}, loaded: false, error: false});
     const [modalOpened, setModalOpened] = useState(false);
     const onChangesSave = () => {
         let toastId = toastAwait("Saving changes...");

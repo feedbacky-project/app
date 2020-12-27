@@ -25,8 +25,8 @@ const IdeaView = () => {
     const context = useContext(AppContext);
     const id = extractIdeaId(useParams().id);
     const location = useLocation();
-    const [idea, setIdea] = useState({data: [], loaded: false, error: false});
-    const [board, setBoard] = useState({data: [], loaded: false, error: false});
+    const [idea, setIdea] = useState({data: {}, loaded: false, error: false});
+    const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const updateState = (data) => {
         setIdea({...idea, data});
@@ -75,7 +75,12 @@ const IdeaView = () => {
     if (!board.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
-    return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
+    return <BoardContext.Provider value={{
+        data: board.data, loaded: board.loaded, error: board.error,
+        updateSuspensions: (suspendedUsers) => {
+            setBoard({...board, data: {...board.data, suspendedUsers}});
+        }
+    }}>
         <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
                     redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
         <IdeaNavbar onNotLoggedClick={() => setModalOpen(true)}/>

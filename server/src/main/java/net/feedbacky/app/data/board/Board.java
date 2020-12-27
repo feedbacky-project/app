@@ -87,6 +87,7 @@ public class Board implements Serializable {
     dto.setSocialLinks(getSocialLinks().stream().map(SocialLink::convertToDto).collect(Collectors.toList()));
     dto.setTags(getTags().stream().map(Tag::convertToDto).collect(Collectors.toList()));
     dto.setModerators(getModerators().stream().map(Moderator::convertToModeratorDto).collect(Collectors.toList()));
+    dto.setSuspendedUsers(getSuspensedList().stream().map(SuspendedUser::convertToDto).collect(Collectors.toList()));
     return dto;
   }
 

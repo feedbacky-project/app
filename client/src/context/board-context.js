@@ -1,9 +1,11 @@
 import React from "react";
 
 const BoardContext = React.createContext({
-    data: [],
+    data: {},
     loaded: false,
     error: false,
+    updateSuspensions: (data) => {
+    },
 });
 
 export default BoardContext;

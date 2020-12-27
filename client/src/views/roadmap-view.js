@@ -16,8 +16,8 @@ const RoadmapView = () => {
     const context = useContext(AppContext);
     const location = useLocation();
     const params = useParams();
-    const [board, setBoard] = useState({data: [], loaded: false, error: false});
-    const [roadmap, setRoadmap] = useState({data: [], loaded: false, error: false});
+    const [board, setBoard] = useState({data: {}, loaded: false, error: false});
+    const [roadmap, setRoadmap] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const resolvePassedData = () => {
         const state = location.state;
@@ -63,7 +63,11 @@ const RoadmapView = () => {
     if (!board.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
-    return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
+    //INFO suspensions are unused in roadmaps
+    return <BoardContext.Provider value={{
+        data: board.data, loaded: board.loaded, error: board.error, updateSuspensions: () => {
+        }
+    }}>
         <LoginModal open={modalOpen} image={board.data.logo}
                     boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/roadmap"}
                     onLoginModalClose={() => setModalOpen(false)}/>

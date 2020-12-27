@@ -19,7 +19,7 @@ const ModeratorsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
     const [moderators, setModerators] = useState(boardData.moderators);
-    const [invited, setInvited] = useState({data: [], loaded: false, error: false});
+    const [invited, setInvited] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const getQuota = () => 10 - (boardData.moderators.length + invited.data.length);
     useEffect(() => {

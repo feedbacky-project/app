@@ -15,8 +15,6 @@ import java.util.List;
  */
 public interface BoardSuspendedUsersService extends FeedbackyService {
 
-  List<FetchSuspendedUserDto> getAll(String discriminator);
-
   ResponseEntity<FetchSuspendedUserDto> post(String discriminator, PostSuspendedUserDto dto);
 
   ResponseEntity delete(long id);

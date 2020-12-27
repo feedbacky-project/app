@@ -19,7 +19,7 @@ import PageBadge from "components/app/page-badge";
 const SocialLinksSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
+    const [socialLinks, setSocialLinks] = useState({data: {}, loaded: false, error: false});
     const getQuota = () => 4 - socialLinks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/socialLinks").then(res => {

@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
+import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,6 +39,7 @@ public class FetchBoardDto {
   private List<FetchSocialLinkDto> socialLinks;
   private List<FetchTagDto> tags;
   private List<FetchModeratorDto> moderators;
+  private List<FetchSuspendedUserDto> suspendedUsers;
 
   private String themeColor;
   private String logo;

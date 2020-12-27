@@ -22,7 +22,7 @@ const AdminPanelView = () => {
     const {id} = useParams();
     const location = useLocation();
     const history = useHistory();
-    const [board, setBoard] = useState({data: [], loaded: false, error: false});
+    const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     useEffect(() => {
         if (location.state == null) {
             axios.get("/boards/" + id).then(res => {
@@ -63,7 +63,12 @@ const AdminPanelView = () => {
         history.push("/b/" + id);
         return <React.Fragment/>;
     }
-    return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
+    return <BoardContext.Provider value={{
+        data: board.data, loaded: board.loaded, error: board.error,
+        updateSuspensions: (suspendedUsers) => {
+            setBoard({...board, data: {...board.data, suspendedUsers}});
+        }
+    }}>
         <IdeaNavbar/>
         <Container>
             <Row className="justify-content-center pb-4">

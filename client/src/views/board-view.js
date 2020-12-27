@@ -15,7 +15,7 @@ import {useLocation, useParams} from "react-router-dom";
 
 const BoardView = () => {
     const context = useContext(AppContext);
-    const [board, setBoard] = useState({data: [], loaded: false, error: false});
+    const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const location = useLocation();
     const {id} = useParams();
@@ -43,7 +43,12 @@ const BoardView = () => {
     if (!board.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
-    return <BoardContext.Provider value={{data: board.data, loaded: board.loaded, error: board.error}}>
+    return <BoardContext.Provider value={{
+        data: board.data, loaded: board.loaded, error: board.error,
+        updateSuspensions: (suspendedUsers) => {
+            setBoard({...board, data: {...board.data, suspendedUsers}});
+        }
+    }}>
         <LoginModal open={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onLoginModalClose={() => setModalOpen(false)}/>
         <BoardNavbar onNotLoggedClick={() => setModalOpen(true)}/>
         <Container className="pb-5">

@@ -21,9 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -42,19 +40,6 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
     this.boardRepository = boardRepository;
     this.suspendedUserRepository = suspendedUserRepository;
     this.userRepository = userRepository;
-  }
-
-  @Override
-  public List<FetchSuspendedUserDto> getAll(String discriminator) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    if(!board.getCreator().equals(user) && !user.isServiceStaff()) {
-      throw new InvalidAuthenticationException("No permission to view suspended users.");
-    }
-    return board.getSuspensedList().stream().map(SuspendedUser::convertToDto).collect(Collectors.toList());
   }
 
   @Override

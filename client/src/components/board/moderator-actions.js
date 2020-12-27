@@ -3,7 +3,7 @@ import {Dropdown, Form} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import axios from "axios";
-import {toastError, toastSuccess} from "components/util/utils";
+import {toastAwait, toastError, toastSuccess} from "components/util/utils";
 import swalReact from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import AppContext from "context/app-context";
@@ -20,9 +20,9 @@ const ModeratorActions = ({
                           }) => {
     const swalGenerator = swalReact(Swal);
     const context = useContext(AppContext);
-    const boardData = useContext(BoardContext).data;
+    const boardContext = useContext(BoardContext);
     const history = useHistory();
-    const visible = boardData.moderators.find(mod => mod.userId === context.user.data.id);
+    const visible = boardContext.data.moderators.find(mod => mod.userId === context.user.data.id);
     const onIdeaOpen = () => {
         swalGenerator.fire({
             title: "Please confirm",
@@ -89,15 +89,17 @@ const ModeratorActions = ({
                 }
                 //todo finite suspension dates
                 const date = new Date();
-                axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
+                const id = toastAwait("Pending suspension...");
+                axios.post("/boards/" + boardContext.data.discriminator + "/suspendedUsers", {
                     userId: ideaData.user.id,
                     suspensionEndDate: (date.getFullYear() + 10) + "-" + (date.getMonth() + 1) + "-" + date.getDate()
                 }).then(res => {
                     if (res.status !== 201) {
-                        toastError();
+                        toastError("Failed to suspend the user.", id);
                         return;
                     }
-                    toastSuccess("User suspended.");
+                    toastSuccess("User suspended.", id);
+                    boardContext.updateSuspensions(boardContext.data.suspendedUsers.concat(res.data));
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
@@ -144,6 +146,9 @@ const ModeratorActions = ({
             });
         }).catch(err => toastError(err.response.data.errors[0]));
     };
+    const isSuspendable = () => {
+        return boardContext.data.suspendedUsers.find(suspended => suspended.user.id === ideaData.user.id);
+    };
 
     if (!visible) {
         return <React.Fragment/>;
@@ -159,9 +164,10 @@ const ModeratorActions = ({
                 <Dropdown.Item as={"span"} onClick={onIdeaOpen}><FaUnlock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Open Idea</Dropdown.Item>
             }
             <Dropdown.Item as={"span"} onClick={doIdeaDelete}><FaTrash className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Delete Idea</Dropdown.Item>
-            <Dropdown.Item as={"span"} onClick={doSuspendUser} className="text-danger">
+            {!isSuspendable() && <Dropdown.Item as={"span"} onClick={doSuspendUser} className="text-danger">
                 <FaUserLock className="mr-1 move-top-2px" style={{color: context.getTheme()}}/> Suspend User
             </Dropdown.Item>
+            }
         </Dropdown.Menu>
     </Dropdown>
 };
