@@ -18,7 +18,7 @@ import {SvgNotice} from "components/app/svg-notice";
 const WebhooksSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const [webhooks, setWebhooks] = useState({data: {}, loaded: false, error: false});
+    const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
     const getQuota = () => 5 - webhooks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/webhooks").then(res => {

@@ -25,7 +25,7 @@ const IdeaView = () => {
     const context = useContext(AppContext);
     const id = extractIdeaId(useParams().id);
     const location = useLocation();
-    const [idea, setIdea] = useState({data: {}, loaded: false, error: false});
+    const [idea, setIdea] = useState({data: [], loaded: false, error: false});
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const updateState = (data) => {

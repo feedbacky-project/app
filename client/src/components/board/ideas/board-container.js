@@ -13,7 +13,7 @@ import {SvgNotice} from "components/app/svg-notice";
 
 const BoardContainer = ({id, onNotLoggedClick}) => {
     const context = useContext(AppContext);
-    const [ideas, setIdeas] = useState({data: {}, loaded: false, error: false, moreToLoad: true});
+    const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
     const isInitialMount = useRef(true);
     useEffect(() => {

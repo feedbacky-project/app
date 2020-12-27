@@ -19,7 +19,7 @@ import BoardContext from "context/board-context";
 const DiscussionBox = ({ideaData, updateState, moderators, onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const [comments, setComments] = useState({data: {}, loaded: false, error: false, moreToLoad: true, page: 0});
+    const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
     const sorts = [
         {oldest: "Oldest"},

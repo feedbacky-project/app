@@ -23,7 +23,7 @@ const IdeaDetailsBox = ({ideaData, updateState, moderators, onNotLoggedClick}) =
     const context = useContext(AppContext);
     const voteRef = React.createRef();
     const history = useHistory();
-    const [voters, setVoters] = useState({data: {}, loaded: false, error: false});
+    const [voters, setVoters] = useState({data: [], loaded: false, error: false});
     const [editor, setEditor] = useState({enabled: false, value: htmlDecode(ideaData.description)});
     useEffect(() => {
         axios.get("/ideas/" + ideaData.id + "/voters").then(res => {
