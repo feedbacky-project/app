@@ -19,5 +19,6 @@ public class AboutFeedbackyData {
   private String serverVersion;
   private List<AbstractLoginProvider> loginProviders;
   private List<FetchUserDto> serviceAdmins;
+  private boolean closedIdeasCommenting;
 
 }

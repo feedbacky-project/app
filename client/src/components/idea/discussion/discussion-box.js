@@ -69,7 +69,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         return <React.Fragment/>
     };
     const renderCommentBox = () => {
-        if (!ideaData.open) {
+        if (!context.serviceData.closedIdeasCommenting) {
             return;
         }
         if (context.user.loggedIn) {

@@ -45,7 +45,8 @@ public class StartupValidator {
     MAIL_MAILGUN_API_KEY("0.1.0-beta"), MAIL_MAILGUN_API_BASE_URL("0.1.0-beta"), MAIL_SMTP_USERNAME("0.1.0-beta"), MAIL_SMTP_PASSWORD("0.1.0-beta"),
     MAIL_SMTP_HOST("0.1.0-beta"), MAIL_SMTP_PORT("0.1.0-beta"), IMAGE_COMPRESSION_ENABLED("0.1.0-beta"), IMAGE_COMPRESSION_TYPE("0.1.0-beta"),
     IMAGE_COMPRESSION_CHEETAHO_API_KEY("0.1.0-beta"),
-    MAIL_SENDGRID_API_KEY("0.2.0-beta"), MAIL_SENDGRID_API_BASE_URL("0.2.0-beta");
+    MAIL_SENDGRID_API_KEY("0.2.0-beta"), MAIL_SENDGRID_API_BASE_URL("0.2.0-beta"),
+    SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS("0.5.0-beta");
 
     private final String sinceVersion;
 
