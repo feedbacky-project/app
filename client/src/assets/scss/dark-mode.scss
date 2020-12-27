@@ -16,7 +16,7 @@ $dark-comment-internal: #3299ff;
   .bg-dark, .popover-header, kbd {
     background-color: $dark-quaternary !important;
   }
-  .modal-content, .swal2-modal, .swal2-content {
+  .modal-content, .swal2-modal, .swal2-content, .swal2-validation-message {
     background-color: $dark-background;
     color: $dark-font-color !important;
   }
