@@ -24,6 +24,9 @@ $dark-comment-internal: #3299ff;
     & > div {
       background-color: $dark-background;
     }
+    & svg {
+      fill: $dark-font-color !important;
+    }
     input {
       background-color: $dark-tertiary;
       box-shadow: $box-shadow !important;

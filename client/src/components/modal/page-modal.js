@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import PropTypes from 'prop-types';
 
 const PageModal = (props) => {
-    return <Modal id={props.id} show={props.isOpen} onHide={props.onHide} centered>
+    return <Modal size={props.size} id={props.id} show={props.isOpen} onHide={props.onHide} centered>
         <Modal.Header>
             <Modal.Title><h5 className="modal-title">{props.title}</h5></Modal.Title>
         </Modal.Header>
