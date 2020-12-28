@@ -3,7 +3,7 @@ import {Button, Col, Dropdown, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaFrown} from "react-icons/fa";
-import {formatUsername, prepareFilterAndSortRequests, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {formatUsername, getDefaultAvatar, prepareFilterAndSortRequests, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
@@ -75,7 +75,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         if (context.user.loggedIn) {
             return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
                 <div className="text-center mr-3 pt-2">
-                    <PageAvatar roundedCircle size={30} url={context.user.data.avatar}/>
+                    <PageAvatar roundedCircle size={30} url={context.user.data.avatar} username={context.user.data.username}/>
                     <br/>
                 </div>
                 <div className="col-12 px-0">
@@ -89,7 +89,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         }
         return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
             <div className="text-center mr-3 pt-2">
-                <PageAvatar roundedCircle size={30} url={process.env.REACT_APP_DEFAULT_USER_AVATAR}/>
+                <PageAvatar roundedCircle size={30} url={getDefaultAvatar("Anonymous")}/>
                 <br/>
             </div>
             <div className="col-12 px-0">

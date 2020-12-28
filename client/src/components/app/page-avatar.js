@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "react-bootstrap/Image";
+import {getDefaultAvatar} from "components/util/utils";
 
 export const PageAvatar = (props) => {
     const getSizedAvatarByUrl = (url, sizing) => {
@@ -20,5 +21,5 @@ export const PageAvatar = (props) => {
     };
     return <Image roundedCircle={props.roundedCircle} rounded={props.rounded} alt="Avatar" className={props.className} style={props.style}
                   src={getSizedAvatarByUrl(props.url, getNearestAvatarSize(props.size))} width={props.size} height={props.size}
-                  onError={(e) => e.target.src = process.env.REACT_APP_DEFAULT_USER_AVATAR} {...props}/>
+                  onError={(e) => e.target.src = getDefaultAvatar(props.username)} {...props}/>
 };
