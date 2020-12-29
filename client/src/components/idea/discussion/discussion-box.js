@@ -3,7 +3,7 @@ import {Button, Col, Dropdown, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaFrown} from "react-icons/fa";
-import {formatUsername, getDefaultAvatar, prepareFilterAndSortRequests, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {formatUsername, getDefaultAvatar, prepareFilterAndSortRequests, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
@@ -18,7 +18,7 @@ import BoardContext from "context/board-context";
 
 const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
-    const boardData = useContext(BoardContext).data;
+    const boardContext = useContext(BoardContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
     const sorts = [
@@ -79,7 +79,8 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
                     <br/>
                 </div>
                 <div className="col-12 px-0">
-                    <small style={{fontWeight: "bold"}}>{formatUsername(context.user.data.id, context.user.data.username, boardData.moderators, boardData.suspendedUsers)}</small>
+                    <small style={{fontWeight: "bold"}}>{formatUsername(context.user.data.id, context.user.data.username,
+                        boardContext.data.moderators, boardContext.data.suspendedUsers)}</small>
                     <br/>
                     <TextareaAutosize className="form-control mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
                                       style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp}/>
@@ -104,7 +105,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         if (!submitOpen) {
             return <React.Fragment/>
         }
-        const moderator = boardData.moderators.find(mod => mod.userId === context.user.data.id);
+        const moderator = boardContext.data.moderators.find(mod => mod.userId === context.user.data.id);
         return <React.Fragment>
             <Button variant="" className="mt-2 ml-0 mb-0" style={{backgroundColor: context.getTheme(), fontSize: "0.75em"}}
                     onClick={() => onCommentSubmit(false)}>Submit</Button>
@@ -167,15 +168,17 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
                 }
                 //todo finite suspension dates
                 const date = new Date();
-                axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
+                const id = toastAwait("Pending suspension...");
+                axios.post("/boards/" + boardContext.data.discriminator + "/suspendedUsers", {
                     userId: commentData.user.id,
                     suspensionEndDate: (date.getFullYear() + 10) + "-" + (date.getMonth() + 1) + "-" + date.getDate()
                 }).then(res => {
                     if (res.status !== 201) {
-                        toastError();
+                        toastError("Failed to suspend the user.", id);
                         return;
                     }
-                    toastSuccess("User suspended.");
+                    toastSuccess("User suspended.", id);
+                    boardContext.updateSuspensions(boardContext.data.suspendedUsers.concat(res.data));
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };

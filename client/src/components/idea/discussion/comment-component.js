@@ -43,13 +43,15 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         }
         return <FaTrashAlt className="ml-1 fa-xs cursor-click" onClick={() => onCommentDelete(data.id)}/>
     };
+    const isSuspendable = () => {
+        if(boardData.moderators.find(mod => mod.user.id === data.user.id)) {
+            return false;
+        }
+        return !boardData.suspendedUsers.find(suspended => suspended.user.id === data.user.id);
+    };
     const renderSuspensionButton = () => {
         const moderator = boardData.moderators.find(mod => mod.userId === context.user.data.id);
-        if (!moderator) {
-            return;
-        }
-        //todo fix
-        if(boardData.suspendedUsers.find(suspended => suspended.user.id === data.user.id)) {
+        if (!moderator || !isSuspendable()) {
             return;
         }
         return <FaUserLock className="ml-1 fa-xs cursor-click" onClick={() => onSuspend(data)}/>
