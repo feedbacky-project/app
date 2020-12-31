@@ -45,6 +45,18 @@ Migrator will migrate every user automatically to enable mail preferences for a 
 **!!!** When using Mailgun as a mail provider add `/messages` at the end of `MAIL_MAILGUN_API_BASE_URL` env variable,
 we no longer add this part in code.
 
+### Updating to 0.5.0
+**!!!** New `.env` variable was added and is required to start, add it to the file and save:
+```
+SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS=false
+```
+Replace `false` with `true` if you want to allow users to comment ideas which are closed.
+
+**!!** `REACT_APP_DEFAULT_USER_AVATAR` value in `.env` has been changed.
+If you wan't to use Letter Avatars please set it to this value:
+```
+REACT_APP_DEFAULT_USER_AVATAR=https://static.plajer.xyz/avatar/generator.php?name=%nick%
+```
 
 ## Attribution note
 Icons (from client project at /src/views/admin/subviews/webhooks/steps/StepSecond.jsx) made by [Prosymbols](https://www.flaticon.com/authors/prosymbols) from www.flaticon.com
