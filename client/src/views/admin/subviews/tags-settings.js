@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
@@ -11,7 +11,6 @@ import ClickableTip from "components/util/clickable-tip";
 import ViewBox from "components/viewbox/view-box";
 import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
-import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
 import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
 import TagEditModal from "components/modal/tag-edit-modal";
@@ -20,47 +19,31 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 
 const TagsSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
-    const boardData = useContext(BoardContext).data;
-    const [tags, setTags] = useState({data: [], loaded: false, error: false});
+    const boardContext = useContext(BoardContext);
+    const boardData = boardContext.data;
     const [modalOpen, setModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState({});
-    const getQuota = () => 10 - tags.data.length;
-    useEffect(() => {
-        axios.get("/boards/" + boardData.discriminator + "/tags").then(res => {
-            if (res.status !== 200) {
-                setTags({...tags, error: true});
-                return;
-            }
-            setTags({...tags, data: res.data, loaded: true});
-        }).catch(() => setTags({...tags, error: true}));
-        // eslint-disable-next-line
-    }, []);
+    const getQuota = () => 10 - boardData.tags.length;
     const onTagCreateModalClick = () => setModalOpen(true);
     const onTagCreateModalClose = () => setModalOpen(false);
-    const onTagCreate = (name, color, roadmapIgnored) => {
-        const data = tags.data.concat({name, color, roadmapIgnored});
-        setTags({...tags, data});
+    const onTagCreate = (data) => {
+        boardContext.updateTags(boardData.tags.concat(data));
     };
     const renderContent = () => {
-        if (tags.error) {
-            return <span className="text-danger">Failed to obtain tags data</span>
-        }
-        return <ComponentLoader loaded={tags.loaded} component={
-            <Col xs={12}>
-                <span className="mr-1 text-black-60">Tags Quota ({getQuota()} left)</span>
-                <ClickableTip id="quota" title="Tags Quota" description="Amount of tags your board can have, you're limited to 10 tags per board."/>
-                {renderTags()}
-                <br/>
-                {renderNewTagButton()}
-            </Col>
-        }/>
+        return <Col xs={12}>
+            <span className="mr-1 text-black-60">Tags Quota ({getQuota()} left)</span>
+            <ClickableTip id="quota" title="Tags Quota" description="Amount of tags your board can have, you're limited to 10 tags per board."/>
+            {renderTags()}
+            <br/>
+            {renderNewTagButton()}
+        </Col>
     };
     const renderTags = () => {
-        if(tags.data.length === 0) {
+        if (boardData.tags.length === 0) {
             return <SvgNotice Component={UndrawNoData} title="No tags yet." description="How about creating one?"/>
         }
-        return tags.data.map((tag, i) => {
+        return boardData.tags.map((tag, i) => {
             return <div key={i}>
                 <PageBadge color={tinycolor(tag.color)} text={tag.name}/>
                 {!tag.roadmapIgnored ||
@@ -93,10 +76,10 @@ const TagsSettings = ({reRouteTo}) => {
         setEditModalOpen(true);
     };
     const onEdit = (oldTag, tag) => {
-        const data = tags.data;
+        const data = boardData.tags;
         const i = data.indexOf(oldTag);
         data[i] = tag;
-        setTags({...tags, data});
+        boardContext.updateTags(data);
     };
     const onTagDelete = (name) => {
         popupSwal("warning", "Dangerous action", "This action is <strong>irreversible</strong> and will delete tag from all ideas, please confirm your action.",
@@ -109,8 +92,7 @@ const TagsSettings = ({reRouteTo}) => {
                         toastError();
                         return;
                     }
-                    const data = tags.data.filter(item => item.name !== name);
-                    setTags({...tags, data});
+                    boardContext.updateTags(boardData.tags.filter(item => item.name !== name));
                     toastSuccess("Tag permanently deleted.");
                 }).catch(err => toastError(err.response.data.errors[0]));
             });

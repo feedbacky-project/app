@@ -47,6 +47,9 @@ const BoardView = () => {
         data: board.data, loaded: board.loaded, error: board.error,
         updateSuspensions: (suspendedUsers) => {
             setBoard({...board, data: {...board.data, suspendedUsers}});
+        },
+        updateTags: (tags) => {
+            setBoard({...board, data: {...board.data, tags}});
         }
     }}>
         <LoginModal open={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onLoginModalClose={() => setModalOpen(false)}/>

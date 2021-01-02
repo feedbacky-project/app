@@ -63,9 +63,11 @@ const RoadmapView = () => {
     if (!board.loaded) {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
-    //INFO suspensions are unused in roadmaps
+    //INFO update methods are not needed in roadmaps
     return <BoardContext.Provider value={{
         data: board.data, loaded: board.loaded, error: board.error, updateSuspensions: () => {
+        },
+        updateTags: () => {
         }
     }}>
         <LoginModal open={modalOpen} image={board.data.logo}

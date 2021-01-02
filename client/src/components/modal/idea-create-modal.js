@@ -128,10 +128,8 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
                 <br/>
                 <Form.Group className="my-2">
                     <Form.Label className="mr-1">Tags</Form.Label>
-                    <ClickableTip id="ideaDescription" title="Writing a Description" description={<React.Fragment>
-                        Write a detailed description of your feedback suggestion.<br/>
-                        Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
-                        Please keep under 1800 characters.
+                    <ClickableTip id="ideaTags" title="Choosing TAgs" description={<React.Fragment>
+                        Choose tags you wish to be used in your idea.<br/>
                     </React.Fragment>}/>
                     <div>
                         {applicableTags.map((tag, i) => {

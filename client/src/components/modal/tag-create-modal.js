@@ -1,6 +1,5 @@
 import React, {useContext, useState} from 'react';
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
 import {formatRemainingCharacters, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
@@ -30,12 +29,12 @@ const TagCreateModal = (props) => {
                 return;
             }
             props.onTagCreateModalClose();
-            props.onTagCreate(name, color, roadmapIgnored);
+            props.onTagCreate(res.data);
             toastSuccess("Tag with name " + name + " created.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Add new Tag"
-                      applyButton={<ExecutableButton variant=""  style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
+                      applyButton={<ExecutableButton variant="" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
         <Row>
             <Col xs={12} className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>

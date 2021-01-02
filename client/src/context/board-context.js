@@ -6,6 +6,8 @@ const BoardContext = React.createContext({
     error: false,
     updateSuspensions: (data) => {
     },
+    updateTags: (data) => {
+    },
 });
 
 export default BoardContext;

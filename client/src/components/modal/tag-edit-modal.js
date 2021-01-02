@@ -32,7 +32,7 @@ const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
                 return;
             }
             onClose();
-            onEdit(tag, {name, color, roadmapIgnored});
+            onEdit(tag, res.data);
             toastSuccess("Tag edited.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };
