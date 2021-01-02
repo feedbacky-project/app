@@ -21,8 +21,9 @@ const TagCreateModal = (props) => {
             return Promise.resolve();
         }
         const roadmapIgnored = document.getElementById("roadmapIgnored").checked;
+        const publicUse = document.getElementById("publicUse").checked;
         return axios.post("/boards/" + props.data.discriminator + "/tags", {
-            name, color, roadmapIgnored,
+            name, color, roadmapIgnored, publicUse,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
@@ -49,10 +50,18 @@ const TagCreateModal = (props) => {
                 <ColorSelectionHelper title="Tag Color" color={color} setColor={setColor} colorWarning={true}/>
             </Col>
             <Col xs={12} sm={6} className="mb-2">
-                <Form.Label className="mr-1 text-black-60">Ignore Roadmap</Form.Label>
-                <ClickableTip id="tagColor" title="Ignore Roadmap" description="Select if you don't want to include show tag and ideas with this tag in roadmap view."/>
-                <br/>
-                <Form.Check id="roadmapIgnored" custom inline label="Roadmap Ignored" type="checkbox" defaultChecked={false}/>
+                <div>
+                    <Form.Label className="mr-1 text-black-60">Ignore Roadmap</Form.Label>
+                    <ClickableTip id="tagColor" title="Ignore Roadmap" description="Select if you don't want to include show tag and ideas with this tag in roadmap view."/>
+                    <br/>
+                    <Form.Check id="roadmapIgnored" custom inline label="Roadmap Ignored" type="checkbox" defaultChecked={false}/>
+                </div>
+                <div className="mt-2">
+                    <Form.Label className="mr-1 text-black-60">Publicly Accessbile</Form.Label>
+                    <ClickableTip id="tagColor" title="Ignore Roadmap" description="Select if you want this tag to be selectable by users when they create new ideas."/>
+                    <br/>
+                    <Form.Check id="publicUse" custom inline label="Public Use" type="checkbox" defaultChecked={false}/>
+                </div>
             </Col>
         </Row>
     </PageModal>

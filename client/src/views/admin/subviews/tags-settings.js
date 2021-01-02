@@ -13,7 +13,7 @@ import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
 import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
-import {FaEyeSlash, FaPen} from "react-icons/all";
+import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
 import TagEditModal from "components/modal/tag-edit-modal";
 import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
@@ -64,8 +64,12 @@ const TagsSettings = ({reRouteTo}) => {
             return <div key={i}>
                 <PageBadge color={tinycolor(tag.color)} text={tag.name}/>
                 {!tag.roadmapIgnored ||
-                <OverlayTrigger overlay={<Tooltip id={"infoTag" + i + "-tooltip"}>Ignores Roadmap</Tooltip>}>
+                <OverlayTrigger overlay={<Tooltip id={"roadmapTag" + i + "-tooltip"}>Ignores Roadmap</Tooltip>}>
                     <FaEyeSlash className="fa-xs ml-1 red"/>
+                </OverlayTrigger>}
+                {!tag.publicUse ||
+                <OverlayTrigger overlay={<Tooltip id={"publicTag" + i + "-tooltip"}>Publicly Accessible</Tooltip>}>
+                    <FaUserTag className="fa-xs ml-1 blue"/>
                 </OverlayTrigger>}
                 <OverlayTrigger overlay={<Tooltip id={"deleteTag" + i + "-tooltip"}>Edit Tag</Tooltip>}>
                     <FaPen className="fa-xs ml-1 hoverable-option" onClick={() => onTagEdit(tag)}/>

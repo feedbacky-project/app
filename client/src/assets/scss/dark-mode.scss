@@ -14,6 +14,9 @@ $dark-comment-internal: #3299ff;
 .dark {
   background-color: $dark-background;
   color: $dark-font-color;
+  .blue {
+    color: $dark-comment-internal;
+  }
   .bg-dark, .popover-header, kbd {
     background-color: $dark-quaternary !important;
   }

@@ -11,19 +11,31 @@ import ClickableTip from "components/util/clickable-tip";
 import DeleteButton from "components/util/delete-button";
 import BoardContext from "context/board-context";
 import ExecutableButton from "components/app/executable-button";
+import PageBadge from "components/app/page-badge";
+import tinycolor from "tinycolor2";
 
 const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
-    const {getTheme} = useContext(AppContext);
-    const {discriminator} = useContext(BoardContext).data;
+    const appContext = useContext(AppContext);
+    const {discriminator, tags} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
     const [attachment, setAttachment] = useState(null);
     const [attachmentName, setAttachmentName] = useState("No Attachment");
+    const applicableTags = tags.filter(tag => tag.publicUse);
 
     const handleSubmit = () => {
         const description = document.getElementById("descriptionTextarea").value;
         let toastId = toastAwait("Posting idea...");
+        const tags = [];
+        if(applicableTags.length !== 0) {
+            const applicable = document.querySelectorAll('[id^="applicableTag_"');
+            applicable.forEach(tagObject => {
+                if(tagObject.checked) {
+                   tags.push(tagObject.id.replace("applicableTag_", ""));
+                }
+            })
+        }
         return axios.post("/ideas/", {
-            discriminator, title, description, attachment
+            discriminator, title, description, attachment, tags
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
@@ -66,9 +78,8 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
             setAttachmentName(file.name);
         });
     };
-
     return <PageModal id="ideaPost" isOpen={open} onHide={onCreateIdeaModalClose} title="Post Feedback"
-                      applyButton={<ExecutableButton variant="" style={{backgroundColor: getTheme()}} onClick={handleSubmit}
+                      applyButton={<ExecutableButton variant="" style={{backgroundColor: appContext.getTheme()}} onClick={handleSubmit}
                                                      className="mx-0">Post Idea</ExecutableButton>}>
         <Form noValidate onSubmit={e => e.preventDefault()}>
             <Form.Group className="mt-2 mb-1">
@@ -113,6 +124,24 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
                     Markdown Supported
                 </Form.Text>
             </Form.Group>
+            {applicableTags.length === 0 || <React.Fragment>
+                <br/>
+                <Form.Group className="my-2">
+                    <Form.Label className="mr-1">Tags</Form.Label>
+                    <ClickableTip id="ideaDescription" title="Writing a Description" description={<React.Fragment>
+                        Write a detailed description of your feedback suggestion.<br/>
+                        Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
+                        Please keep under 1800 characters.
+                    </React.Fragment>}/>
+                    <div>
+                        {applicableTags.map((tag, i) => {
+                            return <Form.Check id={"applicableTag_" + tag.id} key={i} custom inline label={<PageBadge color={tinycolor(tag.color)} text={tag.name} context={appContext}/>}
+                                               type="checkbox" defaultChecked={false}/>
+                        })}
+                    </div>
+                </Form.Group>
+            </React.Fragment>
+            }
         </Form>
     </PageModal>
 };

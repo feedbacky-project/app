@@ -1,0 +1,2 @@
+// Compatibility for Firefox 46 and lower https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Object/values
+if (!Object.values) Object.values = o=>Object.keys(o).map(k=>o[k]);

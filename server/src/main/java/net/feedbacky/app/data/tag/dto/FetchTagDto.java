@@ -16,8 +16,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FetchTagDto {
 
+  private long id;
   private String name;
   private String color;
   private boolean roadmapIgnored;
+  private boolean publicUse;
 
 }
