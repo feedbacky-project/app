@@ -104,50 +104,48 @@ const ModeratorActions = ({
             });
     };
     const onTagsManage = () => {
-        axios.get("/boards/" + ideaData.boardDiscriminator + "/tags").then(res => {
-            let html = [];
-            res.data.forEach((tag, i) => {
-                const applied = ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
-                html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<PageBadge color={tinycolor(tag.color)} text={tag.name} context={context}/>}
-                                      type="checkbox" defaultChecked={applied}/>)
-            });
-            swalGenerator.fire({
-                html: <React.Fragment>
-                    Choose tags to add or remove and click Update to confirm.
-                    <br className="mb-3"/>
-                    <Form>
-                        {html.map(data => {
-                            return data;
-                        })}
-                    </Form>
-                </React.Fragment>,
-                icon: "info",
-                showCancelButton: true,
-                animation: false,
-                reverseButtons: true,
-                focusCancel: true,
-                confirmButtonText: "Update",
-                preConfirm: () => {
-                    let data = [];
-                    res.data.forEach((tag) => {
-                        let tagName = tag.name;
-                        let obj = document.getElementById("tagManage_" + tagName);
-                        data.push({name: tagName, apply: obj.checked});
-                    });
-                    axios.patch("/ideas/" + ideaData.id + "/tags", data).then(response => {
-                        if (response.status !== 200 && response.status !== 204) {
-                            toastError();
-                            return;
-                        }
-                        updateState({...ideaData, tags: response.data});
-                        toastSuccess("Tags updated!");
-                    }).catch(err => toastError(err.response.data.errors[0]));
-                }
-            });
-        }).catch(err => toastError(err.response.data.errors[0]));
+        let html = [];
+        boardContext.data.tags.forEach((tag, i) => {
+            const applied = ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
+            html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<PageBadge color={tinycolor(tag.color)} text={tag.name} context={context}/>}
+                                  type="checkbox" defaultChecked={applied}/>)
+        });
+        swalGenerator.fire({
+            html: <React.Fragment>
+                Choose tags to add or remove and click Update to confirm.
+                <br className="mb-3"/>
+                <Form>
+                    {html.map(data => {
+                        return data;
+                    })}
+                </Form>
+            </React.Fragment>,
+            icon: "info",
+            showCancelButton: true,
+            animation: false,
+            reverseButtons: true,
+            focusCancel: true,
+            confirmButtonText: "Update",
+            preConfirm: () => {
+                let data = [];
+                boardContext.data.tags.forEach((tag) => {
+                    let tagName = tag.name;
+                    let obj = document.getElementById("tagManage_" + tagName);
+                    data.push({name: tagName, apply: obj.checked});
+                });
+                axios.patch("/ideas/" + ideaData.id + "/tags", data).then(res => {
+                    if (res.status !== 200 && res.status !== 204) {
+                        toastError();
+                        return;
+                    }
+                    updateState({...ideaData, tags: res.data});
+                    toastSuccess("Tags updated!");
+                }).catch(err => toastError(err.response.data.errors[0]));
+            }
+        });
     };
     const isSuspendable = () => {
-        if(boardContext.data.moderators.find(mod => mod.user.id === ideaData.user.id)) {
+        if (boardContext.data.moderators.find(mod => mod.user.id === ideaData.user.id)) {
             return false;
         }
         return !boardContext.data.suspendedUsers.find(suspended => suspended.user.id === ideaData.user.id);
