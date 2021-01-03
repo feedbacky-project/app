@@ -128,7 +128,7 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
                 <br/>
                 <Form.Group className="my-2">
                     <Form.Label className="mr-1">Tags</Form.Label>
-                    <ClickableTip id="ideaTags" title="Choosing TAgs" description={<React.Fragment>
+                    <ClickableTip id="ideaTags" title="Choosing Tags" description={<React.Fragment>
                         Choose tags you wish to be used in your idea.<br/>
                     </React.Fragment>}/>
                     <div>
