@@ -27,10 +27,13 @@ const VotersComponent = ({votersAmount, data}) => {
         if (data.error) {
             return <div className="text-danger"><FaFrown className="move-top-2px"/> Failed to load</div>
         }
+        if(data.data.length === 0) {
+            return <div style={{height: 25}}><FaFrown className="move-top-2px"/> None</div>
+        }
         return <div>
             {data.data.slice(0, 5).map(data => {
                 return <OverlayTrigger key={data.id} overlay={<Tooltip id={"voterData" + data.id}>{data.username}</Tooltip>}>
-                    <PageAvatar className="voter-merged" roundedCircle url={data.avatar} size={25}/>
+                    <PageAvatar className="voter-merged" roundedCircle url={data.avatar} size={25} username={data.username}/>
                 </OverlayTrigger>
             })}
             {renderAndMore()}

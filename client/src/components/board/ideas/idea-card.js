@@ -40,7 +40,7 @@ const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
         return <small className="author-container">
             By {" "}
             {formatUsername(idea.user.id, truncateText(idea.user.username, 20), boardData.moderators, boardData.suspendedUsers)} {" "}
-            <PageAvatar className="m-0 move-top-1px" roundedCircle url={idea.user.avatar} size={16}/>
+            <PageAvatar className="m-0 move-top-1px" roundedCircle url={idea.user.avatar} username={idea.user.username} size={16}/>
         </small>
     };
     const updateState = (newData) => {

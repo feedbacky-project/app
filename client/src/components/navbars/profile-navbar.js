@@ -5,6 +5,7 @@ import AppContext from "context/app-context";
 import {renderLogIn} from "components/navbars/navbar-commons";
 import PageNavbar from "components/navbars/page-navbar";
 import {PageAvatar} from "components/app/page-avatar";
+import {getDefaultAvatar} from "components/util/utils";
 
 const ProfileNavbar = (props) => {
     const context = useContext(AppContext);
@@ -26,13 +27,13 @@ const renderHello = (context) => {
     if (!context.user.loggedIn) {
         return <React.Fragment>
             <img className="rounded mr-2" alt="avatar"
-                 src={process.env.REACT_APP_DEFAULT_USER_AVATAR}
+                 src={getDefaultAvatar("User")}
                  width={30} height={30}/>
             <span>Hello User</span>
         </React.Fragment>
     }
     return <React.Fragment>
-        <PageAvatar className="mr-2" roundedCircle url={context.user.data.avatar} size={30}/>
+        <PageAvatar className="mr-2" roundedCircle url={context.user.data.avatar} size={30} username={context.user.data.username}/>
         <span>Hello {context.user.data.username}</span>
     </React.Fragment>
 };

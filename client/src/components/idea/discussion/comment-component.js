@@ -43,13 +43,15 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         }
         return <FaTrashAlt className="ml-1 fa-xs cursor-click" onClick={() => onCommentDelete(data.id)}/>
     };
+    const isSuspendable = () => {
+        if(boardData.moderators.find(mod => mod.user.id === data.user.id)) {
+            return false;
+        }
+        return !boardData.suspendedUsers.find(suspended => suspended.user.id === data.user.id);
+    };
     const renderSuspensionButton = () => {
         const moderator = boardData.moderators.find(mod => mod.userId === context.user.data.id);
-        if (!moderator) {
-            return;
-        }
-        //todo fix
-        if(boardData.suspendedUsers.find(suspended => suspended.user.id === data.user.id)) {
+        if (!moderator || !isSuspendable()) {
             return;
         }
         return <FaUserLock className="ml-1 fa-xs cursor-click" onClick={() => onSuspend(data)}/>
@@ -64,7 +66,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
     if (!data.special) {
         return <React.Fragment key={data.id}>
             <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
-                <PageAvatar roundedCircle className="mr-3 mt-2" size={30} url={data.user.avatar} style={{minWidth: "30px"}}/>
+                <PageAvatar roundedCircle className="mr-3 mt-2" size={30} url={data.user.avatar} username={data.user.username} style={{minWidth: "30px"}}/>
                 <div>
                     {renderCommentUsername(data)}
                     {renderDeletionButton(data)}

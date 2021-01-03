@@ -33,7 +33,7 @@ const SuspensionSettings = ({reRouteTo}) => {
         return boardContext.data.suspendedUsers.map((suspendedUser, i) => {
             return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                 <div className="text-center">
-                    <PageAvatar roundedCircle url={suspendedUser.user.avatar} size={35}/>
+                    <PageAvatar roundedCircle url={suspendedUser.user.avatar} size={35} username={suspendedUser.user.username}/>
                     <DeleteButton id={"mod_del_" + i} onClick={() => onUnsuspension(suspendedUser)} tooltipName="Unsuspend"/>
                     <br/>
                     <small className="text-truncate d-block" style={{maxWidth: 100}}>{suspendedUser.user.username}</small>

@@ -1,5 +1,25 @@
-### future logs
-* Profile settings won't display loading spinner anymore, loading button for avatar change will show instead
+### 0.5.0-beta (December 31, 2020)
+* **[FEATURE]** Added feature to suspend users you don't want to see at your board.
+Feature located under `Suspensions` tab in Admin Panel
+* **[FEATURE]** Added Letter Avatars to show instead of default Feedbacky user avatar
+* **[FEATURE]** Added new setting to allow commenting closed ideas `SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS` in `.env.`
+* **[IMPROVEMENT]** Profile settings won't display loading spinner anymore, loading button for avatar change will show instead
+* **[IMPROVEMENT]** Moderative comments are now ID Tag based for Moderators and Tags inside them,
+once Moderator is updated or Tag is changed they will reflect the changes in the comment as well, before they had hardcoded HTML code inside instead
+* **[IMPROVEMENT]** Action buttons all over the page should show Loading indicator once action is requested
+* **[IMPROVEMENT]** Comment creation textarea is now visible when not logged in to encourage to log in when someone clicks it to add a comment
+* **[FIX]** Various Dark Mode fixes and improvements
+    * Background for modal validation alerts now displays properly on Dark Mode
+    * Feedbacky detected Dark Mode as enabled by default even if it wasn't
+    * Progress bars on Dark Mode are now more visible
+    * Idea Tags Editor does respect Dark Mode now
+* **[FIX]** Fixed consistency between Moderation modals and User modals
+* **[FIX]** Buttons all over the page should now be hoverable (will show hover action on hover instead of nothing)
+* **[FIX]** Replaced localStorage with Cookies due to unknown Firefox issues with localStorage
+* **[FIX]** Liking comments while not logged in will redirect you to Log-in Modal now
+* **[FIX]** Log-in button will no longer show any shadows on hover/click
+* **[FIX]** If there are no voters for an idea `None` will appear under Voters section instead of nothing 
+* **[FIX]** Color selection modal didn't update theme color properly
 
 ### 0.3.1-beta (July 6, 2020)
 * **[FEATURE]** Added slugs to idea links (eg. https://app.feedbacky.net/i/this-is-a-demo-page-feel-free-to-test.66)
