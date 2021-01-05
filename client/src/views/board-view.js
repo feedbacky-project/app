@@ -16,10 +16,13 @@ import {useLocation, useParams} from "react-router-dom";
 const BoardView = () => {
     const context = useContext(AppContext);
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
+    const [searchQuery, setSearchQuery] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const location = useLocation();
     const {id} = useParams();
     useEffect(() => {
+        //reset search query for board switch
+        setSearchQuery("");
         if (location.state == null || location.state._boardData === undefined) {
             axios.get("/boards/" + id).then(res => {
                 if (res.status !== 200) {
@@ -57,8 +60,8 @@ const BoardView = () => {
         <Container className="pb-5">
             <Row className="pb-4">
                 <BoardBanner/>
-                <BoardSearchBar/>
-                <BoardContainer id={id} onNotLoggedClick={() => setModalOpen(true)}/>
+                <BoardSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+                <BoardContainer id={id} searchQuery={searchQuery} onNotLoggedClick={() => setModalOpen(true)}/>
             </Row>
         </Container>
     </BoardContext.Provider>

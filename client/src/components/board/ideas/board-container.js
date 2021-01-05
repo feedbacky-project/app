@@ -11,7 +11,7 @@ import {prepareFilterAndSortRequests} from "components/util/utils";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 import {SvgNotice} from "components/app/svg-notice";
 
-const BoardContainer = ({id, onNotLoggedClick}) => {
+const BoardContainer = ({id, searchQuery, onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
@@ -20,15 +20,19 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
         if(isInitialMount.current) {
             isInitialMount.current = false;
         } else {
+            setIdeas({...ideas, loaded: false});
             onLoadRequest(1, true);
         }
         // eslint-disable-next-line
-    }, [id, context.user.localPreferences]);
+    }, [id, searchQuery, context.user.localPreferences]);
     const loadIdeas = () => {
         if (ideas.error) {
             return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className="mr-1"/> Failed to load ideas</React.Fragment>}/>
         }
         if (ideas.loaded && ideas.data.length === 0 && !ideas.moreToLoad) {
+            if(searchQuery !== "") {
+                return <SvgNotice Component={UndrawNoIdeas} title={"No ideas for query '" + searchQuery + "'."}/>
+            }
             return <SvgNotice Component={UndrawNoIdeas} title="No ideas yet." description="How about creating one?"/>
         }
         return <InfiniteScroll
@@ -49,7 +53,8 @@ const BoardContainer = ({id, onNotLoggedClick}) => {
         setIdeas({...ideas, data: ideas.data.filter(item => item.id !== id)});
     };
     const onLoadRequest = (page, override = false) => {
-        return axios.get("/boards/" + id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(context.user.localPreferences.ideas)).then(res => {
+        const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
+        return axios.get("/boards/" + id + "/ideas?page=" + (page - 1) + prepareFilterAndSortRequests(context.user.localPreferences.ideas) + withQuery).then(res => {
             const data = res.data.data;
             data.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
             if(override) {
