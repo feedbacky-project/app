@@ -401,14 +401,20 @@ public class IdeaServiceImpl implements IdeaService {
             .build();
   }
 
-  private String prepareTagChangeMessage(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean htmlDisplay) {
-    StringBuilder builder = new StringBuilder(user.convertToSpecialCommentMention() + " has ");
+  private String prepareTagChangeMessage(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean tagDataDisplay) {
+    String userName;
+    if(tagDataDisplay) {
+      userName = user.convertToSpecialCommentMention();
+    } else {
+      userName = user.getUsername();
+    }
+    StringBuilder builder = new StringBuilder(userName + " has ");
     if(!addedTags.isEmpty()) {
       builder.append("added");
       for(Tag tag : addedTags) {
         idea.getTags().add(tag);
         builder.append(" ");
-        if(htmlDisplay) {
+        if(tagDataDisplay) {
           builder.append(tag.convertToSpecialCommentMention());
         } else {
           builder.append("`").append(tag.getName()).append("`");
@@ -430,7 +436,7 @@ public class IdeaServiceImpl implements IdeaService {
       for(Tag tag : removedTags) {
         idea.getTags().remove(tag);
         builder.append(" ");
-        if(htmlDisplay) {
+        if(tagDataDisplay) {
           builder.append(tag.convertToSpecialCommentMention());
         } else {
           builder.append("`").append(tag.getName()).append("`");
