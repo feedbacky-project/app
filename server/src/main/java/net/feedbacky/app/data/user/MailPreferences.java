@@ -39,6 +39,10 @@ public class MailPreferences implements Serializable {
   @OneToOne
   @JoinColumn(name = "user_id")
   private User user;
+  //TODO values kept for migration purposes, no longer used, subjects to remove in future versions
+  @Deprecated private boolean notifyFromModeratorsComments;
+  @Deprecated private boolean notifyFromTagsChange;
+  @Deprecated private boolean notifyFromStatusChange;
   private boolean notificationsEnabled;
   private String unsubscribeToken;
 
