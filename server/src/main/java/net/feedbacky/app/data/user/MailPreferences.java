@@ -39,9 +39,7 @@ public class MailPreferences implements Serializable {
   @OneToOne
   @JoinColumn(name = "user_id")
   private User user;
-  private boolean notifyFromModeratorsComments;
-  private boolean notifyFromTagsChange;
-  private boolean notifyFromStatusChange;
+  private boolean notificationsEnabled;
   private String unsubscribeToken;
 
   public FetchMailPreferences convertToDto() {

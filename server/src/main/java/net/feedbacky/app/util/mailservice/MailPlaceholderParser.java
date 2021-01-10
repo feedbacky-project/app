@@ -56,6 +56,7 @@ public class MailPlaceholderParser {
   public static String parseUserPlaceholders(String text, User user) {
     String parsedText = text;
     parsedText = StringUtils.replace(parsedText, "${username}", user.getUsername());
+    parsedText = StringUtils.replace(parsedText, "${avatar}", user.getAvatar());
     parsedText = StringUtils.replace(parsedText, "${unsubscribe_link}", MailService.HOST_ADDRESS + "/unsubscribe/" + user.getId() + "/" + user.getMailPreferences().getUnsubscribeToken());
     parsedText = StringUtils.replace(parsedText, "${host.address}", MailService.HOST_ADDRESS);
     return parsedText;

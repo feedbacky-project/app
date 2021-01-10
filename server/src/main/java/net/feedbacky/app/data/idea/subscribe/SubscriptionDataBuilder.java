@@ -15,6 +15,7 @@ import java.util.Map;
  * <p>
  * Created at 14.05.2020
  */
+@Deprecated //recoding compoment
 public class SubscriptionDataBuilder {
 
   private final Map<String, String> data = new HashMap<>();

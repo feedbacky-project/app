@@ -3,14 +3,15 @@ package net.feedbacky.app.data.idea.subscribe;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.util.mailservice.MailHandler;
-import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
-import net.feedbacky.app.util.mailservice.MailService;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Plajer
@@ -18,9 +19,11 @@ import java.util.concurrent.CompletableFuture;
  * Created at 14.05.2020
  */
 @Component
+@Deprecated //recoding compoment
 public class SubscriptionExecutor {
 
   private final MailHandler mailHandler;
+  private Map<User, List<Pair<Event, Map<String, String>>>> notificationBuffer = new HashMap<>();
 
   @Autowired
   public SubscriptionExecutor(MailHandler mailHandler) {
@@ -29,65 +32,25 @@ public class SubscriptionExecutor {
 
   public void notifySubscribers(Idea idea, Event event, Map<String, String> data) {
     for(User user : idea.getSubscribers()) {
-      boolean shouldNotify = false;
-      switch(event) {
-        case IDEA_BY_MODERATOR_COMMENT:
-          shouldNotify = user.getMailPreferences().isNotifyFromModeratorsComments();
-          break;
-        case IDEA_STATUS_CHANGE:
-          shouldNotify = user.getMailPreferences().isNotifyFromStatusChange();
-          break;
-        case IDEA_TAGS_CHANGE:
-          shouldNotify = user.getMailPreferences().isNotifyFromTagsChange();
-          break;
-        default:
-          break;
-      }
-      if(!shouldNotify) {
+      if(!user.getMailPreferences().isNotificationsEnabled()) {
         continue;
       }
-      doNotifySubscriber(user, idea, event, data);
+      doNotifySubscriber(user, event, data);
     }
   }
 
-  private void doNotifySubscriber(User user, Idea idea, Event event, Map<String, String> data) {
-    String subject;
-    String text;
-    String html;
-    MailService.EmailTemplate template;
-    String status;
-    switch(event) {
-      case IDEA_BY_MODERATOR_COMMENT:
-        template = MailService.EmailTemplate.SUBSCRIBE_COMMENT;
-        subject = template.getSubject();
-        text = template.getLegacyText();
-        status = data.get(SubscriptionMapData.COMMENT_DESCRIPTION.getName());
-        data.put("status", status);
-        html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_COMMENT, null, user, null), idea, data);
-        break;
-      case IDEA_STATUS_CHANGE:
-        template = MailService.EmailTemplate.SUBSCRIBE_STATUS_CHANGE;
-        subject = template.getSubject();
-        text = template.getLegacyText();
-        status = "Idea status changed to " + data.get(SubscriptionMapData.NEW_STATUS.getName());
-        data.put("status", status);
-        html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_STATUS_CHANGE, null, user, null), idea, data);
-        break;
-      case IDEA_TAGS_CHANGE:
-        template = MailService.EmailTemplate.SUBSCRIBE_TAGS_CHANGE;
-        subject = template.getSubject();
-        text = template.getLegacyText();
-        status = data.get(SubscriptionMapData.TAGS_CHANGED.getName());
-        data.put("status", status);
-        html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_TAGS_CHANGE, null, user, null), idea, data);
-        break;
-      default:
-        return;
-    }
-    CompletableFuture.runAsync(() -> mailHandler.getMailService().send(user.getEmail(), subject, text, html));
+  private void doNotifySubscriber(User user, Event event, Map<String, String> data) {
+    List<Pair<Event, Map<String, String>>> incomingNotifications = notificationBuffer.getOrDefault(user, new ArrayList<>());
+    incomingNotifications.add(Pair.of(event, data));
+    notificationBuffer.put(user, incomingNotifications);
+  }
+
+  public Map<User, List<Pair<Event, Map<String, String>>>> getNotificationBuffer() {
+    return notificationBuffer;
+  }
+
+  public void emptyNotificationBuffer() {
+    notificationBuffer.clear();
   }
 
   public enum Event {
