@@ -81,6 +81,11 @@ public class MailNotificationBuilder {
   }
 
   private void insertNewNotification(String newHtml) {
+    if(notificationsAmount == 0) {
+      rawHtml += newHtml;
+      notificationsAmount++;
+      return;
+    }
     rawHtml += "<br/><hr><br/>" + newHtml;
     notificationsAmount++;
   }
