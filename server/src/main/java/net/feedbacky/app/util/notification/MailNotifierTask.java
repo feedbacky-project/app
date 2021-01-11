@@ -4,7 +4,6 @@ import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.user.User;
-import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.idea.CommentRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.util.mailservice.MailHandler;
@@ -45,7 +44,7 @@ public class MailNotifierTask {
     for(Map.Entry<User, List<Pair<SubscriptionExecutor.Event, Map<String, String>>>> entry : subscriptionExecutor.getNotificationBuffer().entrySet()) {
       User user = entry.getKey();
       MailNotificationBuilder builder = new MailNotificationBuilder();
-      builder = builder.withUser(user);
+      builder = builder.withMailRecipient(user);
       for(Pair<SubscriptionExecutor.Event, Map<String, String>> event : entry.getValue()) {
         Map<String, String> data = event.getRight();
         String status;
@@ -66,7 +65,7 @@ public class MailNotifierTask {
             //todo null checks
             idea = ideaRepository.findById(Long.parseLong(data.get(SubscriptionExecutor.SubscriptionMapData.IDEA_ID.getName()))).get();
             status = data.get(SubscriptionExecutor.SubscriptionMapData.TAGS_CHANGED.getName());
-            builder = builder.withIdeaStatusChange(idea, status);
+            builder = builder.withIdeaTagsChange(idea, status);
             break;
           default:
             break;
