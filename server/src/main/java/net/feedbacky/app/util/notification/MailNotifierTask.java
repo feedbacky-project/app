@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -26,6 +28,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class MailNotifierTask {
 
+  private final Logger logger = Logger.getLogger("MailService");
   private MailHandler mailHandler;
   private SubscriptionExecutor subscriptionExecutor;
   private IdeaRepository ideaRepository;
@@ -41,6 +44,11 @@ public class MailNotifierTask {
 
   @Scheduled(fixedRate = 1000 * 60 * 5 /* 5 minutes */)
   private void sendNotificationMailsTask() {
+    if(subscriptionExecutor.getNotificationBuffer().isEmpty()) {
+      return;
+    }
+    int entries = subscriptionExecutor.getNotificationBuffer().size();
+    int condensedNotifications = 0;
     for(Map.Entry<User, List<Pair<SubscriptionExecutor.Event, Map<String, String>>>> entry : subscriptionExecutor.getNotificationBuffer().entrySet()) {
       User user = entry.getKey();
       MailNotificationBuilder builder = new MailNotificationBuilder();
@@ -70,6 +78,7 @@ public class MailNotifierTask {
           default:
             break;
         }
+        condensedNotifications++;
       }
       final String html = builder.buildHtml();
       final int amount = builder.getNotificationsAmount();
@@ -78,6 +87,7 @@ public class MailNotifierTask {
               template.getSubject().replace("${notifications.amount}", String.valueOf(amount)), template.getLegacyText(), html));
     }
     subscriptionExecutor.emptyNotificationBuffer();
+    logger.log(Level.INFO, "Cleaned notifications buffer, sent " + entries + " mails condensed from " + condensedNotifications + " entries.");
   }
 
 }
