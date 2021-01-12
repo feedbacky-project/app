@@ -1,13 +1,6 @@
 package net.feedbacky.app.service.board.moderator;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
-import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.exception.types.InvalidAuthenticationException;
-import net.feedbacky.app.exception.types.ResourceNotFoundException;
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.repository.board.BoardRepository;
-import net.feedbacky.app.repository.board.InvitationRepository;
-import net.feedbacky.app.repository.board.ModeratorRepository;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
@@ -15,10 +8,17 @@ import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InvalidAuthenticationException;
+import net.feedbacky.app.exception.types.ResourceNotFoundException;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.repository.board.BoardRepository;
+import net.feedbacky.app.repository.board.InvitationRepository;
+import net.feedbacky.app.repository.board.ModeratorRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
-import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
 import net.feedbacky.app.util.mailservice.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -113,13 +112,12 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     Invitation invitation = dto.convertToEntity(eventUser, board, "mod");
     board.getInvitedModerators().add(invitation);
     invitationRepository.save(invitation);
-    CompletableFuture.runAsync(() -> {
-      MailService.EmailTemplate template = MailService.EmailTemplate.MODERATOR_INVITATION;
-      String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, invitation);
-      String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, invitation);
-      String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, invitation);
-      mailHandler.getMailService().send(dto.getUserEmail(), subject, text, html);
-    });
+    new MailBuilder()
+            .withRecipient(user)
+            .withEventBoard(board)
+            .withInvitation(invitation)
+            .withTemplate(MailService.EmailTemplate.MODERATOR_INVITATION)
+            .sendMail(mailHandler.getMailService()).async();
     return ResponseEntity.status(HttpStatus.CREATED).body(invitation.convertToDto());
   }
 
@@ -166,13 +164,11 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     board.getModerators().remove(moderator);
     boardRepository.save(board);
     moderatorRepository.delete(moderator);
-    CompletableFuture.runAsync(() -> {
-      MailService.EmailTemplate template = MailService.EmailTemplate.MODERATOR_KICKED;
-      String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, null);
-      String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, null);
-      String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, null);
-      mailHandler.getMailService().send(eventUser.getEmail(), subject, text, html);
-    });
+    new MailBuilder()
+            .withRecipient(eventUser)
+            .withEventBoard(board)
+            .withTemplate(MailService.EmailTemplate.MODERATOR_KICKED)
+            .sendMail(mailHandler.getMailService()).async();
     return ResponseEntity.noContent().build();
   }
 }

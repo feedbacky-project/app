@@ -22,8 +22,8 @@ import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
-import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
 import net.feedbacky.app.util.mailservice.MailService;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
@@ -35,7 +35,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -180,12 +179,11 @@ public class BoardServiceImpl implements BoardService {
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to delete board with discriminator " + discriminator + ".");
     }
-
-    MailService.EmailTemplate template = MailService.EmailTemplate.BOARD_DELETED;
-    String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, null);
-    String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, null);
-    String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, null);
-    mailHandler.getMailService().send(board.getCreator().getEmail(), subject, text, html);
+    new MailBuilder()
+            .withRecipient(board.getCreator())
+            .withEventBoard(board)
+            .withTemplate(MailService.EmailTemplate.BOARD_DELETED)
+            .sendMail(mailHandler.getMailService()).sync();
 
     board.getModerators().forEach(moderator -> {
       User modUser = moderator.getUser();
