@@ -98,8 +98,8 @@ public class StartupMigrator {
         affected++;
         continue;
       }
-      Query query = entityManager.createQuery("SELECT notify_from_moderators_comments, notify_from_status_change, notify_from_tags_change FROM users_mail_preferences WHERE user_id = :id");
-      query.setParameter("id", user.getId());
+      Query query = entityManager.createNativeQuery("SELECT notify_from_moderators_comments, notify_from_status_change, notify_from_tags_change FROM users_mail_preferences WHERE user_id = ?");
+      query.setParameter(1, user.getId());
       try {
         query.getSingleResult();
       } catch(NoResultException e) {
