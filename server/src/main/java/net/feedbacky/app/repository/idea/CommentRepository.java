@@ -7,6 +7,7 @@ import net.feedbacky.app.data.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * <p>
  * Created at 14.10.2019
  */
-@Repository
+@Repository @Table
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   Page<Comment> findByIdea(Idea idea, Pageable pageable);

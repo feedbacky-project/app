@@ -7,6 +7,7 @@ import net.feedbacky.app.data.tag.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Optional;
  * <p>
  * Created at 01.10.2019
  */
-@Repository
+@Repository @Table
 public interface IdeaRepository extends JpaRepository<Idea, Long> {
 
   List<Idea> findByBoard(Board board);
