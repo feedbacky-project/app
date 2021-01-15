@@ -109,7 +109,7 @@ public class StartupMigrator {
       query.setParameter(1, user.getId());
       Object[] result;
       try {
-        result = (Query[]) query.getSingleResult();
+        result = (Object[]) query.getSingleResult();
       } catch(Exception e) {
         logger.log(Level.WARNING, "Encountered SQL exception, probably missing some fields to migrate, switching to non SQL migration.");
         missingValues = true;
