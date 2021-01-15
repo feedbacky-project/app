@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -99,7 +100,9 @@ public class StartupMigrator {
       }
       Query query = entityManager.createQuery("SELECT notify_from_moderators_comments, notify_from_status_change, notify_from_tags_change FROM users_mail_preferences WHERE user_id = :id");
       query.setParameter("id", user.getId());
-      if(query.getSingleResult() == null) {
+      try {
+        query.getSingleResult();
+      } catch(NoResultException e) {
         missingValues = true;
         preferences.setNotificationsEnabled(true);
         user.setMailPreferences(preferences);
