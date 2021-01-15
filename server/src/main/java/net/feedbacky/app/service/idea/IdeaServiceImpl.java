@@ -259,7 +259,7 @@ public class IdeaServiceImpl implements IdeaService {
         idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_OPEN, builder.build());
       }
       subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_STATUS_CHANGE,
-              idea.getId(), idea.getStatus().name()));
+              idea, idea.getStatus().name()));
     }
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
@@ -388,7 +388,7 @@ public class IdeaServiceImpl implements IdeaService {
     idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
 
     subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE,
-            idea.getId(), prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));
+            idea, prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));
     return idea.getTags().stream().map(Tag::convertToDto).collect(Collectors.toList());
   }
 

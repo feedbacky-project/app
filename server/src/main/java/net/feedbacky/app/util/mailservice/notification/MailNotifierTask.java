@@ -32,15 +32,11 @@ public class MailNotifierTask {
   private final Logger logger = Logger.getLogger("MailService");
   private MailHandler mailHandler;
   private SubscriptionExecutor subscriptionExecutor;
-  private IdeaRepository ideaRepository;
-  private CommentRepository commentRepository;
 
   @Autowired
-  public MailNotifierTask(MailHandler mailHandler, SubscriptionExecutor subscriptionExecutor, IdeaRepository ideaRepository, CommentRepository commentRepository) {
+  public MailNotifierTask(MailHandler mailHandler, SubscriptionExecutor subscriptionExecutor) {
     this.mailHandler = mailHandler;
     this.subscriptionExecutor = subscriptionExecutor;
-    this.ideaRepository = ideaRepository;
-    this.commentRepository = commentRepository;
   }
 
   @Scheduled(fixedRate = 1000 * 60 * 5 /* 5 minutes */)
@@ -58,19 +54,16 @@ public class MailNotifierTask {
         Idea idea;
         switch(event.getEventType()) {
           case IDEA_BY_MODERATOR_COMMENT:
-            //todo null checks
-            Comment comment = commentRepository.findById(event.getObjectId()).get();
+            Comment comment = (Comment) event.getObject();
             builder = builder.withIdeaCommentedByModerator(comment);
             break;
           case IDEA_STATUS_CHANGE:
-            //todo null checks
-            idea = ideaRepository.findById(event.getObjectId()).get();
+            idea = (Idea) event.getObject();
             status = "Idea status changed to " + event.getContent();
             builder = builder.withIdeaStatusChange(idea, status);
             break;
           case IDEA_TAGS_CHANGE:
-            //todo null checks
-            idea = ideaRepository.findById(event.getObjectId()).get();
+            idea = (Idea) event.getObject();
             status = event.getContent();
             builder = builder.withIdeaTagsChange(idea, status);
             break;

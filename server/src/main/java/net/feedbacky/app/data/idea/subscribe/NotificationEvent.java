@@ -3,6 +3,8 @@ package net.feedbacky.app.data.idea.subscribe;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author Plajer
  * <p>
@@ -13,7 +15,7 @@ import lombok.Data;
 public class NotificationEvent {
 
   private SubscriptionExecutor.Event eventType;
-  private Long objectId;
+  private Serializable object;
   private String content;
 
 }

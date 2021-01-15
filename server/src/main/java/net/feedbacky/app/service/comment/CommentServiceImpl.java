@@ -137,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
       //notify only if moderator and not author of the idea
       if(isModerator && !idea.getCreator().equals(user)) {
         subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT,
-                comment.getId(), StringEscapeUtils.unescapeHtml4(comment.getDescription())));
+                comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
       }
     }
     return ResponseEntity.status(HttpStatus.CREATED).body(comment.convertToDto(user));
