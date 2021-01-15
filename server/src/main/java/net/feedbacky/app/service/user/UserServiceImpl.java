@@ -111,9 +111,7 @@ public class UserServiceImpl implements UserService {
     if(!preferences.getUnsubscribeToken().equals(code)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid unsubscribe token.");
     }
-    user.getMailPreferences().setNotifyFromModeratorsComments(false);
-    user.getMailPreferences().setNotifyFromStatusChange(false);
-    user.getMailPreferences().setNotifyFromTagsChange(false);
+    user.getMailPreferences().setNotificationsEnabled(false);
     user.getMailPreferences().setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
     userRepository.save(user);
     return ResponseEntity.noContent().build();
@@ -134,9 +132,7 @@ public class UserServiceImpl implements UserService {
     user.setUsername("Anonymous");
     user.setConnectedAccounts(new HashSet<>());
     MailPreferences mailPreferences = user.getMailPreferences();
-    mailPreferences.setNotifyFromTagsChange(false);
-    mailPreferences.setNotifyFromStatusChange(false);
-    mailPreferences.setNotifyFromModeratorsComments(false);
+    mailPreferences.setNotificationsEnabled(false);
     userRepository.save(user);
     return ResponseEntity.noContent().build();
   }

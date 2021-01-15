@@ -10,6 +10,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,6 +35,7 @@ public class StartupMigrator {
   public static final int FILE_VERSION = 3;
   private final Logger logger = Logger.getLogger("Migrator");
   private final UserRepository userRepository;
+  @PersistenceContext private EntityManager entityManager;
   private int version = -1;
   private File versionFile;
 
@@ -82,16 +86,35 @@ public class StartupMigrator {
   private void improvedMailNotificationsFeatureMigration() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3...");
     int affected = 0;
+    boolean missingValues = false;
     for(User user : userRepository.findAll()) {
       int notificationsEnabledAmount = 0;
       MailPreferences preferences = user.getMailPreferences();
-      if(preferences.isNotifyFromModeratorsComments()) {
+      if(missingValues) {
+        preferences.setNotificationsEnabled(true);
+        user.setMailPreferences(preferences);
+        userRepository.save(user);
+        affected++;
+        continue;
+      }
+      Query query = entityManager.createQuery("SELECT notify_from_moderators_comments, notify_from_status_change, notify_from_tags_change FROM users_mail_preferences WHERE user_id = :id");
+      query.setParameter("id", user.getId());
+      if(query.getSingleResult() == null) {
+        missingValues = true;
+        preferences.setNotificationsEnabled(true);
+        user.setMailPreferences(preferences);
+        userRepository.save(user);
+        affected++;
+        continue;
+      }
+      Object[] result = (Object[]) query.getSingleResult();
+      if((boolean) result[0]) {
         notificationsEnabledAmount++;
       }
-      if(preferences.isNotifyFromStatusChange()) {
+      if((boolean) result[1]) {
         notificationsEnabledAmount++;
       }
-      if(preferences.isNotifyFromTagsChange()) {
+      if((boolean) result[2]) {
         notificationsEnabledAmount++;
       }
       //if 2 out of 3 notification methods are enabled assume that user want to receive future notifications about all types of events
@@ -112,9 +135,6 @@ public class StartupMigrator {
         continue;
       }
       MailPreferences defaultPreferences = new MailPreferences();
-      defaultPreferences.setNotifyFromModeratorsComments(true);
-      defaultPreferences.setNotifyFromStatusChange(true);
-      defaultPreferences.setNotifyFromTagsChange(true);
       defaultPreferences.setNotificationsEnabled(true);
       defaultPreferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
       defaultPreferences.setUser(user);
