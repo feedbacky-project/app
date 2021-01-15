@@ -96,7 +96,6 @@ public class StartupMigrator {
     int affected = 0;
     boolean missingValues = false;
     for(User user : userRepository.findAll()) {
-      int notificationsEnabledAmount = 0;
       MailPreferences preferences = user.getMailPreferences();
       if(missingValues) {
         preferences.setNotificationsEnabled(true);
@@ -119,6 +118,7 @@ public class StartupMigrator {
         affected++;
         continue;
       }
+      int notificationsEnabledAmount = 0;
       if((boolean) result[0]) {
         notificationsEnabledAmount++;
       }
@@ -129,12 +129,10 @@ public class StartupMigrator {
         notificationsEnabledAmount++;
       }
       //if 2 out of 3 notification methods are enabled assume that user want to receive future notifications about all types of events
-      if(notificationsEnabledAmount >= 2) {
-        preferences.setNotificationsEnabled(true);
-        user.setMailPreferences(preferences);
-        userRepository.save(user);
-        affected++;
-      }
+      preferences.setNotificationsEnabled(notificationsEnabledAmount >= 2);
+      user.setMailPreferences(preferences);
+      userRepository.save(user);
+      affected++;
     }
     logger.log(Level.INFO, "Migrated to version 3, affected entities: {0}.", affected);
   }
