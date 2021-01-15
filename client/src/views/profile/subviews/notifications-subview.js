@@ -5,29 +5,22 @@ import axios from "axios";
 import ProfileSidebar from "components/sidebar/profile-sidebar";
 import {Col, Row} from "react-bootstrap";
 import ViewBox from "components/viewbox/view-box";
-import Button from "react-bootstrap/Button";
 import ActionButton from "components/app/action-button";
 import ExecutableButton from "components/app/executable-button";
 
 const NotificationsSubview = ({reRouteTo}) => {
     const context = useContext(AppContext);
-    const [moderatorsCommentsNotify, setModeratorsCommentsNotify] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notifyFromModeratorsComments : false);
-    const [tagsChangeNotify, setTagsChangeNotify] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notifyFromTagsChange : false);
-    const [statusChangeNotify, setStatusChangeNotify] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notifyFromStatusChange : false);
+    const [notificationsEnabled, setNotificationsEnabled] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notificationsEnabled : false);
     const onChangesSave = () => {
         let toastId = toastAwait("Saving changes...");
         return axios.patch("/users/@me/mailPreferences", {
-            notifyFromModeratorsComments: moderatorsCommentsNotify,
-            notifyFromTagsChange: tagsChangeNotify,
-            notifyFromStatusChange: statusChangeNotify
+            notificationsEnabled: notificationsEnabled,
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 toastError();
                 return;
             }
-            context.user.data.mailPreferences.notifyFromModeratorsComments = moderatorsCommentsNotify;
-            context.user.data.mailPreferences.notifyFromTagsChange = tagsChangeNotify;
-            context.user.data.mailPreferences.notifyFromStatusChange = statusChangeNotify;
+            context.user.data.mailPreferences.setNotificationsEnabled = setNotificationsEnabled;
             toastSuccess("Settings successfully updated.", toastId);
         }).catch(err => {
             if (err.response === undefined) {
@@ -58,35 +51,13 @@ const NotificationsSubview = ({reRouteTo}) => {
         return <React.Fragment>
             <Row noGutters className="col-12 m-0 p-0 px-3 my-2">
                 <Col sm={9} xs={12}>
-                    <h4 className="mb-1">Moderator Comments</h4>
+                    <h4 className="mb-1">Email Notification Alerts</h4>
                     <span className="text-black-50" style={{fontSize: ".9em"}}>
-                        Notify me via email when moderator comments idea I'm subscribed to.
+                        Notify me when content I'm subscribed to gets updated.
                     </span>
                 </Col>
                 <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
-                    {conditionalButton(moderatorsCommentsNotify, () => setModeratorsCommentsNotify(true), () => setModeratorsCommentsNotify(false))}
-                </Col>
-            </Row>
-            <Row noGutters className="col-12 m-0 p-0 px-3 my-2">
-                <Col sm={9} xs={12}>
-                    <h4 className="mb-1">Tags Change</h4>
-                    <span className="text-black-50" style={{fontSize: ".9em"}}>
-                        Notify me via email when idea I'm subscribed to tags get changed.
-                    </span>
-                </Col>
-                <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
-                    {conditionalButton(tagsChangeNotify, () => setTagsChangeNotify(true), () => setTagsChangeNotify(false))}
-                </Col>
-            </Row>
-            <Row noGutters className="col-12 m-0 p-0 px-3 my-2">
-                <Col sm={9} xs={12}>
-                    <h4 className="mb-1">Status Change</h4>
-                    <span className="text-black-50" style={{fontSize: ".9em"}}>
-                        Notify me via email when idea I'm subscribed to gets closed or opened.
-                    </span>
-                </Col>
-                <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
-                    {conditionalButton(statusChangeNotify, () => setStatusChangeNotify(true), () => setStatusChangeNotify(false))}
+                    {conditionalButton(notificationsEnabled, () => setNotificationsEnabled(true), () => setNotificationsEnabled(false))}
                 </Col>
             </Row>
             <Col xs={12}>
