@@ -11,15 +11,14 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,8 @@ public class StartupMigrator {
   public static final int FILE_VERSION = 3;
   private final Logger logger = Logger.getLogger("Migrator");
   private final UserRepository userRepository;
-  @PersistenceContext private EntityManager entityManager;
+  @PersistenceContext(type = PersistenceContextType.EXTENDED)
+  private EntityManager entityManager;
   private int version = -1;
   private File versionFile;
 
@@ -56,8 +56,14 @@ public class StartupMigrator {
         doAttemptMigration();
         return;
       }
-      String content = new String(Files.readAllBytes(versionFile.toPath()), StandardCharsets.UTF_8);
-      version = parseIntOrDefault(content, FILE_VERSION);
+      try(BufferedReader reader = new BufferedReader(new FileReader(versionFile))) {
+        String content = reader.readLine();
+        if(content == null || content.equals("")) {
+          version = FILE_VERSION;
+        } else {
+          version = Integer.parseInt(content);
+        }
+      }
     } catch(IOException e) {
       logger.log(Level.WARNING, "Failed to get version file contents! Migrator will not run.");
       e.printStackTrace();
@@ -86,6 +92,7 @@ public class StartupMigrator {
 
   private void improvedMailNotificationsFeatureMigration() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3...");
+    logger.log(Level.INFO, "It may take some time depending on users amount in database.");
     int affected = 0;
     boolean missingValues = false;
     for(User user : userRepository.findAll()) {
@@ -100,9 +107,11 @@ public class StartupMigrator {
       }
       Query query = entityManager.createNativeQuery("SELECT notify_from_moderators_comments, notify_from_status_change, notify_from_tags_change FROM users_mail_preferences WHERE user_id = ?");
       query.setParameter(1, user.getId());
+      Object[] result;
       try {
-        query.getSingleResult();
-      } catch(NoResultException e) {
+        result = (Query[]) query.getSingleResult();
+      } catch(Exception e) {
+        logger.log(Level.WARNING, "Encountered SQL exception, probably missing some fields to migrate, switching to non SQL migration.");
         missingValues = true;
         preferences.setNotificationsEnabled(true);
         user.setMailPreferences(preferences);
@@ -110,7 +119,6 @@ public class StartupMigrator {
         affected++;
         continue;
       }
-      Object[] result = (Object[]) query.getSingleResult();
       if((boolean) result[0]) {
         notificationsEnabledAmount++;
       }
@@ -133,6 +141,7 @@ public class StartupMigrator {
 
   private void mailPreferencesFeatureMigration() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 1 to 2...");
+    logger.log(Level.INFO, "It may take some time depending on users amount in database.");
     for(User user : userRepository.findAll()) {
       if(user.getMailPreferences() != null) {
         continue;
@@ -148,21 +157,10 @@ public class StartupMigrator {
   }
 
   private void saveMigrationFile() {
-    try(PrintStream out = new PrintStream(versionFile)) {
-      out.print(FILE_VERSION + "");
-    } catch(FileNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private int parseIntOrDefault(String string, int defaultValue) {
-    if(string.equals("")) {
-      return defaultValue;
-    }
     try {
-      return Integer.parseInt(string);
-    } catch(Exception ex) {
-      return defaultValue;
+      Files.write(versionFile.toPath(), String.valueOf(FILE_VERSION).getBytes());
+    } catch(IOException e) {
+      e.printStackTrace();
     }
   }
 

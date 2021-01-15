@@ -1,3 +1,6 @@
+### future updates
+* Fixed/improved migrator, no more issues with version detection 
+
 ### 0.5.0-beta (December 31, 2020)
 * **[FEATURE]** Added feature to suspend users you don't want to see at your board.
 Feature located under `Suspensions` tab in Admin Panel
