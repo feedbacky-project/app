@@ -9,7 +9,7 @@ import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
-import net.feedbacky.app.data.idea.subscribe.SubscriptionDataBuilder;
+import net.feedbacky.app.data.idea.subscribe.NotificationEvent;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
@@ -24,6 +24,7 @@ import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -135,8 +136,8 @@ public class CommentServiceImpl implements CommentService {
 
       //notify only if moderator and not author of the idea
       if(isModerator && !idea.getCreator().equals(user)) {
-        SubscriptionDataBuilder subscribeBuilder = new SubscriptionDataBuilder().withUser(user).withComment(comment).withIdea(idea);
-        subscriptionExecutor.notifySubscribers(idea, SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, subscribeBuilder.build());
+        subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT,
+                comment.getId(), StringEscapeUtils.unescapeHtml4(comment.getDescription())));
       }
     }
     return ResponseEntity.status(HttpStatus.CREATED).body(comment.convertToDto(user));

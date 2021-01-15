@@ -36,26 +36,16 @@
         <td align="center">
             Hello <b>${username}</b>,
             <br/>
-            you received subscription notification.
+            you received ${notifications.amount} new notification(s)
+            <br/>
+            from ${host.address}.
         </td>
     </tr>
     <tr>
         <td align="center" bgcolor="#ffffff" style="background-color: #ffffff; padding: 16px; margin-top: 16px; margin-bottom: 16px; font-size: 15px; color: #404040; border-radius: 10px; box-shadow: 0 3px 5px 0 #d9d9d9;">
-            <img src="https://cdn.feedbacky.net/static/img/mail/undraw_state_change.png" height="130" style="margin-bottom: 1rem;">
+            <img src="https://cdn.feedbacky.net/static/img/mail/undraw_notification.png" height="130" style="margin-bottom: 1rem;">
             <br/>
-            <b>${idea.name}</b> state has changed at ${host.address}.
-            <table bgcolor="#dfe0e1" style="margin-top: 13px; margin-bottom: 13px; display: inline-flex; padding: 16px; border-radius: 5px; box-shadow: 0 3px 5px 0 #d9d9d9; background-color: #dfe0e1; color: black">
-                <tr>
-                    <td>${status.change}</td>
-                </tr>
-            </table>
-            <br/>
-            <table border="0" bgcolor="#ffa500" style="background-color: #ffa500; margin-bottom: 16px; padding-top: 10px; padding-bottom: 10px; padding-left: 16px; padding-right: 16px; background-color: #ffa500; margin-top: 16px; font-size: 16px; border-radius: 3px;
-            border: none; font-weight: bold; box-shadow: 0 3px 5px 0 #d9d9d9;">
-                <tr>
-                    <td><a href="${idea.viewLink}" style="color: white">View Idea</a></td>
-                </tr>
-            </table>
+            ${notifications.rawHtml}
         </td>
     </tr>
     <tr>

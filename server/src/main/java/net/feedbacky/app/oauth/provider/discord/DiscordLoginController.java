@@ -136,9 +136,7 @@ public class DiscordLoginController implements AbstractLoginProvider {
       user.setUsername(discordUser.getUsername());
       MailPreferences preferences = new MailPreferences();
       preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
-      preferences.setNotifyFromTagsChange(true);
-      preferences.setNotifyFromStatusChange(true);
-      preferences.setNotifyFromModeratorsComments(true);
+      preferences.setNotificationsEnabled(true);
       preferences.setUser(user);
       user.setMailPreferences(preferences);
       Set<ConnectedAccount> accounts = new HashSet<>();

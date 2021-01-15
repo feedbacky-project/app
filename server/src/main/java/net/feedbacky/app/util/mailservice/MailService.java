@@ -1,13 +1,6 @@
 package net.feedbacky.app.util.mailservice;
 
-import lombok.SneakyThrows;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import net.feedbacky.app.util.FileResourceUtils;
 
 /**
  * @author Plajer
@@ -29,12 +22,8 @@ public interface MailService {
             "You requested to remove board ${board.name} and your request was proceeded and executed. (HTML not supported, default message sent)"),
     ACCOUNT_DEACTIVATED("mail_templates/account_deactivated.html", "", "${username} - Account Deactivated",
             "You requested to deactivate your ${username} account and we executed the request, your account was anonymized. (HTML not supported, default message sent)"),
-    SUBSCRIBE_COMMENT("mail_templates/subscription/idea_commented.html", "", "Subscribed Idea Commented",
-            "Idea you're subscribed to was commented. (HTML not supported, default message sent)"),
-    SUBSCRIBE_TAGS_CHANGE("mail_templates/subscription/idea_state_changed.html", "", "Subscribed Idea Tags Changed",
-            "Idea you're subscribed to tags were changed. (HTML not supported, default message sent)"),
-    SUBSCRIBE_STATUS_CHANGE("mail_templates/subscription/idea_state_changed.html", "", "Subscribed Idea Status Changed",
-            "Idea you're subscribed to status was changed. (HTML not supported, default message sent)");
+    SUBSCRIBE_NOTIFICATION("mail_templates/notification/new_notifications.html", "", "${notifications.amount} New Notification(s) Received",
+            "You received new notifications, however, you can see them only when HTML is supported (HTML not supported, default message sent)");
 
     private final String html;
     private final String inviteLink;
@@ -42,7 +31,7 @@ public interface MailService {
     private final String legacyText;
 
     EmailTemplate(String templateFile, String inviteLink, String subject, String legacyText) {
-      this.html = readLineByLine(templateFile);
+      this.html = FileResourceUtils.readFileContents(templateFile);
       this.inviteLink = inviteLink;
       this.subject = subject;
       this.legacyText = legacyText;
@@ -62,19 +51,6 @@ public interface MailService {
 
     public String getLegacyText() {
       return legacyText;
-    }
-
-    @SneakyThrows
-    private String readLineByLine(String filePath) {
-      Resource resource = new ClassPathResource(filePath);
-      InputStream inputStream = resource.getInputStream();
-      StringBuilder contentBuilder = new StringBuilder();
-      try(BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-        for(String line; (line = br.readLine()) != null;) {
-          contentBuilder.append(line).append("\n");
-        }
-      }
-      return contentBuilder.toString();
     }
   }
 

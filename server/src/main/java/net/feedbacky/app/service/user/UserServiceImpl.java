@@ -1,21 +1,21 @@
 package net.feedbacky.app.service.user;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.MailPreferences;
+import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
+import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.data.user.dto.PatchMailPreferences;
+import net.feedbacky.app.data.user.dto.PatchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.data.user.ConnectedAccount;
-import net.feedbacky.app.data.user.User;
-import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
-import net.feedbacky.app.data.user.dto.FetchUserDto;
-import net.feedbacky.app.data.user.dto.PatchUserDto;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
-import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
 import net.feedbacky.app.util.mailservice.MailService;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -111,9 +111,7 @@ public class UserServiceImpl implements UserService {
     if(!preferences.getUnsubscribeToken().equals(code)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid unsubscribe token.");
     }
-    user.getMailPreferences().setNotifyFromModeratorsComments(false);
-    user.getMailPreferences().setNotifyFromStatusChange(false);
-    user.getMailPreferences().setNotifyFromTagsChange(false);
+    user.getMailPreferences().setNotificationsEnabled(false);
     user.getMailPreferences().setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
     userRepository.save(user);
     return ResponseEntity.noContent().build();
@@ -125,19 +123,16 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     //better to run sync now
-    MailService.EmailTemplate template = MailService.EmailTemplate.ACCOUNT_DEACTIVATED;
-    String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, null, user, null);
-    String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, null, user, null);
-    String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, null, user, null);
-    mailHandler.getMailService().send(user.getEmail(), subject, text, html);
+    new MailBuilder()
+            .withRecipient(user)
+            .withTemplate(MailService.EmailTemplate.ACCOUNT_DEACTIVATED)
+            .sendMail(mailHandler.getMailService()).sync();
     user.setEmail("deactivated-" + RandomStringUtils.randomAlphanumeric(6) + "@feedbacky.net");
     user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", "Anonymous"));
     user.setUsername("Anonymous");
     user.setConnectedAccounts(new HashSet<>());
     MailPreferences mailPreferences = user.getMailPreferences();
-    mailPreferences.setNotifyFromTagsChange(false);
-    mailPreferences.setNotifyFromStatusChange(false);
-    mailPreferences.setNotifyFromModeratorsComments(false);
+    mailPreferences.setNotificationsEnabled(false);
     userRepository.save(user);
     return ResponseEntity.noContent().build();
   }

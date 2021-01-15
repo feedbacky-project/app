@@ -2,6 +2,7 @@
 * **[FEATURE]** Added search bar to search ideas by specific title (requested by [eartharoid](https://app.feedbacky.net/i/add-a-search-feature.2313))
 * **[FEATURE]** Added self assignable tags that everyone can set when creating new idea (requested by [VentureKraft](https://app.feedbacky.net/i/self-assignable-tags.982))
 * **[FIX]** Webhook messages contained user data tag instead of username in tag change webhook messages
+* **[FIX]** Migrator fixes, no more issues with version detection 
 
 ### 0.5.0-beta (December 31, 2020)
 * **[FEATURE]** Added feature to suspend users you don't want to see at your board.

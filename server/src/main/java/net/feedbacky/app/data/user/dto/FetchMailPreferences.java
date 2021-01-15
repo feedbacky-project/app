@@ -16,8 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FetchMailPreferences {
 
-  private boolean notifyFromModeratorsComments;
-  private boolean notifyFromTagsChange;
-  private boolean notifyFromStatusChange;
+  private boolean notificationsEnabled;
 
 }
