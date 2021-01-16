@@ -27,7 +27,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
     ];
     const isInitialMount = useRef(true);
     useEffect(() => {
-        if(isInitialMount.current) {
+        if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
             onLoadRequest(1, true);
@@ -36,7 +36,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
     }, [context.user.localPreferences]);
     const onLoadRequest = (page, override) => {
         return axios.get("/ideas/" + ideaData.id + "/comments?page=" + (page - 1) + prepareFilterAndSortRequests(context.user.localPreferences.comments)).then(res => {
-            if(override) {
+            if (override) {
                 setComments({...comments, data: res.data.data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
             } else {
                 setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
@@ -97,7 +97,10 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
                 <small style={{fontWeight: "bold"}}>{formatUsername(-1, "Anonymous", [])}</small>
                 <br/>
                 <TextareaAutosize className="form-control mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
-                                  style={{resize: "none", overflow: "hidden"}} onChange={onNotLoggedClick} onClick={onNotLoggedClick}/>
+                                  style={{resize: "none", overflow: "hidden"}} onChange={onNotLoggedClick} onClick={e => {
+                    e.target.blur();
+                    onNotLoggedClick();
+                }}/>
             </div>
         </div>
     };
@@ -133,7 +136,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
                 toastError();
                 return;
             }
-            if(context.user.localPreferences.comments.sort === "newest") {
+            if (context.user.localPreferences.comments.sort === "newest") {
                 const newData = comments.data;
                 newData.unshift(res.data);
                 setComments({...comments, data: newData});
@@ -201,7 +204,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
             });
     };
     const onCommentLike = (data) => {
-        if(!context.user.loggedIn) {
+        if (!context.user.loggedIn) {
             onNotLoggedClick();
             return;
         }
@@ -223,7 +226,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         });
     };
     const onCommentUnlike = (data) => {
-        if(!context.user.loggedIn) {
+        if (!context.user.loggedIn) {
             onNotLoggedClick();
             return;
         }

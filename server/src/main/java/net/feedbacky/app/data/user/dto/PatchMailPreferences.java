@@ -20,5 +20,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class PatchMailPreferences {
 
   private boolean notificationsEnabled;
-  
+
 }
