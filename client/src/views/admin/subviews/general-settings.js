@@ -119,7 +119,7 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                         <h3 style={{color: "transparent"}}>{boardData.name}</h3>
                         <h5 style={{color: "transparent"}}>{boardData.shortDescription}</h5>
                         <div className="p-3 rounded-circle hoverable-option" style={{
-                            backgroundColor: tinycolor(context.getTheme().hex).setAlpha(.8), cursor: "pointer",
+                            backgroundColor: tinycolor(context.theme).setAlpha(.8), cursor: "pointer",
                             width: "90px", height: "90px", position: "absolute", inset: 0, margin: "auto"
                         }}>
                             <FaUpload className="mb-1" style={{width: "1.8em", height: "1.8em"}}/>
@@ -136,7 +136,7 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                 <div style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
                     <img alt="logo" src={boardData.logo} id="boardLogo" className="img-fluid mb-2" style={{height: 200}}/>
                     <div className="p-3 rounded-circle hoverable-option text-center text-white" style={{
-                        backgroundColor: tinycolor(context.getTheme().hex).setAlpha(.8), cursor: "pointer",
+                        backgroundColor: tinycolor(context.theme).setAlpha(.8), cursor: "pointer",
                         width: "90px", height: "90px", position: "absolute", inset: 0, margin: "auto"
                     }}>
                         <FaUpload className="mb-1" style={{width: "1.8em", height: "1.8em"}}/>

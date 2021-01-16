@@ -73,6 +73,7 @@ public class MailNotifierTask {
         condensedNotifications++;
       }
       builder.build()
+              .withTemplate(MailService.EmailTemplate.SUBSCRIBE_NOTIFICATION)
               .withRecipient(user)
               .sendMail(mailHandler.getMailService())
               .async();
