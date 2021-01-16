@@ -134,6 +134,11 @@ public class StartupMigrator {
       userRepository.save(user);
       affected++;
     }
+    try {
+      entityManager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_moderators_comments").executeUpdate();
+      entityManager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_status_change").executeUpdate();
+      entityManager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_tags_change").executeUpdate();
+    } catch(Exception ignored) {}
     logger.log(Level.INFO, "Migrated to version 3, affected entities: {0}.", affected);
   }
 
