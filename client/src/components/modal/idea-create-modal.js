@@ -24,6 +24,14 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
 
     const handleSubmit = () => {
         const description = document.getElementById("descriptionTextarea").value;
+        if(title.length < 10) {
+            toastWarning("Title should be at least 10 characters long.");
+            return Promise.resolve();
+        }
+        if(description.length < 20) {
+            toastWarning("Description should be at least 20 characters long.");
+            return Promise.resolve();
+        }
         let toastId = toastAwait("Posting idea...");
         const tags = [];
         if(applicableTags.length !== 0) {

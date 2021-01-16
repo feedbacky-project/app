@@ -65,11 +65,12 @@ const CreateSocialLink = () => {
         setSettings({...settings, step: settings.step - 1});
     };
     const nextStep = () => {
-        if (settings.step === 1) {
-            if (settings.iconData === "") {
-                toastWarning("Icon must be chosen.");
-                return;
-            }
+        if (settings.step === 1 && settings.iconData === "") {
+            toastWarning("Icon must be chosen.");
+            return;
+        } else if (settings.step === 2 && settings.url === "") {
+            toastWarning("URL must be typed.");
+            return;
         }
         setSettings({...settings, step: settings.step + 1});
     };

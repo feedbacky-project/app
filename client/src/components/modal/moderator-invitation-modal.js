@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import {toastError, toastSuccess} from "components/util/utils";
+import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import PageModal from "components/modal/page-modal";
 import {PageAvatar} from "components/app/page-avatar";
@@ -12,6 +12,11 @@ const ModeratorInvitationModal = (props) => {
 
     const handleSubmit = () => {
         const userEmail = document.getElementById("inviteEmailTextarea").value;
+        if(userEmail === "" || !userEmail.match(/\S+@\S+\.\S+/)) {
+            toastWarning("Please provide valid email address.");
+            return Promise.resolve();
+        }
+        const toastId = toastAwait("Sending invitation...");
         return axios.post("/boards/" + props.data.discriminator + "/moderators", {
             userEmail,
         }).then(res => {
@@ -27,8 +32,8 @@ const ModeratorInvitationModal = (props) => {
                 Invitation for user <PageAvatar roundedCircle url={res.data.user.avatar} size={16} username={res.data.user.username}/>
                 {" " + res.data.user.username} sent.
             </span>;
-            toastSuccess(toastMsg);
-        }).catch(err => toastError(err.response.data.errors[0]));
+            toastSuccess(toastMsg, toastId);
+        }).catch(err => toastError(err.response.data.errors[0], toastId));
     };
 
     return <PageModal id="moderatorInvite" isOpen={props.open} onHide={props.onModInvitationCreateModalClose} title="Invite New Moderator"
