@@ -113,7 +113,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     board.getInvitedModerators().add(invitation);
     invitationRepository.save(invitation);
     new MailBuilder()
-            .withRecipient(user)
+            .withRecipient(eventUser)
             .withEventBoard(board)
             .withInvitation(invitation)
             .withTemplate(MailService.EmailTemplate.MODERATOR_INVITATION)

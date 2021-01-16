@@ -34,7 +34,7 @@
 <table bgcolor="#e9ecef" align="center" style="padding-top: 48px;padding-bottom: 48px; font-family: 'Roboto', sans-serif" width="500" cellspacing="10">
     <tr style="font-size: 24px" align="center">
         <td align="center">
-            Hello <b>${invite.username}</b>,
+            Hello <b>${invitation.username}</b>,
             <br/>
             you've been invited moderate the board.
         </td>
@@ -43,14 +43,14 @@
         <td align="center" bgcolor="#ffffff" style="background-color: #ffffff; padding: 16px; margin-top: 16px; margin-bottom: 16px; font-size: 15px; color: #404040; border-radius: 10px; box-shadow: 0 3px 5px 0 #d9d9d9;">
             <img src="https://cdn.feedbacky.net/static/img/mail/undraw_invite.png" height="130" style="margin-bottom: 1rem;">
             <br/>
-            ${board.owner} invited you moderate <b>${board.name}</b> board at ${host.address}.
+            ${board.owner.name} invited you moderate <b>${board.name}</b> board at ${host.address}.
             <hr style="border: 1px solid rgba(0, 0, 0, .05); width: 50%; margin: .6rem auto"/>
             Once you join accept this invite you'll become a moderator at this board.
             <br/>
             <table border="0" bgcolor="#ffa500" style="background-color: #ffa500; margin-bottom: 16px; padding-top: 10px; padding-bottom: 10px; padding-left: 16px; padding-right: 16px; background-color: #ffa500; margin-top: 16px; font-size: 16px; border-radius: 3px;
             border: none; font-weight: bold; box-shadow: 0 3px 5px 0 #d9d9d9;">
                 <tr>
-                    <td><a href="${invite.link}" style="color: white">Accept Invitation</a></td>
+                    <td><a href="${invitation.link}" style="color: white">Accept Invitation</a></td>
                 </tr>
             </table>
         </td>

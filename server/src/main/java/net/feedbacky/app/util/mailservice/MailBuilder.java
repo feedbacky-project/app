@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
  * ? - if applicable
  * ${host.address} ${username} ${avatar} ${unsubscribe_link}
  * ?${board.name} ?${board.owner.name}
- * ?${invite.link} ?${invite.username}
+ * ?${invitation.link} ?${invitation.username}
  */
 public class MailBuilder {
 
