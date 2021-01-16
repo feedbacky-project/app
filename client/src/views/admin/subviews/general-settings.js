@@ -38,7 +38,10 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                               required type="text"
                               placeholder="Short name of board." defaultValue={boardData.name}
                               id="boardTextarea" className="bg-light"
-                              onKeyUp={() => formatRemainingCharacters("remainingBoardName", "boardTextarea", 25)}/>
+                              onChange={e => {
+                                  e.target.value = e.target.value.substring(0, 25);
+                                  formatRemainingCharacters("remainingBoardName", "boardTextarea", 25);
+                              }}/>
                 <Form.Text className="text-right text-black-60" id="remainingBoardName">
                     {25 - boardData.name.length} Remaining
                 </Form.Text>
@@ -50,7 +53,10 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                               required type="text" className="bg-light"
                               placeholder="Short description of board."
                               defaultValue={boardData.shortDescription} id="shortDescrTextarea"
-                              onKeyUp={() => formatRemainingCharacters("remainingShortDescr", "shortDescrTextarea", 50)}/>
+                              onChange={e => {
+                                  e.target.value = e.target.value.substring(0, 50);
+                                  formatRemainingCharacters("remainingShortDescr", "shortDescrTextarea", 50);
+                              }}/>
                 <Form.Text className="text-right text-black-60" id="remainingShortDescr">
                     {50 - boardData.shortDescription.length} Remaining
                 </Form.Text>
@@ -69,7 +75,10 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
                                   placeholder="Full and descriptive description of board (supports emojis and markdown)."
                                   defaultValue={htmlDecode(boardData.fullDescription)}
                                   id="fullDescrTextarea"
-                                  onKeyUp={() => formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500)}/>
+                                  onChange={e => {
+                                      e.target.value = e.target.value.substring(0, 2500);
+                                      formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);
+                                  }}/>
                 <Form.Text className="d-inline float-left text-black-60 d-inline">
                     Markdown Supported
                 </Form.Text>

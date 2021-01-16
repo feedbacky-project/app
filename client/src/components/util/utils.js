@@ -162,6 +162,7 @@ export const validateImageWithWarning = (e, elementInputId, size) => {
     return true;
 };
 
+
 export const formatRemainingCharacters = (remainingId, textareaId, limit) => {
     const element = document.getElementById(remainingId);
     const textarea = document.getElementById(textareaId);

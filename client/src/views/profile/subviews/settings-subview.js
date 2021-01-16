@@ -117,8 +117,8 @@ const SettingsSubview = ({reRouteTo}) => {
                 <Form.Control style={{minHeight: 38, resize: "none"}} minLength="4" maxLength="20" rows="1" required
                               type="text" className="bg-light"
                               placeholder="Name of your account." defaultValue={username} id="usernameTextarea"
-                              onKeyUp={e => {
-                                  setUsername(e.target.value);
+                              onChange={e => {
+                                  setUsername(e.target.value.substring(0, 20));
                                   formatRemainingCharacters("remainingUsername", "usernameTextarea", 20);
                               }}/>
                 <Form.Text className="text-right text-black-60" id="remainingUsername">

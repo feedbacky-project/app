@@ -99,9 +99,9 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
                     <div className="col-11 pr-3 px-0 d-inline-block">
                         <Form.Control style={{minHeight: 38, resize: "none"}} minLength="10" maxLength="50" rows="1"
                                       required type="text" defaultValue={title}
-                                      placeholder="Brief and descriptive title." id="titleTextarea" onKeyUp={e => {
+                                      placeholder="Brief and descriptive title." id="titleTextarea" onChange={e => {
                             formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
-                            setTitle(e.target.value);
+                            setTitle(e.target.value.substring(0, 50));
                         }}/>
                     </div>
                     {renderAttachmentButton()}
@@ -124,7 +124,10 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
                 <TextareaAutosize className="form-control" id="descriptionTextarea" rows={5} maxRows={10}
                                   placeholder="Detailed and meaningful description." minLength="10" maxLength="1800" required
                                   as="textarea" style={{resize: "none", overflow: "hidden"}}
-                                  onKeyUp={() => formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800)}/>
+                                  onChange={e => {
+                                      e.target.value = e.target.value.substring(0, 1800);
+                                      formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
+                                  }}/>
                 <Form.Text className="d-inline float-left text-black-60" id="remainingDescription">
                     1800 Remaining
                 </Form.Text>

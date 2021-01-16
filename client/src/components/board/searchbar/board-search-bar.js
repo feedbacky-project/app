@@ -60,9 +60,9 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
         </Col>
         <Col sm={4}>
             <TextareaAutosize ref={queryRef} className="form-control search-bar bg-lighter mt-sm-0 mt-1" maxLength={40} rows={1} maxRows={1} as="textarea" defaultValue={searchQuery}
-                              placeholder="Search" onInput={() => {
+                              placeholder="Search" onInput={e => {
                 clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value), 500);
+                searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
             }}/>
         </Col>
     </React.Fragment>
