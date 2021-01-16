@@ -75,6 +75,7 @@ $font-color: #212529;
 .btn-cancel {
   transition: $hover-transition !important;
   &:hover {
+    color: rgba(0, 0, 0, .6) !important;
     transform: $hover-transform-scale;
   }
 }
