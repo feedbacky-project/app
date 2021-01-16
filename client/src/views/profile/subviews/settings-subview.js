@@ -22,6 +22,10 @@ const SettingsSubview = ({reRouteTo}) => {
     const [connectedAccounts, setConnectedAccounts] = useState({data: [], loaded: false, error: false});
     const [modalOpened, setModalOpened] = useState(false);
     const onChangesSave = () => {
+        if(username.length < 3) {
+            toastWarning("Username length should be longer than 3 characters.");
+            return Promise.resolve();
+        }
         let toastId = toastAwait("Saving changes...");
         return axios.patch("/users/@me", {
             username, avatar
