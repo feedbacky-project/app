@@ -89,7 +89,7 @@ public class StartupMigrator {
     }
     saveMigrationFile();
   }
-
+  
   private void improvedMailNotificationsFeatureMigration() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3...");
     logger.log(Level.INFO, "It may take some time depending on users amount in database.");
@@ -135,10 +135,14 @@ public class StartupMigrator {
       affected++;
     }
     try {
-      entityManager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_moderators_comments").executeUpdate();
-      entityManager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_status_change").executeUpdate();
-      entityManager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_tags_change").executeUpdate();
-    } catch(Exception ignored) {}
+      EntityManager manager = entityManager.getEntityManagerFactory().createEntityManager();
+      manager.getTransaction().begin();
+      manager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_moderators_comments").executeUpdate();
+      manager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_status_change").executeUpdate();
+      manager.createNativeQuery("ALTER TABLE users_mail_preferences DROP notify_from_tags_change").executeUpdate();
+      manager.getTransaction().commit();
+    } catch(Exception ignored) {
+    }
     logger.log(Level.INFO, "Migrated to version 3, affected entities: {0}.", affected);
   }
 
