@@ -71,6 +71,9 @@ $dark-comment-internal: #3299ff;
     //TODO subject to consider
     box-shadow: none !important;
   }
+  .search-bar {
+    box-shadow: $box-shadow !important;
+  }
   .form-control:disabled {
     background-color: $dark-disabled !important;
   }
