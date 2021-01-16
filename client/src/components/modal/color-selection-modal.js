@@ -7,7 +7,7 @@ import AppContext from "context/app-context";
 
 const ColorSelectionModal = ({open, onClose, onUpdate}) => {
     const context = useContext(AppContext);
-    const theme = context.getTheme();
+    const theme = context.getTheme(false);
     const [color, setColor] = useState(theme);
     return <PageModal id="colorSelection" isOpen={open} onHide={onClose} title="Choose New Theme Color" size="sm"
                       applyButton={<Button variant="" type="submit" style={{backgroundColor: theme}} onClick={() => onUpdate(color)} className="mx-0">Save</Button>}>

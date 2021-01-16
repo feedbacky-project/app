@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import tinycolor from "tinycolor2";
 
 const ColorSelectionHelper = ({title, color, setColor, colorWarning}) => {
-    const warn = colorWarning === true ? tinycolor.readability(color, "#fff") < 2.0 || tinycolor.readability(tinycolor(color).lighten(10), "#292c30") < 2.0 : false;
+    const warn = colorWarning === true ? tinycolor.readability(color, "#fff") < 2.0 || tinycolor.readability(tinycolor(color.hex).lighten(10), "#292c30") < 2.0 : false;
     const textClass = warn ? "text-danger" : "text-black-60";
     return <React.Fragment>
         <Form.Label className={"mr-1 " + textClass}>{title}</Form.Label>
