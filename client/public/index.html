@@ -38,37 +38,92 @@
         .load-spinner {
             width: 40px;
             height: 40px;
-            margin: 100px auto;
-            background-color: #0994f6;
 
             border-radius: 100%;
-            -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
-            animation: sk-scaleout 1.0s infinite ease-in-out;
+            -webkit-animation: spinner-animation 1.4s linear infinite;
+            animation: spinner-animation 1.4s linear infinite;
         }
 
-        .dark .load-spinner {
-            background-color: #f2f2f2;
+        .load-spinner-sm {
+            width: 20px;
+            height: 20px;
+
+            border-radius: 100%;
+            -webkit-animation: spinner-animation 1.4s linear infinite;
+            animation: spinner-animation 1.4s linear infinite;
         }
 
-        @-webkit-keyframes sk-scaleout {
+        @-webkit-keyframes spinner-animation {
             0% {
-                -webkit-transform: scale(0)
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
             }
             100% {
-                -webkit-transform: scale(1.0);
-                opacity: 0;
+                -webkit-transform: rotate(270deg);
+                transform: rotate(270deg);
             }
         }
 
-        @keyframes sk-scaleout {
-            0% {
-                -webkit-transform: scale(0);
-                transform: scale(0);
+        @keyframes spinner-animation {
+            00% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
             }
             100% {
-                -webkit-transform: scale(1.0);
-                transform: scale(1.0);
-                opacity: 0;
+                -webkit-transform: rotate(270deg);
+                transform: rotate(270deg);
+            }
+        }
+
+        .dark .load-spinner circle, .dark .load-spinner-sm circle,
+        .load-spinner.white circle, .load-spinner-sm.white circle {
+            stroke: #f2f2f2 !important;
+        }
+
+        .load-spinner.await circle, .load-spinner-sm.await circle {
+            stroke: #0994f6 !important;
+        }
+
+        .load-spinner circle, .load-spinner-sm circle {
+            stroke-dasharray: 187;
+            stroke-dashoffset: 0;
+            stroke: #4285F4;
+            -webkit-transform-origin: center;
+            -ms-transform-origin: center;
+            transform-origin: center;
+            -webkit-animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+            animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+        }
+
+        @-webkit-keyframes dash {
+            0% {
+                stroke-dashoffset: 187;
+            }
+            50% {
+                stroke-dashoffset: 46.75;
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+            }
+            100% {
+                stroke-dashoffset: 187;
+                -webkit-transform: rotate(450deg);
+                transform: rotate(450deg);
+            }
+        }
+
+        @keyframes dash {
+            0% {
+                stroke-dashoffset: 187;
+            }
+            50% {
+                stroke-dashoffset: 46.75;
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+            }
+            100% {
+                stroke-dashoffset: 187;
+                -webkit-transform: rotate(450deg);
+                transform: rotate(450deg);
             }
         }
     </style>
@@ -80,7 +135,7 @@
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
+        for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0) == ' ') {
                 c = c.substring(1);
@@ -91,6 +146,7 @@
         }
         return null;
     }
+
     if (getCookie("prefs_darkMode") === 'true' ||
         (getCookie("prefs_darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add("dark");
@@ -98,7 +154,9 @@
 </script>
 <div id="root">
     <div class="vertical-center">
-        <div class="load-spinner"></div>
+        <svg class="load-spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" style="margin: 100px auto">
+            <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+        </svg>
     </div>
 </div>
 </body>

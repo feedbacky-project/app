@@ -89,7 +89,7 @@ public class StartupMigrator {
     }
     saveMigrationFile();
   }
-  
+
   private void improvedMailNotificationsFeatureMigration() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3...");
     logger.log(Level.INFO, "It may take some time depending on users amount in database.");

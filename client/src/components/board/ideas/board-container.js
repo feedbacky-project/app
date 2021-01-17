@@ -39,7 +39,7 @@ const BoardContainer = ({id, searchQuery, onNotLoggedClick}) => {
             pageStart={0}
             loadMore={(page) => onLoadRequest(page)}
             hasMore={ideas.moreToLoad}
-            loader={<LoadingSpinner key={ideas.data.length}/>}>
+            loader={<Col className="text-center" style={{marginTop: 100}}><LoadingSpinner key={ideas.data.length}/></Col>}>
             {ideas.data.map(ideaData => {
                 return <IdeaCard key={ideaData.id} data={ideaData} onIdeaDelete={onIdeaDelete} onNotLoggedClick={onNotLoggedClick}/>
             })}

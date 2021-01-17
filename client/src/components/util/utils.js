@@ -6,6 +6,7 @@ import {parseEmojis} from "components/util/emoji-filter";
 import marked from "marked";
 import Cookies from "js-cookie";
 import {FaBan} from "react-icons/all";
+import LoadingSpinner from "./loading-spinner";
 
 export const getDefaultAvatar = (username) => {
     const avatar = process.env.REACT_APP_DEFAULT_USER_AVATAR;
@@ -89,7 +90,7 @@ export const toastSuccess = (message = "Action sucessfully executed!", toastId) 
 export const toastAwait = (message = "Awaiting action...", toastId) => {
     const Await = () => (
         <div>
-            <Spinner animation="border" size="sm" variant="" className="mx-2" style={{color: "#0994f6"}}/> {message}
+            <LoadingSpinner size="sm" className="await mx-2"/> {message}
         </div>
     );
     return popupToast(<Await/>, "await", toastId);
