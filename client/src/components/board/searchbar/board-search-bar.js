@@ -59,7 +59,7 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
             </Dropdown>
         </Col>
         <Col sm={4}>
-            <TextareaAutosize ref={queryRef} className="form-control search-bar bg-lighter mt-sm-0 mt-1" maxLength={40} rows={1} maxRows={1} as="textarea" defaultValue={searchQuery}
+            <TextareaAutosize ref={queryRef} className="form-control search-bar bg-lighter mt-sm-0 mt-1 mb-sm-0 mb-1" maxLength={40} rows={1} maxRows={1} as="textarea" defaultValue={searchQuery}
                               placeholder="Search" onInput={e => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);

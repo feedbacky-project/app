@@ -90,7 +90,7 @@ export const toastSuccess = (message = "Action sucessfully executed!", toastId) 
 export const toastAwait = (message = "Awaiting action...", toastId) => {
     const Await = () => (
         <div>
-            <LoadingSpinner size="sm" className="await mx-2"/> {message}
+            <LoadingSpinner size="sm" color="#0994f6" className="mx-2"/> {message}
         </div>
     );
     return popupToast(<Await/>, "await", toastId);

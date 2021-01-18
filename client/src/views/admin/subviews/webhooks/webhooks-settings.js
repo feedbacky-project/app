@@ -3,7 +3,7 @@ import AppContext from "context/app-context";
 import axios from "axios";
 import {prettifyEnum, toastError, toastSuccess} from "components/util/utils";
 import AdminSidebar from "components/sidebar/admin-sidebar";
-import {Button, Col} from "react-bootstrap";
+import {Button, Col, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
@@ -14,6 +14,7 @@ import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/app/svg-notice";
+import LoadingSpinner from "../../../../components/util/loading-spinner";
 
 const WebhooksSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -67,7 +68,7 @@ const WebhooksSettings = ({reRouteTo}) => {
                     </div>
                 </Col>
             </React.Fragment>
-        }/>
+        } loader={<Col className="text-center my-5 py-5"><LoadingSpinner/></Col>}/>
     };
     const getTypeIcon = (hook) => {
         switch (hook.type) {

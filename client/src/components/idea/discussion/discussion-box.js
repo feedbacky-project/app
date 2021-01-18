@@ -52,7 +52,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
             initialLoad={true}
             loadMore={(page) => onLoadRequest(page)}
             hasMore={comments.moreToLoad}
-            loader={<Row className="justify-content-center" key={comments.data.length} style={{marginTop: 100}}><LoadingSpinner/></Row>}>
+            loader={<Row className="justify-content-center mt-5 pt-5" key={comments.data.length}><LoadingSpinner/></Row>}>
             {comments.data.map(data =>
                 <CommentComponent key={data.id} data={data} onCommentDelete={onCommentDelete} onCommentLike={onCommentLike}
                                   onCommentUnlike={onCommentUnlike} onSuspend={onSuspend}/>

@@ -15,6 +15,7 @@ import {FaExclamation} from "react-icons/all";
 import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import PageBadge from "components/app/page-badge";
+import LoadingSpinner from "../../../../components/util/loading-spinner";
 
 const SocialLinksSettings = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -61,7 +62,7 @@ const SocialLinksSettings = ({reRouteTo}) => {
                     {renderAddButton()}
                 </div>
             </Col>
-        }/>
+        } loader={<Col className="text-center my-5 py-5"><LoadingSpinner/></Col>}/>
     };
     const renderAddButton = () => {
         if (getQuota() <= 0) {

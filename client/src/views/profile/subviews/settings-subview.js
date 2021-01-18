@@ -12,6 +12,7 @@ import {useHistory} from "react-router-dom";
 import ViewBox from "components/viewbox/view-box";
 import ComponentLoader from "components/app/component-loader";
 import ExecutableButton from "components/app/executable-button";
+import LoadingSpinner from "../../../components/util/loading-spinner";
 
 const SettingsSubview = ({reRouteTo}) => {
     const context = useContext(AppContext);
@@ -131,7 +132,7 @@ const SettingsSubview = ({reRouteTo}) => {
                 <img alt="avatar" src={avatar} className="img-fluid rounded-circle" width={100}/>
                 <ComponentLoader loaded={connectedAccounts.loaded}
                                  component={<Button variant="success" className="align-top mx-3 my-0" onClick={() => setModalOpened(true)}>Change</Button>}
-                                 loader={<Button variant="success" disabled className="align-top mx-3 my-0">Loading</Button>}
+                                 loader={<Button variant="success" disabled className="align-top mx-3 my-0"><LoadingSpinner className="mr-1" size="sm"/> Loading</Button>}
                 />
             </Col>
             <Col xs={12} lg={6} className="order-3">
