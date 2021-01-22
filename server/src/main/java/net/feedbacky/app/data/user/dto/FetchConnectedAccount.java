@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FetchConnectedAccount {
 
-  private String accountType;
-  private String data;
+  private String provider;
+  private long accountId;
 
 }

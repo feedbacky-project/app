@@ -164,7 +164,7 @@ public class ServiceLoginController {
       userRepository.save(user);
     } else {
       User user = optional.get();
-      if(user.getConnectedAccounts().stream().noneMatch(acc -> acc.getType() == ConnectedAccount.AccountType.findById(id))) {
+      if(user.getConnectedAccounts().stream().noneMatch(acc -> acc.getProvider().equals(id))) {
         Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
         accounts.add(generateConnectedAccount(id, data, fields, user));
         user.setConnectedAccounts(accounts);
@@ -177,17 +177,8 @@ public class ServiceLoginController {
   private ConnectedAccount generateConnectedAccount(String id, Map<String, String> data, LoginProvider.OauthDetails.DataFields fields, User user) {
     ConnectedAccount account = new ConnectedAccount();
     account.setUser(user);
-    account.setType(ConnectedAccount.AccountType.findById(id));
-    Map<String, String> accountData = new HashMap<>();
-    accountData.put("ID", data.get(fields.getId()));
-    accountData.put("USERNAME", data.get(fields.getUsername()));
-    accountData.put("AVATAR", data.get(fields.getAvatar()));
-    accountData.put("EMAIL", data.get(fields.getEmail()));
-    try {
-      account.setData(new ObjectMapper().writeValueAsString(accountData));
-    } catch(JsonProcessingException e) {
-      e.printStackTrace();
-    }
+    account.setProvider(id);
+    account.setAccountId(Long.parseLong(data.get(fields.getId())));
     return account;
   }
 
