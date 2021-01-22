@@ -46,6 +46,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-undertow:2.3.0.RELEASE'
     implementation 'com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-cache:2.3.0.RELEASE'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
     implementation 'javax.cache:cache-api:1.1.1'
     implementation 'com.github.ben-manes.caffeine:caffeine:2.8.0'
     implementation 'com.github.ben-manes.caffeine:jcache:2.5.3'

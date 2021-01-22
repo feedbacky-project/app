@@ -6,6 +6,7 @@ import {Redirect, useLocation, useParams} from "react-router-dom";
 import ErrorView from "views/errors/error-view";
 import {FaTimes} from "react-icons/fa";
 import Cookies from "js-cookie";
+import {toastError} from "../components/util/utils";
 
 const OauthReceiver = ({onLogin}) => {
     const {provider} = useParams();
@@ -29,7 +30,10 @@ const OauthReceiver = ({onLogin}) => {
             Cookies.set("FSID", response.token, {expires: 14});
             setData({...data, loaded: true});
             onLogin(response.token);
-        }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
+        }).catch(err => {
+            toastError(err.response.data.errors[0]);
+            setData({...data, loaded: true, error: true, status: -1});
+        });
     };
 
     if (data.error && data.status !== 403) {

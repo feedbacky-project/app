@@ -40,6 +40,7 @@ public class ConnectedAccount implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
+  @Deprecated
   private AccountType type;
   @Column(name = "data", columnDefinition = "text", length = 355)
   private String data;
@@ -48,8 +49,21 @@ public class ConnectedAccount implements Serializable {
     return new ModelMapper().map(this, FetchConnectedAccount.class);
   }
 
+  @AllArgsConstructor @Getter
+  @Deprecated //subject to remove/change
   public enum AccountType {
-    DISCORD, GITHUB, GOOGLE
+    DISCORD("discord"), GITHUB("github"), GOOGLE("google");
+
+    private String id;
+
+    public static AccountType findById(String id) {
+      for(AccountType type : values()) {
+        if(type.getId().equals(id)) {
+          return type;
+        }
+      }
+      return null;
+    }
   }
 
 }
