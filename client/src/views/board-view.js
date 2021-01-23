@@ -12,6 +12,7 @@ import LoadingSpinner from "components/util/loading-spinner";
 import AppContext from "context/app-context";
 import BoardContext from "context/board-context";
 import {useLocation, useParams} from "react-router-dom";
+import CommonBoardContextedView from "./common-board-contexted-view";
 
 const BoardView = () => {
     const context = useContext(AppContext);
@@ -40,21 +41,7 @@ const BoardView = () => {
         }
         // eslint-disable-next-line
     }, [id]);
-    if (board.error) {
-        return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>
-    }
-    if (!board.loaded) {
-        return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
-    }
-    return <BoardContext.Provider value={{
-        data: board.data, loaded: board.loaded, error: board.error,
-        updateSuspensions: (suspendedUsers) => {
-            setBoard({...board, data: {...board.data, suspendedUsers}});
-        },
-        updateTags: (tags) => {
-            setBoard({...board, data: {...board.data, tags}});
-        }
-    }}>
+    return <CommonBoardContextedView board={board} setBoard={setBoard} errorMessage={"Content Not Found"} errorIcon={<FaExclamationCircle className="error-icon"/>}>
         <LoginModal open={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onLoginModalClose={() => setModalOpen(false)}/>
         <BoardNavbar onNotLoggedClick={() => setModalOpen(true)}/>
         <Container className="pb-5">
@@ -64,7 +51,7 @@ const BoardView = () => {
                 <BoardContainer id={id} searchQuery={searchQuery} onNotLoggedClick={() => setModalOpen(true)}/>
             </Row>
         </Container>
-    </BoardContext.Provider>
+    </CommonBoardContextedView>
 };
 
 export default BoardView;

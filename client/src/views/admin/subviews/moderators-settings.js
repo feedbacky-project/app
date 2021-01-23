@@ -1,11 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Col} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import axios from "axios";
 import {prettifyEnum, toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
 import ModeratorInvitationModal from "components/modal/moderator-invitation-modal";
 import copy from "copy-text-to-clipboard";
-import AdminSidebar from "components/sidebar/admin-sidebar";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import DeleteButton from "components/util/delete-button";
@@ -13,16 +12,20 @@ import ViewBox from "components/viewbox/view-box";
 import PageBadge from "components/app/page-badge";
 import BoardContext from "context/board-context";
 import tinycolor from "tinycolor2";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
+import ExecutableButton from "../../../components/app/executable-button";
+import AdminContext from "../../../context/admin-context";
 
-const ModeratorsSettings = ({reRouteTo}) => {
+const ModeratorsSettings = () => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
+    const {setCurrentNode} = useContext(AdminContext);
     const [moderators, setModerators] = useState(boardData.moderators);
     const [invited, setInvited] = useState({data: [], loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const getQuota = () => 10 - (boardData.moderators.length + invited.data.length);
     useEffect(() => {
+        setCurrentNode("moderators");
         axios.get("/boards/" + boardData.discriminator + "/invitedModerators").then(res => {
             if (res.status !== 200) {
                 setInvited({...invited, error: true});
@@ -63,7 +66,7 @@ const ModeratorsSettings = ({reRouteTo}) => {
                 {moderators.map((mod, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                         <div className="text-center">
-                            <PageAvatar roundedCircle url={mod.user.avatar} size={35} username={mod.user.username}/>
+                            <PageAvatar roundedCircle user={mod.user} size={35}/>
                             {renderModerationKick(mod, i)}
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{mod.user.username}</small>
@@ -80,7 +83,7 @@ const ModeratorsSettings = ({reRouteTo}) => {
                 {invited.data.map((invited, i) => {
                     return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                         <div className="text-center">
-                            <PageAvatar roundedCircle url={invited.user.avatar} size={35} username={invited.user.username}/>
+                            <PageAvatar roundedCircle user={invited.user} size={35}/>
                             <DeleteButton id={"invite_del_" + invited.user.id} onClick={() => onInvalidation(invited.id)} tooltipName="Invalidate"/>
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{invited.user.username}</small>
@@ -93,8 +96,10 @@ const ModeratorsSettings = ({reRouteTo}) => {
                 })}
             </Col>
             <Col xs={12}>
-                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}
-                        onClick={() => setModalOpen(true)}>Invite New</Button>
+                <ExecutableButton className="m-0 mt-3 float-right" style={{backgroundColor: context.getTheme()}} onClick={() => {
+                    setModalOpen(true);
+                    return Promise.resolve();
+                }}>Invite New</ExecutableButton>
             </Col>
         </React.Fragment>
     };
@@ -139,20 +144,17 @@ const ModeratorsSettings = ({reRouteTo}) => {
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
-    return <React.Fragment>
-        <AdminSidebar currentNode="moderators" reRouteTo={reRouteTo} data={boardData}/>
-        <Col xs={12} md={9}>
-            <ModeratorInvitationModal onModInvitationSend={onModInvitationSend}
-                                      onModInvitationCreateModalClose={() => setModalOpen(false)}
-                                      data={boardData} session={context.user.session} open={modalOpen}/>
-            <ViewBox theme={context.getTheme()} title="Moderators Management" description="Manage your board moderators here.">
-                <React.Fragment>
-                    {renderOverview()}
-                    {renderModerators()}
-                </React.Fragment>
-            </ViewBox>
-        </Col>
-    </React.Fragment>
+    return <Col xs={12} md={9}>
+        <ModeratorInvitationModal onModInvitationSend={onModInvitationSend}
+                                  onModInvitationCreateModalClose={() => setModalOpen(false)}
+                                  data={boardData} session={context.user.session} open={modalOpen}/>
+        <ViewBox theme={context.getTheme()} title="Moderators Management" description="Manage your board moderators here.">
+            <React.Fragment>
+                {renderOverview()}
+                {renderModerators()}
+            </React.Fragment>
+        </ViewBox>
+    </Col>
 };
 
 export default ModeratorsSettings;

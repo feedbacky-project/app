@@ -11,6 +11,7 @@ import BoardContext from "context/board-context";
 import {BoardRoadmap} from "components/roadmap/board-roadmap";
 import IdeaNavbar from "components/navbars/idea-navbar";
 import ComponentLoader from "components/app/component-loader";
+import CommonBoardContextedView from "./common-board-contexted-view";
 
 const RoadmapView = () => {
     const context = useContext(AppContext);
@@ -57,19 +58,10 @@ const RoadmapView = () => {
         loadRoadmapData();
         // eslint-disable-next-line
     }, []);
-    if (board.error || roadmap.error) {
+    if (roadmap.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>
     }
-    if (!board.loaded) {
-        return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
-    }
-    //INFO update methods are not needed in roadmaps
-    return <BoardContext.Provider value={{
-        data: board.data, loaded: board.loaded, error: board.error, updateSuspensions: () => {
-        },
-        updateTags: () => {
-        }
-    }}>
+    return <CommonBoardContextedView board={board} setBoard={setBoard} errorMessage={"Content Not Found"} errorIcon={<FaExclamationCircle className="error-icon"/>}>
         <LoginModal open={modalOpen} image={board.data.logo}
                     boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/roadmap"}
                     onLoginModalClose={() => setModalOpen(false)}/>
@@ -79,7 +71,7 @@ const RoadmapView = () => {
                 <ComponentLoader loaded={roadmap.loaded} component={<BoardRoadmap data={roadmap.data} onNotLoggedClick={() => setModalOpen(true)}/>}/>
             </Row>
         </Container>
-    </BoardContext.Provider>
+    </CommonBoardContextedView>
 };
 
 export default RoadmapView;

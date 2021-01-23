@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import {FaFrown} from "react-icons/all";
 import AppContext from "context/app-context";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import LoadingSpinner from "../../util/loading-spinner";
 
@@ -31,9 +31,9 @@ const VotersComponent = ({votersAmount, data}) => {
             return <div style={{height: 25}}><FaFrown className="move-top-2px"/> None</div>
         }
         return <div>
-            {data.data.slice(0, 5).map(data => {
-                return <OverlayTrigger key={data.id} overlay={<Tooltip id={"voterData" + data.id}>{data.username}</Tooltip>}>
-                    <PageAvatar className="voter-merged" roundedCircle url={data.avatar} size={25} username={data.username}/>
+            {data.data.slice(0, 5).map(dataUser => {
+                return <OverlayTrigger key={dataUser.id} overlay={<Tooltip id={"voterData" + dataUser.id}>{dataUser.username}</Tooltip>}>
+                    <PageAvatar className="voter-merged" roundedCircle user={dataUser} size={25}/>
                 </OverlayTrigger>
             })}
             {renderAndMore()}

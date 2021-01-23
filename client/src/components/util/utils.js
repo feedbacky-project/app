@@ -1,7 +1,6 @@
 import {Slide, toast} from "react-toastify";
 import React from "react";
 import {FaCheck, FaExclamation, FaExclamationTriangle} from "react-icons/fa";
-import Spinner from "react-bootstrap/Spinner";
 import {parseEmojis} from "components/util/emoji-filter";
 import marked from "marked";
 import Cookies from "js-cookie";

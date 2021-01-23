@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import AdminSidebar from "components/sidebar/admin-sidebar";
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {toastError, toastSuccess} from "components/util/utils";
@@ -16,11 +15,15 @@ import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import PageBadge from "components/app/page-badge";
 import LoadingSpinner from "../../../../components/util/loading-spinner";
+import AdminContext from "../../../../context/admin-context";
 
-const SocialLinksSettings = ({reRouteTo}) => {
+const SocialLinksSettings = () => {
     const context = useContext(AppContext);
-    const boardData = useContext(BoardContext).data;
+    const boardContext = useContext(BoardContext);
+    const boardData = boardContext.data;
+    const {setCurrentNode} = useContext(AdminContext);
     const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
+    useEffect(() => setCurrentNode("social"), []);
     const getQuota = () => 4 - socialLinks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/socialLinks").then(res => {
@@ -98,18 +101,16 @@ const SocialLinksSettings = ({reRouteTo}) => {
                     }
                     const data = socialLinks.data.filter(item => item.id !== id);
                     setSocialLinks({...socialLinks, data});
+                    boardContext.updateSocialLinks(data);
                     toastSuccess("Social link deleted.");
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
-    return <React.Fragment>
-        <AdminSidebar currentNode="social" reRouteTo={reRouteTo} data={boardData}/>
-        <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme()} title="Social Links" description="Edit links visible at your board page here.">
-                {renderContent()}
-            </ViewBox>
-        </Col>
-    </React.Fragment>
+    return <Col xs={12} md={9}>
+        <ViewBox theme={context.getTheme()} title="Social Links" description="Edit links visible at your board page here.">
+            {renderContent()}
+        </ViewBox>
+    </Col>
 };
 
 export default SocialLinksSettings;

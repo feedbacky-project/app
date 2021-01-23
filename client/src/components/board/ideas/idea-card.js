@@ -4,13 +4,14 @@ import {FaLock, FaRegComment} from "react-icons/fa";
 import {Card} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import AppContext from "context/app-context";
-import {convertIdeaToSlug, formatUsername, toastError, truncateText} from "components/util/utils";
+import {convertIdeaToSlug, toastError, truncateText} from "components/util/utils";
 import ModeratorActions from "components/board/moderator-actions";
 import tinycolor from "tinycolor2";
 import PageBadge from "components/app/page-badge";
 import VoteButton from "components/app/vote-button";
 import BoardContext from "context/board-context";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
+import PageUsername from "../../app/page-username";
 
 const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
     const cardRef = React.createRef();
@@ -39,8 +40,8 @@ const IdeaCard = ({data, onIdeaDelete, onNotLoggedClick}) => {
     const renderAuthor = () => {
         return <small className="author-container">
             By {" "}
-            {formatUsername(idea.user.id, truncateText(idea.user.username, 20), boardData.moderators, boardData.suspendedUsers)} {" "}
-            <PageAvatar className="m-0 move-top-1px" roundedCircle url={idea.user.avatar} username={idea.user.username} size={16}/>
+            <PageUsername user={idea.user} truncate={20}/> {" "}
+            <PageAvatar className="m-0 move-top-1px" roundedCircle user={idea.user} size={16}/>
         </small>
     };
     const updateState = (newData) => {

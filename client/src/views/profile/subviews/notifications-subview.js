@@ -3,9 +3,8 @@ import AppContext from "context/app-context";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
 import ProfileSidebar from "components/sidebar/profile-sidebar";
-import {Col, Row} from "react-bootstrap";
+import {Button, Col, Row} from "react-bootstrap";
 import ViewBox from "components/viewbox/view-box";
-import ActionButton from "components/app/action-button";
 import ExecutableButton from "components/app/executable-button";
 
 const NotificationsSubview = ({reRouteTo}) => {
@@ -43,9 +42,9 @@ const NotificationsSubview = ({reRouteTo}) => {
     }
     const conditionalButton = (conditionEnabled, funcEnable, funcDisable) => {
         if (conditionEnabled) {
-            return <ActionButton onClick={funcDisable} variant="danger" text="Disable"/>
+            return <Button variant={"danger"} className="m-0 mt-sm-0 mt-2" onClick={funcDisable}>Disable</Button>
         }
-        return <ActionButton onClick={funcEnable} variant="success" text="Enable"/>
+        return <Button variant={"success"} className="m-0 mt-sm-0 mt-2" onClick={funcEnable}>Enable</Button>
     };
     const renderContent = () => {
         return <React.Fragment>

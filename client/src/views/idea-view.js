@@ -13,6 +13,7 @@ import ComponentLoader from "components/app/component-loader";
 import BoardContext from "context/board-context";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {convertIdeaToSlug} from "components/util/utils";
+import CommonBoardContextedView from "./common-board-contexted-view";
 
 const IdeaView = () => {
     const history = useHistory();
@@ -69,21 +70,7 @@ const IdeaView = () => {
     if (idea.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>
     }
-    if (board.error) {
-        return <ErrorView icon={<FaSadTear className="error-icon"/>} message="Server Connection Error"/>
-    }
-    if (!board.loaded) {
-        return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
-    }
-    return <BoardContext.Provider value={{
-        data: board.data, loaded: board.loaded, error: board.error,
-        updateSuspensions: (suspendedUsers) => {
-            setBoard({...board, data: {...board.data, suspendedUsers}});
-        },
-        updateTags: (tags) => {
-            setBoard({...board, data: {...board.data, tags}});
-        }
-    }}>
+    return <CommonBoardContextedView board={board} setBoard={setBoard}>
         <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
                     redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
         <IdeaNavbar onNotLoggedClick={() => setModalOpen(true)}/>
@@ -100,7 +87,7 @@ const IdeaView = () => {
                 }/>
             </Row>
         </Container>
-    </BoardContext.Provider>
+    </CommonBoardContextedView>
 };
 
 export default IdeaView;

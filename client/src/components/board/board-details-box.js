@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 import {FaAlignRight} from "react-icons/all";
 import {parseMarkdown} from "components/util/utils";
 import BoardContext from "context/board-context";
+import ExecutableButton from "../app/executable-button";
 
 const BoardDetailsBox = ({onIdeaCreation, onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -45,9 +46,12 @@ const BoardDetailsBox = ({onIdeaCreation, onNotLoggedClick}) => {
                 <Card.Body className="pb-2">
                     <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(boardData.fullDescription)}}/>
                     <hr/>
-                    <Button className="mx-0 mt-0 mb-2 py-1" variant="" style={{backgroundColor: context.getTheme()}} onClick={onCreateIdeaModalClick}>
+                    <ExecutableButton className="mx-0 mt-0 mb-2 py-1" style={{backgroundColor: context.getTheme()}} onClick={() => {
+                        setOpen(true);
+                        return Promise.resolve();
+                    }}>
                         <FaPencilAlt className="mr-1 move-top-1px"/> New Idea
-                    </Button>
+                    </ExecutableButton>
                     {renderEditButton()}
                 </Card.Body>
             </Card>

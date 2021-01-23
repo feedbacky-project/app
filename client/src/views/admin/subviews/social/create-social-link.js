@@ -12,7 +12,8 @@ import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons
 import BoardContext from "context/board-context";
 
 const CreateSocialLink = () => {
-    const boardData = useContext(BoardContext).data;
+    const context = useContext(BoardContext);
+    const boardData = context.data;
     const history = useHistory();
     const [settings, setSettings] = useState({step: 1, iconData: "", url: "", chosen: -1, customIcon: false});
     const renderStep = () => {
@@ -35,6 +36,9 @@ const CreateSocialLink = () => {
                         pathname: "/ba/" + boardData.discriminator + "/social",
                         state: null
                     });
+                    const links = context.data.socialLinks;
+                    links.push(res.data);
+                    context.updateSocialLinks(links);
                 }).catch(err => {
                     toastError(err.response.data.errors[0], toastId);
                     setSettings({...settings, step: 2});
@@ -74,27 +78,29 @@ const CreateSocialLink = () => {
         }
         setSettings({...settings, step: settings.step + 1});
     };
-    return <Container>
-        <Row className="mt-5">
-            <Col xs={12} className="d-none d-sm-block">
-                <Steps direction="horizontal" size="small" progressDot current={settings.step}>
-                    <Step title="Choose Icon"/>
-                    <Step title="Set Link"/>
-                    <Step title="Finish" state="finish"/>
-                </Steps>
-            </Col>
-            <Col xs={12} className="d-sm-none px-4">
-                <small>Step {settings.step}</small>
-                <ProgressBar now={settings.step * 33.3}/>
-            </Col>
-            {renderStep()}
-            <Col xs={12} className="text-right mt-4">
-                <Button variant="link" className="text-black-60 btn-cancel" as={Link} to={"/ba/" + boardData.discriminator + "/social"}>Cancel</Button>
-                {renderBackButton()}
-                {renderNextButton()}
-            </Col>
-        </Row>
-    </Container>
+    return <Col xs={12} md={9}>
+        <Container>
+            <Row className="mt-5">
+                <Col xs={12} className="d-none d-sm-block">
+                    <Steps direction="horizontal" size="small" progressDot current={settings.step}>
+                        <Step title="Choose Icon"/>
+                        <Step title="Set Link"/>
+                        <Step title="Finish" state="finish"/>
+                    </Steps>
+                </Col>
+                <Col xs={12} className="d-sm-none px-4">
+                    <small>Step {settings.step}</small>
+                    <ProgressBar now={settings.step * 33.3}/>
+                </Col>
+                {renderStep()}
+                <Col xs={12} className="text-right mt-4">
+                    <Button variant="link" className="text-black-60 btn-cancel" as={Link} to={"/ba/" + boardData.discriminator + "/social"}>Cancel</Button>
+                    {renderBackButton()}
+                    {renderNextButton()}
+                </Col>
+            </Row>
+        </Container>
+    </Col>
 };
 
 export default withRouter(CreateSocialLink);

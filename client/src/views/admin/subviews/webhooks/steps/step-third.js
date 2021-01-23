@@ -11,7 +11,7 @@ const StepThird = ({updateSettings, settings}) => {
                 Type webhook link URL where events data will be send.
             </span>
         </Col>
-        <Col sm={12} md={8} xl={6} className="offset-xl-3 offset-md-2 mt-4 px-md-5 px-3">
+        <Col sm={12} md={10} className="offset-md-1 mt-4 px-md-5 px-3">
             <div className="text-black-60 mb-2">
                 Webhook URL
             </div>

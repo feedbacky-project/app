@@ -5,8 +5,9 @@ import TimeAgo from "timeago-react";
 import {FaEdit, FaHeart, FaLockOpen, FaLowVision, FaRegHeart, FaTags, FaTimesCircle, FaTrashAlt, FaUserLock} from "react-icons/all";
 import AppContext from "context/app-context";
 import BoardContext from "context/board-context";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
 import parseComment from "components/idea/discussion/comment-parser";
+import PageUsername from "../../app/page-username";
 
 const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onSuspend}) => {
     const context = useContext(AppContext);
@@ -34,7 +35,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
                 </OverlayTrigger>
             </React.Fragment>
         }
-        return <small style={{fontWeight: "bold"}}>{formatUsername(data.user.id, data.user.username, boardData.moderators, boardData.suspendedUsers)}</small>
+        return <small style={{fontWeight: "bold"}}><PageUsername user={data.user}/></small>
     };
     const renderDeletionButton = () => {
         const moderator = boardData.moderators.find(mod => mod.userId === context.user.data.id);
@@ -66,7 +67,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
     if (!data.special) {
         return <React.Fragment key={data.id}>
             <div className="d-inline-flex mb-2" style={{wordBreak: "break-word"}}>
-                <PageAvatar roundedCircle className="mr-3 mt-2" size={30} url={data.user.avatar} username={data.user.username} style={{minWidth: "30px"}}/>
+                <PageAvatar roundedCircle className="mr-3 mt-2" size={30} user={data.user} style={{minWidth: "30px"}}/>
                 <div>
                     {renderCommentUsername(data)}
                     {renderDeletionButton(data)}

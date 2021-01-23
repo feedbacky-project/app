@@ -40,7 +40,7 @@ const StepSecond = ({updateSettings, settings}) => {
         </Col>
         <Col xs={12} className="mt-4 px-md-5 px-3">
             <Row className="justify-content-center">
-                <CardGroup className="col-10 justify-content-center">
+                <CardGroup className="col-12 justify-content-center">
                     {renderCards()}
                 </CardGroup>
             </Row>

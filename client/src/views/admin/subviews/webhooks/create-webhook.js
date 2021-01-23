@@ -77,28 +77,30 @@ const CreateWebhook = () => {
         }
         setSettings({...settings, step: settings.step + 1});
     };
-    return <Container>
-        <Row className="mt-5">
-            <Col xs={12} className="d-none d-sm-block">
-                <Steps direction="horizontal" size="small" progressDot current={settings.step}>
-                    <Step title="Select Type"/>
-                    <Step title="Choose Events"/>
-                    <Step title="Set URL"/>
-                    <Step title="Finish" state="finish"/>
-                </Steps>
-            </Col>
-            <Col xs={12} className="d-sm-none px-4">
-                <small>Step {settings.step}</small>
-                <ProgressBar now={settings.step * 25}/>
-            </Col>
-            {renderStep()}
-            <Col xs={12} className="text-right mt-4">
-                <Button variant="link" className="text-black-60 btn-cancel" as={Link} to={"/ba/" + boardData.discriminator + "/webhooks"}>Cancel</Button>
-                {renderBackButton()}
-                {renderNextButton()}
-            </Col>
-        </Row>
-    </Container>
+    return <Col xs={12} md={9}>
+        <Container>
+            <Row className="mt-5">
+                <Col xs={12} className="d-none d-sm-block">
+                    <Steps direction="horizontal" size="small" progressDot current={settings.step}>
+                        <Step title="Select Type"/>
+                        <Step title="Choose Events"/>
+                        <Step title="Set URL"/>
+                        <Step title="Finish" state="finish"/>
+                    </Steps>
+                </Col>
+                <Col xs={12} className="d-sm-none px-4">
+                    <small>Step {settings.step}</small>
+                    <ProgressBar now={settings.step * 25}/>
+                </Col>
+                {renderStep()}
+                <Col xs={12} className="text-right mt-4">
+                    <Button variant="link" className="text-black-60 btn-cancel" as={Link} to={"/ba/" + boardData.discriminator + "/webhooks"}>Cancel</Button>
+                    {renderBackButton()}
+                    {renderNextButton()}
+                </Col>
+            </Row>
+        </Container>
+    </Col>
 };
 
 export default withRouter(CreateWebhook);

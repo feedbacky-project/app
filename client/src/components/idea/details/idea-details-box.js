@@ -16,9 +16,10 @@ import AttachmentsComponent from "components/idea/details/attachments-component"
 import MailSubscriptionComponent from "components/idea/details/mail-subscription-component";
 import VoteButton from "components/app/vote-button";
 import {useHistory} from "react-router-dom";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
 import ExecutableButton from "components/app/executable-button";
 import BoardContext from "context/board-context";
+import PageUsername from "../../app/page-username";
 
 const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -144,8 +145,8 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
             {renderDeletionButton()}
             {ideaData.user.id !== context.user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
-            <PageAvatar roundedCircle className="mr-1" url={ideaData.user.avatar} size={18} username={ideaData.user.username} style={{maxWidth: "none"}}/>
-            <small>{formatUsername(ideaData.user.id, ideaData.user.username, boardData.moderators, boardData.suspendedUsers)} ·{" "}</small>
+            <PageAvatar roundedCircle className="mr-1" user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
+            <small><PageUsername user={ideaData.user}/> ·{" "}</small>
             <small className="text-black-60"><TimeAgo datetime={ideaData.creationDate}/></small>
             {!ideaData.edited || <small className="text-black-60"> · edited</small>}
         </React.Fragment>

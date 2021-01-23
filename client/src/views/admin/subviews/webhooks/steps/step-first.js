@@ -7,7 +7,7 @@ import {toastWarning} from "components/util/utils";
 
 const type = ["DISCORD", "CUSTOM_ENDPOINT"];
 const typeName = ["Discord", "Custom Endpoint"];
-const typeIcon = [<FaDiscord className="fa-lg"/>, <FaGlobe className="fa-lg"/>];
+const typeIcon = [<FaDiscord className="fa-md"/>, <FaGlobe className="fa-md"/>];
 
 const StepFirst = ({updateSettings, settings}) => {
     const onChoose = (item) => {
@@ -40,7 +40,7 @@ const StepFirst = ({updateSettings, settings}) => {
         </Col>
         <Col xs={12} className="mt-4 px-md-5 px-3">
             <Row className="justify-content-center">
-                <CardDeck className="col-7 justify-content-center">
+                <CardDeck className="col-10 justify-content-center">
                     {renderCards()}
                 </CardDeck>
             </Row>

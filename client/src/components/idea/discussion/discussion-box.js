@@ -12,9 +12,12 @@ import ClickableTip from "components/util/clickable-tip";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import CommentComponent from "components/idea/discussion/comment-component";
 import {SvgNotice} from "components/app/svg-notice";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
 import {FaAngleDown} from "react-icons/all";
 import BoardContext from "context/board-context";
+import PageUsername from "../../app/page-username";
+import PageSelectableDropdown from "../../app/page-selectable-dropdown";
+import ExecutableButton from "../../app/executable-button";
 
 const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -75,12 +78,11 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         if (context.user.loggedIn) {
             return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
                 <div className="text-center mr-3 pt-2">
-                    <PageAvatar roundedCircle size={30} url={context.user.data.avatar} username={context.user.data.username}/>
+                    <PageAvatar roundedCircle size={30} user={context.user.data}/>
                     <br/>
                 </div>
                 <div className="col-12 px-0">
-                    <small style={{fontWeight: "bold"}}>{formatUsername(context.user.data.id, context.user.data.username,
-                        boardContext.data.moderators, boardContext.data.suspendedUsers)}</small>
+                    <small style={{fontWeight: "bold"}}><PageUsername user={context.user.data}/></small>
                     <br/>
                     <TextareaAutosize className="form-control mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
                                       style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp}/>
@@ -90,11 +92,11 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         }
         return <div className="d-inline-flex mb-2 col-10 px-0" style={{wordBreak: "break-word"}}>
             <div className="text-center mr-3 pt-2">
-                <PageAvatar roundedCircle size={30} url={getDefaultAvatar("Anonymous")}/>
+                <PageAvatar roundedCircle size={30} user={null}/>
                 <br/>
             </div>
             <div className="col-12 px-0">
-                <small style={{fontWeight: "bold"}}>{formatUsername(-1, "Anonymous", [])}</small>
+                <small style={{fontWeight: "bold"}}>Anonymous</small>
                 <br/>
                 <TextareaAutosize className="form-control mt-1" id="commentMessage" rows={1} maxRows={5} placeholder="Write a comment..."
                                   style={{resize: "none", overflow: "hidden"}} onChange={onNotLoggedClick} onClick={e => {
@@ -110,11 +112,16 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         }
         const moderator = boardContext.data.moderators.find(mod => mod.userId === context.user.data.id);
         return <React.Fragment>
-            <Button variant="" className="mt-2 ml-0 mb-0" style={{backgroundColor: context.getTheme(), fontSize: "0.75em"}}
-                    onClick={() => onCommentSubmit(false)}>Submit</Button>
+            <ExecutableButton className="mt-2 ml-0 mb-0" style={{backgroundColor: context.getTheme(), fontSize: "0.75em"}}
+                              onClick={() => onCommentSubmit(false)}>
+                Submit
+            </ExecutableButton>
+
             {moderator && <React.Fragment>
-                <Button variant="" className="mt-2 ml-2 mr-1 mb-0" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
-                        onClick={() => onCommentSubmit(true)}>Submit Internal</Button>
+                <ExecutableButton className="mt-2 ml-2 mr-1 mb-0" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
+                                  onClick={() => onCommentSubmit(true)}>
+                    Submit Internal
+                </ExecutableButton>
                 <div className="d-inline-block align-top move-bottom-2px"><ClickableTip id="internalTip" title="Internal Comments" description="Comments visible only for moderators of the project, hidden from public view."/></div>
             </React.Fragment>}
         </React.Fragment>
@@ -127,7 +134,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
             toastWarning("Message must be longer than 10 and shorter than 500 characters!");
             return;
         }
-        axios.post("/comments/", {
+        return axios.post("/comments/", {
             ideaId: ideaData.id,
             description: message,
             type,
@@ -246,24 +253,18 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
             });
         });
     };
+    const sortCurrentValue = Object.values(sorts.find(obj => {
+        return Object.keys(obj)[0] === (context.user.localPreferences.comments.sort || "oldest");
+    }));
+    const sortValues = sorts.map(val => {
+        const key = Object.keys(val)[0];
+        const value = Object.values(val)[0];
+        return <Dropdown.Item key={key} onClick={() => context.onLocalPreferencesUpdate({...context.user.localPreferences, comments: {...context.user.localPreferences.comments, sort: key}})}>{value}</Dropdown.Item>
+    });
     return <Col xs={12}>
         <div>
             <div className="d-inline-block text-black-75 mr-1">Discussion ({ideaData.commentsAmount} comments)</div>
-            <Dropdown className="d-inline-block" style={{zIndex: 1}}>
-                <Dropdown.Toggle id="sort" variant="" className="search-dropdown-bar btn btn-link text-dark move-top-1px">
-                <span>{Object.values(sorts.find(obj => {
-                    return Object.keys(obj)[0] === (context.user.localPreferences.comments.sort || "oldest");
-                }))}</span>
-                    <FaAngleDown/>
-                </Dropdown.Toggle>
-                <Dropdown.Menu alignRight>
-                    {sorts.map(val => {
-                        const key = Object.keys(val)[0];
-                        const value = Object.values(val)[0];
-                        return <Dropdown.Item key={key} onClick={() => context.onLocalPreferencesUpdate({...context.user.localPreferences, comments: {...context.user.localPreferences.comments, sort: key}})}>{value}</Dropdown.Item>
-                    })}
-                </Dropdown.Menu>
-            </Dropdown>
+            <PageSelectableDropdown id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <Col xs={12} sm={10} md={6} className="p-0 mb-1 mt-1" id="commentBox">
             {renderCommentBox()}

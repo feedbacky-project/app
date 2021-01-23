@@ -1,11 +1,10 @@
-import React, {lazy, Suspense, useContext, useState} from 'react';
+import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
 import axios from "axios";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import swalReact from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import AdminSidebar from "components/sidebar/admin-sidebar";
 import {retry} from "components/util/lazy-init";
 import ViewBox from "components/viewbox/view-box";
 import BoardContext from "context/board-context";
@@ -17,17 +16,20 @@ import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import ColorSelectionModal from "components/modal/color-selection-modal";
 import ExecutableButton from "components/app/executable-button";
+import AdminContext from "../../../context/admin-context";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
-const GeneralSettings = ({reRouteTo, updateState}) => {
+const GeneralSettings = ({updateState}) => {
     const history = useHistory();
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
+    const {setCurrentNode} = useContext(AdminContext);
     const swalGenerator = swalReact(Swal);
     const [bannerInput, setBannerInput] = useState(null);
     const [logoInput, setLogoInput] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
+    useEffect(() => setCurrentNode("general"), []);
     const renderContent = () => {
         return <React.Fragment>
             <ColorSelectionModal open={modalOpen} onClose={() => setModalOpen(false)} onUpdate={(color) => context.onThemeChange(color)}/>
@@ -255,15 +257,12 @@ const GeneralSettings = ({reRouteTo, updateState}) => {
             setBannerInput(data);
         });
     };
-    return <React.Fragment>
-        <AdminSidebar currentNode="general" reRouteTo={reRouteTo} data={boardData}/>
-        <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme()} title="General Settings" description="Configure your board base settings here.">
-                {renderContent()}
-            </ViewBox>
-            {renderDangerContent()}
-        </Col>
-    </React.Fragment>
+    return <Col xs={12} md={9}>
+        <ViewBox theme={context.getTheme()} title="General Settings" description="Configure your board base settings here.">
+            {renderContent()}
+        </ViewBox>
+        {renderDangerContent()}
+    </Col>
 };
 
 export default GeneralSettings;

@@ -1,11 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import {toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
 import TagCreateModal from "components/modal/tag-create-modal";
-import AdminSidebar from "components/sidebar/admin-sidebar";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
 import ViewBox from "components/viewbox/view-box";
@@ -16,17 +15,19 @@ import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
 import TagEditModal from "components/modal/tag-edit-modal";
 import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
+import ExecutableButton from "../../../components/app/executable-button";
+import AdminContext from "../../../context/admin-context";
 
-const TagsSettings = ({reRouteTo}) => {
+const TagsSettings = () => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
+    const {setCurrentNode} = useContext(AdminContext);
     const boardData = boardContext.data;
     const [modalOpen, setModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState({});
     const getQuota = () => 10 - boardData.tags.length;
-    const onTagCreateModalClick = () => setModalOpen(true);
-    const onTagCreateModalClose = () => setModalOpen(false);
+    useEffect(() => setCurrentNode("tags"), []);
     const onTagCreate = (data) => {
         boardContext.updateTags(boardData.tags.concat(data));
     };
@@ -69,7 +70,10 @@ const TagsSettings = ({reRouteTo}) => {
                 <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}><FaExclamation/> Add New</Button>
             </OverlayTrigger>
         }
-        return <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} onClick={onTagCreateModalClick}>Add New</Button>
+        return <ExecutableButton className="m-0 mt-3 float-right" style={{backgroundColor: context.getTheme()}} onClick={() => {
+            setModalOpen(true);
+            return Promise.resolve();
+        }}>Add New</ExecutableButton>
     };
     const onTagEdit = (tag) => {
         setEditData(tag);
@@ -98,8 +102,7 @@ const TagsSettings = ({reRouteTo}) => {
             });
     };
     return <React.Fragment>
-        <AdminSidebar currentNode="tags" reRouteTo={reRouteTo} data={boardData}/>
-        <TagCreateModal onTagCreate={onTagCreate} onTagCreateModalClose={onTagCreateModalClose} data={boardData} open={modalOpen}/>
+        <TagCreateModal onTagCreate={onTagCreate} onTagCreateModalClose={() => setModalOpen(false)} data={boardData} open={modalOpen}/>
         <TagEditModal open={editModalOpen} onClose={() => setEditModalOpen(false)} boardData={boardData} tag={editData} onEdit={onEdit}/>
         <Col xs={12} md={9}>
             <ViewBox theme={context.getTheme()} title="Tags Management" description="Edit your board tags here.">

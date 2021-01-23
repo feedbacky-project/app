@@ -1,20 +1,22 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import AppContext from "context/app-context";
 import BoardContext from "context/board-context";
 import axios from "axios";
 import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
 import {toastAwait, toastError, toastSuccess} from "components/util/utils";
 import DeleteButton from "components/util/delete-button";
 import {popupSwal} from "components/util/sweetalert-utils";
-import AdminSidebar from "components/sidebar/admin-sidebar";
 import ViewBox from "components/viewbox/view-box";
+import AdminContext from "../../../context/admin-context";
 
-const SuspensionSettings = ({reRouteTo}) => {
+const SuspensionSettings = () => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
+    const {setCurrentNode} = useContext(AdminContext);
+    useEffect(() => setCurrentNode("suspensions"), []);
     const renderContent = () => {
         return <Col xs={12}>
             <div className="mb-1 text-black-60">Suspended Users</div>
@@ -33,7 +35,7 @@ const SuspensionSettings = ({reRouteTo}) => {
         return boardContext.data.suspendedUsers.map((suspendedUser, i) => {
             return <div className="d-inline-flex justify-content-center mr-2" key={i}>
                 <div className="text-center">
-                    <PageAvatar roundedCircle url={suspendedUser.user.avatar} size={35} username={suspendedUser.user.username}/>
+                    <PageAvatar roundedCircle user={suspendedUser.user} size={35}/>
                     <DeleteButton id={"mod_del_" + i} onClick={() => onUnsuspension(suspendedUser)} tooltipName="Unsuspend"/>
                     <br/>
                     <small className="text-truncate d-block" style={{maxWidth: 100}}>{suspendedUser.user.username}</small>
@@ -59,14 +61,11 @@ const SuspensionSettings = ({reRouteTo}) => {
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
-    return <React.Fragment>
-        <AdminSidebar currentNode="suspended" reRouteTo={reRouteTo} data={boardContext.data}/>
-        <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme()} title="Suspensions Management" description="Manage suspended users here.">
-                {renderContent()}
-            </ViewBox>
-        </Col>
-    </React.Fragment>
+    return <Col xs={12} md={9}>
+        <ViewBox theme={context.getTheme()} title="Suspensions Management" description="Manage suspended users here.">
+            {renderContent()}
+        </ViewBox>
+    </Col>
 };
 
 export default SuspensionSettings;

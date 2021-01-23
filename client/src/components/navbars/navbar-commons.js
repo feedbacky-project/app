@@ -4,7 +4,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
 import {FaAngleDown} from "react-icons/all";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
 
 export const renderLogIn = (onNotLoggedClick, context) => {
     if (!context.user.loggedIn) {
@@ -15,7 +15,7 @@ export const renderLogIn = (onNotLoggedClick, context) => {
     return <NavItem>
         <Dropdown>
             <Dropdown.Toggle id="userOptions" variant="" className="btn btn-link m-0 pr-1 text-white">
-                <PageAvatar className="mr-1" roundedCircle url={context.user.data.avatar} size={24} username={context.user.data.username}/>
+                <PageAvatar className="mr-1" roundedCircle user={context.user.data} size={24}/>
                 <FaAngleDown/>
             </Dropdown.Toggle>
             <Dropdown.Menu alignRight>

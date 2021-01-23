@@ -4,7 +4,7 @@ import axios from "axios";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import PageModal from "components/modal/page-modal";
-import {PageAvatar} from "components/app/page-avatar";
+import PageAvatar from "components/app/page-avatar";
 import ExecutableButton from "components/app/executable-button";
 
 const ModeratorInvitationModal = (props) => {
@@ -29,7 +29,7 @@ const ModeratorInvitationModal = (props) => {
             mod.role = "moderator";
             props.onModInvitationSend(mod);
             const toastMsg = <span>
-                Invitation for user <PageAvatar roundedCircle url={res.data.user.avatar} size={16} username={res.data.user.username}/>
+                Invitation for user <PageAvatar roundedCircle user={res.data.user} size={16}/>
                 {" " + res.data.user.username} sent.
             </span>;
             toastSuccess(toastMsg, toastId);

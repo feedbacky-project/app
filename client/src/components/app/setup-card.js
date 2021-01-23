@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import {Card} from "react-bootstrap";
 
 const SetupCard = ({icon, text, onClick, className = ""}) => {
-    return <Card className={className} style={{minWidth: 175}} onClick={onClick}>
+    return <Card className={className} style={{minWidth: 150, maxWidth: 250}} onClick={onClick}>
         <Card.Body className="text-center">
             {icon}
             <br className="my-3"/>
-            <strong style={{fontSize: "1.5rem"}}>{text}</strong>
+            <strong style={{fontSize: "1.25rem"}}>{text}</strong>
         </Card.Body>
     </Card>
 };

@@ -1,3 +1,7 @@
+* social links are now properly updated in admin panel and changes are reflected on main page without the need to reload
+* staged creators for webhooks and social links are now inside admin panel not separate page
+
+
 ### 0.6.0-beta
 * **[FEATURE]** Added search bar to search ideas by specific title (requested by [eartharoid](https://app.feedbacky.net/i/add-a-search-feature.2313))
 * **[FEATURE]** Added self assignable tags that everyone can set when creating new idea (requested by [VentureKraft](https://app.feedbacky.net/i/self-assignable-tags.982))

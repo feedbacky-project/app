@@ -2,8 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import axios from "axios";
 import {prettifyEnum, toastError, toastSuccess} from "components/util/utils";
-import AdminSidebar from "components/sidebar/admin-sidebar";
-import {Button, Col, Row} from "react-bootstrap";
+import {Button, Col} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";
@@ -15,11 +14,14 @@ import BoardContext from "context/board-context";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/app/svg-notice";
 import LoadingSpinner from "../../../../components/util/loading-spinner";
+import AdminContext from "../../../../context/admin-context";
 
-const WebhooksSettings = ({reRouteTo}) => {
+const WebhooksSettings = () => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
+    const {setCurrentNode} = useContext(AdminContext);
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
+    useEffect(() => setCurrentNode("webhooks"), []);
     const getQuota = () => 5 - webhooks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/webhooks").then(res => {
@@ -100,15 +102,12 @@ const WebhooksSettings = ({reRouteTo}) => {
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
-    return <React.Fragment>
-        <AdminSidebar currentNode="webhooks" reRouteTo={reRouteTo} data={boardData}/>
-        <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme()} title="Webhooks"
-                     description="Edit webhooks to integrate with other apps here.">
-                {renderContent()}
-            </ViewBox>
-        </Col>
-    </React.Fragment>
+    return <Col xs={12} md={9}>
+        <ViewBox theme={context.getTheme()} title="Webhooks"
+                 description="Edit webhooks to integrate with other apps here.">
+            {renderContent()}
+        </ViewBox>
+    </Col>
 };
 
 export default WebhooksSettings;
