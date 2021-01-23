@@ -30,7 +30,7 @@ const ProfileView = () => {
         <Container>
             <Row className="justify-content-center pb-4">
                 <ProfileSidebar currentNode={currentNode} reRouteTo={(destination) => history.push({pathname: "/me/" + destination})}/>
-                <Suspense fallback={<Col xs={12} md={9}><Row className="justify-content-center vertical-center"><LoadingSpinner/></Row></Col>}>
+                <Suspense fallback={<Col xs={12} md={9}><Row className="justify-content-center mt-5 pt-5"><LoadingSpinner/></Row></Col>}>
                     <Switch>
                         <Route path="/me/settings" component={SettingsSubview}/>
                         <Route path="/me/notifications" component={NotificationsSubview}/>
