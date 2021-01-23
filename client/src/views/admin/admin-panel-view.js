@@ -7,7 +7,7 @@ import IdeaNavbar from "components/navbars/idea-navbar";
 import LoadingSpinner from "components/util/loading-spinner";
 import AppContext from "context/app-context";
 import CommonBoardContextedView from "../common-board-contexted-view";
-import AdminContext from "../../context/admin-context";
+import PageNodesContext from "../../context/page-nodes-context";
 import {retry} from "../../components/util/lazy-init";
 import AdminSidebar from "../../components/sidebar/admin-sidebar";
 
@@ -62,7 +62,7 @@ const AdminPanelView = () => {
         return <React.Fragment/>;
     }
     return <CommonBoardContextedView board={board} setBoard={setBoard} errorMessage={"Content Not Found"} errorIcon={<FaExclamationCircle className="error-icon"/>}>
-        <AdminContext.Provider value={{setCurrentNode: setCurrentNode}}>
+        <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
             <IdeaNavbar/>
             <Container>
                 <Row className="justify-content-center pb-4">
@@ -82,7 +82,7 @@ const AdminPanelView = () => {
                     </Suspense>
                 </Row>
             </Container>
-        </AdminContext.Provider>
+        </PageNodesContext.Provider>
     </CommonBoardContextedView>
 };
 

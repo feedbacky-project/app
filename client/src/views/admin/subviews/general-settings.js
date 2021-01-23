@@ -16,7 +16,7 @@ import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import ColorSelectionModal from "components/modal/color-selection-modal";
 import ExecutableButton from "components/app/executable-button";
-import AdminContext from "../../../context/admin-context";
+import PageNodesContext from "../../../context/page-nodes-context";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
@@ -24,7 +24,7 @@ const GeneralSettings = ({updateState}) => {
     const history = useHistory();
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const {setCurrentNode} = useContext(AdminContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     const swalGenerator = swalReact(Swal);
     const [bannerInput, setBannerInput] = useState(null);
     const [logoInput, setLogoInput] = useState(null);

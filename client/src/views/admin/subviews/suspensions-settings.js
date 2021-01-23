@@ -10,12 +10,12 @@ import {toastAwait, toastError, toastSuccess} from "components/util/utils";
 import DeleteButton from "components/util/delete-button";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ViewBox from "components/viewbox/view-box";
-import AdminContext from "../../../context/admin-context";
+import PageNodesContext from "../../../context/page-nodes-context";
 
 const SuspensionSettings = () => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
-    const {setCurrentNode} = useContext(AdminContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     useEffect(() => setCurrentNode("suspensions"), []);
     const renderContent = () => {
         return <Col xs={12}>

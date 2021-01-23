@@ -14,12 +14,12 @@ import BoardContext from "context/board-context";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/app/svg-notice";
 import LoadingSpinner from "../../../../components/util/loading-spinner";
-import AdminContext from "../../../../context/admin-context";
+import PageNodesContext from "../../../../context/page-nodes-context";
 
 const WebhooksSettings = () => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const {setCurrentNode} = useContext(AdminContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
     useEffect(() => setCurrentNode("webhooks"), []);
     const getQuota = () => 5 - webhooks.data.length;

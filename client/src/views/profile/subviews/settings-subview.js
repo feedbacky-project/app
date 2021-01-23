@@ -1,4 +1,3 @@
-import ProfileSidebar from "components/sidebar/profile-sidebar";
 import {Col, Form, Row} from "react-bootstrap";
 import React, {useContext, useEffect, useState} from "react";
 import {formatRemainingCharacters, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
@@ -13,17 +12,20 @@ import ViewBox from "components/viewbox/view-box";
 import ComponentLoader from "components/app/component-loader";
 import ExecutableButton from "components/app/executable-button";
 import LoadingSpinner from "../../../components/util/loading-spinner";
+import PageNodesContext from "../../../context/page-nodes-context";
 
-const SettingsSubview = ({reRouteTo}) => {
+const SettingsSubview = () => {
     const context = useContext(AppContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     const history = useHistory();
     const swalGenerator = swalReact(Swal);
     const [username, setUsername] = useState(context.user.data.username);
     const [avatar, setAvatar] = useState(context.user.data.avatar);
     const [connectedAccounts, setConnectedAccounts] = useState({data: [], loaded: false, error: false});
     const [modalOpened, setModalOpened] = useState(false);
+    useEffect(() => setCurrentNode("settings"), []);
     const onChangesSave = () => {
-        if(username.length < 3) {
+        if (username.length < 3) {
             toastWarning("Username length should be longer than 3 characters.");
             return Promise.resolve();
         }
@@ -95,14 +97,11 @@ const SettingsSubview = ({reRouteTo}) => {
         // eslint-disable-next-line
     }, []);
     if (!context.user.loggedIn) {
-        return <React.Fragment>
-            <ProfileSidebar currentNode="settings" reRouteTo={reRouteTo}/>
-            <Col xs={12} md={9}>
-                <ViewBox theme={context.getTheme(false)} title="User Settings" description="Edit your account here.">
-                    <Col className="text-center py-4">Please log in to see contents of this page.</Col>
-                </ViewBox>
-            </Col>
-        </React.Fragment>
+        return <Col xs={12} md={9}>
+            <ViewBox theme={context.getTheme(false)} title="User Settings" description="Edit your account here.">
+                <Col className="text-center py-4">Please log in to see contents of this page.</Col>
+            </ViewBox>
+        </Col>
     }
     const renderContent = () => {
         return <React.Fragment>
@@ -151,29 +150,26 @@ const SettingsSubview = ({reRouteTo}) => {
             </Col>
         </React.Fragment>
     };
-    return <React.Fragment>
-        <ProfileSidebar currentNode="settings" reRouteTo={reRouteTo}/>
-        <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme(false)} title="User Settings" description="Edit your account here.">
-                {renderContent()}
-            </ViewBox>
-            <Col xs={12} className="mb-3 view-box-bg mt-2 py-2 danger-shadow">
-                <Row noGutters className="col-12 p-3">
-                    <Col sm={9} xs={12}>
-                        <h4 className="mb-1 text-danger">Deactivate Account</h4>
-                        <span className="text-black-50" style={{fontSize: ".9em"}}>
+    return <Col xs={12} md={9}>
+        <ViewBox theme={context.getTheme(false)} title="User Settings" description="Edit your account here.">
+            {renderContent()}
+        </ViewBox>
+        <Col xs={12} className="mb-3 view-box-bg mt-2 py-2 danger-shadow">
+            <Row noGutters className="col-12 p-3">
+                <Col sm={9} xs={12}>
+                    <h4 className="mb-1 text-danger">Deactivate Account</h4>
+                    <span className="text-black-50" style={{fontSize: ".9em"}}>
                             Personal information will be <strong>permanently removed</strong> but all your content will be anonymized. <strong>Irreversible action.</strong>
                         </span>
-                    </Col>
-                    <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
-                        <ExecutableButton onClick={onAccountDeactivation} variant="danger">
-                            Deactivate
-                        </ExecutableButton>
-                    </Col>
-                </Row>
-            </Col>
+                </Col>
+                <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
+                    <ExecutableButton onClick={onAccountDeactivation} variant="danger">
+                        Deactivate
+                    </ExecutableButton>
+                </Col>
+            </Row>
         </Col>
-    </React.Fragment>
+    </Col>
 };
 
 export default SettingsSubview;

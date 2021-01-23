@@ -16,12 +16,12 @@ import TagEditModal from "components/modal/tag-edit-modal";
 import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import ExecutableButton from "../../../components/app/executable-button";
-import AdminContext from "../../../context/admin-context";
+import PageNodesContext from "../../../context/page-nodes-context";
 
 const TagsSettings = () => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
-    const {setCurrentNode} = useContext(AdminContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     const boardData = boardContext.data;
     const [modalOpen, setModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);

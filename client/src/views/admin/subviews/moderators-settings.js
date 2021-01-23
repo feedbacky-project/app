@@ -14,12 +14,12 @@ import BoardContext from "context/board-context";
 import tinycolor from "tinycolor2";
 import PageAvatar from "components/app/page-avatar";
 import ExecutableButton from "../../../components/app/executable-button";
-import AdminContext from "../../../context/admin-context";
+import PageNodesContext from "../../../context/page-nodes-context";
 
 const ModeratorsSettings = () => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const {setCurrentNode} = useContext(AdminContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     const [moderators, setModerators] = useState(boardData.moderators);
     const [invited, setInvited] = useState({data: [], loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);

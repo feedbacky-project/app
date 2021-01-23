@@ -15,13 +15,13 @@ import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import PageBadge from "components/app/page-badge";
 import LoadingSpinner from "../../../../components/util/loading-spinner";
-import AdminContext from "../../../../context/admin-context";
+import PageNodesContext from "../../../../context/page-nodes-context";
 
 const SocialLinksSettings = () => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
     const boardData = boardContext.data;
-    const {setCurrentNode} = useContext(AdminContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
     useEffect(() => setCurrentNode("social"), []);
     const getQuota = () => 4 - socialLinks.data.length;

@@ -1,15 +1,17 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
-import ProfileSidebar from "components/sidebar/profile-sidebar";
 import {Button, Col, Row} from "react-bootstrap";
 import ViewBox from "components/viewbox/view-box";
 import ExecutableButton from "components/app/executable-button";
+import PageNodesContext from "../../../context/page-nodes-context";
 
-const NotificationsSubview = ({reRouteTo}) => {
+const NotificationsSubview = () => {
     const context = useContext(AppContext);
+    const {setCurrentNode} = useContext(PageNodesContext);
     const [notificationsEnabled, setNotificationsEnabled] = useState(context.user.loggedIn ? context.user.data.mailPreferences.notificationsEnabled : false);
+    useEffect(() => setCurrentNode("notifications"), []);
     const onChangesSave = () => {
         let toastId = toastAwait("Saving changes...");
         return axios.patch("/users/@me/mailPreferences", {
@@ -31,14 +33,11 @@ const NotificationsSubview = ({reRouteTo}) => {
         });
     };
     if (!context.user.loggedIn) {
-        return <React.Fragment>
-            <ProfileSidebar currentNode="notifications" reRouteTo={reRouteTo}/>
-            <Col xs={12} md={9}>
-                <ViewBox theme={context.getTheme(false)} title="Mail Notifications" description="Configure your mail notifications here.">
-                    <Col className="text-center py-4">Please log in to see contents of this page.</Col>
-                </ViewBox>
-            </Col>
-        </React.Fragment>
+        return <Col xs={12} md={9}>
+            <ViewBox theme={context.getTheme(false)} title="Mail Notifications" description="Configure your mail notifications here.">
+                <Col className="text-center py-4">Please log in to see contents of this page.</Col>
+            </ViewBox>
+        </Col>
     }
     const conditionalButton = (conditionEnabled, funcEnable, funcDisable) => {
         if (conditionEnabled) {
@@ -66,14 +65,11 @@ const NotificationsSubview = ({reRouteTo}) => {
             </Col>
         </React.Fragment>
     };
-    return <React.Fragment>
-        <ProfileSidebar currentNode="notifications" reRouteTo={reRouteTo}/>
-        <Col xs={12} md={9}>
-            <ViewBox theme={context.getTheme(false)} title="Mail Notifications" description="Configure your mail notifications here.">
-                {renderContent()}
-            </ViewBox>
-        </Col>
-    </React.Fragment>
+    return <Col xs={12} md={9}>
+        <ViewBox theme={context.getTheme(false)} title="Mail Notifications" description="Configure your mail notifications here.">
+            {renderContent()}
+        </ViewBox>
+    </Col>
 };
 
 export default NotificationsSubview;
