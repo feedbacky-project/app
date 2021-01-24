@@ -26,7 +26,7 @@ const BoardDetailsBox = ({onIdeaCreation, onNotLoggedClick}) => {
         if (!contains) {
             return;
         }
-        return <PageButton color={context.getTheme()} as={Link} to={{
+        return <PageButton as={Link} to={{
             pathname: "/ba/" + boardData.discriminator,
             state: {
                 _boardData: boardData,
@@ -43,7 +43,7 @@ const BoardDetailsBox = ({onIdeaCreation, onNotLoggedClick}) => {
                 <Card.Body className="pb-2">
                     <div className="markdown-box" dangerouslySetInnerHTML={{__html: parseMarkdown(boardData.fullDescription)}}/>
                     <hr/>
-                    <ExecutableButton color={context.getTheme()} className="mx-0 mt-0 mb-2 py-1" onClick={() => {
+                    <ExecutableButton className="mx-0 mt-0 mb-2 py-1" onClick={() => {
                         onCreateIdeaModalClick();
                         return Promise.resolve();
                     }}>

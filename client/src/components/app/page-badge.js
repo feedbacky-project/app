@@ -5,10 +5,13 @@ import {Badge} from "react-bootstrap";
 import tinycolor from "tinycolor2";
 
 // fixme sneaky workaround for missing context when inserting html directly
-const PageBadge = ({color, text, className = "", context = null}) => {
+const PageBadge = ({color = null, text, className = "", context = null}) => {
     let appContext = useContext(AppContext);
     if (context != null) {
         appContext = context;
+    }
+    if(color == null) {
+        color = appContext.getTheme();
     }
     if (appContext.user.darkMode) {
         color = color.lighten(10);

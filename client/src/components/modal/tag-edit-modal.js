@@ -40,7 +40,7 @@ const TagEditModal = ({tag, boardData, open, onClose, onEdit}) => {
     };
 
     return <PageModal id="tagCreate" isOpen={open} onHide={onClose} title="Edit Tag"
-                      applyButton={<PageButton color={context.getTheme()} onClick={handleSubmit} className="mx-0">Save</PageButton>}>
+                      applyButton={<PageButton onClick={handleSubmit} className="mx-0">Save</PageButton>}>
         <Row>
             <Col xs={12} className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>

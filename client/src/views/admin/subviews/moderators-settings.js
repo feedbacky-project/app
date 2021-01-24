@@ -70,7 +70,7 @@ const ModeratorsSettings = () => {
                             {renderModerationKick(mod, i)}
                             <br/>
                             <small className="text-truncate d-block" style={{maxWidth: 100}}>{mod.user.username}</small>
-                            <PageBadge color={context.getTheme()} text={prettifyEnum(mod.role)} className="move-top-3px"/>
+                            <PageBadge text={prettifyEnum(mod.role)} className="move-top-3px"/>
                         </div>
                     </div>
                 })}
@@ -96,7 +96,7 @@ const ModeratorsSettings = () => {
                 })}
             </Col>
             <Col xs={12}>
-                <ExecutableButton color={context.getTheme()} className="m-0 mt-3 float-right" onClick={() => {
+                <ExecutableButton className="m-0 mt-3 float-right" onClick={() => {
                     setModalOpen(true);
                     return Promise.resolve();
                 }}>Invite New</ExecutableButton>

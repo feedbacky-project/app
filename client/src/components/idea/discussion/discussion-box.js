@@ -113,12 +113,12 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         }
         const moderator = boardContext.data.moderators.find(mod => mod.userId === context.user.data.id);
         return <React.Fragment>
-            <ExecutableButton color={context.getTheme()} className="mt-2 ml-0 mb-0" style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(false)}>
+            <ExecutableButton size="sm" className="mt-2 ml-0 mb-0" style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(false)}>
                 Submit
             </ExecutableButton>
 
             {moderator && <React.Fragment>
-                <ExecutableButton color={tinycolor("#0080FF")} className="mt-2 ml-2 mr-1 mb-0" style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(true)}>
+                <ExecutableButton color={tinycolor("#0080FF")} size="sm" className="mt-2 ml-2 mr-1 mb-0" style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(true)}>
                     Submit Internal
                 </ExecutableButton>
                 <div className="d-inline-block align-top move-bottom-2px"><ClickableTip id="internalTip" title="Internal Comments" description="Comments visible only for moderators of the project, hidden from public view."/></div>

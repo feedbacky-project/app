@@ -35,7 +35,7 @@ const TagCreateModal = (props) => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Add new Tag"
-                      applyButton={<ExecutableButton color={context.getTheme()} onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
+                      applyButton={<ExecutableButton onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
         <Row>
             <Col xs={12} className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>

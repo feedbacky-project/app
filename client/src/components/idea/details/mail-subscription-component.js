@@ -32,13 +32,11 @@ const MailSubscriptionComponent = ({ideaData, updateState, onNotLoggedClick}) =>
         }).catch(() => toastError());
     };
     const renderButton = () => {
-        if (ideaData.subscribed) {
-            return <ExecutableButton color={context.getTheme()} size="sm" className="m-0 mt-sm-0"
-                                     onClick={onSubscribeToggle}><FaRegBellSlash className="move-top-1px"/> Unsubscribe</ExecutableButton>
-        } else {
-            return <ExecutableButton color={context.getTheme()} size="sm" className="m-0 mt-sm-0"
-                                     onClick={onSubscribeToggle}><FaRegBell className="move-top-1px"/> Subscribe</ExecutableButton>
-        }
+        return <ExecutableButton size="sm" className="m-0 mt-sm-0" onClick={onSubscribeToggle}>
+            {ideaData.subscribed ?
+                <React.Fragment><FaRegBellSlash className="move-top-1px"/> Unsubscribe</React.Fragment>
+                : <React.Fragment><FaRegBell className="move-top-1px"/> Subscribe</React.Fragment>}
+        </ExecutableButton>
     };
     return <React.Fragment>
         <div className="my-1 text-black-75">

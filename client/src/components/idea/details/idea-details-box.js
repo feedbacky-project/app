@@ -127,7 +127,7 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
             <TextareaAutosize className="form-control bg-lighter" id="editorBox" rows={4} maxRows={12}
                               placeholder="Write a description..." required as="textarea"
                               style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
-            <ExecutableButton color={context.getTheme()} className="m-0 mt-2" onClick={onEditApply}>Save</ExecutableButton>
+            <ExecutableButton className="m-0 mt-2" onClick={onEditApply}>Save</ExecutableButton>
             <PageCancelButton className="m-0 mt-2" onClick={() => setEditor({...editor, enabled: false})}>Cancel</PageCancelButton>
         </React.Fragment>
     };

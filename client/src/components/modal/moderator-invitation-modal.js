@@ -8,8 +8,6 @@ import PageAvatar from "components/app/page-avatar";
 import ExecutableButton from "components/app/executable-button";
 
 const ModeratorInvitationModal = (props) => {
-    const context = useContext(AppContext);
-
     const handleSubmit = () => {
         const userEmail = document.getElementById("inviteEmailTextarea").value;
         if(userEmail === "" || !userEmail.match(/\S+@\S+\.\S+/)) {
@@ -37,7 +35,7 @@ const ModeratorInvitationModal = (props) => {
     };
 
     return <PageModal id="moderatorInvite" isOpen={props.open} onHide={props.onModInvitationCreateModalClose} title="Invite New Moderator"
-                      applyButton={<ExecutableButton color={context.getTheme()} onClick={handleSubmit} className="mx-0">Invite</ExecutableButton>}>
+                      applyButton={<ExecutableButton onClick={handleSubmit} className="mx-0">Invite</ExecutableButton>}>
         <Form noValidate>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">User Email</Form.Label>

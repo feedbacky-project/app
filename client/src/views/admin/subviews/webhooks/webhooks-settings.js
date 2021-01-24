@@ -66,8 +66,7 @@ const WebhooksSettings = () => {
                     </div>
                     {renderWebhooks()}
                     <div>
-                        <PageButton color={context.getTheme()} className="m-0 mt-3 float-right" as={Link}
-                                    to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</PageButton>
+                        <PageButton className="m-0 mt-3 float-right" as={Link} to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</PageButton>
                     </div>
                 </Col>
             </React.Fragment>
@@ -84,7 +83,7 @@ const WebhooksSettings = () => {
         }
     };
     const renderEvents = (hook) => {
-        return hook.events.map(event => <div key={hook.id + event}><PageBadge className="d-block my-1" text={prettifyEnum(event)} color={context.getTheme()}/></div>);
+        return hook.events.map(event => <div key={hook.id + event}><PageBadge className="d-block my-1" text={prettifyEnum(event)}/></div>);
     };
     const onWebhookDelete = (hook) => {
         popupSwal("warning", "Dangerous action", "Webhook will be permanently removed and won't send data to target URL.",

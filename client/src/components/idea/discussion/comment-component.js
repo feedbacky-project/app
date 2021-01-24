@@ -43,7 +43,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         if (data.user.id !== context.user.data.id && !moderator) {
             return;
         }
-        return <FaTrashAlt className="ml-1 fa-xs cursor-click" onClick={() => onCommentDelete(data.id)}/>
+        return <FaTrashAlt className="ml-1 fa-xs cursor-click text-black-60" onClick={() => onCommentDelete(data.id)}/>
     };
     const isSuspendable = () => {
         if(boardData.moderators.find(mod => mod.user.id === data.user.id)) {
@@ -56,7 +56,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         if (!moderator || !isSuspendable()) {
             return;
         }
-        return <FaUserLock className="ml-1 fa-xs cursor-click" onClick={() => onSuspend(data)}/>
+        return <FaUserLock className="ml-1 fa-xs cursor-click text-black-60" onClick={() => onSuspend(data)}/>
     };
     const renderLikes = () => {
         const likes = data.likesAmount;

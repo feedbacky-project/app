@@ -3,8 +3,11 @@ import AppContext from "../../context/app-context";
 import tinycolor from "tinycolor2";
 import {Button} from "react-bootstrap";
 
-const PageButton = ({children, color, className, style, disabled, onClick, size, as, to}) => {
+const PageButton = ({children, color = null, className, style, disabled, onClick, size, as, to}) => {
     const appContext = useContext(AppContext);
+    if(color == null) {
+        color = appContext.getTheme();
+    }
     if (appContext.user.darkMode) {
         color = color.lighten(10);
         //if still not readable, increase again

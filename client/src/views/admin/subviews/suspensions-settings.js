@@ -23,8 +23,7 @@ const SuspensionSettings = () => {
             <div className="mb-1 text-black-60">Suspended Users</div>
             {renderSuspensions()}
             <div>
-                <PageButton color={context.getTheme()} className="m-0 mt-3 float-right"
-                            onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</PageButton>
+                <PageButton className="m-0 mt-3 float-right" onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</PageButton>
             </div>
         </Col>
     };

@@ -148,7 +148,7 @@ const GeneralSettings = ({updateState}) => {
                 <input hidden accept="image/jpeg, image/png" id="logoInput" type="file" name="logo" onChange={onLogoChange}/>
             </Col>
             <Col xs={12}>
-                <ExecutableButton color={context.getTheme()} className="m-0 mt-3 float-right" onClick={onChangesSave}>
+                <ExecutableButton className="m-0 mt-3 float-right" onClick={onChangesSave}>
                     Save Settings
                 </ExecutableButton>
             </Col>

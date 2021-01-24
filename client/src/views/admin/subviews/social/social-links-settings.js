@@ -49,7 +49,7 @@ const SocialLinksSettings = () => {
                     <DeleteButton tooltipName="Delete" onClick={() => onSocialLinkDelete(link.id)}
                                   id={"social-" + link.id + "-del"}/>
                     <br/>
-                    <SafeAnchor url={link.url}><PageBadge color={context.getTheme()} text={extractHostname(link.url)}/></SafeAnchor>
+                    <SafeAnchor url={link.url}><PageBadge text={extractHostname(link.url)}/></SafeAnchor>
                 </div>
             </div>
         })
@@ -71,10 +71,10 @@ const SocialLinksSettings = () => {
     const renderAddButton = () => {
         if (getQuota() <= 0) {
             return <OverlayTrigger overlay={<Tooltip id="quota-tooltip">Quota Limit Reached</Tooltip>}>
-                <PageButton color={context.getTheme()} className="m-0 mt-3 float-right"><FaExclamation/> Add New</PageButton>
+                <PageButton className="m-0 mt-3 float-right"><FaExclamation/> Add New</PageButton>
             </OverlayTrigger>
         }
-        return <PageButton color={context.getTheme()} className="m-0 mt-3 float-right" as={Link} to={"/ba/" + boardData.discriminator + "/social/create"}>Add New</PageButton>
+        return <PageButton className="m-0 mt-3 float-right" as={Link} to={"/ba/" + boardData.discriminator + "/social/create"}>Add New</PageButton>
     };
     const extractHostname = (url) => {
         let hostname;
