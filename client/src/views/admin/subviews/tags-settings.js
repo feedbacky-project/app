@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import {toastError, toastSuccess} from "components/util/utils";
@@ -30,7 +30,7 @@ const TagsSettings = () => {
     const getQuota = () => 10 - boardData.tags.length;
     useEffect(() => setCurrentNode("tags"), []);
     const onTagCreate = (data) => {
-        boardContext.updateTags(boardData.tags.concat(data));
+        boardContext.updateState({tags: boardData.tags.concat(data)});
     };
     const renderContent = () => {
         return <Col xs={12}>
@@ -81,10 +81,10 @@ const TagsSettings = () => {
         setEditModalOpen(true);
     };
     const onEdit = (oldTag, tag) => {
-        const data = boardData.tags;
-        const i = data.indexOf(oldTag);
-        data[i] = tag;
-        boardContext.updateTags(data);
+        const tags = boardData.tags;
+        const i = tags.indexOf(oldTag);
+        tags[i] = tag;
+        boardContext.updateState({tags});
     };
     const onTagDelete = (name) => {
         popupSwal("warning", "Dangerous action", "This action is <strong>irreversible</strong> and will delete tag from all ideas, please confirm your action.",
@@ -97,7 +97,7 @@ const TagsSettings = () => {
                         toastError();
                         return;
                     }
-                    boardContext.updateTags(boardData.tags.filter(item => item.name !== name));
+                    boardContext.updateState({tags: boardData.tags.filter(item => item.name !== name)});
                     toastSuccess("Tag permanently deleted.");
                 }).catch(err => toastError(err.response.data.errors[0]));
             });

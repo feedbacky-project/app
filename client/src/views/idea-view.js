@@ -13,6 +13,7 @@ import {useHistory, useLocation, useParams} from "react-router-dom";
 import {convertIdeaToSlug} from "components/util/utils";
 import CommonBoardContextedView from "./common-board-contexted-view";
 import LoadingSpinner from "../components/util/loading-spinner";
+import IdeaContext from "../context/idea-context";
 
 const IdeaView = () => {
     const history = useHistory();
@@ -73,22 +74,24 @@ const IdeaView = () => {
         return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
     return <CommonBoardContextedView board={board} setBoard={setBoard}>
-        <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
-                    redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
-        <IdeaNavbar onNotLoggedClick={() => setModalOpen(true)}/>
-        <Container className="pb-5">
-            <Row className="justify-content-center pb-4">
-                <ComponentLoader loaded={board.loaded} component={
-                    <IdeaDetailsBox updateState={updateState} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
-                }/>
-                <Col xs={12}>
-                    <hr/>
-                </Col>
-                <ComponentLoader loaded={idea.loaded} component={
-                    <DiscussionBox updateState={updateState} ideaData={idea.data} onNotLoggedClick={() => setModalOpen(true)}/>
-                }/>
-            </Row>
-        </Container>
+        <IdeaContext.Provider value={{
+            ideaData: idea.data, loaded: idea.loaded, error: idea.error,
+            updateState: (data) => {
+                setIdea({...idea, data});
+                history.replace({pathname: location.pathname, state: null});
+            },
+        }}>
+            <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
+                        redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
+            <IdeaNavbar onNotLoggedClick={() => setModalOpen(true)}/>
+            <Container className="pb-5">
+                <Row className="justify-content-center pb-4">
+                    <ComponentLoader loaded={board.loaded} component={<IdeaDetailsBox onNotLoggedClick={() => setModalOpen(true)}/>}/>
+                    <Col xs={12}><hr/></Col>
+                    <ComponentLoader loaded={idea.loaded} component={<DiscussionBox onNotLoggedClick={() => setModalOpen(true)}/>}/>
+                </Row>
+            </Container>
+        </IdeaContext.Provider>
     </CommonBoardContextedView>
 };
 

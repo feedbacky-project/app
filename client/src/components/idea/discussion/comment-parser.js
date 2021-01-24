@@ -1,8 +1,8 @@
 import tinycolor from "tinycolor2";
 import PageBadge from "components/app/page-badge";
 import React from "react";
-import {formatUsername} from "components/util/utils";
 import replace from "react-string-replace";
+import PageUsername from "../../app/page-username";
 
 const parseComment = (message, moderatorsData, tagsData) => {
     const regex = /[^{}]+(?=})/g;
@@ -29,7 +29,7 @@ const parseTag = (result, moderatorsData, tagsData) => {
     if (data[0] === "data_tag") {
         return parseBoardTagData(data, tagsData);
     } else if (data[0] === "data_user") {
-        return parseModeratorData(data, moderatorsData);
+        return parseModeratorData(data);
     }
 };
 
@@ -41,8 +41,11 @@ const parseBoardTagData = (data, tagsData) => {
     return <PageBadge key={data[2]} text={foundTag.name} color={tinycolor(foundTag.color)}/>
 };
 
-const parseModeratorData = (data, moderatorsData) => {
-    return <span key={data[1]}>{formatUsername(parseInt(data[1]), data[2], moderatorsData)}</span>;
+const parseModeratorData = (data) => {
+    //simulate user from user context, WARNING, might be unsafe in the future!
+    return <span key={data[1]}>
+        <PageUsername user={{id: parseInt(data[1]), username: data[2]}}/>
+    </span>
 };
 
 export default parseComment;

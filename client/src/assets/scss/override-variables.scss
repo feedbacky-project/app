@@ -6,9 +6,9 @@ $border-width: 0;
 $border-color: transparent;
 $badge-font-weight: 400;
 $badge-font-size: .7rem;
-$jumbotron-color: #fff;
+$jumbotron-color: white;
 $dropdown-box-shadow: $box-shadow;
-$popover-header-bg: #323232;
+$popover-header-bg: hsl(0, 0%, 20%);
 $popover-header-color: white;
 $link-hover-decoration: none;
 $navbar-brand-font-size: 1.25rem;
@@ -20,10 +20,10 @@ $dropdown-font-size: 14px;
 $dropdown-min-width: 8.5rem;
 $input-box-shadow: $box-shadow;
 
-$green: #00c851;
-$red: #ff3547;
-$orange: #c2a442;
-$blue: #176ac4;
+$green: hsl(144, 100%, 39%);
+$red: hsl(355, 100%, 60%);
+$orange: hsl(46, 51%, 51%);
+$blue: hsl(211, 79%, 43%);
 
 $theme-colors: (
         "primary": $blue,

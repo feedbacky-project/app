@@ -13,14 +13,13 @@ import {useHistory} from "react-router-dom";
 import PageBadge from "components/app/page-badge";
 import tinycolor from "tinycolor2";
 import BoardContext from "context/board-context";
+import IdeaContext from "../../context/idea-context";
 
-const ModeratorActions = ({
-                              ideaData, updateState, onIdeaDelete = () => {
-    }
-                          }) => {
+const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     const swalGenerator = swalReact(Swal);
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
+    const {ideaData, updateState} = useContext(IdeaContext);
     const history = useHistory();
     const visible = boardContext.data.moderators.find(mod => mod.userId === context.user.data.id);
     const onIdeaOpen = () => {
@@ -99,7 +98,7 @@ const ModeratorActions = ({
                         return;
                     }
                     toastSuccess("User suspended.", id);
-                    boardContext.updateSuspensions(boardContext.data.suspendedUsers.concat(res.data));
+                    boardContext.updateState({suspendedUsers: boardContext.data.suspendedUsers.concat(res.data)});
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };
@@ -173,10 +172,8 @@ const ModeratorActions = ({
     </Dropdown>
 };
 
-ModeratorActions.propTypes = {
-    ideaData: PropTypes.object.isRequired,
-    updateState: PropTypes.func.isRequired,
+ModeratorActionsButton.propTypes = {
     onIdeaDelete: PropTypes.func
 };
 
-export default ModeratorActions;
+export default ModeratorActionsButton;

@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import {formatUsername, parseMarkdown} from "components/util/utils";
+import {parseMarkdown} from "components/util/utils";
 import TimeAgo from "timeago-react";
 import {FaEdit, FaHeart, FaLockOpen, FaLowVision, FaRegHeart, FaTags, FaTimesCircle, FaTrashAlt, FaUserLock} from "react-icons/all";
 import AppContext from "context/app-context";
@@ -46,7 +46,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         return <FaTrashAlt className="ml-1 fa-xs cursor-click text-black-60" onClick={() => onCommentDelete(data.id)}/>
     };
     const isSuspendable = () => {
-        if(boardData.moderators.find(mod => mod.user.id === data.user.id)) {
+        if (boardData.moderators.find(mod => mod.user.id === data.user.id)) {
             return false;
         }
         return !boardData.suspendedUsers.find(suspended => suspended.user.id === data.user.id);
@@ -82,7 +82,7 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         </React.Fragment>
     }
     let color = context.getTheme();
-    if(context.user.darkMode) {
+    if (context.user.darkMode) {
         color = color.clone().setAlpha(.2);
     }
 

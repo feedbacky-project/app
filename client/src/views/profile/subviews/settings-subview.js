@@ -1,8 +1,7 @@
 import {Col, Form, Row} from "react-bootstrap";
 import React, {useContext, useEffect, useState} from "react";
-import {formatRemainingCharacters, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
 import AvatarSelectionModal from "components/modal/avatar-selection-modal";
 import Swal from "sweetalert2";
@@ -15,6 +14,7 @@ import LoadingSpinner from "../../../components/util/loading-spinner";
 import PageNodesContext from "../../../context/page-nodes-context";
 import PageButton from "../../../components/app/page-button";
 import tinycolor from "tinycolor2";
+import PageCountableFormControl from "../../../components/app/page-countable-form-control";
 
 const SettingsSubview = () => {
     const context = useContext(AppContext);
@@ -116,16 +116,8 @@ const SettingsSubview = () => {
             } loader={<React.Fragment/>}/>
             <Col xs={12} lg={6} className="order-lg-1 order-2">
                 <Form.Label className="mr-1 mt-lg-0 mt-2 text-black-60">Username</Form.Label>
-                <Form.Control style={{minHeight: 38, resize: "none"}} minLength="4" maxLength="20" rows="1" required
-                              type="text" className="bg-light"
-                              placeholder="Name of your account." defaultValue={username} id="usernameTextarea"
-                              onChange={e => {
-                                  setUsername(e.target.value.substring(0, 20));
-                                  formatRemainingCharacters("remainingUsername", "usernameTextarea", 20);
-                              }}/>
-                <Form.Text className="text-right text-black-60" id="remainingUsername">
-                    {20 - username.length} Remaining
-                </Form.Text>
+                <PageCountableFormControl id={"usernameTextarea"} className={"bg-light"} minLength={4} maxLength={20} placeholder={"Name of your account."}
+                                          onChange={e => setUsername(e.target.value.substring(0, 20))}/>
             </Col>
             <Col xs={12} lg={6} className="order-lg-2 order-1">
                 <Form.Label className="mr-1 text-black-60">Avatar</Form.Label>
@@ -139,8 +131,7 @@ const SettingsSubview = () => {
             <Col xs={12} lg={6} className="order-3">
                 <Form.Label className="mr-1 mt-2 text-black-60">Email</Form.Label>
                 <Form.Control style={{minHeight: 38, resize: "none"}} minLength="4" maxLength="20" rows="1" required
-                              disabled
-                              value={context.user.data.email} id="emailTextarea"/>
+                              disabled value={context.user.data.email} id="emailTextarea"/>
                 <Form.Text className="text-right text-black-60" id="remainingUsername">
                     Cannot Change
                 </Form.Text>

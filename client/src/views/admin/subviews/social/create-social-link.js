@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import StepFirst from "views/admin/subviews/social/steps/step-first";
 import StepSecond from "views/admin/subviews/social//steps/step-second";
-import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
+import {Col, Container, ProgressBar, Row} from "react-bootstrap";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
 import Steps, {Step} from "rc-steps";
@@ -39,9 +39,8 @@ const CreateSocialLink = () => {
                         pathname: "/ba/" + boardData.discriminator + "/social",
                         state: null
                     });
-                    const links = context.data.socialLinks;
-                    links.push(res.data);
-                    context.updateSocialLinks(links);
+                    const socialLinks = context.data.socialLinks.concat(res.data);
+                    context.updateState({socialLinks});
                 }).catch(err => {
                     toastError(err.response.data.errors[0], toastId);
                     setSettings({...settings, step: 2});

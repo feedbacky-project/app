@@ -3,14 +3,11 @@ import BoardNavbar from "components/navbars/board-navbar";
 import BoardSearchBar from "components/board/searchbar/board-search-bar";
 import BoardContainer from "components/board/ideas/board-container";
 import axios from "axios";
-import ErrorView from "views/errors/error-view";
 import {FaExclamationCircle} from "react-icons/fa";
 import {Container, Row} from "react-bootstrap";
 import LoginModal from "components/modal/login-modal";
 import BoardBanner from "components/board/board-banner";
-import LoadingSpinner from "components/util/loading-spinner";
 import AppContext from "context/app-context";
-import BoardContext from "context/board-context";
 import {useLocation, useParams} from "react-router-dom";
 import CommonBoardContextedView from "./common-board-contexted-view";
 

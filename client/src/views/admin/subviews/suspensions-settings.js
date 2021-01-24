@@ -54,9 +54,9 @@ const SuspensionSettings = () => {
                         toastError("Failed to unsuspend the user", id);
                         return;
                     }
-                    const data = boardContext.data.suspendedUsers.filter(item => item.id !== suspendedUser.id);
+                    const suspendedUsers = boardContext.data.suspendedUsers.filter(item => item.id !== suspendedUser.id);
                     toastSuccess("User unsuspended.", id);
-                    boardContext.updateSuspensions(data);
+                    boardContext.updateState({suspendedUsers});
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };

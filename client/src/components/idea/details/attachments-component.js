@@ -6,10 +6,12 @@ import {popupSwal} from "components/util/sweetalert-utils";
 import axios from "axios";
 import {toastError, toastSuccess} from "components/util/utils";
 import BoardContext from "context/board-context";
+import IdeaContext from "../../../context/idea-context";
 
-const AttachmentsComponent = ({ideaData, updateState}) => {
+const AttachmentsComponent = () => {
     const context = useContext(AppContext);
     const {moderators} = useContext(BoardContext).data;
+    const {ideaData, updateState} = useContext(IdeaContext);
     if (ideaData.attachments.length === 0) {
         return <React.Fragment/>
     }

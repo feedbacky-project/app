@@ -17,6 +17,7 @@ import tinycolor from "tinycolor2";
 import ColorSelectionModal from "components/modal/color-selection-modal";
 import ExecutableButton from "components/app/executable-button";
 import PageNodesContext from "../../../context/page-nodes-context";
+import PageCountableFormControl from "../../../components/app/page-countable-form-control";
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
@@ -32,36 +33,17 @@ const GeneralSettings = ({updateState}) => {
     useEffect(() => setCurrentNode("general"), []);
     const renderContent = () => {
         return <React.Fragment>
-            <ColorSelectionModal open={modalOpen} onClose={() => setModalOpen(false)} onUpdate={(color) => context.onThemeChange(color)}/>
+            <ColorSelectionModal open={modalOpen} onClose={() => setModalOpen(false)} onUpdate={(color) => context.onThemeChange(color.toHexString())}/>
             <Col xs={12} lg={6}>
                 <Form.Label className="mr-1 text-black-60">Board Name</Form.Label>
                 <ClickableTip id="boardName" title="Set Board Name" description="Name of your board should be at least 4 and maximum 25 characters long."/>
-                <Form.Control style={{minHeight: 38, resize: "none"}} minLength="4" maxLength="25" rows="1"
-                              required type="text"
-                              placeholder="Short name of board." defaultValue={boardData.name}
-                              id="boardTextarea" className="bg-light"
-                              onChange={e => {
-                                  e.target.value = e.target.value.substring(0, 25);
-                                  formatRemainingCharacters("remainingBoardName", "boardTextarea", 25);
-                              }}/>
-                <Form.Text className="text-right text-black-60" id="remainingBoardName">
-                    {25 - boardData.name.length} Remaining
-                </Form.Text>
+                <PageCountableFormControl id={"boardTextarea"} className={"bg-light"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={boardData.name}/>
             </Col>
             <Col xs={12} lg={6}>
                 <Form.Label className="mr-1 mt-lg-0 mt-2 text-black-60">Short Description</Form.Label>
                 <ClickableTip id="boardShortDescription" title="Set Short Description" description="Very short board description used for thumbnail purposes. Keep it under 50 characters long."/>
-                <Form.Control style={{minHeight: 38, resize: "none"}} minLength="10" maxLength="50" rows="1"
-                              required type="text" className="bg-light"
-                              placeholder="Short description of board."
-                              defaultValue={boardData.shortDescription} id="shortDescrTextarea"
-                              onChange={e => {
-                                  e.target.value = e.target.value.substring(0, 50);
-                                  formatRemainingCharacters("remainingShortDescr", "shortDescrTextarea", 50);
-                              }}/>
-                <Form.Text className="text-right text-black-60" id="remainingShortDescr">
-                    {50 - boardData.shortDescription.length} Remaining
-                </Form.Text>
+                <PageCountableFormControl id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
+                                          defaultValue={boardData.shortDescription}/>
             </Col>
             <Col xs={12} lg={6}>
                 <Form.Label className="mr-1 text-black-60 mt-2">Full Description</Form.Label>

@@ -1,8 +1,7 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
-import AppContext from "context/app-context";
 import PageModal from "components/modal/page-modal";
 import PageAvatar from "components/app/page-avatar";
 import ExecutableButton from "components/app/executable-button";

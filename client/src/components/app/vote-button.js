@@ -3,13 +3,15 @@ import Button from "react-bootstrap/Button";
 import AppContext from "context/app-context";
 import {FiChevronsUp, FiChevronUp} from "react-icons/all";
 import PropTypes from "prop-types";
+import IdeaContext from "../../context/idea-context";
 
-const VoteButton = ({upvoted, votersAmount, onVote}) => {
+const VoteButton = ({onVote}) => {
     const context = useContext(AppContext);
+    const {ideaData} = useContext(IdeaContext);
     let color = context.getTheme();
 
     let vote;
-    if (!upvoted) {
+    if (!ideaData.upvoted) {
         color = color.setAlpha(.7);
         vote = <FiChevronUp style={{color}}/>;
     } else {
@@ -18,14 +20,12 @@ const VoteButton = ({upvoted, votersAmount, onVote}) => {
     return <span className="my-auto">
         <Button className="vote-btn" onClick={onVote} variant="">
             {vote}
-            <strong className="d-block" style={{color: color}}>{votersAmount}</strong>
+            <strong className="d-block" style={{color: color}}>{ideaData.votersAmount}</strong>
         </Button>
     </span>
 };
 
 VoteButton.propTypes = {
-    upvoted: PropTypes.bool.isRequired,
-    votersAmount: PropTypes.number.isRequired,
     onVote: PropTypes.func.isRequired
 };
 

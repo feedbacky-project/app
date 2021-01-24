@@ -4,7 +4,6 @@ import {FaCheck, FaExclamation, FaExclamationTriangle} from "react-icons/fa";
 import {parseEmojis} from "components/util/emoji-filter";
 import marked from "marked";
 import Cookies from "js-cookie";
-import {FaBan} from "react-icons/all";
 import LoadingSpinner from "./loading-spinner";
 
 export const getDefaultAvatar = (username) => {
@@ -100,27 +99,6 @@ export const truncateText = (text, maxLength) => {
         return text;
     }
     return text.substring(0, maxLength) + "...";
-};
-
-export const formatUsername = (userId, userName, moderators = [], suspended = []) => {
-    const isSuspended = suspended.find(suspended => suspended.user.id === userId);
-    if (isSuspended) {
-        return <span className="board-role suspended"><FaBan className="fa-xs move-top-1px"/> {userName}</span>
-    }
-    const user = moderators.find(mod => mod.userId === userId);
-    if (user == null) {
-        return userName;
-    }
-    switch (user.role.toLowerCase()) {
-        case "owner":
-        case "admin":
-            return <span className="board-role admin">{userName}</span>;
-        case "moderator":
-            return <span className="board-role moderator">{userName}</span>;
-        case "user":
-        default:
-            return userName;
-    }
 };
 
 export const prepareFilterAndSortRequests = (preferences) => {

@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
-import {Button, Col, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import ViewBox from "components/viewbox/view-box";
 import ExecutableButton from "components/app/executable-button";
 import PageNodesContext from "../../../context/page-nodes-context";

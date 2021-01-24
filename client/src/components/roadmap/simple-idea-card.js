@@ -1,15 +1,18 @@
 import React, {useContext, useState} from "react";
 import VoteButton from "components/app/vote-button";
-import {Link} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {convertIdeaToSlug, toastError, truncateText} from "components/util/utils";
 import BoardContext from "context/board-context";
 import {FaLock, FaRegComment} from "react-icons/all";
 import axios from "axios";
 import AppContext from "context/app-context";
+import IdeaContext from "../../context/idea-context";
 
 export const SimpleIdeaCard = ({data, onNotLoggedClick}) => {
     const cardRef = React.createRef();
     const [idea, setIdea] = useState(data);
+    const history = useHistory();
+    const location = useLocation();
     const boardData = useContext(BoardContext).data;
     const context = useContext(AppContext);
     const renderLockState = () => {
@@ -54,7 +57,7 @@ export const SimpleIdeaCard = ({data, onNotLoggedClick}) => {
                 toastError();
                 return;
             }
-            if(upvoted) {
+            if (upvoted) {
                 cardRef.current.classList.add("upvote-animation");
             } else {
                 cardRef.current.classList.remove("upvote-animation");
@@ -62,24 +65,32 @@ export const SimpleIdeaCard = ({data, onNotLoggedClick}) => {
             setIdea({...idea, upvoted, votersAmount});
         }).catch(() => toastError());
     };
-    return <div ref={cardRef} id={"container_idea_" + idea.id} className="m-3" style={{borderRadius: 0, display: `block`}}>
-        <div className="row">
+    return <IdeaContext.Provider value={{
+        ideaData: idea, loaded: true, error: false,
+        updateState: (data) => {
+            setIdea({...idea, data});
+            history.replace({pathname: location.pathname, state: null});
+        },
+    }}>
+        <div ref={cardRef} id={"container_idea_" + idea.id} className="m-3" style={{borderRadius: 0, display: `block`}}>
+            <div className="row">
             <span className="my-auto mr-2">
                 <VoteButton votersAmount={idea.votersAmount} onVote={onVote} upvoted={idea.upvoted}/>
             </span>
-            <Link className="d-inline col px-0 text-left hidden-anchor" to={{
-                pathname: "/i/" + convertIdeaToSlug(idea),
-                state: {_ideaData: idea, _boardData: boardData}
-            }}>
-                <div>
-                    <div className="d-inline mr-1" style={{letterSpacing: `-.15pt`}}>
-                        {renderLockState()}
-                        <span dangerouslySetInnerHTML={{__html: idea.title}}/>
-                        {renderComments()}
+                <Link className="d-inline col px-0 text-left hidden-anchor" to={{
+                    pathname: "/i/" + convertIdeaToSlug(idea),
+                    state: {_ideaData: idea, _boardData: boardData}
+                }}>
+                    <div>
+                        <div className="d-inline mr-1" style={{letterSpacing: `-.15pt`}}>
+                            {renderLockState()}
+                            <span dangerouslySetInnerHTML={{__html: idea.title}}/>
+                            {renderComments()}
+                        </div>
                     </div>
-                </div>
-                <small className="text-black-60" style={{letterSpacing: `-.15pt`}} dangerouslySetInnerHTML={{__html: truncateText(idea.description, 90)}}/>
-            </Link>
+                    <small className="text-black-60" style={{letterSpacing: `-.15pt`}} dangerouslySetInnerHTML={{__html: truncateText(idea.description, 90)}}/>
+                </Link>
+            </div>
         </div>
-    </div>
+    </IdeaContext.Provider>
 };

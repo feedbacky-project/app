@@ -4,9 +4,11 @@ import AppContext from "context/app-context";
 import PageAvatar from "components/app/page-avatar";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import LoadingSpinner from "../../util/loading-spinner";
+import IdeaContext from "../../../context/idea-context";
 
-const VotersComponent = ({votersAmount, data}) => {
+const VotersComponent = ({data}) => {
     const context = useContext(AppContext);
+    const {votersAmount} = useContext(IdeaContext).ideaData;
     const renderVoters = () => {
         if (!data.loaded) {
             const voters = votersAmount > 5 ? 5 : votersAmount;

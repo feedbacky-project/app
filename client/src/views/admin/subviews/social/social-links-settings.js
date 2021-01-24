@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import axios from "axios";
 import {toastError, toastSuccess} from "components/util/utils";
 import AppContext from "context/app-context";
@@ -100,7 +100,7 @@ const SocialLinksSettings = () => {
                     }
                     const data = socialLinks.data.filter(item => item.id !== id);
                     setSocialLinks({...socialLinks, data});
-                    boardContext.updateSocialLinks(data);
+                    boardContext.updateState({socialLinks: data});
                     toastSuccess("Social link deleted.");
                 }).catch(err => toastError(err.response.data.errors[0]));
             });

@@ -4,8 +4,8 @@ import {FaBan} from "react-icons/all";
 import {truncateText} from "../util/utils";
 
 const PageUsername = ({user, truncate = -1}) => {
-    const {data} = useContext(BoardContext);
-    const isSuspended = data.suspendedUsers.find(suspended => suspended.user.id === user.id);
+    const {suspendedUsers, moderators} = useContext(BoardContext).data;
+    const isSuspended = suspendedUsers.find(suspended => suspended.user.id === user.id);
     let username = user.username;
     if(truncate > 0) {
         username = truncateText(username, truncate);
@@ -13,7 +13,7 @@ const PageUsername = ({user, truncate = -1}) => {
     if (isSuspended) {
         return <span className="board-role suspended"><FaBan className="fa-xs move-top-1px"/> {username}</span>
     }
-    const moderator = data.moderators.find(mod => mod.userId === user.id);
+    const moderator = moderators.find(mod => mod.userId === user.id);
     if (moderator == null) {
         return username;
     }

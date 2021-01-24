@@ -4,7 +4,7 @@ $border-radius: .35rem;
 
 .swal2-cancel {
   background-color: transparent !important;
-  color: rgba(0, 0, 0, 0.5) !important;
+  color: hsla(0, 0%, 0%, 0.5) !important;
   &:hover {
     background-image: none !important;
     text-decoration: none;

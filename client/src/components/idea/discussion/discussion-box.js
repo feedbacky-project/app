@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Button, Col, Dropdown, Row} from "react-bootstrap";
+import {Col, Dropdown, Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "components/util/loading-spinner";
 import {FaFrown} from "react-icons/fa";
-import {formatUsername, getDefaultAvatar, prepareFilterAndSortRequests, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import {prepareFilterAndSortRequests, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import AppContext from "context/app-context";
 import InfiniteScroll from "react-infinite-scroller";
 import TextareaAutosize from 'react-autosize-textarea';
@@ -13,16 +13,17 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import CommentComponent from "components/idea/discussion/comment-component";
 import {SvgNotice} from "components/app/svg-notice";
 import PageAvatar from "components/app/page-avatar";
-import {FaAngleDown} from "react-icons/all";
 import BoardContext from "context/board-context";
 import PageUsername from "../../app/page-username";
 import PageSelectableDropdown from "../../app/page-selectable-dropdown";
 import ExecutableButton from "../../app/executable-button";
 import tinycolor from "tinycolor2";
+import IdeaContext from "../../../context/idea-context";
 
-const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
+const DiscussionBox = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
+    const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
     const sorts = [
@@ -187,7 +188,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
                         return;
                     }
                     toastSuccess("User suspended.", id);
-                    boardContext.updateSuspensions(boardContext.data.suspendedUsers.concat(res.data));
+                    boardContext.updateState({suspendedUsers: boardContext.data.suspendedUsers.concat(res.data)});
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };

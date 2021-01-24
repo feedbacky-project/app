@@ -16,5 +16,5 @@ const PageNavbar = ({theme, children}) => {
 export default PageNavbar;
 
 PageNavbar.propTypes = {
-    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 };

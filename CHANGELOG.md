@@ -7,6 +7,8 @@
 * dark mode is now shadowless, every ui element now won't have shadows, previously only texteareas and forms did
 * special comment icons on dark mode are no longer full color, alpha color is applied to look better
 * loading spinners now do implement theme color of board where applicable
+* removed brightness filter on board image (jumbotron) on dark mode
+* another fix for color selection modal in admin panel
 
 FIXME overlay triggers don't work anymore (why)
 

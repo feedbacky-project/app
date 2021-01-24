@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
+import {Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
 import {Link, useHistory, withRouter} from "react-router-dom";
 import StepFirst from "views/admin/subviews/webhooks/steps/step-first";

@@ -27,7 +27,7 @@ const PageBadge = ({color = null, text, className = "", context = null}) => {
 export default PageBadge;
 
 PageBadge.propTypes = {
-    color: PropTypes.object.isRequired,
+    color: PropTypes.object,
     text: PropTypes.string.isRequired,
     className: PropTypes.string
 };

@@ -5,9 +5,11 @@ import AppContext from "context/app-context";
 import axios from "axios";
 import {toastError, toastSuccess} from "components/util/utils";
 import ExecutableButton from "components/app/executable-button";
+import IdeaContext from "../../../context/idea-context";
 
-const MailSubscriptionComponent = ({ideaData, updateState, onNotLoggedClick}) => {
+const MailSubscriptionComponent = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);
+    const {ideaData, updateState} = useContext(IdeaContext);
     const onSubscribeToggle = () => {
         if (!context.user.loggedIn) {
             onNotLoggedClick();

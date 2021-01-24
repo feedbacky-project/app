@@ -1,12 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import Button from "react-bootstrap/Button";
 import {Col} from "react-bootstrap";
 import {FaLock, FaTrash} from "react-icons/fa";
 import TimeAgo from "timeago-react";
 import axios from "axios";
 import AppContext from "context/app-context";
-import {formatUsername, htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "components/util/utils";
-import ModeratorActions from "components/board/moderator-actions";
+import {htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "components/util/utils";
+import ModeratorActionsButton from "components/board/moderator-actions-button";
 import {popupSwal} from "components/util/sweetalert-utils";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaPen} from "react-icons/all";
@@ -21,10 +20,12 @@ import ExecutableButton from "components/app/executable-button";
 import BoardContext from "context/board-context";
 import PageUsername from "../../app/page-username";
 import PageCancelButton from "../../app/page-cancel-button";
+import IdeaContext from "../../../context/idea-context";
 
-const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
-    const context = useContext(AppContext);
+const IdeaDetailsBox = ({onNotLoggedClick}) => {
+    const {user} = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
+    const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
     const history = useHistory();
     const [voters, setVoters] = useState({data: [], loaded: false, error: false});
@@ -77,7 +78,7 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
             });
     };
     const onUpvote = () => {
-        if (!context.user.loggedIn) {
+        if (!user.loggedIn) {
             onNotLoggedClick();
             return;
         }
@@ -97,7 +98,7 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
             method: request,
             url: "/ideas/" + ideaData.id + "/voters",
             headers: {
-                "Authorization": "Bearer " + context.user.session
+                "Authorization": "Bearer " + user.session
             }
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
@@ -106,10 +107,10 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
             }
             if (upvoted) {
                 voteRef.current.classList.add("upvote-animation");
-                setVoters({...voters, data: voters.data.concat(context.user.data)});
+                setVoters({...voters, data: voters.data.concat(user.data)});
             } else {
                 voteRef.current.classList.remove("upvote-animation");
-                setVoters({...voters, data: voters.data.filter(item => item.id !== context.user.data.id)});
+                setVoters({...voters, data: voters.data.filter(item => item.id !== user.data.id)});
             }
             updateState({...ideaData, upvoted, votersAmount});
         }).catch(() => toastError());
@@ -133,7 +134,7 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
     };
     const renderDeletionButton = () => {
         //if moderator, then moderator actions component can handle that
-        if (ideaData.user.id !== context.user.data.id || boardData.moderators.find(mod => mod.userId === context.user.data.id)) {
+        if (ideaData.user.id !== user.data.id || boardData.moderators.find(mod => mod.userId === user.data.id)) {
             return;
         }
         return <FaTrash className="ml-1 fa-xs cursor-click move-top-2px" onClick={onDelete}/>
@@ -142,9 +143,9 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
         return <React.Fragment>
             <span className="mr-1 text-tight" style={{fontSize: "1.45rem"}}
                   dangerouslySetInnerHTML={{__html: ideaData.title}}/>
-            <ModeratorActions moderators={boardData.moderators} ideaData={ideaData} updateState={updateState}/>
+            <ModeratorActionsButton/>
             {renderDeletionButton()}
-            {ideaData.user.id !== context.user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
+            {ideaData.user.id !== user.data.id || <FaPen className="ml-2 fa-xs cursor-click move-top-2px text-black-60" onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
             <PageAvatar roundedCircle className="mr-1" user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
             <small><PageUsername user={ideaData.user}/> ·{" "}</small>
@@ -156,7 +157,7 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
         <Col sm={12} md={10} className="mt-4">
             <Col xs={12} className="d-inline-flex mb-2 p-0">
                 <div className="my-auto mr-2" ref={voteRef}>
-                    <VoteButton votersAmount={ideaData.votersAmount} onVote={onUpvote} upvoted={ideaData.upvoted}/>
+                    <VoteButton onVote={onUpvote}/>
                 </div>
                 <div>
                     {ideaData.open || <FaLock className="mr-1" style={{transform: "translateY(-4px)"}}/>}
@@ -168,10 +169,10 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
             </Col>
         </Col>
         <Col md={2} xs={12}>
-            <VotersComponent votersAmount={ideaData.votersAmount} data={voters}/>
-            <TagsComponent data={ideaData.tags}/>
-            <AttachmentsComponent ideaData={ideaData} updateState={updateState}/>
-            <MailSubscriptionComponent ideaData={ideaData} updateState={updateState} onNotLoggedClick={onNotLoggedClick}/>
+            <VotersComponent data={voters}/>
+            <TagsComponent/>
+            <AttachmentsComponent/>
+            <MailSubscriptionComponent onNotLoggedClick={onNotLoggedClick}/>
         </Col>
     </React.Fragment>
 };

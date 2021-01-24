@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import axios from "axios";
 import {prettifyEnum, toastError, toastSuccess} from "components/util/utils";
-import {Button, Col} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ClickableTip from "components/util/clickable-tip";

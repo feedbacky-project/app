@@ -1,14 +1,14 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import {formatRemainingCharacters, toastError, toastSuccess, toastWarning} from "components/util/utils";
-import AppContext from "context/app-context";
+import {toastError, toastSuccess, toastWarning} from "components/util/utils";
 import PageModal from "components/modal/page-modal";
 import ClickableTip from "components/util/clickable-tip";
 import {Col, Row} from "react-bootstrap";
 import ColorSelectionHelper from "components/modal/color-selection-helper";
 import ExecutableButton from "components/app/executable-button";
 import tinycolor from "tinycolor2";
+import PageCountableFormControl from "../app/page-countable-form-control";
 
 const TagCreateModal = ({open, onTagCreateModalClose, data, onTagCreate}) => {
     const [color, setColor] = useState("#0994f6");
@@ -39,11 +39,7 @@ const TagCreateModal = ({open, onTagCreateModalClose, data, onTagCreate}) => {
             <Col xs={12} className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>
                 <ClickableTip id="tagName" title="Tag Name" description="Descriptive and under 20 characters name of tag."/>
-                <Form.Control style={{minHeight: 38, resize: "none"}} minLength="2" maxLength="15" rows="1" required type="text"
-                              placeholder="Short and descriptive." id="tagNameTextarea" onKeyUp={() => formatRemainingCharacters("remainingTag", "tagNameTextarea", 15)}/>
-                <Form.Text className="text-right text-black-60" id="remainingTag">
-                    15 Remaining
-                </Form.Text>
+                <PageCountableFormControl id="tagNameTextarea" minLength={2} maxLength={15} placeholder={"Short and descriptive."}/>
             </Col>
             <Col xs={12} sm={6} className="mb-2">
                 <ColorSelectionHelper title="Tag Color" color={tinycolor(color)} setColor={setColor} colorWarning={true}/>

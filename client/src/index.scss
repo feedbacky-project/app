@@ -1,7 +1,8 @@
 $hover-transition: all .2s ease-in-out;
 $hover-transform-scale: scale(1.05);
 $border-radius: .35rem;
-$font-color: #212529;
+$font-color: hsl(210, 11%, 15%);
+$pure-dark-half: hsla(0, 0%, 0%, .5);
 
 @import "~react-toastify/dist/ReactToastify.css";
 @import "assets/scss/override-variables";
@@ -50,12 +51,12 @@ $font-color: #212529;
   border-bottom-right-radius: $border-radius;
 }
 
-.shadow {
+.shadow, .swal2-modal, .modal-content, .Toastify__toast {
   box-shadow: $box-shadow;
 }
 
 .danger-shadow {
-  box-shadow: 0 3px 5px 0 rgba(204, 51, 0, .5);
+  box-shadow: 0 3px 5px 0 hsla(15, 100%, 40%, .5) !important;
 }
 
 .btn-link:hover {
@@ -76,7 +77,7 @@ $font-color: #212529;
   transition: $hover-transition !important;
 
   &:hover {
-    color: rgba(0, 0, 0, .6) !important;
+    @extend .text-black-60;
     transform: $hover-transform-scale;
   }
 }
@@ -89,10 +90,6 @@ $font-color: #212529;
 
 .btn, .btn:focus {
   border: 1px solid transparent;
-}
-
-.swal2-modal, .modal-content {
-  box-shadow: $box-shadow;
 }
 
 .btn {
@@ -126,12 +123,12 @@ $font-color: #212529;
 
 .dropdown-item {
   &:active {
-    background-color: rgba(0, 0, 0, .075);
+    background-color: hsla(0, 0%, 0%, .075);
     color: $font-color;
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, .075);
+    background-color: hsla(0, 0%, 0%, .075);
   }
 }
 
@@ -141,7 +138,7 @@ $font-color: #212529;
 }
 
 .badge {
-  color: #fff;
+  color: white;
   border-width: 0;
   box-shadow: none;
   border-radius: $border-radius;
@@ -174,7 +171,7 @@ $font-color: #212529;
 }
 
 hr {
-  border-top: 1px solid rgba(0, 0, 0, .1);
+  border-top: 1px solid hsla(0, 0%, 0%, .1);
 }
 
 .btn, .btn:hover {
@@ -222,7 +219,7 @@ body {
 }
 
 .author-container, .comments-container {
-  color: rgba(0, 0, 0, .6);
+  color: hsla(0, 0%, 0%, .6);
   float: right;
   margin-left: 0.25rem;
   transform: translateY(3px);
@@ -278,10 +275,10 @@ body {
 }
 
 .markdown-box a {
-  color: #09c;
+  color: hsl(195, 100%, 40%);
 
   &:hover {
-    color: #0f4580;
+    color: hsl(195, 100%, 20%);
   }
 }
 
@@ -291,7 +288,7 @@ body {
 }
 
 .small-text-shadow {
-  text-shadow: 0 0 4px #000;
+  text-shadow: 0 0 4px black;
 }
 
 /* to fix profile mobile card deck breaking */
@@ -318,7 +315,7 @@ body {
 
 .voter-merged {
   margin: 0 -12px 0 0;
-  border: 2px solid #f8f9fa;
+  border: 2px solid hsl(210, 17%, 98%);
   transition: .2s ease-in-out;
 }
 
@@ -356,11 +353,11 @@ a.pre-href {
 }
 
 .text-black-60 {
-  color: rgba(0, 0, 0, .6);
+  color: hsla(0, 0%, 0%, .6);
 }
 
 .text-black-75 {
-  color: rgba(0, 0, 0, .75);
+  color: hsla(0, 0%, 0%, .75);
 }
 
 .color-picker-admin {
@@ -381,32 +378,28 @@ a.pre-href {
   opacity: 1 !important;
 }
 
-.Toastify__toast {
-  box-shadow: $box-shadow;
-}
-
 .toast-style {
   color: $font-color;
   background-color: white;
 
   &.info {
-    border-left: 5px solid #2196f3;
+    border-left: 5px solid hsl(207, 90%, 54%);
   }
 
   &.error {
-    border-left: 5px solid #e43e3e;
+    border-left: 5px solid hsl(0, 75%, 57%);
   }
 
   &.warning {
-    border-left: 5px solid #ffe008;
+    border-left: 5px solid hsl(52, 100%, 52%);
   }
 
   &.success {
-    border-left: 5px solid #3ec569;
+    border-left: 5px solid hsl(139, 54%, 51%);
   }
 
   &.await {
-    border-left: 5px solid #0994f6;
+    border-left: 5px solid hsl(205, 93%, 50%);
   }
 }
 
@@ -416,7 +409,7 @@ a {
 
 .social-link {
   padding: .5rem 1rem;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: $pure-dark-half;
   transition: .2s ease-in-out;
 
   &:first-of-type {
@@ -428,12 +421,12 @@ a {
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, .25);
+    background-color: hsla(0, 0%, 0%, .25);
   }
 }
 
 .border-chosen {
-  border: 2px solid #0994f6 !important;
+  border: 2px solid hsl(205, 93%, 50%) !important;
 }
 
 .border-invisible {
@@ -465,7 +458,7 @@ a {
 }
 
 .form-control::placeholder {
-  color: rgba(0, 0, 0, .5);
+  color: $pure-dark-half;
 }
 
 .btn-attachment {
@@ -479,19 +472,19 @@ a {
 
 .board-role {
   &.admin {
-    color: #ff0800;
+    color: hsl(2, 100%, 50%);
   }
 
   &.moderator {
-    color: #4cbb17;
+    color: hsl(101, 78%, 41%);
   }
 
   &.suspended {
-    color: rgba(0, 0, 0, .5);
+    color: $pure-dark-half;
   }
 
   &.internal {
-    color: #0080FF;
+    color: hsl(210, 100%, 50%);
   }
 }
 
@@ -577,11 +570,11 @@ a {
   &::-webkit-scrollbar {
     height: 6px;
     width: 6px;
-    background: #f0f0f0;
+    background: hsl(0, 0%, 94%);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #cdcdcd;
+    background: hsl(0, 0%, 80%);
   }
 }
 

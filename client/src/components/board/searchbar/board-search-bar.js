@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {Col, Dropdown} from "react-bootstrap";
 import AppContext from "context/app-context";
-import {FaAngleDown} from "react-icons/all";
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
 import PageSelectableDropdown from "../../app/page-selectable-dropdown";
 

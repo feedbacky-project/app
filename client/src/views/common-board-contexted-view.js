@@ -14,14 +14,8 @@ const CommonBoardContextedView = ({board, setBoard, errorMessage = "Server Conne
     }
     return <BoardContext.Provider value={{
         data: board.data, loaded: board.loaded, error: board.error,
-        updateSuspensions: (suspendedUsers) => {
-            setBoard({...board, data: {...board.data, suspendedUsers}});
-        },
-        updateTags: (tags) => {
-            setBoard({...board, data: {...board.data, tags}});
-        },
-        updateSocialLinks: (socialLinks) => {
-            setBoard({...board, data: {...board.data, socialLinks}});
+        updateState: data => {
+          setBoard({...board, data});
         }
     }}>
         {children}
