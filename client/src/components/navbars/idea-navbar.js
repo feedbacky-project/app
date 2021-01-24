@@ -10,9 +10,8 @@ import BoardContext from "context/board-context";
 const IdeaNavbar = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
-    const theme = context.getTheme();
 
-    return <PageNavbar theme={theme}>
+    return <PageNavbar>
         <Link to={{
             pathname: "/b/" + boardData.discriminator,
             state: {_boardData: boardData}

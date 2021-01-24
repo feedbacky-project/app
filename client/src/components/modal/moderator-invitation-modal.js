@@ -7,7 +7,7 @@ import PageModal from "components/modal/page-modal";
 import PageAvatar from "components/app/page-avatar";
 import ExecutableButton from "components/app/executable-button";
 
-const ModeratorInvitationModal = (props) => {
+const ModeratorInvitationModal = ({data, onModInvitationCreateModalClose, onModInvitationSend, open}) => {
     const handleSubmit = () => {
         const userEmail = document.getElementById("inviteEmailTextarea").value;
         if(userEmail === "" || !userEmail.match(/\S+@\S+\.\S+/)) {
@@ -15,17 +15,17 @@ const ModeratorInvitationModal = (props) => {
             return Promise.resolve();
         }
         const toastId = toastAwait("Sending invitation...");
-        return axios.post("/boards/" + props.data.discriminator + "/moderators", {
+        return axios.post("/boards/" + data.discriminator + "/moderators", {
             userEmail,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
                 return;
             }
-            props.onModInvitationCreateModalClose();
+            onModInvitationCreateModalClose();
             let mod = res.data;
             mod.role = "moderator";
-            props.onModInvitationSend(mod);
+            onModInvitationSend(mod);
             const toastMsg = <span>
                 Invitation for user <PageAvatar roundedCircle user={res.data.user} size={16}/>
                 {" " + res.data.user.username} sent.
@@ -34,7 +34,7 @@ const ModeratorInvitationModal = (props) => {
         }).catch(err => toastError(err.response.data.errors[0], toastId));
     };
 
-    return <PageModal id="moderatorInvite" isOpen={props.open} onHide={props.onModInvitationCreateModalClose} title="Invite New Moderator"
+    return <PageModal id="moderatorInvite" isOpen={open} onHide={onModInvitationCreateModalClose} title="Invite New Moderator"
                       applyButton={<ExecutableButton onClick={handleSubmit} className="mx-0">Invite</ExecutableButton>}>
         <Form noValidate>
             <Form.Group className="mt-2 mb-1">

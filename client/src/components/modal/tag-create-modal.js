@@ -10,8 +10,7 @@ import ColorSelectionHelper from "components/modal/color-selection-helper";
 import ExecutableButton from "components/app/executable-button";
 import tinycolor from "tinycolor2";
 
-const TagCreateModal = (props) => {
-    const context = useContext(AppContext);
+const TagCreateModal = ({open, onTagCreateModalClose, data, onTagCreate}) => {
     const [color, setColor] = useState("#0994f6");
 
     const handleSubmit = () => {
@@ -22,19 +21,19 @@ const TagCreateModal = (props) => {
         }
         const roadmapIgnored = document.getElementById("roadmapIgnored").checked;
         const publicUse = document.getElementById("publicUse").checked;
-        return axios.post("/boards/" + props.data.discriminator + "/tags", {
+        return axios.post("/boards/" + data.discriminator + "/tags", {
             name, color, roadmapIgnored, publicUse,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 toastError();
                 return;
             }
-            props.onTagCreateModalClose();
-            props.onTagCreate(res.data);
+            onTagCreateModalClose();
+            onTagCreate(res.data);
             toastSuccess("Tag with name " + name + " created.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };
-    return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Add new Tag"
+    return <PageModal id="tagCreate" isOpen={open} onHide={onTagCreateModalClose} title="Add new Tag"
                       applyButton={<ExecutableButton onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
         <Row>
             <Col xs={12} className="mt-2 mb-1">

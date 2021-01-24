@@ -9,9 +9,8 @@ import BoardContext from "context/board-context";
 const BoardNavbar = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const boardContext = useContext(BoardContext);
-    const theme = context.getTheme();
 
-    return <PageNavbar theme={theme}>
+    return <PageNavbar>
         <Container className="d-flex">
             <NavbarBrand as={Link} to="/me">
                 <img className="mr-2" src={boardContext.data.logo}

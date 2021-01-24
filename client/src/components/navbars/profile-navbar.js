@@ -6,7 +6,7 @@ import {renderLogIn} from "components/navbars/navbar-commons";
 import PageNavbar from "components/navbars/page-navbar";
 import PageAvatar from "components/app/page-avatar";
 
-const ProfileNavbar = (props) => {
+const ProfileNavbar = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const theme = context.getTheme(false);
 
@@ -16,7 +16,7 @@ const ProfileNavbar = (props) => {
                 {renderHello(context)}
             </NavbarBrand>
             <div className="ml-auto py-0 text-nowrap">
-                {renderLogIn(props.onNotLoggedClick, context)}
+                {renderLogIn(onNotLoggedClick, context)}
             </div>
         </Container>
     </PageNavbar>
