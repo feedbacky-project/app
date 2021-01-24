@@ -1,14 +1,15 @@
 import React from 'react';
 import {FaAngleLeft, FaAngleRight} from "react-icons/all";
-import {Button} from "react-bootstrap";
 import PropTypes from 'prop-types';
+import PageButton from "../app/page-button";
+import tinycolor from "tinycolor2";
 
 export const NextStepButton = (props) => {
-  return <Button variant="" style={{backgroundColor: "#0994f6"}} className="pr-1 ml-2" onClick={props.nextStep}>Next <FaAngleRight/></Button>
+    return <PageButton color={tinycolor("#0994f6")} className="pr-1 ml-2" onClick={props.nextStep}>Next <FaAngleRight/></PageButton>
 };
 
 export const PreviousStepButton = (props) => {
-    return <Button variant="" style={{backgroundColor: "#0994f6"}} className="pl-1" onClick={props.previousStep}><FaAngleLeft/> Back</Button>
+    return <PageButton color={tinycolor("#0994f6")} className="pl-1" onClick={props.previousStep}><FaAngleLeft/> Back</PageButton>
 };
 
 NextStepButton.propTypes = {

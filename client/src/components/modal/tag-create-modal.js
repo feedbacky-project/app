@@ -8,6 +8,7 @@ import ClickableTip from "components/util/clickable-tip";
 import {Col, Row} from "react-bootstrap";
 import ColorSelectionHelper from "components/modal/color-selection-helper";
 import ExecutableButton from "components/app/executable-button";
+import tinycolor from "tinycolor2";
 
 const TagCreateModal = (props) => {
     const context = useContext(AppContext);
@@ -34,7 +35,7 @@ const TagCreateModal = (props) => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <PageModal id="tagCreate" isOpen={props.open} onHide={props.onTagCreateModalClose} title="Add new Tag"
-                      applyButton={<ExecutableButton variant="" style={{backgroundColor: context.getTheme()}} onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
+                      applyButton={<ExecutableButton color={context.getTheme()} onClick={handleSubmit} className="mx-0">Save</ExecutableButton>}>
         <Row>
             <Col xs={12} className="mt-2 mb-1">
                 <Form.Label className="mr-1 text-black-60">Tag Name</Form.Label>
@@ -46,7 +47,7 @@ const TagCreateModal = (props) => {
                 </Form.Text>
             </Col>
             <Col xs={12} sm={6} className="mb-2">
-                <ColorSelectionHelper title="Tag Color" color={color} setColor={setColor} colorWarning={true}/>
+                <ColorSelectionHelper title="Tag Color" color={tinycolor(color)} setColor={setColor} colorWarning={true}/>
             </Col>
             <Col xs={12} sm={6} className="mb-2">
                 <div>

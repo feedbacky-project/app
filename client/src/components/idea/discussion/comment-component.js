@@ -13,17 +13,18 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
     const context = useContext(AppContext);
     const boardData = useContext(BoardContext).data;
     const retrieveSpecialCommentTypeIcon = (type) => {
+        const fill = context.user.darkMode ? context.getTheme().toHexString() : "white";
         switch (type) {
             case "IDEA_CLOSED":
-                return <FaTimesCircle className="icon"/>;
+                return <FaTimesCircle className="icon" fill={fill}/>;
             case "IDEA_OPENED":
-                return <FaLockOpen className="icon"/>;
+                return <FaLockOpen className="icon" fill={fill}/>;
             case "IDEA_EDITED":
-                return <FaEdit className="icon"/>;
+                return <FaEdit className="icon" fill={fill}/>;
             case "LEGACY":
             case "TAGS_MANAGED":
             default:
-                return <FaTags className="icon"/>;
+                return <FaTags className="icon" fill={fill}/>;
         }
     };
     const renderCommentUsername = () => {
@@ -81,12 +82,15 @@ const CommentComponent = ({data, onCommentDelete, onCommentUnlike, onCommentLike
         </React.Fragment>
     }
     let color = context.getTheme();
+    if(context.user.darkMode) {
+        color = color.clone().setAlpha(.2);
+    }
 
     return <React.Fragment key={data.id}>
         <div className="d-inline-flex my-1">
             <div className="comment-icon mr-3" style={{backgroundColor: color, color, minWidth: 30}}>{retrieveSpecialCommentTypeIcon(data.specialType)}</div>
             <div>
-                <span style={{color}}>{parseComment(data.description, boardData.moderators, boardData.tags)}</span>
+                <span style={{color: context.getTheme()}}>{parseComment(data.description, boardData.moderators, boardData.tags)}</span>
                 <small className="ml-1 text-black-60"><TimeAgo datetime={data.creationDate}/></small>
             </div>
         </div>

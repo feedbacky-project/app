@@ -6,10 +6,13 @@ import {toastAwait, toastError, toastSuccess, toastWarning} from "components/uti
 import axios from "axios";
 import Steps, {Step} from "rc-steps";
 import {Link, useHistory, withRouter} from "react-router-dom";
+import tinycolor from "tinycolor2";
 
 import "views/Steps.css";
 import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
 import BoardContext from "context/board-context";
+import PageButton from "../../../../components/app/page-button";
+import PageCancelButton from "../../../../components/app/page-cancel-button";
 
 const CreateSocialLink = () => {
     const context = useContext(BoardContext);
@@ -61,7 +64,7 @@ const CreateSocialLink = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 2) {
-            return <Button variant="success" className="ml-2" onClick={nextStep}>Finish</Button>
+            return <PageButton color={tinycolor("#00c851")} className="ml-2" onClick={nextStep}>Finish</PageButton>
         }
         return <NextStepButton nextStep={nextStep}/>
     };
@@ -94,7 +97,7 @@ const CreateSocialLink = () => {
                 </Col>
                 {renderStep()}
                 <Col xs={12} className="text-right mt-4">
-                    <Button variant="link" className="text-black-60 btn-cancel" as={Link} to={"/ba/" + boardData.discriminator + "/social"}>Cancel</Button>
+                    <PageCancelButton as={Link} to={"/ba/" + boardData.discriminator + "/social"}>Cancel</PageCancelButton>
                     {renderBackButton()}
                     {renderNextButton()}
                 </Col>

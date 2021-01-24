@@ -67,7 +67,7 @@ const AdminPanelView = () => {
             <Container>
                 <Row className="justify-content-center pb-4">
                     <AdminSidebar currentNode={currentNode} reRouteTo={reRouteTo} data={board}/>
-                    <Suspense fallback={<Col xs={12} md={9}><Row className="justify-content-center mt-5 pt-5"><LoadingSpinner/></Row></Col>}>
+                    <Suspense fallback={<Col xs={12} md={9}><Row className="justify-content-center mt-5 pt-5"><LoadingSpinner color={context.getTheme().toHexString()}/></Row></Col>}>
                         <Switch>
                             <Route path="/ba/:id/tags" component={TagsSettings}/>
                             <Route path="/ba/:id/moderators" component={ModeratorsSettings}/>

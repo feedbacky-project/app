@@ -13,6 +13,8 @@ import ComponentLoader from "components/app/component-loader";
 import ExecutableButton from "components/app/executable-button";
 import LoadingSpinner from "../../../components/util/loading-spinner";
 import PageNodesContext from "../../../context/page-nodes-context";
+import PageButton from "../../../components/app/page-button";
+import tinycolor from "tinycolor2";
 
 const SettingsSubview = () => {
     const context = useContext(AppContext);
@@ -130,8 +132,8 @@ const SettingsSubview = () => {
                 <br/>
                 <img alt="avatar" src={avatar} className="img-fluid rounded-circle" width={100}/>
                 <ComponentLoader loaded={connectedAccounts.loaded}
-                                 component={<Button variant="success" className="align-top mx-3 my-0" onClick={() => setModalOpened(true)}>Change</Button>}
-                                 loader={<Button variant="success" disabled className="align-top mx-3 my-0"><LoadingSpinner className="mr-1" size="sm"/> Loading</Button>}
+                                 component={<PageButton color={tinycolor("#00c851")} className="align-top mx-3 my-0" onClick={() => setModalOpened(true)}>Change</PageButton>}
+                                 loader={<PageButton color={tinycolor("#00c851")} disabled className="align-top mx-3 my-0"><LoadingSpinner className="mr-1" size="sm"/> Loading</PageButton>}
                 />
             </Col>
             <Col xs={12} lg={6} className="order-3">
@@ -144,7 +146,7 @@ const SettingsSubview = () => {
                 </Form.Text>
             </Col>
             <Col xs={12} className="order-4">
-                <ExecutableButton className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
+                <ExecutableButton color={tinycolor("#00c851")} className="m-0 mt-3 ml-3 float-right" onClick={onChangesSave}>
                     Save Settings
                 </ExecutableButton>
             </Col>
@@ -163,7 +165,7 @@ const SettingsSubview = () => {
                         </span>
                 </Col>
                 <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
-                    <ExecutableButton onClick={onAccountDeactivation} variant="danger">
+                    <ExecutableButton color={tinycolor("#ff3547")} onClick={onAccountDeactivation}>
                         Deactivate
                     </ExecutableButton>
                 </Col>

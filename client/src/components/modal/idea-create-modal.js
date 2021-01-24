@@ -87,8 +87,7 @@ const IdeaCreateModal = ({open, onCreateIdeaModalClose, onIdeaCreation}) => {
         });
     };
     return <PageModal id="ideaPost" isOpen={open} onHide={onCreateIdeaModalClose} title="Post Feedback"
-                      applyButton={<ExecutableButton variant="" style={{backgroundColor: appContext.getTheme()}} onClick={handleSubmit}
-                                                     className="mx-0">Post Idea</ExecutableButton>}>
+                      applyButton={<ExecutableButton color={appContext.getTheme()} onClick={handleSubmit} className="mx-0">Post Idea</ExecutableButton>}>
         <Form noValidate onSubmit={e => e.preventDefault()}>
             <Form.Group className="mt-2 mb-1">
                 <Form.Label className="mr-1">Title</Form.Label>

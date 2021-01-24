@@ -6,6 +6,8 @@ import {Button, Col, Row} from "react-bootstrap";
 import ViewBox from "components/viewbox/view-box";
 import ExecutableButton from "components/app/executable-button";
 import PageNodesContext from "../../../context/page-nodes-context";
+import tinycolor from "tinycolor2";
+import PageButton from "../../../components/app/page-button";
 
 const NotificationsSubview = () => {
     const context = useContext(AppContext);
@@ -41,9 +43,9 @@ const NotificationsSubview = () => {
     }
     const conditionalButton = (conditionEnabled, funcEnable, funcDisable) => {
         if (conditionEnabled) {
-            return <Button variant={"danger"} className="m-0 mt-sm-0 mt-2" onClick={funcDisable}>Disable</Button>
+            return <PageButton color={tinycolor("#ff3547")} className="m-0 mt-sm-0 mt-2" onClick={funcDisable}>Disable</PageButton>
         }
-        return <Button variant={"success"} className="m-0 mt-sm-0 mt-2" onClick={funcEnable}>Enable</Button>
+        return <PageButton color={tinycolor("#00c851")} className="m-0 mt-sm-0 mt-2" onClick={funcEnable}>Enable</PageButton>
     };
     const renderContent = () => {
         return <React.Fragment>
@@ -59,7 +61,7 @@ const NotificationsSubview = () => {
                 </Col>
             </Row>
             <Col xs={12}>
-                <ExecutableButton className="m-0 mt-3 ml-3 float-right" variant="success" onClick={onChangesSave}>
+                <ExecutableButton color={tinycolor("#00c851")} className="m-0 mt-3 ml-3 float-right" onClick={onChangesSave}>
                     Save Settings
                 </ExecutableButton>
             </Col>

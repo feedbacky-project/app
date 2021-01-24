@@ -7,10 +7,13 @@ import StepSecond from "views/admin/subviews/webhooks/steps/step-second";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import axios from "axios";
 import StepThird from "views/admin/subviews/webhooks/steps/step-third";
+import tinycolor from "tinycolor2";
 
 import "views/Steps.css";
 import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
 import BoardContext from "context/board-context";
+import PageButton from "../../../../components/app/page-button";
+import PageCancelButton from "../../../../components/app/page-cancel-button";
 
 const CreateWebhook = () => {
     const history = useHistory();
@@ -57,7 +60,7 @@ const CreateWebhook = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 3) {
-            return <Button variant="success" className="ml-2" onClick={nextStep}>Finish</Button>
+            return <PageButton color={tinycolor("#00c851")} className="ml-2" onClick={nextStep}>Finish</PageButton>
         }
         return <NextStepButton nextStep={nextStep}/>
     };
@@ -94,7 +97,7 @@ const CreateWebhook = () => {
                 </Col>
                 {renderStep()}
                 <Col xs={12} className="text-right mt-4">
-                    <Button variant="link" className="text-black-60 btn-cancel" as={Link} to={"/ba/" + boardData.discriminator + "/webhooks"}>Cancel</Button>
+                    <PageCancelButton as={Link} to={"/ba/" + boardData.discriminator + "/webhooks"}>Cancel</PageCancelButton>
                     {renderBackButton()}
                     {renderNextButton()}
                 </Col>

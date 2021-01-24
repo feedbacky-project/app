@@ -92,7 +92,7 @@ const GeneralSettings = ({updateState}) => {
                 <Form.Label className="mr-1 text-black-60 mt-2">Theme Color</Form.Label>
                 <ClickableTip id="themeColor" title="Set Theme Color" description="Configure theme color of your board. It will affect elements of your board. Colors might look differently across Light and Dark Themes."/>
                 <br/>
-                <Suspense fallback={<LoadingSpinner/>}>
+                <Suspense fallback={<LoadingSpinner color={context.getTheme().toHexString()}/>}>
                     <CirclePicker
                         colors={["#2d3436", "#2c3e50", "#d35400", "#e74c3c", "#eb3b5a", "#e67e22", "#f39c12", "#fd9644", "#8e44ad", "#2980b9", "#3498db", "#27ae60", "#2ecc71", "#16a085", "#1abc9c", "#95a5a6"]}
                         className="text-center color-picker-admin"
@@ -148,7 +148,7 @@ const GeneralSettings = ({updateState}) => {
                 <input hidden accept="image/jpeg, image/png" id="logoInput" type="file" name="logo" onChange={onLogoChange}/>
             </Col>
             <Col xs={12}>
-                <ExecutableButton className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} onClick={onChangesSave}>
+                <ExecutableButton color={context.getTheme()} className="m-0 mt-3 float-right" onClick={onChangesSave}>
                     Save Settings
                 </ExecutableButton>
             </Col>
@@ -164,7 +164,7 @@ const GeneralSettings = ({updateState}) => {
                     </span>
                 </Col>
                 <Col sm={3} xs={6} className="text-sm-right text-left my-auto">
-                    <ExecutableButton onClick={onBoardDelete} variant="danger">
+                    <ExecutableButton color={tinycolor("#ff3547")} onClick={onBoardDelete}>
                         Delete
                     </ExecutableButton>
                 </Col>

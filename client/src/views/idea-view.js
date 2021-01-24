@@ -1,19 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
 import axios from "axios";
 import ErrorView from "views//errors/error-view";
-import {FaExclamationCircle, FaSadTear} from "react-icons/fa";
+import {FaExclamationCircle} from "react-icons/fa";
 import IdeaNavbar from "components/navbars/idea-navbar";
 import LoginModal from "components/modal/login-modal";
-import LoadingSpinner from "components/util/loading-spinner";
 import IdeaDetailsBox from "components/idea/details/idea-details-box";
 import DiscussionBox from "components/idea/discussion/discussion-box";
 import {Col, Container, Row} from "react-bootstrap";
 import AppContext from "context/app-context";
 import ComponentLoader from "components/app/component-loader";
-import BoardContext from "context/board-context";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {convertIdeaToSlug} from "components/util/utils";
 import CommonBoardContextedView from "./common-board-contexted-view";
+import LoadingSpinner from "../components/util/loading-spinner";
 
 const IdeaView = () => {
     const history = useHistory();
@@ -69,6 +68,9 @@ const IdeaView = () => {
     }, []);
     if (idea.error) {
         return <ErrorView icon={<FaExclamationCircle className="error-icon"/>} message="Content Not Found"/>
+    }
+    if (!idea.loaded) {
+        return <Row className="justify-content-center vertical-center"><LoadingSpinner/></Row>
     }
     return <CommonBoardContextedView board={board} setBoard={setBoard}>
         <LoginModal open={modalOpen} onLoginModalClose={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}

@@ -8,7 +8,7 @@ const ViewBox = ({theme, title, description, children}) => {
             <h3 className="mb-0">{title}</h3>
             <div>{description}</div>
         </Card>
-        <Col className="view-box-bg shadow">
+        <Col className="view-box-bg">
             <Row className="py-4 px-3 px-0 pt-5 mb-3">
                 {children}
             </Row>

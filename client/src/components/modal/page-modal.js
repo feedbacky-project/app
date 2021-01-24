@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import PropTypes from 'prop-types';
+import PageCancelButton from "../app/page-cancel-button";
 
 const PageModal = (props) => {
     return <Modal size={props.size} id={props.id} show={props.isOpen} onHide={props.onHide} centered>
@@ -12,9 +13,9 @@ const PageModal = (props) => {
             {props.children}
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="link" className="m-0 text-black-60 btn-cancel" onClick={props.onHide}>
+            <PageCancelButton className="m-0" onClick={props.onHide}>
                 Cancel
-            </Button>
+            </PageCancelButton>
             {props.applyButton}
         </Modal.Footer>
     </Modal>

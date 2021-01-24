@@ -74,6 +74,7 @@ $font-color: #212529;
 
 .btn-cancel {
   transition: $hover-transition !important;
+
   &:hover {
     color: rgba(0, 0, 0, .6) !important;
     transform: $hover-transform-scale;
@@ -237,7 +238,6 @@ body {
 
   .icon {
     vertical-align: bottom;
-    fill: white;
   }
 }
 
@@ -248,6 +248,7 @@ body {
   padding: .25rem .5rem;
   margin: 0;
   transition: .2s ease-in-out;
+
   &:hover {
     transform: scale(1.05);
   }
@@ -278,6 +279,7 @@ body {
 
 .markdown-box a {
   color: #09c;
+
   &:hover {
     color: #0f4580;
   }
@@ -289,7 +291,7 @@ body {
 }
 
 .small-text-shadow {
-  text-shadow: 0 0 3px #000;
+  text-shadow: 0 0 4px #000;
 }
 
 /* to fix profile mobile card deck breaking */
@@ -424,17 +426,18 @@ a {
   &:last-child {
     border-top-right-radius: 4px;
   }
+
   &:hover {
     background-color: rgba(0, 0, 0, .25);
   }
 }
 
 .border-chosen {
-  border: 2px solid #0994f6;
+  border: 2px solid #0994f6 !important;
 }
 
 .border-invisible {
-  border: 2px solid transparent;
+  border: 2px solid transparent !important;
 }
 
 .justify-content-center {
@@ -495,6 +498,7 @@ a {
 .cursor-click {
   cursor: pointer;
   transition: $hover-transition;
+
   &:hover {
     transform: $hover-transform-scale;
   }
@@ -537,6 +541,7 @@ a {
 .view-box-bg {
   background-color: white;
   border-radius: $border-radius;
+  box-shadow: $box-shadow;
 }
 
 .sidebar {
@@ -552,6 +557,7 @@ a {
 
     a {
       transition: $hover-transition;
+
       &:hover {
         transform: $hover-transform-scale;
       }

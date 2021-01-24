@@ -20,6 +20,7 @@ import PageAvatar from "components/app/page-avatar";
 import ExecutableButton from "components/app/executable-button";
 import BoardContext from "context/board-context";
 import PageUsername from "../../app/page-username";
+import PageCancelButton from "../../app/page-cancel-button";
 
 const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -126,8 +127,8 @@ const IdeaDetailsBox = ({ideaData, updateState, onNotLoggedClick}) => {
             <TextareaAutosize className="form-control bg-lighter" id="editorBox" rows={4} maxRows={12}
                               placeholder="Write a description..." required as="textarea"
                               style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
-            <ExecutableButton className="m-0 mt-2" variant="" style={{backgroundColor: context.getTheme()}} onClick={onEditApply}>Save</ExecutableButton>
-            <Button className="m-0 mt-2 text-black-50 btn-cancel" variant="link" onClick={() => setEditor({...editor, enabled: false})}>Cancel</Button>
+            <ExecutableButton color={context.getTheme()} className="m-0 mt-2" onClick={onEditApply}>Save</ExecutableButton>
+            <PageCancelButton className="m-0 mt-2" onClick={() => setEditor({...editor, enabled: false})}>Cancel</PageCancelButton>
         </React.Fragment>
     };
     const renderDeletionButton = () => {

@@ -17,6 +17,7 @@ import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import ExecutableButton from "../../../components/app/executable-button";
 import PageNodesContext from "../../../context/page-nodes-context";
+import PageButton from "../../../components/app/page-button";
 
 const TagsSettings = () => {
     const context = useContext(AppContext);
@@ -67,10 +68,10 @@ const TagsSettings = () => {
     const renderNewTagButton = () => {
         if (getQuota() <= 0) {
             return <OverlayTrigger overlay={<Tooltip id="quota-tooltip">Quota Limit Reached</Tooltip>}>
-                <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}><FaExclamation/> Add New</Button>
+                <PageButton color={context.getTheme()} className="m-0 mt-3 float-right"><FaExclamation/> Add New</PageButton>
             </OverlayTrigger>
         }
-        return <ExecutableButton className="m-0 mt-3 float-right" style={{backgroundColor: context.getTheme()}} onClick={() => {
+        return <ExecutableButton color={context.getTheme()} className="m-0 mt-3 float-right" onClick={() => {
             setModalOpen(true);
             return Promise.resolve();
         }}>Add New</ExecutableButton>

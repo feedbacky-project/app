@@ -33,10 +33,10 @@ const MailSubscriptionComponent = ({ideaData, updateState, onNotLoggedClick}) =>
     };
     const renderButton = () => {
         if (ideaData.subscribed) {
-            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}} className="m-0 mt-sm-0"
+            return <ExecutableButton color={context.getTheme()} size="sm" className="m-0 mt-sm-0"
                                      onClick={onSubscribeToggle}><FaRegBellSlash className="move-top-1px"/> Unsubscribe</ExecutableButton>
         } else {
-            return <ExecutableButton variant="" size="sm" style={{backgroundColor: context.getTheme()}} className="m-0 mt-sm-0"
+            return <ExecutableButton color={context.getTheme()} size="sm" className="m-0 mt-sm-0"
                                      onClick={onSubscribeToggle}><FaRegBell className="move-top-1px"/> Subscribe</ExecutableButton>
         }
     };

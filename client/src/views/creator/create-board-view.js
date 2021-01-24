@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import AppContext from "context/app-context";
 import {isServiceAdmin, toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
-import {Button, Col, Container, ProgressBar, Row} from "react-bootstrap";
+import {Col, Container, ProgressBar, Row} from "react-bootstrap";
 import Steps, {Step} from "rc-steps";
 import ProfileNavbar from "components/navbars/profile-navbar";
 import {Link, useHistory} from "react-router-dom";
@@ -11,6 +11,9 @@ import StepThird from "views/creator/steps/step-third";
 import axios from "axios";
 import {NextStepButton, PreviousStepButton} from "components/steps/steps-buttons";
 import "views/Steps.css";
+import PageCancelButton from "../../components/app/page-cancel-button";
+import PageButton from "../../components/app/page-button";
+import tinycolor from "tinycolor2";
 
 const CreateBoardView = () => {
     const context = useContext(AppContext);
@@ -68,7 +71,7 @@ const CreateBoardView = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 3) {
-            return <Button variant="success" className="ml-2" onClick={nextStep}>Create Board</Button>
+            return <PageButton color={tinycolor("#00c851")} className="ml-2" onClick={nextStep}>Create Board</PageButton>
         }
         return <NextStepButton nextStep={nextStep}/>
     };
@@ -121,7 +124,7 @@ const CreateBoardView = () => {
                 </Col>
                 {renderStep()}
                 <Col xs={12} className="text-right mt-4">
-                    <Button variant="link" className="text-black-60 btn-cancel" as={Link} to="/me">Cancel</Button>
+                    <PageCancelButton as={Link} to={"/me"}>Cancel</PageCancelButton>
                     {renderBackButton()}
                     {renderNextButton()}
                 </Col>

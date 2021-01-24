@@ -1,6 +1,14 @@
 * social links are now properly updated in admin panel and changes are reflected on main page without the need to reload
 * staged creators for webhooks and social links are now inside admin panel not separate page
+* buttons all over the page now respect dark mode and use badge-like background and color scheme
+* changed badges background alpha value to 10%, looks better (just my opinion)
+* changed small text shadow size from 3 to 4 px (better to read the text)
+* borders in webhooks creator were broken, now they're fixed
+* dark mode is now shadowless, every ui element now won't have shadows, previously only texteareas and forms did
+* special comment icons on dark mode are no longer full color, alpha color is applied to look better
+* loading spinners now do implement theme color of board where applicable
 
+FIXME overlay triggers don't work anymore (why)
 
 ### 0.6.0-beta
 * **[FEATURE]** Added search bar to search ideas by specific title (requested by [eartharoid](https://app.feedbacky.net/i/add-a-search-feature.2313))

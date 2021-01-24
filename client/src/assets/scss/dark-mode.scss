@@ -11,6 +11,9 @@ $dark-role-moderator: #3cfd41;
 $dark-role-suspended: #a9a9a9;
 $dark-comment-internal: #3299ff;
 
+//going shadowless on dark mode
+$box-shadow: none;
+
 .dark {
   background-color: $dark-background;
   color: $dark-font-color;
@@ -23,16 +26,18 @@ $dark-comment-internal: #3299ff;
   .modal-content, .swal2-modal, .swal2-content, .swal2-validation-message {
     background-color: $dark-background;
     color: $dark-font-color !important;
+    box-shadow: $box-shadow !important;
   }
   .chrome-picker {
+    box-shadow: $box-shadow !important;
     & > div {
-      background-color: $dark-background;
+      background-color: $dark-secondary;
     }
     & svg {
       fill: $dark-font-color !important;
     }
     input {
-      background-color: $dark-tertiary;
+      background-color: $dark-quaternary;
       box-shadow: $box-shadow !important;
       color: $dark-font-color !important;
     }
@@ -68,8 +73,7 @@ $dark-comment-internal: #3299ff;
   textarea, .form-control, .swal2-input {
     background-color: $dark-secondary !important;
     color: rgba(242,242,242,.6) !important;
-    //TODO subject to consider
-    box-shadow: none !important;
+    box-shadow: $box-shadow !important;
   }
   .search-bar {
     box-shadow: $box-shadow !important;
@@ -79,13 +83,15 @@ $dark-comment-internal: #3299ff;
   }
   .btn-attachment {
     background-color: $dark-secondary;
-    box-shadow: none !important;
     *:hover {
       color: $dark-font-color;
     }
   }
   .voter-merged {
     border: 2px solid $dark-background;
+  }
+  .card, .jumbotron, .btn, .navbar, .swal2-styled {
+    box-shadow: $box-shadow !important;
   }
   .card, hr {
     background-color: $dark-secondary;
@@ -94,7 +100,8 @@ $dark-comment-internal: #3299ff;
     background-color: #e5a82d !important;
   }
   .dropdown-menu, .dropdown-item {
-    background-color: $dark-tertiary;
+    box-shadow: $box-shadow;
+    background-color: $dark-quaternary;
     color: $dark-font-color;
   }
   .tooltip-inner {
@@ -131,6 +138,7 @@ $dark-comment-internal: #3299ff;
   .toast-style, .popover-body {
     background-color: $dark-secondary;
     color: $dark-font-color;
+    box-shadow: $box-shadow !important;
   }
   .board-role {
     &.admin {
@@ -157,18 +165,21 @@ $dark-comment-internal: #3299ff;
   }
   .popover  {
     background: transparent !important;
+    box-shadow: $box-shadow;
   }
   .comment-icon {
     box-shadow: 0 0 0 1px $dark-background, 0 0 0 2px currentColor;
   }
   .view-box-bg {
     background-color: $dark-secondary;
+    box-shadow: $box-shadow !important;
     .form-control:not(:disabled) {
       background-color: $dark-quaternary !important;
     }
   }
+  //simulate border on shadowless dark mode
   .danger-shadow {
-    box-shadow: 0 3px 5px 0 rgba(255, 57, 50, .5);
+    border: rgba(255, 57, 50, .3) 1px solid;
   }
   .roadmap-container {
     scrollbar-color: $dark-hover $dark-tertiary; /* firefox property */
@@ -183,6 +194,7 @@ $dark-comment-internal: #3299ff;
     background-color: $dark-tertiary;
     padding: 0 .5rem;
     text-decoration: none;
+    box-shadow: $box-shadow !important;
     &:hover {
       text-decoration: none;
       background-color: $dark-hover;

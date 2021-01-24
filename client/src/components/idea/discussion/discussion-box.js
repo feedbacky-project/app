@@ -18,6 +18,7 @@ import BoardContext from "context/board-context";
 import PageUsername from "../../app/page-username";
 import PageSelectableDropdown from "../../app/page-selectable-dropdown";
 import ExecutableButton from "../../app/executable-button";
+import tinycolor from "tinycolor2";
 
 const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -55,7 +56,7 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
             initialLoad={true}
             loadMore={(page) => onLoadRequest(page)}
             hasMore={comments.moreToLoad}
-            loader={<Row className="justify-content-center mt-5 pt-5" key={comments.data.length}><LoadingSpinner/></Row>}>
+            loader={<Row className="justify-content-center mt-5 pt-5" key={comments.data.length}><LoadingSpinner color={context.getTheme().toHexString()}/></Row>}>
             {comments.data.map(data =>
                 <CommentComponent key={data.id} data={data} onCommentDelete={onCommentDelete} onCommentLike={onCommentLike}
                                   onCommentUnlike={onCommentUnlike} onSuspend={onSuspend}/>
@@ -112,14 +113,12 @@ const DiscussionBox = ({ideaData, updateState, onNotLoggedClick}) => {
         }
         const moderator = boardContext.data.moderators.find(mod => mod.userId === context.user.data.id);
         return <React.Fragment>
-            <ExecutableButton className="mt-2 ml-0 mb-0" style={{backgroundColor: context.getTheme(), fontSize: "0.75em"}}
-                              onClick={() => onCommentSubmit(false)}>
+            <ExecutableButton color={context.getTheme()} className="mt-2 ml-0 mb-0" style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(false)}>
                 Submit
             </ExecutableButton>
 
             {moderator && <React.Fragment>
-                <ExecutableButton className="mt-2 ml-2 mr-1 mb-0" style={{backgroundColor: "#0080FF", fontSize: "0.75em"}}
-                                  onClick={() => onCommentSubmit(true)}>
+                <ExecutableButton color={tinycolor("#0080FF")} className="mt-2 ml-2 mr-1 mb-0" style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(true)}>
                     Submit Internal
                 </ExecutableButton>
                 <div className="d-inline-block align-top move-bottom-2px"><ClickableTip id="internalTip" title="Internal Comments" description="Comments visible only for moderators of the project, hidden from public view."/></div>

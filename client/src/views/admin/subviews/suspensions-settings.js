@@ -2,15 +2,16 @@ import React, {useContext, useEffect} from "react";
 import AppContext from "context/app-context";
 import BoardContext from "context/board-context";
 import axios from "axios";
-import {Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import {SvgNotice} from "components/app/svg-notice";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import PageAvatar from "components/app/page-avatar";
-import {toastAwait, toastError, toastSuccess} from "components/util/utils";
+import {toastAwait, toastError, toastSuccess, toastWarning} from "components/util/utils";
 import DeleteButton from "components/util/delete-button";
 import {popupSwal} from "components/util/sweetalert-utils";
 import ViewBox from "components/viewbox/view-box";
 import PageNodesContext from "../../../context/page-nodes-context";
+import PageButton from "../../../components/app/page-button";
 
 const SuspensionSettings = () => {
     const context = useContext(AppContext);
@@ -22,9 +23,8 @@ const SuspensionSettings = () => {
             <div className="mb-1 text-black-60">Suspended Users</div>
             {renderSuspensions()}
             <div>
-                <OverlayTrigger overlay={<Tooltip id={"suspensionButtonSoon"}>Suspend users manually through moderator tools.</Tooltip>}>
-                    <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}} disabled>Add New</Button>
-                </OverlayTrigger>
+                <PageButton color={context.getTheme()} className="m-0 mt-3 float-right"
+                            onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</PageButton>
             </div>
         </Col>
     };

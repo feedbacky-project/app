@@ -12,8 +12,8 @@ const VotersComponent = ({votersAmount, data}) => {
             const voters = votersAmount > 5 ? 5 : votersAmount;
             let spinners = [];
             for (let i = 0; i < voters; i++) {
-                spinners.push(<LoadingSpinner key={i} color={context.getTheme()} className="voter-merged" style={{
-                    verticalAlign: "text-bottom", margin: "0 -10px 0 0", width: 23, height: 23, color: context.getTheme()
+                spinners.push(<LoadingSpinner key={i} customSize={23} color={context.getTheme()} className="voter-merged" style={{
+                    verticalAlign: "text-bottom", margin: "0 -10px 0 0", color: context.getTheme()
                 }}/>);
             }
             if (votersAmount <= 5) {

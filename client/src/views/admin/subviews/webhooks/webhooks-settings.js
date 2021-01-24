@@ -15,6 +15,7 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/app/svg-notice";
 import LoadingSpinner from "../../../../components/util/loading-spinner";
 import PageNodesContext from "../../../../context/page-nodes-context";
+import PageButton from "../../../../components/app/page-button";
 
 const WebhooksSettings = () => {
     const context = useContext(AppContext);
@@ -65,12 +66,12 @@ const WebhooksSettings = () => {
                     </div>
                     {renderWebhooks()}
                     <div>
-                        <Button className="m-0 mt-3 float-right" variant="" style={{backgroundColor: context.getTheme()}}
-                                as={Link} to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</Button>
+                        <PageButton color={context.getTheme()} className="m-0 mt-3 float-right" as={Link}
+                                    to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</PageButton>
                     </div>
                 </Col>
             </React.Fragment>
-        } loader={<Col className="text-center my-5 py-5"><LoadingSpinner/></Col>}/>
+        } loader={<Col className="text-center my-5 py-5"><LoadingSpinner color={context.getTheme().toHexString()}/></Col>}/>
     };
     const getTypeIcon = (hook) => {
         switch (hook.type) {
