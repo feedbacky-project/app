@@ -4,6 +4,8 @@
   "homepage": "https://app.feedbacky.net",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "copy-text-to-clipboard": "^2.2.0",
