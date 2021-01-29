@@ -4,6 +4,7 @@ import Steps from "rc-steps";
 import React, {useContext} from "react";
 import {ProgressBar} from "react-bootstrap";
 import UiCol from "ui/grid/UiCol";
+import "assets/scss/commons/setup-steps.scss";
 
 const ProgressSteps = styled(Steps)`
   .rc-steps-item-finish .rc-steps-item-icon > .rc-steps-icon .rc-steps-icon-dot {

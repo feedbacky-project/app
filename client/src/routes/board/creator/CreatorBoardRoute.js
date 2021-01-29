@@ -1,4 +1,3 @@
-import "assets/scss/commons/setup-steps.scss";
 import axios from "axios";
 import ProfileNavbar from "components/profile/ProfileNavbar";
 import AppContext from "context/AppContext";

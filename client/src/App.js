@@ -24,6 +24,7 @@ const AdminPanelView = lazy(() => retry(() => import("routes/board/admin/BoardAd
 const IdeaView = lazy(() => retry(() => import("routes/IdeaRoute")));
 const OauthReceiver = lazy(() => retry(() => import("routes/LoginRoute")));
 const UnsubscribeView = lazy(() => retry(() => import("routes/NotificationUnsubscribeRoute")));
+const UiTestRoute = lazy(() => retry(() => import("routes/UiTestRoute")));
 
 toast.configure();
 
@@ -173,6 +174,7 @@ const App = () => {
                     <Route path={"/i/:id"} component={IdeaView}/>
                     <Route path={"/unsubscribe/:id/:code"} component={UnsubscribeView}/>
                     <Route path={"/auth/:provider"} render={() => <OauthReceiver onLogin={onLogin}/>}/>
+                    <Route path={"/-/ui-test"} component={UiTestRoute}/>
                     <Route render={() => <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>}/>
                 </Switch>
             </Suspense>
