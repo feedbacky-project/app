@@ -38,7 +38,7 @@ src/
         `/me/settings` is a subroute of ProfileRoute)
 * **`src/ui/`** - Place for User Interface elements that don't directly implement client side logic (eg. state management).
 * **`src/utils/`** - Place for JavaScript Code utilities used across the project
-* **src/App.js** - Project main file where every Route is registered and other common code parts are included (eg. theming).
+* **`src/App.js`** - Project main file where every Route is registered and other common code parts are included (eg. theming).
 
 ## File Naming
 React components should be `UpperCased` while JavaScript Code uses `kebab-case`.
