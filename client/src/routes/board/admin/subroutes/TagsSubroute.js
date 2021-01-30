@@ -42,7 +42,7 @@ const TagsSubroute = () => {
         }
         return boardData.tags.map((tag, i) => {
             return <div key={i}>
-                <UiBadge color={tinycolor(tag.color)} text={tag.name}/>
+                <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>
                 {!tag.roadmapIgnored ||
                 <UiTooltip id={"tag" + i + "map"} text={"Ignores Roadmap"}>
                     <FaEyeSlash className={"fa-xs ml-1 red"}/>

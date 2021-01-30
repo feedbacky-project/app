@@ -17,7 +17,6 @@ import {toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 
 const SocialLinksSubroute = () => {
-    const {getTheme} = useContext(AppContext);
     const {updateState, data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
@@ -46,7 +45,7 @@ const SocialLinksSubroute = () => {
                     <UiElementDeleteButton tooltipName={"Delete"} onClick={() => onSocialLinkDelete(link.id)}
                                            id={"social-" + link.id + "-del"}/>
                     <br/>
-                    <SafeAnchor url={link.url}><UiBadge text={extractHostname(link.url)}/></SafeAnchor>
+                    <SafeAnchor url={link.url}><UiBadge>{extractHostname(link.url)}</UiBadge></SafeAnchor>
                 </div>
             </div>
         })
@@ -63,7 +62,7 @@ const SocialLinksSubroute = () => {
                     {renderAddButton()}
                 </div>
             </UiCol>
-        } loader={<UiCol className={"text-center my-5 py-5"}><UiLoadingSpinner color={getTheme().toHexString()}/></UiCol>}/>
+        } loader={<UiCol className={"text-center my-5 py-5"}><UiLoadingSpinner/></UiCol>}/>
     };
     const renderAddButton = () => {
         if (getQuota() <= 0) {

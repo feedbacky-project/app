@@ -1,8 +1,7 @@
-import AppContext from "context/AppContext";
+import styled from "@emotion/styled";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext} from "react";
 import {FaFrown} from "react-icons/all";
-import styled from "@emotion/styled";
 import {UiLoadingSpinner, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
 
@@ -32,14 +31,13 @@ const Voter = styled(UiAvatar)`
 `;
 
 const VotersInfo = ({data}) => {
-    const {getTheme} = useContext(AppContext);
     const {votersAmount} = useContext(IdeaContext).ideaData;
     const renderVoters = () => {
         if (!data.loaded) {
             const voters = votersAmount > 5 ? 5 : votersAmount;
             let spinners = [];
             for (let i = 0; i < voters; i++) {
-                spinners.push(<LoadingVoter key={i} customSize={23} color={getTheme()} style={{color: getTheme()}}/>);
+                spinners.push(<LoadingVoter key={i} customSize={23}/>);
             }
             if (votersAmount <= 5) {
                 return <React.Fragment>{spinners}</React.Fragment>

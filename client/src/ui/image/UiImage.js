@@ -5,7 +5,8 @@ const Image = styled.img`
     vertical-align: middle;
 `;
 
-const UiImage = ({width, height, alt, src, roundedCircle, rounded, className, style, onError = e => void 0}) => {
+const UiImage = (props) => {
+    const {roundedCircle, rounded, className, onError = () => void 0, ...otherProps} = props;
     let classes = className;
     if (rounded) {
         classes += " rounded";
@@ -13,7 +14,7 @@ const UiImage = ({width, height, alt, src, roundedCircle, rounded, className, st
     if (roundedCircle) {
         classes += " rounded-circle";
     }
-    return <Image alt={alt} className={classes} style={style} src={src} width={width} height={height} onError={onError}/>
+    return <Image className={classes} onError={onError} {...otherProps}/>
 };
 
 export {UiImage};

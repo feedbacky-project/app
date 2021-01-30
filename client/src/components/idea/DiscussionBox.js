@@ -19,10 +19,9 @@ import {prepareFilterAndSortRequests, toastAwait, toastError, toastSuccess, toas
 import {popupSwal} from "utils/sweetalert-utils";
 
 const DiscussionBox = () => {
-    const {user, serviceData, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
+    const {user, serviceData, onLocalPreferencesUpdate} = useContext(AppContext);
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
-    //fakeLoader option added here for odd glitch when you type into the comment box fast enough before comments are loaded they won't load the first page
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
     const sorts = [
@@ -39,28 +38,26 @@ const DiscussionBox = () => {
         // eslint-disable-next-line
     }, [user.localPreferences]);
     const onLoadRequest = (page, override) => {
-        setComments({...comments, fakeLoader: true});
         return axios.get("/ideas/" + ideaData.id + "/comments?page=" + (page - 1) + prepareFilterAndSortRequests(user.localPreferences.comments)).then(res => {
             if (override) {
-                setComments({...comments, data: res.data.data, loaded: true, fakeLoader: false, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
+                setComments({...comments, data: res.data.data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
             } else {
-                setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, fakeLoader: false, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
+                setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
             }
-        }).catch(() => {setComments({...comments, loaded: true, error: true})});
+        }).catch(() => {
+            setComments({...comments, loaded: true, error: true})
+        });
     };
     const renderComments = () => {
         if (comments.error) {
             return <div className={"text-danger mt-2 mb-3"}><FaFrown/> Failed to load comments</div>
-        }
-        if(comments.fakeLoader) {
-            return <UiRow centered className={"mt-5 pt-5"} key={comments.data.length}><UiLoadingSpinner color={getTheme().toHexString()}/></UiRow>
         }
         return <InfiniteScroll
             pageStart={0}
             initialLoad={true}
             loadMore={page => onLoadRequest(page)}
             hasMore={comments.moreToLoad}
-            loader={<UiRow centered className={"mt-5 pt-5"} key={comments.data.length}><UiLoadingSpinner color={getTheme().toHexString()}/></UiRow>}>
+            loader={<UiRow centered className={"mt-5 pt-5"} key={comments.data.length}><UiLoadingSpinner/></UiRow>}>
             {comments.data.map(data =>
                 <CommentsBox key={data.id} data={data} onCommentDelete={onCommentDelete} onCommentLike={onCommentLike}
                              onCommentUnlike={onCommentUnlike} onSuspend={onSuspend}/>

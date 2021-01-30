@@ -23,7 +23,8 @@ const SuspendedRole = styled.span`
   }
 `;
 
-const UiPrettyUsername = ({user, truncate = -1}) => {
+const UiPrettyUsername = (props) => {
+    const {user, truncate = -1} = props;
     const {suspendedUsers, moderators} = useContext(BoardContext).data;
     const isSuspended = suspendedUsers.find(suspended => suspended.user.id === user.id);
     let username = user.username;

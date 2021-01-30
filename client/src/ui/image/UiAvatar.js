@@ -2,7 +2,8 @@ import React from "react";
 import {UiImage} from "ui/image/UiImage";
 import {getDefaultAvatar} from "utils/basic-utils";
 
-const UiAvatar = ({user, roundedCircle, rounded, className, style, size}) => {
+const UiAvatar = (props) => {
+    const {user, size, ...otherProps} = props;
     const getSizedAvatarByUrl = (url, sizing) => {
         if (url.includes("googleusercontent")) {
             return url + "=h" + sizing;
@@ -25,9 +26,7 @@ const UiAvatar = ({user, roundedCircle, rounded, className, style, size}) => {
     } else {
         src = getSizedAvatarByUrl(user.avatar, getNearestAvatarSize(size));
     }
-    return <UiImage alt={"Avatar"} className={className} style={style} rounded={rounded} roundedCircle={roundedCircle}
-                    src={src} width={size} height={size}
-                    onError={e => e.target.src = getDefaultAvatar(user.username)}/>
+    return <UiImage alt={"Avatar"} onError={e => e.target.src = getDefaultAvatar(user.username)} src={src} width={size} height={size} {...otherProps}/>
 };
 
 export {UiAvatar};

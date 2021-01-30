@@ -12,7 +12,7 @@ import {UiCol} from "ui/grid";
 import {prepareFilterAndSortRequests} from "utils/basic-utils";
 
 const BoardIdeaCardContainer = ({id, searchQuery}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
     const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
     const isInitialMount = useRef(true);
@@ -39,7 +39,7 @@ const BoardIdeaCardContainer = ({id, searchQuery}) => {
             pageStart={0}
             loadMore={page => onLoadRequest(page)}
             hasMore={ideas.moreToLoad}
-            loader={<UiCol className={"text-center mt-5 pt-5"} key={ideas.data.length}><UiLoadingSpinner color={getTheme().toHexString()}/></UiCol>}>
+            loader={<UiCol className={"text-center mt-5 pt-5"} key={ideas.data.length}><UiLoadingSpinner/></UiCol>}>
             {ideas.data.map(ideaData => {
                 return <IdeaCard key={ideaData.id} ideaData={ideaData} onIdeaDelete={onIdeaDelete}/>
             })}

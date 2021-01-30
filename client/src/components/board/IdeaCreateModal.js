@@ -74,7 +74,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
     const renderAttachmentButton = () => {
         return <div className={"float-right"}>
             <UiCol xs={"auto"}  className={"d-inline-block px-0"}>
-                <AttachmentButton className={"m-0 p-0"}>
+                <AttachmentButton variant={""} className={"m-0 p-0"}>
                     <input accept={"image/jpeg, image/png"} type={"file"} className={"d-none"} id={"attachmentUpload"} onChange={onAttachmentUpload}/>
                     <label htmlFor={"attachmentUpload"} className={"mb-0 cursor-click"} style={{height: 38, width: 38, color: "hsl(210, 11%, 15%)"}}>
                         <FaRegImage className={"align-top cursor-click"} style={{position: "relative", top: "50%", transform: "translateY(-50%)"}}/>
@@ -158,8 +158,8 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                 </div>
                 <div>
                     {applicableTags.map((tag, i) => {
-                        return <Form.Check id={"applicableTag_" + tag.id} key={i} custom inline label={<UiBadge color={tinycolor(tag.color)} text={tag.name} context={appContext}/>}
-                                           type={"checkbox"} defaultChecked={false}/>
+                        return <Form.Check id={"applicableTag_" + tag.id} key={i} custom inline type={"checkbox"} defaultChecked={false}
+                                           label={<UiBadge color={tinycolor(tag.color)} context={appContext}>{tag.name}</UiBadge>}/>
                     })}
                 </div>
             </div>

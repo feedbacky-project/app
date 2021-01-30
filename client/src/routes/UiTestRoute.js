@@ -20,7 +20,11 @@ import {toastSuccess} from "utils/basic-utils";
 
 const UiTestRoute = () => {
     const context = useContext(AppContext);
-    useEffect(() => context.onThemeChange("#8e44ad"), []);
+    useEffect(() => {
+            document.getElementById("loadable").click();
+            context.onThemeChange("#8e44ad");
+        }, //eslint-disable-next-line
+        []);
     const customTheme = tinycolor("#e74c3c");
     const themes = ["#c0392b", "#9b59b6", "#16a085", "#2980b9"];
     return <BoardContextedRouteUtil board={{
@@ -51,7 +55,7 @@ const UiTestRoute = () => {
                         <UiButton className={"mx-2"}>Test</UiButton>
                         <UiButton className={"mx-2"} color={customTheme}>Colored</UiButton>
                         <UiCancelButton className={"mx-2"}>TestCancel</UiCancelButton>
-                        <UiLoadableButton className={"mx-2"} onClick={() => new Promise(resolve => setTimeout(void 0, 1000))}>Loading</UiLoadableButton>
+                        <UiLoadableButton id={"loadable"} className={"mx-2"} onClick={() => new Promise(resolve => setTimeout(void 0, 1000))}>Loading</UiLoadableButton>
                         <UiClassicButton className={"mx-2"}>Classic</UiClassicButton>
 
                         <UiElementDeleteButton tooltipName={"Delete Btn"} onClick={() => void 0} id={"elDel"}/>
@@ -69,8 +73,8 @@ const UiTestRoute = () => {
                         <UiClickableTip className={"mx-2"} id={"tip"} title={"Title"} description={"Desc"} icon={<FaCogs/>}/>
                     </UiCol>
                     <UiCol xs={12} className={"my-3"}>
-                        <UiBadge className={"mx-2"} text={"Test"}/>
-                        <UiBadge className={"mx-2"} text={"Colored"} color={customTheme}/>
+                        <UiBadge className={"mx-2"}>Test</UiBadge>
+                        <UiBadge className={"mx-2"} color={customTheme}>Colored</UiBadge>
                     </UiCol>
                     <UiCol as={UiRow} xs={12}>
                         <UiCol xs={12} md={6}>

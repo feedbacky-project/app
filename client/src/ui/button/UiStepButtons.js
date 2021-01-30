@@ -4,12 +4,14 @@ import {FaAngleLeft, FaAngleRight} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiButton} from "ui/button/UiButton";
 
-const UiNextStepButton = ({nextStep}) => {
-    return <UiButton color={tinycolor("#0994f6")} className={"pr-1 ml-2"} onClick={nextStep}>Next <FaAngleRight/></UiButton>
+const UiNextStepButton = (props) => {
+    const {nextStep, ...otherProps} = props;
+    return <UiButton color={tinycolor("#0994f6")} className={"pr-1 ml-2"} onClick={nextStep} {...otherProps}>Next <FaAngleRight/></UiButton>
 };
 
-const UiPreviousStepButton = ({previousStep}) => {
-    return <UiButton color={tinycolor("#0994f6")} className={"pl-1"} onClick={previousStep}><FaAngleLeft/> Back</UiButton>
+const UiPreviousStepButton = (props) => {
+    const {previousStep, ...otherProps} = props;
+    return <UiButton color={tinycolor("#0994f6")} className={"pl-1"} onClick={previousStep} {...otherProps}><FaAngleLeft/> Back</UiButton>
 };
 
 export {UiNextStepButton};

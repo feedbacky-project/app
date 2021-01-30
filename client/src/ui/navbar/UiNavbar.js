@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import React, {useContext} from 'react';
 import {Navbar} from "react-bootstrap";
 
-const UiNavbar = ({theme, children}) => {
+const UiNavbar = (props) => {
     const {getTheme} = useContext(AppContext);
-    if(theme == null) {
-        theme = getTheme();
-    }
-    return <Navbar variant={"dark"} style={{backgroundColor: theme}} expand={"lg"}>
+    const {theme = getTheme(), children, ...otherProps} = props;
+    return <Navbar variant={"dark"} style={{backgroundColor: theme}} expand={"lg"} {...otherProps}>
         {children}
     </Navbar>
 };

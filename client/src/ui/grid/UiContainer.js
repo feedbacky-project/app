@@ -1,8 +1,9 @@
 import React from "react";
 import {Container} from "react-bootstrap";
 
-const UiContainer = ({className, children}) => {
-    return <Container className={className}>
+const UiContainer = (props) => {
+    const {children, ...otherProps} = props;
+    return <Container {...otherProps}>
         {children}
     </Container>
 };

@@ -1,7 +1,8 @@
 import axios from "axios";
 import BoardContext from "context/BoardContext";
+import PageNodesContext from "context/PageNodesContext";
 import {Step} from "rc-steps";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Link, useHistory, withRouter} from "react-router-dom";
 import StepFirstSubroute from "routes/board/admin/subroutes/webhooks/creator/StepFirstSubroute";
 import StepSecondSubroute from "routes/board/admin/subroutes/webhooks/creator/StepSecondSubroute";
@@ -16,9 +17,10 @@ const CreateWebhookSubroute = () => {
     const history = useHistory();
     const {data: boardData} = useContext(BoardContext);
     const [settings, setSettings] = useState({step: 1, type: "", listenedEvents: [], url: ""});
-    const updateSettings = (data) => {
-        setSettings(data);
-    };
+    const {setCurrentNode} = useContext(PageNodesContext);
+    useEffect(() => setCurrentNode("webhooks"), [setCurrentNode]);
+
+    const updateSettings = data => setSettings(data);
     const renderStep = () => {
         switch (settings.step) {
             case 1:

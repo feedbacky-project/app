@@ -15,7 +15,6 @@ import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 
 const WebhooksSubroute = () => {
-    const {getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
@@ -67,7 +66,7 @@ const WebhooksSubroute = () => {
                     </div>
                 </UiCol>
             </React.Fragment>
-        } loader={<UiCol className={"text-center my-5 py-5"}><UiLoadingSpinner color={getTheme().toHexString()}/></UiCol>}/>
+        } loader={<UiCol className={"text-center my-5 py-5"}><UiLoadingSpinner/></UiCol>}/>
     };
     const getTypeIcon = (hook) => {
         switch (hook.type) {
@@ -80,7 +79,7 @@ const WebhooksSubroute = () => {
         }
     };
     const renderEvents = (hook) => {
-        return hook.events.map(event => <div key={hook.id + event}><UiBadge className={"d-block my-1"} text={prettifyEnum(event)}/></div>);
+        return hook.events.map(event => <div key={hook.id + event}><UiBadge className={"d-block my-1"}>{prettifyEnum(event)}</UiBadge></div>);
     };
     const onWebhookDelete = (hook) => {
         popupSwal("warning", "Dangerous action", "Webhook will be permanently removed and won't send data to target URL.",

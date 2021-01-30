@@ -127,8 +127,8 @@ const IdeaInfoBox = () => {
             <TextareaAutosize className={"form-control bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
                               placeholder={"Write a description..."} required as={"textarea"}
                               style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
-            <UiLoadableButton className={"m-0 mt-2"} onClick={onEditApply}>Save</UiLoadableButton>
-            <UiCancelButton className={"m-0 mt-2"} onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
+            <UiLoadableButton size={"sm"} className={"m-0 mt-2"} onClick={onEditApply}>Save</UiLoadableButton>
+            <UiCancelButton size={"sm"} className={"m-0 mt-2"} onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
         </React.Fragment>
     };
     const renderDeletionButton = () => {

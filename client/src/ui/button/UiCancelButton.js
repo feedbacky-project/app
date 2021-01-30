@@ -16,8 +16,9 @@ const CancelButton = styled(Button)`
   }
 `;
 
-const UiCancelButton = ({children, className, style, onClick, size, as, to}) => {
-    return <CancelButton variant={"link"} size={size} style={style} className={className} onClick={onClick} as={as} to={to}>{children}</CancelButton>
+const UiCancelButton = (props) => {
+    const {children, ...otherProps} = props;
+    return <CancelButton variant={"link"} {...otherProps}>{children}</CancelButton>
 };
 
 export {UiCancelButton};

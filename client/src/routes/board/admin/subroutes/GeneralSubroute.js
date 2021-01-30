@@ -44,8 +44,8 @@ const GeneralSubroute = ({updateState}) => {
                 <UiCountableFormControl id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
                                         defaultValue={boardData.shortDescription}/>
             </UiCol>
-            <UiCol xs={12} lg={6}>
-                <Form.Label className={"mr-1 text-black-60 mt-2"}>Full Description</Form.Label>
+            <UiCol xs={12} lg={6} className={"mt-2"}>
+                <Form.Label className={"mr-1 text-black-60"}>Full Description</Form.Label>
                 <UiClickableTip id={"boardDescription"} title={"Set Description"} description={<React.Fragment>
                     Full description visible at your board, markdown supported. Keep it under 2500
                     characters long.
@@ -69,15 +69,15 @@ const GeneralSubroute = ({updateState}) => {
                     {2500 - boardData.fullDescription.length} Remaining
                 </Form.Text>
             </UiCol>
-            <UiCol xs={12} lg={6}>
-                <Form.Label className={"mr-1 text-black-60 mt-2"}>Theme Color</Form.Label>
+            <UiCol xs={12} lg={6} className={"mt-2"}>
+                <Form.Label className={"mr-1 text-black-60"}>Theme Color</Form.Label>
                 <UiClickableTip id={"themeColor"} title={"Set Theme Color"} description={"Configure theme color of your board. It will affect elements of your board. Colors might look differently across Light and Dark Themes."}/>
                 <br/>
-                <Suspense fallback={<UiLoadingSpinner color={getTheme().toHexString()}/>}>
+                <Suspense fallback={<UiLoadingSpinner/>}>
                     <CirclePicker
                         colors={["#2d3436", "#2c3e50", "#d35400", "#e74c3c", "#eb3b5a", "#e67e22", "#f39c12", "#fd9644", "#8e44ad", "#2980b9", "#3498db", "#27ae60", "#2ecc71", "#16a085", "#1abc9c", "#95a5a6"]}
                         className={"text-center color-picker-admin"}
-                        circleSpacing={4} color={getTheme(false).toHexString()}
+                        circleSpacing={4} color={getTheme(false)}
                         onChangeComplete={color => onThemeChange(color.hex)}>
                     </CirclePicker>
                     <div className={"hoverable-option"} style={{width: 28, height: 28, marginRight: 4, marginTop: 4}} onClick={() => setModalOpen(true)}>
@@ -92,8 +92,8 @@ const GeneralSubroute = ({updateState}) => {
                     </div>
                 </Suspense>
             </UiCol>
-            <UiCol xs={12} lg={8}>
-                <Form.Label className={"mr-1 text-black-60 mt-2"}>Board Banner</Form.Label>
+            <UiCol xs={12} lg={8} className={"mt-2"}>
+                <Form.Label className={"mr-1 text-black-60"}>Board Banner</Form.Label>
                 <UiClickableTip id={"banner"} title={"Set Board Banner"} description={"Suggested size: 1120x400. Maximum size 500 kb, PNG and JPG only."}/>
                 <br/>
                 <div onClick={() => document.getElementById("bannerInput").click()}>
@@ -112,8 +112,8 @@ const GeneralSubroute = ({updateState}) => {
                 </div>
                 <input hidden accept={"image/jpeg, image/png"} id={"bannerInput"} type={"file"} name={"banner"} onChange={onBannerChange}/>
             </UiCol>
-            <UiCol xs={12} lg={4}>
-                <Form.Label className={"mr-1 text-black-60 mt-2"}>Board Logo</Form.Label>
+            <UiCol xs={12} lg={4} className={"mt-2"}>
+                <Form.Label className={"mr-1 text-black-60"}>Board Logo</Form.Label>
                 <UiClickableTip id={"logo"} title={"Set Board Logo"}
                                 description={"Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."}/>
                 <div style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>

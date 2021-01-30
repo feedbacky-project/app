@@ -19,29 +19,28 @@ const Badge = styled.div`
 `;
 
 // fixme sneaky workaround for missing context when inserting html directly
-const UiBadge = ({color = null, text, className = "", context = null}) => {
+const UiBadge = (props) => {
+    const {context = null} = props;
     let appContext = useContext(AppContext);
     if (context != null) {
         appContext = context;
     }
-    if(color == null) {
-        color = appContext.getTheme();
-    }
+    const {color = appContext.getTheme(), children, ...otherProps} = props;
+    let badgeColor = color;
     if (appContext.user.darkMode) {
-        color = color.lighten(10);
+        badgeColor = badgeColor.lighten(10);
         //if still not readable, increase again
-        if (tinycolor.readability(color, "#282828") < 2.5) {
-            color = color.lighten(25);
+        if (tinycolor.readability(badgeColor, "#282828") < 2.5) {
+            badgeColor = badgeColor.lighten(25);
         }
-        return <Badge color={""} style={{color: color, fontWeight: "bold", backgroundColor: color.clone().setAlpha(.1)}} className={className}>{text}</Badge>
+        return <Badge color={""} style={{color: badgeColor, fontWeight: "bold", backgroundColor: badgeColor.clone().setAlpha(.1)}} {...otherProps}>{children}</Badge>
     }
-    return <Badge color={""} style={{backgroundColor: color}} className={className}>{text}</Badge>
+    return <Badge color={""} style={{backgroundColor: badgeColor}} {...otherProps}>{children}</Badge>
 };
 
 export {UiBadge};
 
 UiBadge.propTypes = {
     color: PropTypes.object,
-    text: PropTypes.string.isRequired,
     className: PropTypes.string
 };

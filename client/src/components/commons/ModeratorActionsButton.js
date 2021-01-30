@@ -128,8 +128,8 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
         let html = [];
         boardData.tags.forEach((tag, i) => {
             const applied = ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
-            html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline label={<UiBadge color={tinycolor(tag.color)} text={tag.name} context={context}/>}
-                                  type={"checkbox"} defaultChecked={applied}/>)
+            html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline type={"checkbox"} defaultChecked={applied}
+                                  label={<UiBadge color={tinycolor(tag.color)} context={context}>{tag.name}</UiBadge>}/>)
         });
         swalGenerator.fire({
             html: <React.Fragment>

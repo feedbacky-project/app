@@ -10,7 +10,7 @@ const TagsInfo = () => {
     }
     return <React.Fragment>
         <div className={"mt-1 text-black-75"}>Tags</div>
-        {tags.map((tag, i) => <UiBadge key={i} text={tag.name} color={tinycolor(tag.color)} className={"mr-1"}/>)}
+        {tags.map((tag, i) => <UiBadge key={i} color={tinycolor(tag.color)} className={"mr-1"}>{tag.name}</UiBadge>)}
     </React.Fragment>
 };
 

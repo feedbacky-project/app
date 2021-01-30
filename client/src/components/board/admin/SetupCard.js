@@ -14,7 +14,7 @@ const SetupCard = ({icon, chosen = false, text, onClick, className = ""}) => {
     const {getTheme} = useContext(AppContext);
     let style;
     if(chosen) {
-        style = {border: "2px solid " + getTheme().toHexString()};
+        style = {border: "2px solid " + getTheme()};
     } else {
         style = {border: "2px solid transparent"};
     }

@@ -1,7 +1,8 @@
 import axios from "axios";
 import BoardContext from "context/BoardContext";
+import PageNodesContext from "context/PageNodesContext";
 import {Step} from "rc-steps";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Link, useHistory, withRouter} from "react-router-dom";
 import StepFirstRoute from "routes/board/admin/subroutes/social/creator/StepFirstRoute";
 import StepSecondRoute from "routes/board/admin/subroutes/social/creator/StepSecondRoute";
@@ -15,6 +16,10 @@ const CreateSocialLinkSubroute = () => {
     const {updateState, data: boardData} = useContext(BoardContext);
     const history = useHistory();
     const [settings, setSettings] = useState({step: 1, iconData: "", url: "", chosen: -1, customIcon: false});
+    const {setCurrentNode} = useContext(PageNodesContext);
+    useEffect(() => setCurrentNode("social"), [setCurrentNode]);
+
+    const updateSettings = data => setSettings(data);
     const renderStep = () => {
         switch (settings.step) {
             case 1:
@@ -47,9 +52,6 @@ const CreateSocialLinkSubroute = () => {
                 setSettings({...settings, step: 1});
                 return <StepFirstRoute updateSettings={updateSettings} settings={settings}/>;
         }
-    };
-    const updateSettings = (data) => {
-        setSettings(data);
     };
     const renderBackButton = () => {
         if (settings.step === 1) {

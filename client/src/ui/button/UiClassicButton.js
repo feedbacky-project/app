@@ -1,8 +1,21 @@
+import styled from "@emotion/styled";
 import React from "react";
 import {PageButton} from "ui/button/UiButton";
 
-const UiClassicButton = ({children, className, style, disabled, onClick, size, as, to}) => {
-    return <PageButton as={as} to={to} variant={""} size={size} style={{style}} disabled={disabled} className={className} onClick={onClick}>{children}</PageButton>
+const ClassicButton = styled(PageButton)`
+  background-color: white;
+  color: var(--font-color);
+  
+  &:hover, &:focus {
+    background-color: white;
+    color: var(--font-color);
+    border-color: transparent !important;
+  }
+`;
+
+const UiClassicButton = (props) => {
+    const {children, ...otherProps} = props;
+    return <ClassicButton {...otherProps}>{children}</ClassicButton>
 };
 
 export {UiClassicButton};

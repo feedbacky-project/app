@@ -25,10 +25,10 @@ const CommentIcon = ({specialType}) => {
     const {user, getTheme} = useContext(AppContext);
     let color = getTheme();
     if (user.darkMode) {
-        color = color.clone().setAlpha(.2);
+        color = color.setAlpha(.2);
     }
     const retrieveSpecialCommentTypeIcon = (type) => {
-        const fill = user.darkMode ? getTheme().toHexString() : "white";
+        const fill = user.darkMode ? getTheme() : "white";
         switch (type) {
             case "IDEA_CLOSED":
                 return <FaTimesCircle className={"icon"} fill={fill}/>;

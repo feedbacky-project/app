@@ -3,7 +3,8 @@ import React from 'react';
 import Modal from "react-bootstrap/Modal";
 import {UiCancelButton} from "ui/button";
 
-const UiModal = ({id, isOpen, onHide, title, applyButton, children, size}) => {
+const UiModal = (props) => {
+    const {id, isOpen, onHide, title, applyButton, children, size} = props;
     return <Modal size={size} id={id} show={isOpen} onHide={onHide} centered>
         <Modal.Header>
             <Modal.Title><h5 className={"modal-title"}>{title}</h5></Modal.Title>

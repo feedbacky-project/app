@@ -17,7 +17,7 @@ const parseComment = (message, moderatorsData, tagsData) => {
         const text = span.exec(el)[1];
         const colorRegex = /<span[^)>]*style='background-color: ([^)>]*)'[^)>]*>/g;
         const color = tinycolor(colorRegex.exec(el)[1]);
-        finalMessage = replace(finalMessage, el, (match, i) => <UiBadge key={match + i} color={tinycolor(color)} text={text}/>)
+        finalMessage = replace(finalMessage, el, (match, i) => <UiBadge key={match + i} color={tinycolor(color)}>{text}</UiBadge>)
     });
     //todo backward compatibility for old <span></span> badge tags
     return finalMessage;
@@ -35,9 +35,9 @@ const parseTag = (result, moderatorsData, tagsData) => {
 const parseBoardTagData = (data, tagsData) => {
     const foundTag = tagsData.find(el => el.name === data[2]);
     if (foundTag === undefined) {
-        return <UiBadge key={data[2]} text={data[2]} color={tinycolor(data[3])}/>
+        return <UiBadge key={data[2]} color={tinycolor(data[3])}>{data[2]}</UiBadge>
     }
-    return <UiBadge key={data[2]} text={foundTag.name} color={tinycolor(foundTag.color)}/>
+    return <UiBadge key={data[2]} color={tinycolor(foundTag.color)}>{foundTag.name}</UiBadge>
 };
 
 const parseModeratorData = (data) => {

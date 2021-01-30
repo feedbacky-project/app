@@ -16,16 +16,11 @@ const ViewBox = styled.div`
 }
 `;
 
-const UiViewBox = ({theme, title, description, children}) => {
+const UiViewBox = (props) => {
     const {getTheme} = useContext(AppContext);
-    let boxTheme;
-    if (theme == null) {
-        boxTheme = getTheme();
-    } else {
-        boxTheme = theme;
-    }
+    const {theme = getTheme(), title, description, children} = props;
     return <React.Fragment>
-        <Card as={ViewBox} style={{backgroundColor: boxTheme}}>
+        <Card as={ViewBox} style={{backgroundColor: theme}}>
             <h3 className={"mb-0"}>{title}</h3>
             <div>{description}</div>
         </Card>

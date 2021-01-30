@@ -1,16 +1,16 @@
 import React, {useState} from "react";
 import {Form} from "react-bootstrap";
 
-const UiCountableFormControl = ({id, minLength, maxLength, rows = 1, type = "text", placeholder, defaultValue, className, onChange = () => void 0}) => {
+const UiCountableFormControl = (props) => {
+    const {minLength, maxLength, defaultValue, onChange = () => void 0, ...otherProps} = props;
     const [currentLength, setCurrentLength] = useState(defaultValue == null ? 0 : defaultValue.length);
     return <React.Fragment>
-        <Form.Control className={className} style={{minHeight: 38, resize: "none"}} minLength={minLength} maxLength={maxLength} rows={rows} required type={type}
-                      placeholder={placeholder} id={id} defaultValue={defaultValue} onChange={e => {
+        <Form.Control style={{minHeight: 38, resize: "none"}} required onChange={e => {
             e.target.value = e.target.value.substring(0, maxLength);
             setCurrentLength(e.target.value.length);
             onChange(e);
-        }}/>
-        <Form.Text className={"text-right text-black-60"} id={"remaining_" + id}>
+        }} defaultValue={defaultValue} minLength={minLength} maxLength={maxLength} {...otherProps}/>
+        <Form.Text className={"text-right text-black-60"}>
             {maxLength - currentLength} Remaining
         </Form.Text>
     </React.Fragment>

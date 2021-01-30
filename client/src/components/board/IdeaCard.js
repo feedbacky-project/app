@@ -62,7 +62,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
         return <span>
             <br className={"d-sm-none"}/>
             <BadgeContainer className={"mx-sm-1 mx-0"}>
-                {idea.tags.map((tag, i) => <UiBadge key={i} text={tag.name} color={tinycolor(tag.color)} className={"move-top-2px"}/>)}
+                {idea.tags.map((tag, i) => <UiBadge key={i} color={tinycolor(tag.color)} className={"move-top-2px"}>{tag.name}</UiBadge>)}
             </BadgeContainer>
         </span>
     };

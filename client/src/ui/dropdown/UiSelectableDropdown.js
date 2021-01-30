@@ -30,8 +30,9 @@ const SelectableDropdown = styled.div`
   }
 `;
 
-const UiSelectableDropdown = ({id, className, currentValue, values}) => {
+const UiSelectableDropdown = (props) => {
     const {user, getTheme} = useContext(AppContext);
+    const {id, className, currentValue, values} = props;
     let children;
     if(user.darkMode) {
         let color = getTheme().lighten(10);

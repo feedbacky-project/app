@@ -140,7 +140,7 @@ const App = () => {
     if (serviceData.error) {
         return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"}/></BrowserRouter>
     }
-    return <ComponentLoader loader={<UiRow centered verticallyCentered><UiLoadingSpinner className={"default-color"}/></UiRow>}
+    return <ComponentLoader loader={<LoadingRouteUtil/>}
                             loaded={serviceData.loaded && userData.loaded} component={
         <AppContext.Provider value={{
             user: {

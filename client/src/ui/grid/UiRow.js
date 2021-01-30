@@ -1,7 +1,8 @@
 import React from "react";
 import {Row} from "react-bootstrap";
 
-const UiRow = ({noGutters, centered, verticallyCentered, className, children}) => {
+const UiRow = (props) => {
+    const {centered, verticallyCentered, className, children, ...otherProps} = props;
     let classes = className;
     if(centered) {
         classes += " justify-content-center";
@@ -9,7 +10,7 @@ const UiRow = ({noGutters, centered, verticallyCentered, className, children}) =
     if(verticallyCentered) {
         classes += " vertical-center";
     }
-    return <Row noGutters={noGutters} className={classes}>
+    return <Row className={classes} {...otherProps}>
         {children}
     </Row>
 };

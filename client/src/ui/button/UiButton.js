@@ -16,21 +16,19 @@ export const PageButton = styled(Button)`
   }
 `;
 
-const UiButton = ({children, color = null, className, style, disabled, onClick, size, as, to}) => {
+const UiButton = (props) => {
     const {getTheme, user} = useContext(AppContext);
-    if(color == null) {
-        color = getTheme();
-    }
+    const {children, color = getTheme(), style, ...otherProps} = props;
+    let buttonColor = color;
     if (user.darkMode) {
-        color = color.lighten(10);
+        buttonColor = buttonColor.lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(color, "#282828") < 2.5) {
-            color = color.lighten(25);
+            buttonColor = buttonColor.lighten(25);
         }
-        return <PageButton as={as} to={to} variant={""} size={size} style={{color: color, fontWeight: "bold", backgroundColor: color.clone().setAlpha(.1), style}}
-                       disabled={disabled} className={className} onClick={onClick}>{children}</PageButton>
+        return <PageButton variant={""} style={{color: buttonColor, fontWeight: "bold", backgroundColor: buttonColor.clone().setAlpha(.1), style}} {...otherProps}>{children}</PageButton>
     }
-    return <PageButton as={as} to={to}  variant={""} size={size} style={{backgroundColor: color, style}} disabled={disabled} className={className} onClick={onClick}>{children}</PageButton>
+    return <PageButton variant={""} style={{backgroundColor: buttonColor, style}} {...otherProps}>{children}</PageButton>
 };
 
 export {UiButton};
