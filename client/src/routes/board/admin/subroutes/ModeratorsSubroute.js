@@ -66,7 +66,7 @@ const ModeratorsSubroute = () => {
                             {renderModerationKick(mod, i)}
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{mod.user.username}</small>
-                            <UiBadge className={"move-top-3px"}>{prettifyEnum(mod.role)}</UiBadge>
+                            <UiBadge className={"d-block"}>{prettifyEnum(mod.role)}</UiBadge>
                         </div>
                     </div>
                 })}
@@ -86,7 +86,7 @@ const ModeratorsSubroute = () => {
                             <div className={"cursor-click"} onClick={() => {
                                 copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
                                 toastSuccess("Copied to clipboard.");
-                            }}><UiBadge color={tinycolor("#0994f6")} className={"move-top-3px"}>Copy Invite</UiBadge></div>
+                            }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></div>
                         </div>
                     </div>
                 })}

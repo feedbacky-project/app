@@ -15,6 +15,13 @@
 * move social icons buttons hover url for the whole button not only the icon (Tigerpanzer suggestion)
 * changed moderator actions icons to cog
 * make more page elements theme dependant (use page theme for background or color)
+* added accessibility support for prefers-reduced-motion for some non-essential animations (upvote, settings, loaders)
+* replaced color in profile navbar on light mode with darker accent to meet AAA color contrast
+* replaced some text with text-black-50 color to text-black-60 to meet AAA color contrast
+* fixed issue that anyone could access admin panel of any board (couldn't use it and saw only public data no private data)
+* upvote buttons are now grey if they're not upvoted
+* replaced default color palette in theme selector with more color contrast safe colors
+* made some changes towards easier keyboard accessibility (brought back links outlines, made new idea button tabindex 1)
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 TODO border setupcard theme based

@@ -21,10 +21,13 @@ const IconToggle = styled(FaCog)`
   transition: all 0.7s ease-in-out 0s;
   color: var(--pure-dark-half);
   
-  &:hover {
-    color: var(--pure-dark-half);
-    transform: rotate(360deg);
-    transition: all 0.7s ease-in-out 0s;
+  //hide non-essential motion if requested
+  @media(prefers-reduced-motion: no-preference) {
+      &:hover {
+        color: var(--pure-dark-half);
+        transform: rotate(360deg);
+        transition: all 0.7s ease-in-out 0s;
+      }
   }
   
   .dark &, .dark &:hover {

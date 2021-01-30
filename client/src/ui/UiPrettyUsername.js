@@ -5,9 +5,9 @@ import {FaBan} from "react-icons/all";
 import {truncateText} from "utils/basic-utils";
 
 const AdminRole = styled.span`
-  color: hsl(2, 100%, 50%);
+  color: hsl(2, 100%, 40%);
   .dark & {
-    color: hsl(2, 98%, 61%);
+    color: hsl(2, 95%, 66%);
   }
 `;
 const ModeratorRole = styled.span`

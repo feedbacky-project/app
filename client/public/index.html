@@ -35,6 +35,18 @@
             margin-right: calc(-1 * (100vw - 100%));
         }
 
+        @media(prefers-reduced-motion: reduce) {
+            .load-spinner {
+                -webkit-animation: spinner-animation 2.8s linear infinite !important;
+                animation: spinner-animation 2.8s linear infinite !important;
+            }
+
+            .load-spinner circle {
+                -webkit-animation: dash 2.8s linear infinite !important;
+                animation: dash 2.8s linear infinite !important;
+            }
+        }
+
         .load-spinner {
             width: 40px;
             height: 40px;

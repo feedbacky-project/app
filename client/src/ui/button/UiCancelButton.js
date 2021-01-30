@@ -6,6 +6,10 @@ const CancelButton = styled(Button)`
   transition: var(--hover-transition) !important;
   color: hsla(0, 0%, 0%, .6);
 
+  &:focus {
+    outline: 1px dotted white;
+  }
+
   .dark & {
     color: hsla(0, 0%, 95%, .6) !important;
   }

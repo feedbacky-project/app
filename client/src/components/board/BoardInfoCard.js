@@ -43,7 +43,8 @@ const BoardInfoCard = ({onIdeaCreation}) => {
                 <Card.Body className={"pb-2"}>
                     <div className={"markdown-box"} dangerouslySetInnerHTML={{__html: parseMarkdown(data.fullDescription)}}/>
                     <hr/>
-                    <UiLoadableButton className={"mx-0 mt-0 mb-2 py-1"} onClick={() => {
+                    {/* eslint-disable-next-line */}
+                    <UiLoadableButton tabindex={1} className={"mx-0 mt-0 mb-2 py-1"} onClick={() => {
                         onCreateIdeaModalClick();
                         return Promise.resolve();
                     }}>

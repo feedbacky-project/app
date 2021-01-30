@@ -75,7 +75,10 @@ const GeneralSubroute = ({updateState}) => {
                 <br/>
                 <Suspense fallback={<UiLoadingSpinner/>}>
                     <CirclePicker
-                        colors={["#2d3436", "#2c3e50", "#d35400", "#e74c3c", "#eb3b5a", "#e67e22", "#f39c12", "#fd9644", "#8e44ad", "#2980b9", "#3498db", "#27ae60", "#2ecc71", "#16a085", "#1abc9c", "#95a5a6"]}
+                        colors={["#273c75", "#2c3e50", "#8e44ad", "#B33771",
+                            "#d35400", "#e74c3c", "#706fd3", "#218c74",
+                            "#2980b9", "#16a085", "#e67e22", "#27ae60",
+                            "#44bd32", "#1B9CFC", "#3498db", "#EE5A24"]}
                         className={"text-center color-picker-admin"}
                         circleSpacing={4} color={getTheme(false)}
                         onChangeComplete={color => onThemeChange(color.hex)}>
@@ -140,7 +143,7 @@ const GeneralSubroute = ({updateState}) => {
             <UiRow noGutters className={"m-0 p-0 px-4 my-2"}>
                 <UiCol sm={9} xs={12}>
                     <h4 className={"mb-1 text-danger"}>Delete Board</h4>
-                    <span className={"text-black-50"} style={{fontSize: ".9em"}}>
+                    <span className={"text-black-60"} style={{fontSize: ".9em"}}>
                         Permanently delete your board and all ideas in it. <strong>Irreversible action.</strong>
                     </span>
                 </UiCol>

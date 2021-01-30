@@ -32,7 +32,7 @@ const PopoverHeader = styled(Popover.Title)`
 `;
 
 const UiClickableTip = (props) => {
-    const {id, title, description, icon = <FaQuestionCircle className={"fa-xs cursor-pointer text-black-50 align-top hoverable-option"}/>} = props;
+    const {id, title, description, icon = <FaQuestionCircle className={"fa-xs cursor-pointer text-black-60 align-top hoverable-option"}/>} = props;
     return <OverlayTrigger
         trigger={"click"} placement={"top"} rootClose={true} rootCloseEvent={"click"}
         overlay={

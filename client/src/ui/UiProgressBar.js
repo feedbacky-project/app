@@ -19,7 +19,7 @@ const ProgressSteps = styled(Steps)`
 `;
 
 const PageProgressBar = styled(ProgressBar)`
-  .progress-bar {
+  .progress-bar-striped {
     background-color: ${props => props.theme.toHexString()};
   }
 `;
@@ -35,7 +35,7 @@ const UiProgressBar = (props) => {
         </UiCol>
         <UiCol xs={12} className={"d-sm-none px-4"}>
             <small>Step {currentStep}</small>
-            <PageProgressBar theme={getTheme()} now={(currentStep / steps) * 100}/>
+            <PageProgressBar striped theme={getTheme()} now={(currentStep / steps) * 100}/>
         </UiCol>
     </React.Fragment>
 };

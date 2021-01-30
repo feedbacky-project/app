@@ -12,7 +12,7 @@ const ColorSelectionHelper = ({title, color, setColor, colorWarning}) => {
         <Form.Label className={"mr-1 " + textClass}>{title}</Form.Label>
         <UiClickableTip id={"colorChooser"} title={"Choose Color"} description={"Choose the color. Avoid too bright and too dark colors, poorly visible in Light and Dark Themes."}/>
         {!warn || <UiClickableTip id={"colorWarn"} title={"Color Warning"} description={"This color is considered either too dark or too bright and might look bad on Light or Dark Mode."}
-                                  icon={<FaExclamationCircle className={"fa-xs text-danger move-top-1px ml-1 hoverable-option"}/>}/>}
+                                  icon={<FaExclamationCircle className={"fa-xs text-danger align-top ml-1 hoverable-option"}/>}/>}
         <br/>
         <Suspense fallback={<UiLoadingSpinner/>}>
             <ChromePicker className={"text-center"} disableAlpha color={color} onChangeComplete={changedColor => setColor(changedColor.hex)}/>

@@ -15,7 +15,10 @@ const StepThirdSubroute = ({updateSettings, settings}) => {
         </UiCol>
         <UiCol xs={12} className={"mt-4 px-md-5 px-3"}>
             <Suspense fallback={<UiLoadingSpinner/>}>
-                <CirclePicker colors={["#202428", "#2d3436", "#2c3e50", "#d35400", "#e74c3c", "#e67e22", "#8e44ad", "#2980b9", "#3498db", "#f39c12", "#f1c40f", "#27ae60", "#2ecc71", "#16a085", "#1abc9c", "#95a5a6"]}
+                <CirclePicker colors={["#273c75", "#2c3e50", "#8e44ad", "#B33771",
+                    "#d35400", "#e74c3c", "#706fd3", "#218c74",
+                    "#2980b9", "#16a085", "#e67e22", "#27ae60",
+                    "#44bd32", "#1B9CFC", "#3498db", "#EE5A24"]}
                               className={"text-center color-picker-admin mx-auto"} color={settings.themeColor} circleSpacing={4}
                               onChangeComplete={color => updateSettings({...settings, themeColor: color.hex})}/>
             </Suspense>

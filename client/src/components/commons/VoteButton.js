@@ -17,36 +17,47 @@ const VoteBtn = styled(Button)`
   .to-upvote, .upvoted {
     transition: .2s ease-in-out;
   }
+  
+  &:focus {
+    outline: 1px dotted black;
+  }
+  
+  .dark &:focus {
+    outline: 1px dotted white;
+  }
 
-  &:hover {
-     & .to-upvote {
-       animation: UpVote 1s linear infinite;
-     }
-     
-     & .upvoted {
-      animation: DownVote 1s linear infinite;
-     }
-     
-     @keyframes UpVote {
-       0%, 100% {
-         transform: translateY(0px);
-       }
-       50% {
-         transform: translateY(-5px);
-       }
-     }
-    
-     @keyframes DownVote {
-       0% {
-         transform: rotate(180deg);
-       }
-       50% {
-         transform: rotate(180deg) translateY(5px);
-       }
-       100% {
-        transform: rotate(180deg);
-       }
-     }
+  //hide non-essential motion if requested
+  @media(prefers-reduced-motion: no-preference) {
+      &:hover {
+         & .to-upvote {
+           animation: UpVote 1s linear infinite;
+         }
+         
+         & .upvoted {
+          animation: DownVote 1s linear infinite;
+         }
+         
+         @keyframes UpVote {
+           0%, 100% {
+             transform: translateY(0px);
+           }
+           50% {
+             transform: translateY(-5px);
+           }
+         }
+        
+         @keyframes DownVote {
+           0% {
+             transform: rotate(180deg);
+           }
+           50% {
+             transform: rotate(180deg) translateY(5px);
+           }
+           100% {
+            transform: rotate(180deg);
+           }
+         }
+      }
   }
   
   @media (max-width: 576px) {
@@ -54,7 +65,24 @@ const VoteBtn = styled(Button)`
       font-size: 1rem;
     }
   }
-  
+`;
+
+const ToUpvoteBtn = styled(VoteBtn)`
+   &, &:hover {
+     color: hsla(0, 0%, 0%, .6);
+   }
+   
+  .dark & {
+    color: hsla(0, 0%, 95%, .6);
+  }
+`;
+
+const ToUpvoteIcon = styled(FiChevronUp)`
+  color: hsla(0, 0%, 0%, .6);
+   
+  .dark & {
+    color: hsla(0, 0%, 95%, .6);
+  }
 `;
 
 const VoteButton = ({onVote}) => {
@@ -62,18 +90,20 @@ const VoteButton = ({onVote}) => {
     const {ideaData} = useContext(IdeaContext);
     let color = getTheme();
 
-    let vote;
+    let btn;
     if (!ideaData.upvoted) {
-        color = color.setAlpha(.7);
-        vote = <FiChevronUp className={"to-upvote"} style={{color}}/>;
+        btn = <ToUpvoteBtn onClick={onVote} variant={""}>
+            <ToUpvoteIcon className={"to-upvote"}/>
+            <strong className={"d-block"}>{ideaData.votersAmount}</strong>
+        </ToUpvoteBtn>
     } else {
-        vote = <FiChevronsUp className={"upvoted"} style={{color}}/>;
-    }
-    return <span className={"my-auto"}>
-        <VoteBtn onClick={onVote} variant={""}>
-            {vote}
+        btn = <VoteBtn onClick={onVote} variant={""}>
+            <FiChevronsUp className={"upvoted"} style={{color}}/>
             <strong className={"d-block"} style={{color: color}}>{ideaData.votersAmount}</strong>
         </VoteBtn>
+    }
+    return <span className={"my-auto"}>
+        {btn}
     </span>
 };
 

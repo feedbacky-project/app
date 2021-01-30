@@ -152,7 +152,7 @@ const SettingsSubroute = () => {
             <UiRow noGutters className={"p-3"}>
                 <UiCol sm={9} xs={12}>
                     <h4 className={"mb-1 text-danger"}>Deactivate Account</h4>
-                    <span className={"text-black-50"} style={{fontSize: ".9em"}}>
+                    <span className={"text-black-60"} style={{fontSize: ".9em"}}>
                             Personal information will be <strong>permanently removed</strong> but all your content will be anonymized. <strong>Irreversible action.</strong>
                         </span>
                 </UiCol>

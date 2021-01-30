@@ -3,7 +3,6 @@ import axios from "axios";
 import SafeAnchor from "components/commons/SafeAnchor";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
-import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';

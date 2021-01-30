@@ -68,10 +68,6 @@ $box-shadow: none;
     border-color: hsl(41, 99%, 58%) !important;
   }
 
-  .text-black-50 {
-    color: hsla(0, 0%, 95%, .5) !important;
-  }
-
   .text-black-75 {
     color: hsla(0, 0%, 95%, .75) !important;
   }
@@ -162,6 +158,10 @@ $box-shadow: none;
   //simulate border on shadowless dark mode
   .danger-shadow {
     border: hsla(2, 100%, 60%, .3) 1px solid;
+  }
+
+  .text-danger {
+    color: hsl(2, 95%, 66%) !important;
   }
 
   .search-dropdown-bar {

@@ -1,7 +1,6 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import SetupCard from "components/board/admin/SetupCard";
 import React from 'react';
-import {CardDeck} from "react-bootstrap";
 import {FaFileUpload} from "react-icons/all";
 import {FaDiscord, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
 import {UiCol, UiRow} from "ui/grid";
@@ -58,11 +57,9 @@ const StepFirstRoute = ({settings, updateSettings}) => {
             </span>
         </UiCol>
         <UiCol xs={12} className={"mt-3 px-md-5 px-3"}>
-            <UiRow centered>
-                <CardDeck as={UiCol} xs={10}>
-                    {renderCards()}
-                </CardDeck>
-            </UiRow>
+            <UiCol centered as={UiRow} className={"mx-0"} xs={12}>
+                {renderCards()}
+            </UiCol>
         </UiCol>
     </React.Fragment>
 };

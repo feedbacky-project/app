@@ -31,7 +31,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
             {serviceData.loginProviders.map((data, i) => {
                 let provider = data.providerData;
                 return <a key={i} href={provider.oauthLink + redirectUrl}>
-                    <button type={"button"} className={"btn btn-social move-top-1px mx-1"} style={{color: "#fff", backgroundColor: provider.color}}><img alt={provider.name} src={provider.icon} width={16} height={16}/></button>
+                    <button type={"button"} className={"btn btn-social mx-1"} style={{color: "#fff", backgroundColor: provider.color}}><img alt={provider.name} src={provider.icon} width={16} height={16}/></button>
                 </a>
             })}
         </Modal.Body>

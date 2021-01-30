@@ -22,7 +22,7 @@ const CreateSocialLink = lazy(() => retry(() => import("routes/board/admin/subro
 const SuspensionSettings = lazy(() => retry(() => import("routes/board/admin/subroutes/SuspensionsSubroute")));
 
 const BoardAdminPanelRoute = () => {
-    const {onThemeChange, getTheme, user} = useContext(AppContext);
+    const {onThemeChange, user} = useContext(AppContext);
     const {id} = useParams();
     const location = useLocation();
     const history = useHistory();
@@ -52,7 +52,7 @@ const BoardAdminPanelRoute = () => {
     if (location.state != null && !board.loaded) {
         return <LoadingRouteUtil/>
     }
-    if (!user.loggedIn) {
+    if(!user.loggedIn || board.data.creatorId !== user.data.id) {
         history.push("/b/" + id);
         return <React.Fragment/>
     }

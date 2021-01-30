@@ -9,6 +9,10 @@ export const PageButton = styled(Button)`
   box-shadow: var(--box-shadow);
   transition: var(--hover-transition);
   
+  &:focus {
+    outline: 1px dotted white;
+  }
+  
   &:hover, &:active {
     color: white;
     box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, .3);

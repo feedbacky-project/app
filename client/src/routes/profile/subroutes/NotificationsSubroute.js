@@ -50,7 +50,7 @@ const NotificationsSubroute = () => {
         return <React.Fragment>
             <UiCol sm={9} xs={12} className={"my-2"}>
                 <h4 className={"mb-1"}>Email Notification Alerts</h4>
-                <span className={"text-black-50"} style={{fontSize: ".9em"}}>
+                <span className={"text-black-60"} style={{fontSize: ".9em"}}>
                         Notify me when content I'm subscribed to gets updated.
                     </span>
             </UiCol>
