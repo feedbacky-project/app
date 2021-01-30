@@ -4,8 +4,8 @@ import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import {NavbarBrand} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import UiContainer from "ui/grid/UiContainer";
-import UiNavbar from "ui/navbar/UiNavbar";
+import {UiContainer} from "ui/grid";
+import {UiNavbar} from "ui/navbar";
 
 const BoardNavbar = () => {
     const context = useContext(AppContext);

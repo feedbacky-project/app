@@ -10,7 +10,7 @@ const UiElementDeleteButton = ({id, tooltipName, onClick, offsetX = "-6px", offs
     </OverlayTrigger>
 };
 
-export default UiElementDeleteButton;
+export {UiElementDeleteButton};
 
 UiElementDeleteButton.propTypes = {
     id: PropTypes.string.isRequired,

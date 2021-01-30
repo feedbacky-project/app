@@ -1,9 +1,8 @@
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
-import UiDropdownElement from "ui/dropdown/UiDropdownElement";
-import UiSelectableDropdown from "ui/dropdown/UiSelectableDropdown";
-import UiCol from "ui/grid/UiCol";
+import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
+import {UiCol} from "ui/grid";
 
 const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     const {user, onLocalPreferencesUpdate} = useContext(AppContext);

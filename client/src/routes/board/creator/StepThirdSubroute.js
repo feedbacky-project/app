@@ -1,8 +1,8 @@
 import UndrawChooseTheme from "assets/svg/undraw/choose_theme.svg";
 import React, {Suspense} from 'react';
 import {CirclePicker} from "react-color";
-import UiCol from "ui/grid/UiCol";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
+import {UiCol} from "ui/grid";
 
 const StepThirdSubroute = ({updateSettings, settings}) => {
     return <React.Fragment>

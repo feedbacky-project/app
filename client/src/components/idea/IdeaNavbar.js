@@ -5,8 +5,8 @@ import React, {useContext} from 'react';
 import {NavbarBrand} from "react-bootstrap";
 import {FaChevronLeft} from "react-icons/fa";
 import {Link} from "react-router-dom";
-import UiContainer from "ui/grid/UiContainer";
-import UiNavbar from "ui/navbar/UiNavbar";
+import {UiContainer} from "ui/grid";
+import {UiNavbar} from "ui/navbar";
 
 const IdeaNavbar = () => {
     const context = useContext(AppContext);

@@ -4,11 +4,10 @@ import {SvgNotice} from "components/commons/SvgNotice";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect} from "react";
-import UiButton from "ui/button/UiButton";
-import UiElementDeleteButton from "ui/button/UiElementDeleteButton";
-import UiCol from "ui/grid/UiCol";
-import UiAvatar from "ui/image/UiAvatar";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiButton, UiElementDeleteButton} from "ui/button";
+import {UiCol} from "ui/grid";
+import {UiAvatar} from "ui/image";
+import {UiViewBox} from "ui/viewbox";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

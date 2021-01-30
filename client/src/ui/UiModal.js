@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from "react-bootstrap/Modal";
-import UiCancelButton from "ui//button/UiCancelButton";
+import {UiCancelButton} from "ui/button";
 
 const UiModal = ({id, isOpen, onHide, title, applyButton, children, size}) => {
     return <Modal size={size} id={id} show={isOpen} onHide={onHide} centered>
@@ -18,6 +18,8 @@ const UiModal = ({id, isOpen, onHide, title, applyButton, children, size}) => {
     </Modal>
 };
 
+export {UiModal};
+
 UiModal.propTypes = {
     id: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
@@ -25,5 +27,3 @@ UiModal.propTypes = {
     title: PropTypes.string.isRequired,
     applyButton: PropTypes.element.isRequired,
 };
-
-export default UiModal;

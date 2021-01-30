@@ -9,13 +9,10 @@ import {useHistory} from "react-router-dom";
 import Swal from "sweetalert2";
 import swalReact from "sweetalert2-react-content";
 import tinycolor from "tinycolor2";
-import UiButton from "ui/button/UiButton";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
-import UiCountableFormControl from "ui/UiCountableFormControl";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiCountableFormControl, UiLoadingSpinner} from "ui";
+import {UiButton, UiLoadableButton} from "ui/button";
+import {UiCol, UiRow} from "ui/grid";
+import {UiViewBox} from "ui/viewbox";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const SettingsSubroute = () => {

@@ -16,4 +16,4 @@ const UiCountableFormControl = ({id, minLength, maxLength, rows = 1, type = "tex
     </React.Fragment>
 };
 
-export default UiCountableFormControl;
+export {UiCountableFormControl};

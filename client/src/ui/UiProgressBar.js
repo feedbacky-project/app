@@ -3,8 +3,8 @@ import AppContext from "context/AppContext";
 import Steps from "rc-steps";
 import React, {useContext} from "react";
 import {ProgressBar} from "react-bootstrap";
-import UiCol from "ui/grid/UiCol";
 import "assets/scss/commons/setup-steps.scss";
+import {UiCol} from "ui/grid";
 
 const ProgressSteps = styled(Steps)`
   .rc-steps-item-finish .rc-steps-item-icon > .rc-steps-icon .rc-steps-icon-dot {
@@ -39,4 +39,4 @@ const UiProgressBar = ({currentStep, steps, children}) => {
     </React.Fragment>
 };
 
-export default UiProgressBar;
+export {UiProgressBar};

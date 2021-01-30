@@ -7,8 +7,7 @@ import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from "react";
 import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
+import {UiCol, UiRow} from "ui/grid";
 import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
 
 export const SimpleIdeaCard = ({ideaData}) => {

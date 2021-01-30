@@ -55,4 +55,4 @@ const UiSelectableDropdown = ({id, className, currentValue, values}) => {
     </Dropdown>
 };
 
-export default UiSelectableDropdown;
+export {UiSelectableDropdown};

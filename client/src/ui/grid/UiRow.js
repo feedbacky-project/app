@@ -14,4 +14,4 @@ const UiRow = ({noGutters, centered, verticallyCentered, className, children}) =
     </Row>
 };
 
-export default UiRow;
+export {UiRow};

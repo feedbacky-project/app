@@ -2,10 +2,9 @@ import AppContext from "context/AppContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext} from "react";
 import {FaFrown} from "react-icons/all";
-import UiAvatar from "ui/image/UiAvatar";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
-import UiTooltip from "ui/UiTooltip";
 import styled from "@emotion/styled";
+import {UiLoadingSpinner, UiTooltip} from "ui";
+import {UiAvatar} from "ui/image";
 
 const MoreVotersText = styled.span`
   letter-spacing: -.3pt;

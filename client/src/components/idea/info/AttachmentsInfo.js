@@ -4,8 +4,8 @@ import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext} from "react";
-import UiElementDeleteButton from "ui/button/UiElementDeleteButton";
-import UiImage from "ui/image/UiImage";
+import {UiElementDeleteButton} from "ui/button";
+import {UiImage} from "ui/image";
 import {toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

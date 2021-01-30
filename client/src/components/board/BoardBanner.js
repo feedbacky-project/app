@@ -5,8 +5,8 @@ import React, {useContext} from 'react';
 import {Jumbotron} from "react-bootstrap";
 import {FaMap} from "react-icons/all";
 import {Link} from "react-router-dom";
-import UiCol from "ui/grid/UiCol";
-import UiImage from "ui/image/UiImage";
+import {UiCol} from "ui/grid";
+import {UiImage} from "ui/image";
 
 const SocialLink = styled.a`
   padding: .5rem 1rem;

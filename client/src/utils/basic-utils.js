@@ -3,7 +3,7 @@ import marked from "marked";
 import React from "react";
 import {FaCheck, FaExclamation, FaExclamationTriangle} from "react-icons/fa";
 import {Slide, toast} from "react-toastify";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
 import {parseEmojis} from "utils/emoji-filter";
 
 export const getDefaultAvatar = (username) => {

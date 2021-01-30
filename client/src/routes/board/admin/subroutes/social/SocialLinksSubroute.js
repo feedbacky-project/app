@@ -9,13 +9,10 @@ import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaExclamation} from "react-icons/all";
 import {Link} from "react-router-dom";
-import UiButton from "ui/button/UiButton";
-import UiElementDeleteButton from "ui/button/UiElementDeleteButton";
-import UiCol from "ui/grid/UiCol";
-import UiBadge from "ui/UiBadge";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
-import UiTooltip from "ui/UiTooltip";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiBadge, UiLoadingSpinner, UiTooltip} from "ui";
+import {UiButton, UiElementDeleteButton} from "ui/button";
+import {UiCol} from "ui/grid";
+import {UiViewBox} from "ui/viewbox";
 import {toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

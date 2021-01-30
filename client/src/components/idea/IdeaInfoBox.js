@@ -14,11 +14,10 @@ import {FaPen} from "react-icons/all";
 import {FaLock, FaTrash} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import TimeAgo from "timeago-react";
-import UiCancelButton from "ui/button/UiCancelButton";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
-import UiAvatar from "ui/image/UiAvatar";
-import UiPrettyUsername from "ui/UiPrettyUsername";
+import {UiPrettyUsername} from "ui";
+import {UiCancelButton, UiLoadableButton} from "ui/button";
+import {UiCol} from "ui/grid";
+import {UiAvatar} from "ui/image";
 import {htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

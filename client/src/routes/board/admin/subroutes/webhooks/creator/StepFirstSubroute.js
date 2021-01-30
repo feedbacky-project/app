@@ -3,8 +3,7 @@ import SetupCard from "components/board/admin/SetupCard";
 import React from 'react';
 import {CardDeck} from "react-bootstrap";
 import {FaDiscord, FaGlobe} from "react-icons/fa";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
+import {UiCol, UiRow} from "ui/grid";
 import {toastWarning} from "utils/basic-utils";
 
 const type = ["DISCORD", "CUSTOM_ENDPOINT"];

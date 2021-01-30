@@ -2,7 +2,7 @@ import {renderSidebarRoutes, Sidebar} from "components/commons/sidebar-commons";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {FaAt, FaColumns, FaSlidersH, FaTags, FaUserLock, FaUsersCog} from "react-icons/all";
-import UiCol from "ui/grid/UiCol";
+import {UiCol} from "ui/grid";
 
 const AdminSidebar = ({currentNode, reRouteTo}) => {
     const routes = [

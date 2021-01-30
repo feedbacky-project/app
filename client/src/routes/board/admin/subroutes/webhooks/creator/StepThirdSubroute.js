@@ -1,7 +1,7 @@
 import UndrawSetUrl from "assets/svg/undraw/set_url.svg";
 import React from 'react';
 import {Form} from "react-bootstrap";
-import UiCol from "ui/grid/UiCol";
+import {UiCol} from "ui/grid";
 
 const StepThirdSubroute = ({updateSettings, settings}) => {
     return <React.Fragment>

@@ -1,6 +1,6 @@
 import React from "react";
-import UiRow from "ui/grid/UiRow";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
+import {UiRow} from "ui/grid";
 
 const LoadingRouteUtil = () => {
     return <UiRow centered verticallyCentered><UiLoadingSpinner/></UiRow>

@@ -5,4 +5,4 @@ const UiDropdownElement = ({onClick, className, children, as, to}) => {
     return <Dropdown.Item onClick={onClick} className={className} as={as} to={to}>{children}</Dropdown.Item>
 };
 
-export default UiDropdownElement;
+export {UiDropdownElement};

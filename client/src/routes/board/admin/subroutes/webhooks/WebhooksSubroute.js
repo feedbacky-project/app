@@ -7,13 +7,10 @@ import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import UiButton from "ui/button/UiButton";
-import UiElementDeleteButton from "ui/button/UiElementDeleteButton";
-import UiCol from "ui/grid/UiCol";
-import UiBadge from "ui/UiBadge";
-import UiClickableTip from "ui/UiClickableTip";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiBadge, UiClickableTip, UiLoadingSpinner} from "ui";
+import {UiButton, UiElementDeleteButton} from "ui/button";
+import {UiCol} from "ui/grid";
+import {UiViewBox} from "ui/viewbox";
 import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

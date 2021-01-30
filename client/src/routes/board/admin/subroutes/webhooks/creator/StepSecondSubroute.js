@@ -2,8 +2,7 @@ import UndrawChooseEvents from "assets/svg/undraw/choose_events.svg";
 import SetupCard from "components/board/admin/SetupCard";
 import React from 'react';
 import CardGroup from "react-bootstrap/CardGroup";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
+import {UiCol, UiRow} from "ui/grid";
 
 const events = ["IDEA_CREATE", "IDEA_DELETE", "IDEA_COMMENT", "IDEA_COMMENT_DELETE", "IDEA_EDIT", "IDEA_TAG_CHANGE", "IDEA_OPEN", "IDEA_CLOSE"];
 const eventNames = ["Idea Post Create", "Idea Post Delete", "Idea Comment Post", "Idea Comment Delete", "Idea Post Edited", "Idea Tag Change", "Idea State Open", "Idea State Close"];

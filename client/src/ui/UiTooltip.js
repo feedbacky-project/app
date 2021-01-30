@@ -7,4 +7,4 @@ const UiTooltip = ({id, text, children}) => {
     </OverlayTrigger>
 };
 
-export default UiTooltip;
+export {UiTooltip};

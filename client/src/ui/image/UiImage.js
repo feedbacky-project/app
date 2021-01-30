@@ -16,4 +16,4 @@ const UiImage = ({width, height, alt, src, roundedCircle, rounded, className, st
     return <Image alt={alt} className={classes} style={style} src={src} width={width} height={height} onError={onError}/>
 };
 
-export default UiImage;
+export {UiImage};

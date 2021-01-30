@@ -1,7 +1,7 @@
 import IdeaContext from "context/IdeaContext";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";
-import UiBadge from "ui/UiBadge";
+import {UiBadge} from "ui";
 
 const TagsInfo = () => {
     const {tags} = useContext(IdeaContext).ideaData;

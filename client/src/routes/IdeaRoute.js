@@ -12,9 +12,7 @@ import {useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import UiCol from "ui/grid/UiCol";
-import UiContainer from "ui/grid/UiContainer";
-import UiRow from "ui/grid/UiRow";
+import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {convertIdeaToSlug} from "utils/basic-utils";
 
 const IdeaRoute = () => {

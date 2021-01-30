@@ -4,8 +4,7 @@ import React from 'react';
 import {CardDeck} from "react-bootstrap";
 import {FaFileUpload} from "react-icons/all";
 import {FaDiscord, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
+import {UiCol, UiRow} from "ui/grid";
 import {getBase64FromFile, validateImageWithWarning} from "utils/basic-utils";
 
 const itemsIcons = [<FaGithub className={"fa-md"}/>, <FaDiscord className={"fa-md"}/>, <FaPatreon className={"fa-md"}/>, <FaYoutube className={"fa-md"}/>,

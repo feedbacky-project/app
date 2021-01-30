@@ -2,9 +2,8 @@ import AppContext from "context/AppContext";
 import md5 from "md5";
 import PropTypes from "prop-types";
 import React, {useContext} from 'react';
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
-import UiModal from "ui/UiModal";
+import {UiModal} from "ui";
+import {UiCol, UiRow} from "ui/grid";
 import {getDefaultAvatar} from "utils/basic-utils";
 
 const AvatarSelectionModal = ({isOpen, onHide, connectedAccounts, onAvatarChoose}) => {

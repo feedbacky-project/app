@@ -2,16 +2,16 @@ import axios from "axios";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import Form from "react-bootstrap/Form";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiAvatar from "ui/image/UiAvatar";
-import UiModal from "ui/UiModal";
+import {UiModal} from "ui";
+import {UiLoadableButton} from "ui/button";
+import {UiAvatar} from "ui/image";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
     const {data} = useContext(BoardContext);
     const handleSubmit = () => {
         const userEmail = document.getElementById("inviteEmailTextarea").value;
-        if(userEmail === "" || !userEmail.match(/\S+@\S+\.\S+/)) {
+        if (userEmail === "" || !userEmail.match(/\S+@\S+\.\S+/)) {
             toastWarning("Please provide valid email address.");
             return Promise.resolve();
         }

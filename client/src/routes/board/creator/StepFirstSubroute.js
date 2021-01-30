@@ -1,8 +1,7 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import React from 'react';
-import UiCol from "ui/grid/UiCol";
-import UiClickableTip from "ui/UiClickableTip";
-import UiCountableFormControl from "ui/UiCountableFormControl";
+import {UiClickableTip, UiCountableFormControl} from "ui";
+import {UiCol} from "ui/grid";
 
 const StepFirstSubroute = ({updateSettings, settings}) => {
     return <React.Fragment>

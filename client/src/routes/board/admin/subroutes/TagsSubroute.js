@@ -9,13 +9,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import UiButton from "ui/button/UiButton";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
-import UiBadge from "ui/UiBadge";
-import UiClickableTip from "ui/UiClickableTip";
-import UiTooltip from "ui/UiTooltip";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiBadge, UiClickableTip, UiTooltip} from "ui";
+import {UiButton, UiLoadableButton} from "ui/button";
+import {UiCol} from "ui/grid";
+import {UiViewBox} from "ui/viewbox";
 import {toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

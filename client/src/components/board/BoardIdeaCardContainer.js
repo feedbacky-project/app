@@ -7,8 +7,8 @@ import AppContext from "context/AppContext";
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FaRegFrown} from "react-icons/fa";
 import InfiniteScroll from 'react-infinite-scroller';
-import UiCol from "ui/grid/UiCol";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
+import {UiCol} from "ui/grid";
 import {prepareFilterAndSortRequests} from "utils/basic-utils";
 
 const BoardIdeaCardContainer = ({id, searchQuery}) => {

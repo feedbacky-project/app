@@ -6,10 +6,8 @@ import AppContext from "context/AppContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {lazy, Suspense, useContext, useEffect, useState} from "react";
 import {Route, Switch, useHistory} from "react-router-dom";
-import UiCol from "ui/grid/UiCol";
-import UiContainer from "ui/grid/UiContainer";
-import UiRow from "ui/grid/UiRow";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
+import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {retry} from "utils/lazy-init";
 
 const SettingsSubview = lazy(() => retry(() => import("routes/profile/subroutes/SettingsSubroute")));

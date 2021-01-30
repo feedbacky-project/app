@@ -46,7 +46,7 @@ const UiClickableTip = ({id, title, description, icon = <FaQuestionCircle classN
     </OverlayTrigger>
 };
 
-export default UiClickableTip;
+export {UiClickableTip};
 
 UiClickableTip.propTypes = {
     id: PropTypes.string.isRequired,

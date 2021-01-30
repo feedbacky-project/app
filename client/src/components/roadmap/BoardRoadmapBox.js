@@ -3,7 +3,7 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {SimpleIdeaCard} from "components/roadmap/SimpleIdeaCard";
 import React from "react";
-import UiCol from "ui/grid/UiCol";
+import {UiCol} from "ui/grid";
 
 const RoadmapContainer = styled.div`
   padding: 0 1rem;

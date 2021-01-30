@@ -1,8 +1,8 @@
 import UndrawBrandProject from "assets/svg/undraw/brand_project.svg";
 import React from 'react';
 import {Form} from "react-bootstrap";
-import UiCol from "ui/grid/UiCol";
-import UiClickableTip from "ui/UiClickableTip";
+import {UiClickableTip} from "ui";
+import {UiCol} from "ui/grid";
 import {getBase64FromFile, validateImageWithWarning} from "utils/basic-utils";
 
 const StepSecondSubroute = ({updateSettings, settings}) => {

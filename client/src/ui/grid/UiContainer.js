@@ -7,4 +7,4 @@ const UiContainer = ({className, children}) => {
     </Container>
 };
 
-export default UiContainer;
+export {UiContainer};

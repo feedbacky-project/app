@@ -2,7 +2,7 @@ import {renderSidebarRoutes, Sidebar} from "components/commons/sidebar-commons";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {FaRegAddressCard, FaRegBell} from "react-icons/all";
-import UiCol from "ui/grid/UiCol";
+import {UiCol} from "ui/grid";
 
 const ProfileSidebar = ({currentNode, reRouteTo}) => {
     const routes = [

@@ -7,4 +7,4 @@ const UiCol = ({xs, sm, md, lg, xl, className, children, as, to}) => {
     </Col>
 };
 
-export default UiCol;
+export {UiCol};

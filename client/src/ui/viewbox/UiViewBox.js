@@ -3,8 +3,7 @@ import AppContext from "context/AppContext";
 import PropTypes from "prop-types";
 import React, {useContext} from 'react';
 import {Card} from "react-bootstrap";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
+import {UiCol, UiRow} from "ui/grid";
 
 const ViewBox = styled.div`
   z-index: 1;
@@ -38,7 +37,7 @@ const UiViewBox = ({theme, title, description, children}) => {
     </React.Fragment>
 };
 
-export default UiViewBox;
+export {UiViewBox};
 
 UiViewBox.propTypes = {
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),

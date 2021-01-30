@@ -49,4 +49,4 @@ const UiPrettyUsername = ({user, truncate = -1}) => {
     }
 };
 
-export default UiPrettyUsername;
+export {UiPrettyUsername};

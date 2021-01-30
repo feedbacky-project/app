@@ -5,13 +5,11 @@ import PageNodesContext from "context/PageNodesContext";
 import copy from "copy-text-to-clipboard";
 import React, {useContext, useEffect, useState} from 'react';
 import tinycolor from "tinycolor2";
-import UiElementDeleteButton from "ui/button/UiElementDeleteButton";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
-import UiAvatar from "ui/image/UiAvatar";
-import UiBadge from "ui/UiBadge";
-import UiClickableTip from "ui/UiClickableTip";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiBadge, UiClickableTip} from "ui";
+import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
+import {UiCol} from "ui/grid";
+import {UiAvatar} from "ui/image";
+import {UiViewBox} from "ui/viewbox";
 import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

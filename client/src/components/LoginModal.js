@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {Modal, ModalDialog} from "react-bootstrap";
-import UiImage from "ui/image/UiImage";
+import {UiImage} from "ui/image";
 
 const CascadingModal = styled(ModalDialog)`
   margin-top: 6rem;

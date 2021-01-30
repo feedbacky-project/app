@@ -38,7 +38,7 @@ const UiBadge = ({color = null, text, className = "", context = null}) => {
     return <Badge color={""} style={{backgroundColor: color}} className={className}>{text}</Badge>
 };
 
-export default UiBadge;
+export {UiBadge};
 
 UiBadge.propTypes = {
     color: PropTypes.object,

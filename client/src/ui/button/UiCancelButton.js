@@ -20,4 +20,4 @@ const UiCancelButton = ({children, className, style, onClick, size, as, to}) => 
     return <CancelButton variant={"link"} size={size} style={style} className={className} onClick={onClick} as={as} to={to}>{children}</CancelButton>
 };
 
-export default UiCancelButton;
+export {UiCancelButton};

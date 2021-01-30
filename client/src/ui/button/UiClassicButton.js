@@ -5,4 +5,4 @@ const UiClassicButton = ({children, className, style, disabled, onClick, size, a
     return <PageButton as={as} to={to} variant={""} size={size} style={{style}} disabled={disabled} className={className} onClick={onClick}>{children}</PageButton>
 };
 
-export default UiClassicButton;
+export {UiClassicButton};

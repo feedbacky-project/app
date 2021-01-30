@@ -3,9 +3,8 @@ import {NavItem} from "react-bootstrap";
 import {FaAngleDown} from "react-icons/all";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
-import UiDropdown from "ui/dropdown/UiDropdown";
-import UiDropdownElement from "ui/dropdown/UiDropdownElement";
-import UiAvatar from "ui/image/UiAvatar";
+import {UiDropdown, UiDropdownElement} from "ui/dropdown";
+import {UiAvatar} from "ui/image";
 import {isServiceAdmin} from "utils/basic-utils";
 
 export const renderLogIn = (onNotLoggedClick, context) => {

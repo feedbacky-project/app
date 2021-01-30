@@ -54,3 +54,5 @@ eg.
 
 ## Imports
 Imports should be sorted by modules so they're sorted alphabetically.
+
+User Interface elements located in `src/ui/` should contain export in `index.js` file and should be importable only from this file.

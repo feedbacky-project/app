@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
 
 const ComponentLoader = ({loaded, loader = <UiLoadingSpinner/>, component}) => {
     if (!loaded) {

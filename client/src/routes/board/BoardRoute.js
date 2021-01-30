@@ -9,8 +9,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaExclamationCircle} from "react-icons/fa";
 import {useLocation, useParams} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
-import UiContainer from "ui/grid/UiContainer";
-import UiRow from "ui/grid/UiRow";
+import {UiContainer, UiRow} from "ui/grid";
 
 const BoardRoute = () => {
     const {onThemeChange, defaultTheme} = useContext(AppContext);

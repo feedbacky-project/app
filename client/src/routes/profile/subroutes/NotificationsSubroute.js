@@ -3,10 +3,9 @@ import AppContext from "context/AppContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';
 import tinycolor from "tinycolor2";
-import UiButton from "ui/button/UiButton";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiButton, UiLoadableButton} from "ui/button";
+import {UiCol} from "ui/grid";
+import {UiViewBox} from "ui/viewbox";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const NotificationsSubroute = () => {

@@ -1,9 +1,9 @@
 import ColorSelectionHelper from "components/commons/ColorSelectionHelper";
 import AppContext from "context/AppContext";
 import React, {useContext, useState} from 'react';
-import UiButton from "ui/button/UiButton";
-import UiRow from "ui/grid/UiRow";
-import UiModal from "ui/UiModal";
+import {UiModal} from "ui";
+import {UiButton} from "ui/button";
+import {UiRow} from "ui/grid";
 
 const ThemeSelectionModal = ({isOpen, onHide, onUpdate}) => {
     const context = useContext(AppContext);

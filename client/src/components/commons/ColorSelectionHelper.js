@@ -3,8 +3,7 @@ import Form from "react-bootstrap/Form";
 import {ChromePicker} from "react-color";
 import {FaExclamationCircle} from "react-icons/all";
 import tinycolor from "tinycolor2";
-import UiClickableTip from "ui/UiClickableTip";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiClickableTip, UiLoadingSpinner} from "ui";
 
 const ColorSelectionHelper = ({title, color, setColor, colorWarning}) => {
     const warn = colorWarning === true ? tinycolor.readability(color, "#fff") < 2.0 || tinycolor.readability(tinycolor(color).lighten(10), "#292c30") < 2.0 : false;

@@ -8,10 +8,8 @@ import {FaExclamationCircle} from "react-icons/fa";
 import {Route, Switch, useHistory, useLocation, useParams} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import UiCol from "ui/grid/UiCol";
-import UiContainer from "ui/grid/UiContainer";
-import UiRow from "ui/grid/UiRow";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
+import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {retry} from "utils/lazy-init";
 
 const GeneralSettings = lazy(() => retry(() => import("routes/board/admin/subroutes/GeneralSubroute")));

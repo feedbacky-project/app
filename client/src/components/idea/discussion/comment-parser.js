@@ -1,8 +1,7 @@
 import React from "react";
 import replace from "react-string-replace";
 import tinycolor from "tinycolor2";
-import UiBadge from "ui/UiBadge";
-import UiPrettyUsername from "ui/UiPrettyUsername";
+import {UiBadge, UiPrettyUsername} from "ui";
 
 const parseComment = (message, moderatorsData, tagsData) => {
     const regex = /[^{}]+(?=})/g;

@@ -33,4 +33,4 @@ const UiButton = ({children, color = null, className, style, disabled, onClick, 
     return <PageButton as={as} to={to}  variant={""} size={size} style={{backgroundColor: color, style}} disabled={disabled} className={className} onClick={onClick}>{children}</PageButton>
 };
 
-export default UiButton;
+export {UiButton};

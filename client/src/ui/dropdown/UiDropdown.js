@@ -12,4 +12,4 @@ const UiDropdown = ({className, toggleClassName, toggle, children}) => {
     </Dropdown>
 };
 
-export default UiDropdown;
+export {UiDropdown};

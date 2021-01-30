@@ -3,10 +3,8 @@ import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import UiButton from "ui/button/UiButton";
-import UiCol from "ui/grid/UiCol";
-import UiContainer from "ui/grid/UiContainer";
-import UiRow from "ui/grid/UiRow";
+import {UiButton} from "ui/button";
+import {UiCol, UiContainer, UiRow} from "ui/grid";
 
 const ErrorIcon = styled.div`
   font-size: 110px;

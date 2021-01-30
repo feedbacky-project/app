@@ -6,9 +6,8 @@ import {Card} from "react-bootstrap";
 import {FaAlignRight} from "react-icons/all";
 import {FaPencilAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
-import UiButton from "ui/button/UiButton";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
+import {UiButton, UiLoadableButton} from "ui/button";
+import {UiCol} from "ui/grid";
 import {parseMarkdown} from "utils/basic-utils";
 
 const BoardInfoCard = ({onIdeaCreation}) => {

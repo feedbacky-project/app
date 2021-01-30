@@ -12,9 +12,8 @@ import {useHistory} from "react-router-dom";
 import Swal from "sweetalert2";
 import swalReact from "sweetalert2-react-content";
 import tinycolor from "tinycolor2";
-import UiDropdown from "ui/dropdown/UiDropdown";
-import UiDropdownElement from "ui/dropdown/UiDropdownElement";
-import UiBadge from "ui/UiBadge";
+import {UiBadge} from "ui";
+import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {toastAwait, toastError, toastSuccess} from "utils/basic-utils";
 import {popupSwal} from "utils/sweetalert-utils";
 

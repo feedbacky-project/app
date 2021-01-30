@@ -7,13 +7,9 @@ import TextareaAutosize from "react-autosize-textarea";
 import Form from "react-bootstrap/Form";
 import {FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import UiClassicButton from "ui/button/UiClassicButton";
-import UiElementDeleteButton from "ui/button/UiElementDeleteButton";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
-import UiBadge from "ui/UiBadge";
-import UiClickableTip from "ui/UiClickableTip";
-import UiModal from "ui/UiModal";
+import {UiBadge, UiClickableTip, UiModal} from "ui";
+import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
+import {UiCol} from "ui/grid";
 import {formatRemainingCharacters, getBase64FromFile, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
 
 const AttachmentButton = styled(UiClassicButton)`

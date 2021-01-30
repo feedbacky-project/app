@@ -13,7 +13,7 @@ const UiNavbar = ({theme, children}) => {
     </Navbar>
 };
 
-export default UiNavbar;
+export {UiNavbar};
 
 UiNavbar.propTypes = {
     theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object])

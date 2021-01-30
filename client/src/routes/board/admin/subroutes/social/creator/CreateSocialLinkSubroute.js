@@ -6,13 +6,9 @@ import {Link, useHistory, withRouter} from "react-router-dom";
 import StepFirstRoute from "routes/board/admin/subroutes/social/creator/StepFirstRoute";
 import StepSecondRoute from "routes/board/admin/subroutes/social/creator/StepSecondRoute";
 import tinycolor from "tinycolor2";
-import UiButton from "ui/button/UiButton";
-import UiCancelButton from "ui/button/UiCancelButton";
-import {UiNextStepButton, UiPreviousStepButton} from "ui/button/UiStepButtons";
-import UiCol from "ui/grid/UiCol";
-import UiContainer from "ui/grid/UiContainer";
-import UiRow from "ui/grid/UiRow";
-import UiProgressBar from "ui/UiProgressBar";
+import {UiProgressBar} from "ui";
+import {UiButton, UiCancelButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
+import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const CreateSocialLinkSubroute = () => {

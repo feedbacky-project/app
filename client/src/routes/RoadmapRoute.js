@@ -10,9 +10,8 @@ import {FaExclamationCircle} from "react-icons/all";
 import {useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
-import UiContainer from "ui/grid/UiContainer";
-import UiRow from "ui/grid/UiRow";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
+import {UiLoadingSpinner} from "ui";
+import {UiContainer, UiRow} from "ui/grid";
 
 const RoadmapRoute = () => {
     const {onThemeChange, defaultTheme} = useContext(AppContext);

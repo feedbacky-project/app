@@ -10,11 +10,9 @@ import {Card} from "react-bootstrap";
 import {FaLock, FaRegComment} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
-import UiAvatar from "ui/image/UiAvatar";
-import UiBadge from "ui/UiBadge";
-import UiPrettyUsername from "ui/UiPrettyUsername";
+import {UiBadge, UiPrettyUsername} from "ui";
+import {UiCol, UiRow} from "ui/grid";
+import {UiAvatar} from "ui/image";
 import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
 
 const BadgeContainer = styled.span`

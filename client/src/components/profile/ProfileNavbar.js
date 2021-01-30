@@ -3,9 +3,9 @@ import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {NavbarBrand} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import UiContainer from "ui/grid/UiContainer";
-import UiNavbar from "ui/navbar/UiNavbar";
-import UiAvatar from "ui/image/UiAvatar";
+import {UiContainer} from "ui/grid";
+import {UiAvatar} from "ui/image";
+import {UiNavbar} from "ui/navbar";
 
 const ProfileNavbar = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);

@@ -4,13 +4,10 @@ import BoardContext from "context/BoardContext";
 import React, {useContext, useEffect, useState} from "react";
 import Form from "react-bootstrap/Form";
 import tinycolor from "tinycolor2";
-import UiButton from "ui/button/UiButton";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
-import UiClickableTip from "ui/UiClickableTip";
-import UiModal from "ui/UiModal";
+import {UiClickableTip, UiCountableFormControl, UiModal} from "ui";
+import {UiButton} from "ui/button";
+import {UiCol, UiRow} from "ui/grid";
 import {toastError, toastSuccess, toastWarning} from "utils/basic-utils";
-import UiCountableFormControl from "../../../ui/UiCountableFormControl";
 
 const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
     const {data} = useContext(BoardContext);

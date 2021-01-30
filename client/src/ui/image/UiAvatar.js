@@ -1,5 +1,5 @@
 import React from "react";
-import UiImage from "ui/image/UiImage";
+import {UiImage} from "ui/image/UiImage";
 import {getDefaultAvatar} from "utils/basic-utils";
 
 const UiAvatar = ({user, roundedCircle, rounded, className, style, size}) => {
@@ -30,4 +30,4 @@ const UiAvatar = ({user, roundedCircle, rounded, className, style, size}) => {
                     onError={e => e.target.src = getDefaultAvatar(user.username)}/>
 };
 
-export default UiAvatar;
+export {UiAvatar};

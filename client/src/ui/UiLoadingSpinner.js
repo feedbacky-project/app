@@ -18,4 +18,4 @@ const UiLoadingSpinner = ({className = "", size = "lg", customSize, color = null
     </svg>
 };
 
-export default UiLoadingSpinner;
+export {UiLoadingSpinner};

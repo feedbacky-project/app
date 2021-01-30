@@ -11,13 +11,10 @@ import {useHistory} from "react-router-dom";
 import Swal from "sweetalert2";
 import swalReact from "sweetalert2-react-content";
 import tinycolor from "tinycolor2";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiCol from "ui/grid/UiCol";
-import UiRow from "ui/grid/UiRow";
-import UiClickableTip from "ui/UiClickableTip";
-import UiCountableFormControl from "ui/UiCountableFormControl";
-import UiLoadingSpinner from "ui/UiLoadingSpinner";
-import UiViewBox from "ui/viewbox/UiViewBox";
+import {UiClickableTip, UiCountableFormControl, UiLoadingSpinner} from "ui";
+import {UiLoadableButton} from "ui/button";
+import {UiCol, UiRow} from "ui/grid";
+import {UiViewBox} from "ui/viewbox";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
 import {retry} from "utils/lazy-init";
 

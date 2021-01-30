@@ -4,8 +4,8 @@ import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext} from "react";
 import {FaRegBell, FaRegBellSlash} from "react-icons/all";
-import UiLoadableButton from "ui/button/UiLoadableButton";
-import UiClickableTip from "ui/UiClickableTip";
+import {UiClickableTip} from "ui";
+import {UiLoadableButton} from "ui/button";
 import {toastError, toastSuccess} from "utils/basic-utils";
 
 const NotificationsInfo = () => {

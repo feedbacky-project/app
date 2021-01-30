@@ -5,9 +5,8 @@ import BoardContext from "context/BoardContext";
 import React, {useContext} from "react";
 import {FaHeart, FaLowVision, FaRegHeart, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
-import UiAvatar from "ui/image/UiAvatar";
-import UiPrettyUsername from "ui/UiPrettyUsername";
-import UiTooltip from "ui/UiTooltip";
+import {UiPrettyUsername, UiTooltip} from "ui";
+import {UiAvatar} from "ui/image";
 import {parseMarkdown} from "utils/basic-utils";
 import styled from "@emotion/styled";
 
