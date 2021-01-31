@@ -133,7 +133,7 @@ public class ServiceLoginController {
     if(responseData.get(provider.getOauthDetails().getDataFields().getEmail()) == null) {
       throw new LoginFailedException("Email address not found, please contact administrator if you think it's an error.");
     }
-    String mailVerified = responseData.get(provider.getOauthDetails().getDataFields().getEmailVerified());
+    String mailVerified = responseData.get(String.valueOf(provider.getOauthDetails().getDataFields().getEmailVerified()));
     if(mailVerified != null && !Boolean.parseBoolean(mailVerified)) {
       throw new LoginFailedException("Email address you sign in with is not verified at '" + provider.getProviderData().getName() + "', please verify email to continue.");
     }
