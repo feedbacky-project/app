@@ -43,7 +43,7 @@ public class LoginProvider {
       private String email;
       private String username;
       private String avatar;
-      private Boolean emailVerified;
+      private String emailVerified;
     }
   }
 

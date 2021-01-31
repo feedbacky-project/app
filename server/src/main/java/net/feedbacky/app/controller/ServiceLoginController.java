@@ -128,27 +128,27 @@ public class ServiceLoginController {
     conn.setRequestProperty("Authorization", authorization);
     conn.setDoOutput(true);
 
-    Map<String, String> responseData = new ObjectMapper().readValue(getResponse(conn.getInputStream()), Map.class);
+    Map<String, Object> responseData = new ObjectMapper().readValue(getResponse(conn.getInputStream()), Map.class);
     conn.disconnect();
     if(responseData.get(provider.getOauthDetails().getDataFields().getEmail()) == null) {
       throw new LoginFailedException("Email address not found, please contact administrator if you think it's an error.");
     }
-    String mailVerified = responseData.get(String.valueOf(provider.getOauthDetails().getDataFields().getEmailVerified()));
-    if(mailVerified != null && !Boolean.parseBoolean(mailVerified)) {
+    Boolean mailVerified = (Boolean) responseData.get(provider.getOauthDetails().getDataFields().getEmailVerified());
+    if(mailVerified != null && !mailVerified) {
       throw new LoginFailedException("Email address you sign in with is not verified at '" + provider.getProviderData().getName() + "', please verify email to continue.");
     }
 
     return createOrUpdateUser(id, responseData, provider.getOauthDetails().getDataFields());
   }
 
-  private User createOrUpdateUser(String id, Map<String, String> data, LoginProvider.OauthDetails.DataFields fields) {
-    Optional<User> optional = userRepository.findByEmail(data.get(fields.getEmail()));
+  private User createOrUpdateUser(String id, Map<String, Object> data, LoginProvider.OauthDetails.DataFields fields) {
+    Optional<User> optional = userRepository.findByEmail((String) data.get(fields.getEmail()));
     if(!optional.isPresent()) {
       optional = Optional.of(new User());
       User user = optional.get();
-      user.setEmail(data.get(fields.getEmail()));
-      user.setAvatar(data.get(fields.getAvatar()));
-      user.setUsername(data.get(fields.getUsername()));
+      user.setEmail((String) data.get(fields.getEmail()));
+      user.setAvatar((String) data.get(fields.getAvatar()));
+      user.setUsername((String) data.get(fields.getUsername()));
       MailPreferences preferences = new MailPreferences();
       preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
       preferences.setNotificationsEnabled(true);
@@ -174,11 +174,11 @@ public class ServiceLoginController {
     return optional.get();
   }
 
-  private ConnectedAccount generateConnectedAccount(String id, Map<String, String> data, LoginProvider.OauthDetails.DataFields fields, User user) {
+  private ConnectedAccount generateConnectedAccount(String id, Map<String, Object> data, LoginProvider.OauthDetails.DataFields fields, User user) {
     ConnectedAccount account = new ConnectedAccount();
     account.setUser(user);
     account.setProvider(id);
-    account.setAccountId(Long.parseLong(data.get(fields.getId())));
+    account.setAccountId((Long) data.get(fields.getId()));
     return account;
   }
 
