@@ -51,7 +51,7 @@ public class User implements Serializable {
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<Moderator> permissions = new HashSet<>();
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<ConnectedAccount> connectedAccounts = new HashSet<>();
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private MailPreferences mailPreferences;

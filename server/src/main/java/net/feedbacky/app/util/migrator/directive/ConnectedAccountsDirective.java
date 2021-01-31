@@ -109,7 +109,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
           }
           user.setConnectedAccounts(updatedAccounts);
           userRepository.save(user);
-        } catch(JsonProcessingException e) {
+        } catch(Exception e) {
           logger.log(Level.WARNING, "Failed to process data for user id " + user.getId() + ", skipping.");
           continue;
         }
