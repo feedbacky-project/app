@@ -30,8 +30,7 @@ const CLIENT_VERSION = "1.0.0-alpha";
 const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
 
 const App = ({appearanceSettings}) => {
-    console.log(appearanceSettings);
-    const {theme, setTheme, darkMode, getTheme, onDarkModeToggle} = appearanceSettings;
+    const {appearance, setAppearance, theme, setTheme, getTheme, onAppearanceToggle} = appearanceSettings;
     const [session, setSession] = useState(Cookies.get("FSID"));
     const [localPrefs, setLocalPrefs] = useState({
         ideas: {filter: getCookieOrDefault("prefs_searchFilter", ""), sort: getCookieOrDefault("prefs_searchSort", "")},
@@ -77,7 +76,7 @@ const App = ({appearanceSettings}) => {
         Cookies.remove("prefs_searchFilter");
         Cookies.remove("prefs_searchSort");
         Cookies.remove("prefs_comments_sort");
-        Cookies.remove("prefs_darkMode");
+        Cookies.remove("prefs_appearance");
         onLogOut();
         setServiceData({...serviceData, data: [], loaded: false, error: false});
     };
@@ -114,15 +113,17 @@ const App = ({appearanceSettings}) => {
                 loggedIn: userData.loggedIn,
                 session: session,
                 localPreferences: localPrefs,
-                darkMode: darkMode,
+                darkMode: appearance.mode === "dark",
                 onLogOut: onLogOut,
                 hardResetData: hardResetData,
             },
             serviceData: serviceData.data,
             onLocalPreferencesUpdate: onLocalPreferencesUpdate,
-            onDarkModeToggle: onDarkModeToggle,
+            onAppearanceToggle: onAppearanceToggle,
             getTheme: getTheme,
             theme: theme,
+            appearance: appearance,
+            setAppearance: setAppearance,
             defaultTheme: DEFAULT_THEME,
             onThemeChange: (newTheme = DEFAULT_THEME) => setTheme(newTheme),
             clientVersion: CLIENT_VERSION

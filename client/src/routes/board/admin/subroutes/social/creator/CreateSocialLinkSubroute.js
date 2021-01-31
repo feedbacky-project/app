@@ -41,7 +41,7 @@ const CreateSocialLinkSubroute = () => {
                         state: null
                     });
                     const socialLinks = boardData.socialLinks.concat(res.data);
-                    updateState({socialLinks});
+                    updateState({...boardData, socialLinks});
                 }).catch(err => {
                     toastError(err.response.data.errors[0], toastId);
                     setSettings({...settings, step: 2});

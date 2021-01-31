@@ -1,50 +1,44 @@
 import axios from "axios";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import SafeAnchor from "components/commons/SafeAnchor";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {UiElementDeleteButton} from "ui/button";
 import {UiImage} from "ui/image";
 import {toastError, toastSuccess} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const AttachmentsInfo = () => {
     const {user} = useContext(AppContext);
     const {moderators} = useContext(BoardContext).data;
     const {ideaData, updateState} = useContext(IdeaContext);
+    const [modal, setModal] = useState({open: false, data: -1, dataUrl: ""});
     if (ideaData.attachments.length === 0) {
         return <React.Fragment/>
     }
-    const onAttachmentDelete = (attachment) => {
-        popupSwal("warning", "Dangerous action", "This attachment will be permanently removed.",
-            "Delete", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/attachments/" + attachment.id).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    updateState({
-                        ...ideaData,
-                        attachments: ideaData.attachments.filter(data => data.url !== attachment.url)
-                    });
-                    toastSuccess("Attachment removed.");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0]);
-                })
-            });
+    const onAttachmentDelete = () => {
+        axios.delete("/attachments/" + modal.data).then(res => {
+            if (res.status !== 204) {
+                toastError();
+                return;
+            }
+            updateState({...ideaData, attachments: ideaData.attachments.filter(data => data.url !== modal.dataUrl)});
+            toastSuccess("Attachment removed.");
+        }).catch(err => {
+            toastError(err.response.data.errors[0]);
+        });
     };
     //todo lightbox for attachments
     return <React.Fragment>
+        <DangerousActionModal id={"attachmentDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onAttachmentDelete}
+                              actionDescription={<div>Attachment will be permanently <u>deleted</u>.</div>}/>
         <div className={"my-1 text-black-75"}>Attached Files</div>
         {ideaData.attachments.map(attachment => {
             let userId = user.data.id;
             if (ideaData.user.id === userId || moderators.find(mod => mod.userId === userId)) {
                 return <React.Fragment key={attachment.id}>
-                    <UiElementDeleteButton tooltipName={"Remove"} onClick={() => onAttachmentDelete(attachment)} id={"attachment-del"}/>
+                    <UiElementDeleteButton tooltipName={"Remove"} id={"attachment-del"} onClick={() => setModal({open: true, data: attachment.id, dataUrl: attachment.url})}/>
                     <SafeAnchor url={attachment.url}>
                         <UiImage className={"img-thumbnail"} src={attachment.url} alt={"Social Icon"} width={125}/>
                     </SafeAnchor>

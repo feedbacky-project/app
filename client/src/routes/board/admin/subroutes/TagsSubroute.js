@@ -2,6 +2,7 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import TagCreateModal from "components/board/admin/TagCreateModal";
 import TagEditModal from "components/board/admin/TagEditModal";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
@@ -14,7 +15,6 @@ import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {toastError, toastSuccess} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const TagsSubroute = () => {
     const {data: boardData, updateState} = useContext(BoardContext);
@@ -22,10 +22,11 @@ const TagsSubroute = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState({});
+    const [deleteModal, setDeleteModal] = useState({open: false, data: "", dataColor: {}});
     const getQuota = () => 10 - boardData.tags.length;
     useEffect(() => setCurrentNode("tags"), [setCurrentNode]);
     const onTagCreate = (data) => {
-        updateState({tags: boardData.tags.concat(data)});
+        updateState({...boardData, tags: boardData.tags.concat(data)});
     };
     const renderContent = () => {
         return <UiCol xs={12}>
@@ -54,8 +55,8 @@ const TagsSubroute = () => {
                 <UiTooltip id={"tag" + i + "edit"} text={"Edit Tag"}>
                     <FaPen className={"fa-xs ml-1 hoverable-option"} onClick={() => onTagEdit(tag)}/>
                 </UiTooltip>
-                <UiTooltip id={"tag" + i + "delete"} text={"Edit Tag"}>
-                    <FaTrashAlt className={"fa-xs ml-1 hoverable-option"} onClick={() => onTagDelete(tag.name)}/>
+                <UiTooltip id={"tag" + i + "delete"} text={"Delete Tag"}>
+                    <FaTrashAlt className={"fa-xs ml-1 hoverable-option"} onClick={() => setDeleteModal({open: true, data: tag.name, dataColor: tinycolor(tag.color)})}/>
                 </UiTooltip>
             </div>
         });
@@ -79,27 +80,23 @@ const TagsSubroute = () => {
         const tags = boardData.tags;
         const i = tags.indexOf(oldTag);
         tags[i] = tag;
-        updateState({tags});
+        updateState({...boardData, tags});
     };
-    const onTagDelete = (name) => {
-        popupSwal("warning", "Dangerous action", "This action is <strong>irreversible</strong> and will delete tag from all ideas, please confirm your action.",
-            "Delete Tag", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/boards/" + boardData.discriminator + "/tags/" + name).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    updateState({tags: boardData.tags.filter(item => item.name !== name)});
-                    toastSuccess("Tag permanently deleted.");
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+    const onTagDelete = () => {
+        axios.delete("/boards/" + boardData.discriminator + "/tags/" + deleteModal.data).then(res => {
+            if (res.status !== 204) {
+                toastError();
+                return;
+            }
+            updateState({...boardData, tags: boardData.tags.filter(item => item.name !== deleteModal.data)});
+            toastSuccess("Tag permanently deleted.");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <React.Fragment>
         <TagCreateModal onTagCreate={onTagCreate} onHide={() => setModalOpen(false)} isOpen={modalOpen}/>
         <TagEditModal isOpen={editModalOpen} onHide={() => setEditModalOpen(false)} tag={editData} onEdit={onEdit}/>
+        <DangerousActionModal id={"tagDel"} onHide={() => setDeleteModal({...deleteModal, open: false})} isOpen={deleteModal.open} onAction={onTagDelete}
+                              actionDescription={<div>Tag <UiBadge color={deleteModal.dataColor}>{deleteModal.data}</UiBadge> will be <u>deleted from all ideas</u> and list of available tags.</div>}/>
         <UiCol xs={12} md={9}>
             <UiViewBox title={"Tags Management"} description={"Edit your board tags here."}>
                 {renderContent()}

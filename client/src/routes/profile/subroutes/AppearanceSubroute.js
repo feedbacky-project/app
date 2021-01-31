@@ -1,24 +1,14 @@
 import AppearanceCard from "components/profile/AppearanceCard";
 import AppContext from "context/AppContext";
 import PageNodesContext from "context/PageNodesContext";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import {UiBadge} from "ui";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import {getCookieOrDefault} from "utils/basic-utils";
 
 const AppearanceSubroute = () => {
-    const getDefaultThemeType = () => {
-        const val = getCookieOrDefault("prefs_darkMode", null);
-        if (val == null) {
-            return "system";
-        } else {
-            return user.darkMode ? "dark" : "light";
-        }
-    };
-    const {user, onDarkModeToggle, getTheme} = useContext(AppContext);
+    const {user, appearance, onAppearanceToggle, getTheme} = useContext(AppContext);
     const {setCurrentNode} = useContext(PageNodesContext);
-    const [themeType, setThemeType] = useState(getDefaultThemeType());
     useEffect(() => setCurrentNode("appearance"), [setCurrentNode]);
     if (!user.loggedIn) {
         return <UiCol xs={12} md={9}>
@@ -32,23 +22,20 @@ const AppearanceSubroute = () => {
             <UiCol xs={12} className={"my-2 text-center"}>
                 <h4 className={"mb-1"}>Application Theme</h4>
                 <div className={"d-inline-block mb-2"}>
-                    <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/system.png"} chosen={themeType === "system"} onClick={() => {
-                        setThemeType("system");
-                        onDarkModeToggle("system");
+                    <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/system.png"} chosen={appearance.systemDefault} onClick={() => {
+                        onAppearanceToggle("system");
                     }}/>
                     <UiBadge>System Default</UiBadge>
                 </div>
                 <div className={"d-inline-block mb-2"}>
-                    <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/light.png"} chosen={themeType === "light"} onClick={() => {
-                        setThemeType("light");
-                        onDarkModeToggle("light");
+                    <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/light.png"} chosen={appearance.mode === "light" && !appearance.systemDefault} onClick={() => {
+                        onAppearanceToggle("light");
                     }}/>
                     <UiBadge>Light</UiBadge>
                 </div>
                 <div className={"d-inline-block mb-2"}>
-                    <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/dark.png"} chosen={themeType === "dark"} onClick={() => {
-                        setThemeType("dark");
-                        onDarkModeToggle("dark");
+                    <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/dark.png"} chosen={appearance.mode === "dark" && !appearance.systemDefault} onClick={() => {
+                        onAppearanceToggle("dark");
                     }}/>
                     <UiBadge>Dark</UiBadge>
                 </div>

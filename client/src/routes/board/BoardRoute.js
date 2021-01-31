@@ -38,7 +38,10 @@ const BoardRoute = () => {
         }
         // eslint-disable-next-line
     }, [id]);
-    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setModalOpen(true)} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
+    return <BoardContextedRouteUtil board={board} setBoard={(newD) => {
+        console.log(newD);
+        setBoard(newD);
+    }} onNotLoggedClick={() => setModalOpen(true)} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onHide={() => setModalOpen(false)}/>
         <BoardNavbar/>
         <UiContainer className={"pb-5"}>

@@ -26,9 +26,7 @@ const NotificationsInfo = () => {
                 toastError();
                 return;
             }
-            updateState({
-                ...ideaData, subscribed: !ideaData.subscribed
-            });
+            updateState({...ideaData, subscribed: !ideaData.subscribed});
             toastSuccess("Toggled mail notifications for this idea.");
         }).catch(() => toastError());
     };

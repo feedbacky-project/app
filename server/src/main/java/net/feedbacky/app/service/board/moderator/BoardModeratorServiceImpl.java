@@ -149,7 +149,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to delete moderators invitations from this board.");
+      throw new InvalidAuthenticationException("No permission to revoke moderator permissions from this board.");
     }
     User eventUser = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " does not exist."));

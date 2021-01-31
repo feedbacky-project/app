@@ -1,5 +1,6 @@
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import CommentsBox from "components/idea/discussion/CommentsBox";
 import AppContext from "context/AppContext";
@@ -10,7 +11,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 import {FaFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroller";
 import tinycolor from "tinycolor2";
-import {UiClickableTip, UiLoadingSpinner, UiPrettyUsername} from "ui";
+import {UiBadge, UiClickableTip, UiLoadingSpinner, UiPrettyUsername} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
@@ -24,6 +25,7 @@ const DiscussionBox = () => {
     const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
+    const [modal, setModal] = useState({open: true, type: "", data: -1});
     const sorts = [
         {oldest: "Oldest"},
         {newest: "Newest"}
@@ -59,8 +61,8 @@ const DiscussionBox = () => {
             hasMore={comments.moreToLoad}
             loader={<UiRow centered className={"mt-5 pt-5"} key={comments.data.length}><UiLoadingSpinner/></UiRow>}>
             {comments.data.map(data =>
-                <CommentsBox key={data.id} data={data} onCommentDelete={onCommentDelete} onCommentLike={onCommentLike}
-                             onCommentUnlike={onCommentUnlike} onSuspend={onSuspend}/>
+                <CommentsBox key={data.id} data={data} onCommentDelete={onCommentPreDelete} onCommentLike={onCommentLike}
+                             onCommentUnlike={onCommentUnlike} onSuspend={onPreSuspend}/>
             )}
         </InfiniteScroll>
     };
@@ -170,45 +172,34 @@ const DiscussionBox = () => {
             setSubmitOpen(false);
         }
     };
-    const onSuspend = (commentData) => {
-        popupSwal("warning", "Dangerous action", "Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.",
-            "Suspend", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                //todo finite suspension dates
-                const date = new Date();
-                const id = toastAwait("Pending suspension...");
-                axios.post("/boards/" + data.discriminator + "/suspendedUsers", {
-                    userId: commentData.user.id,
-                    suspensionEndDate: (date.getFullYear() + 10) + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-                }).then(res => {
-                    if (res.status !== 201) {
-                        toastError("Failed to suspend the user.", id);
-                        return;
-                    }
-                    toastSuccess("User suspended.", id);
-                    updateState({suspendedUsers: data.suspendedUsers.concat(res.data)});
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+    const onPreSuspend = commentData => setModal({open: true, type: "suspend", data: commentData.user.id});
+    const onSuspend = () => {
+        //todo finite suspension dates
+        const date = new Date();
+        const id = toastAwait("Pending suspension...");
+        axios.post("/boards/" + data.discriminator + "/suspendedUsers", {
+            userId: modal.data,
+            suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
+        }).then(res => {
+            if (res.status !== 201) {
+                toastError("Failed to suspend the user.", id);
+                return;
+            }
+            toastSuccess("User suspended.", id);
+            updateBoardState({...data, suspendedUsers: data.suspendedUsers.concat(res.data)});
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
-    const onCommentDelete = (id) => {
-        popupSwal("warning", "Dangerous action",
-            "This action is <strong>irreversible</strong> and will delete this comment, please confirm your action.",
-            "Delete Comment", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/comments/" + id).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    setComments({...comments, data: comments.data.filter(item => item.id !== id)});
-                    updateState({...ideaData, commentsAmount: ideaData.commentsAmount - 1});
-                    toastSuccess("Comment permanently deleted.");
-                }).catch(err => toastError(err.response.data.errors[0]))
-            });
+    const onCommentPreDelete = id => setModal({open: true, type: "delete", data: id});
+    const onCommentDelete = () => {
+        axios.delete("/comments/" + modal.data).then(res => {
+            if (res.status !== 204) {
+                toastError();
+                return;
+            }
+            setComments({...comments, data: comments.data.filter(item => item.id !== modal.data)});
+            updateState({...ideaData, commentsAmount: ideaData.commentsAmount - 1});
+            toastSuccess("Comment permanently deleted.");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onCommentLike = (data) => {
         if (!user.loggedIn) {
@@ -262,6 +253,10 @@ const DiscussionBox = () => {
         return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, comments: {...user.localPreferences.comments, sort: key}})}>{value}</UiDropdownElement>
     });
     return <UiCol xs={12}>
+        <DangerousActionModal id={"suspend"} onHide={() => setModal({...modal, open: false, type: ""})} isOpen={modal.open && modal.type === "suspend"} onAction={onSuspend}
+                              actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
+        <DangerousActionModal id={"commentDel"} onHide={() => setModal({...modal, open: false, type: ""})} isOpen={modal.open && modal.type === "delete"} onAction={onCommentDelete}
+                              actionDescription={<div>Comment will be permanently <u>deleted</u>.</div>}/>
         <div>
             <div className={"d-inline-block text-black-75 mr-1"}>Discussion ({ideaData.commentsAmount} comments)</div>
             <UiSelectableDropdown id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>

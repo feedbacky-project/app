@@ -1,4 +1,5 @@
 import axios from "axios";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import AttachmentsInfo from "components/idea/info/AttachmentsInfo";
@@ -19,7 +20,6 @@ import {UiCancelButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const IdeaInfoBox = () => {
     const {user} = useContext(AppContext);
@@ -29,6 +29,7 @@ const IdeaInfoBox = () => {
     const history = useHistory();
     const [voters, setVoters] = useState({data: [], loaded: false, error: false});
     const [editor, setEditor] = useState({enabled: false, value: htmlDecode(ideaData.description)});
+    const [modal, setModal] = useState({open: false});
     useEffect(() => {
         axios.get("/ideas/" + ideaData.id + "/voters").then(res => {
             if (res.status !== 200) {
@@ -61,20 +62,14 @@ const IdeaInfoBox = () => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onDelete = () => {
-        popupSwal("warning", "Dangerous action", "This action is <strong>irreversible</strong> and will delete the idea, please confirm your action.",
-            "Delete Idea", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/ideas/" + ideaData.id).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    history.push("/b/" + ideaData.boardDiscriminator);
-                    toastSuccess("Idea permanently deleted.");
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+        axios.delete("/ideas/" + ideaData.id).then(res => {
+            if (res.status !== 204) {
+                toastError();
+                return;
+            }
+            history.push("/b/" + ideaData.boardDiscriminator);
+            toastSuccess("Idea permanently deleted.");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onUpvote = () => {
         if (!user.loggedIn) {
@@ -136,7 +131,7 @@ const IdeaInfoBox = () => {
         if (ideaData.user.id !== user.data.id || data.moderators.find(mod => mod.userId === user.data.id)) {
             return;
         }
-        return <FaTrash className={"ml-1 fa-xs cursor-click move-top-2px"} onClick={onDelete}/>
+        return <FaTrash className={"ml-1 fa-xs cursor-click move-top-2px text-black-60"} onClick={() => setModal({open: true})}/>
     };
     const renderDetails = () => {
         return <React.Fragment>
@@ -152,6 +147,8 @@ const IdeaInfoBox = () => {
         </React.Fragment>
     };
     return <React.Fragment>
+        <DangerousActionModal id={"ideaDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onDelete}
+                              actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
         <UiCol sm={12} md={10} className={"mt-4"}>
             <UiCol xs={12} className={"d-inline-flex mb-2 p-0"}>
                 <div className={"my-auto mr-2"} ref={voteRef}>

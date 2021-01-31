@@ -52,7 +52,7 @@ const BoardAdminPanelRoute = () => {
     if (location.state != null && !board.loaded) {
         return <LoadingRouteUtil/>
     }
-    if(!user.loggedIn || board.data.creatorId !== user.data.id) {
+    if(!user.loggedIn || (board.loaded && board.data.creatorId !== user.data.id)) {
         history.push("/b/" + id);
         return <React.Fragment/>
     }

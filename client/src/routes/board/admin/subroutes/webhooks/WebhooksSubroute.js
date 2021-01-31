@@ -1,5 +1,6 @@
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
 import BoardContext from "context/BoardContext";
@@ -11,12 +12,12 @@ import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const WebhooksSubroute = () => {
     const {data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
+    const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("webhooks"), [setCurrentNode]);
     const getQuota = () => 5 - webhooks.data.length;
     useEffect(() => {
@@ -38,7 +39,8 @@ const WebhooksSubroute = () => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={hook.id}>
                 <div className={"text-center"}>
                     <img alt={"Webhook"} className={"rounded bg-dark p-2"} src={getTypeIcon(hook)} height={40} width={40}/>
-                    <UiElementDeleteButton id={"webhook_del_" + i} onClick={() => onWebhookDelete(hook)} tooltipName={"Delete"}/>
+                    <UiElementDeleteButton id={"webhook_del_" + i} tooltipName={"Delete"}
+                                           onClick={() => setModal({open: true, data: hook.id, dataName: prettifyEnum(hook.type) + " #" + hook.id})}/>
                     <br/>
                     <small className={"text-truncate text-center d-block"}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
                     <div className={"disable-scrollbars"} style={{maxHeight: 80, overflowY: "scroll"}}>
@@ -80,24 +82,20 @@ const WebhooksSubroute = () => {
     const renderEvents = (hook) => {
         return hook.events.map(event => <div key={hook.id + event}><UiBadge className={"d-block my-1"}>{prettifyEnum(event)}</UiBadge></div>);
     };
-    const onWebhookDelete = (hook) => {
-        popupSwal("warning", "Dangerous action", "Webhook will be permanently removed and won't send data to target URL.",
-            "Delete", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/webhooks/" + hook.id).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    const data = webhooks.data.filter(item => item.id !== hook.id);
-                    setWebhooks({...webhooks, data});
-                    toastSuccess("Webhook deleted.");
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+    const onWebhookDelete = () => {
+        axios.delete("/webhooks/" + modal.data).then(res => {
+            if (res.status !== 204) {
+                toastError();
+                return;
+            }
+            const data = webhooks.data.filter(item => item.id !== modal.data);
+            setWebhooks({...webhooks, data});
+            toastSuccess("Webhook deleted.");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <UiCol xs={12} md={9}>
+        <DangerousActionModal id={"webhookDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onWebhookDelete}
+                              actionDescription={<div>Webhook <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u> and won't receive any future data.</div>}/>
         <UiViewBox title={"Webhooks"} description={"Edit webhooks to integrate with other apps here."}>
             {renderContent()}
         </UiViewBox>

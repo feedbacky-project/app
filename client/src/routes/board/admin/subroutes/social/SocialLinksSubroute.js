@@ -1,5 +1,6 @@
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import SafeAnchor from "components/commons/SafeAnchor";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
@@ -13,12 +14,12 @@ import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {toastError, toastSuccess} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const SocialLinksSubroute = () => {
     const {updateState, data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
+    const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("social"), [setCurrentNode]);
     const getQuota = () => 4 - socialLinks.data.length;
     useEffect(() => {
@@ -41,8 +42,8 @@ const SocialLinksSubroute = () => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={link.id}>
                 <div className={"text-center"} id={"socialPreviewContainer"}>
                     <img className={"bg-dark rounded p-2"} alt={"Logo"} src={link.logoUrl} height={40} width={40}/>
-                    <UiElementDeleteButton tooltipName={"Delete"} onClick={() => onSocialLinkDelete(link.id)}
-                                           id={"social-" + link.id + "-del"}/>
+                    <UiElementDeleteButton tooltipName={"Delete"} id={"social-" + link.id + "-del"}
+                                           onClick={() => setModal({...modal, open: true, data: link.id, dataName: extractHostname(link.url)})}/>
                     <br/>
                     <SafeAnchor url={link.url}><UiBadge>{extractHostname(link.url)}</UiBadge></SafeAnchor>
                 </div>
@@ -82,25 +83,21 @@ const SocialLinksSubroute = () => {
         hostname = hostname.split('?')[0];
         return hostname.replace("www.", "");
     };
-    const onSocialLinkDelete = (id) => {
-        popupSwal("question", "Are you sure?", "Social link will be deleted.",
-            "Delete", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/socialLinks/" + id).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    const data = socialLinks.data.filter(item => item.id !== id);
-                    setSocialLinks({...socialLinks, data});
-                    updateState({socialLinks: data});
-                    toastSuccess("Social link deleted.");
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+    const onSocialLinkDelete = () => {
+        axios.delete("/socialLinks/" + modal.data).then(res => {
+            if (res.status !== 204) {
+                toastError();
+                return;
+            }
+            const data = socialLinks.data.filter(item => item.id !== modal.data);
+            setSocialLinks({...socialLinks, data});
+            updateState({...boardData, socialLinks: data});
+            toastSuccess("Social link deleted.");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <UiCol xs={12} md={9}>
+        <DangerousActionModal id={"socialDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onSocialLinkDelete}
+                              actionDescription={<div>Social link <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u>.</div>}/>
         <UiViewBox title={"Social Links"} description={"Edit links visible at your board page here."}>
             {renderContent()}
         </UiViewBox>

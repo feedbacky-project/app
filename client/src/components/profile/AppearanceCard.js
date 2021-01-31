@@ -10,6 +10,10 @@ const OptionCard = styled(Card)`
   max-width: 200px;
   cursor: pointer;
   margin: 0.5rem 1rem;
+  
+  .card-img {
+    border-radius: .2rem;
+  }
 `;
 
 const AppearanceCard = ({className, chosen, imgSrc, onClick}) => {

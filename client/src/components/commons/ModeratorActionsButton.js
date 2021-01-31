@@ -116,14 +116,14 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 const id = toastAwait("Pending suspension...");
                 axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
                     userId: ideaData.user.id,
-                    suspensionEndDate: (date.getFullYear() + 10) + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+                    suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
                 }).then(res => {
                     if (res.status !== 201) {
                         toastError("Failed to suspend the user.", id);
                         return;
                     }
                     toastSuccess("User suspended.", id);
-                    updateBoardState({suspendedUsers: boardData.suspendedUsers.concat(res.data)});
+                    updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
                 }).catch(err => toastError(err.response.data.errors[0]));
             });
     };

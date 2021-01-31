@@ -148,8 +148,8 @@
         return null;
     }
 
-    if (getCookie("prefs_darkMode") === 'true' ||
-        (getCookie("prefs_darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (getCookie("prefs_appearance") === 'dark' ||
+        (getCookie("prefs_appearance") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add("dark");
     }
 </script>

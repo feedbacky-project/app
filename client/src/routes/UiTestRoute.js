@@ -43,7 +43,7 @@ const UiTestRoute = () => {
             <div style={{position: "fixed", zIndex: 1000, left: "15px", top: "50%", width: 150, borderRadius: ".35rem", backgroundColor: "#2d2d2d"}}>
                 <UiContainer className={"py-2 justify-content-center"}>
                     <div style={{textAlign: "center", marginBottom: ".5rem", color: "white"}}>Debug Card</div>
-                    <UiButton size={"sm"} className={"my-1"} onClick={() => context.onDarkModeToggle()}>Dark Mode</UiButton>
+                    <UiButton size={"sm"} className={"my-1"} onClick={() => context.onAppearanceToggle()}>Dark Mode</UiButton>
                     <UiButton size={"sm"} className={"my-1"} onClick={() => context.onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
                     <UiButton size={"sm"} className={"my-1"} onClick={() => toastSuccess("Toast test")}>Toast Test</UiButton>
                 </UiContainer>

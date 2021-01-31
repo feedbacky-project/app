@@ -8,18 +8,30 @@ export const DEFAULT_THEME = "#343a40";
 
 const AppAppearance = () => {
     const [theme, setTheme] = useState(DEFAULT_THEME);
-    const [darkMode, setDarkMode] = useState(getCookieOrDefault("prefs_darkMode", "false") === 'true');
+    const generateAppearanceData = () => {
+        const cookie = getCookieOrDefault("prefs_appearance", null);
+        const systemDefault = cookie == null;
+        let mode;
+        if(cookie == null) {
+            if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                mode = "dark";
+            } else {
+                mode = "light";
+            }
+        } else {
+            mode = cookie;
+        }
+        return {mode, systemDefault};
+    };
+    const [appearance, setAppearance] = useState(generateAppearanceData());
     useEffect(() => {
-        if (darkMode) {
-            document.body.classList.add("dark");
-        } else if (getCookieOrDefault("prefs_darkMode", null) == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setDarkMode(true);
+        if (appearance.mode === "dark") {
             document.body.classList.add("dark");
         }
-    }, [darkMode]);
+    }, [appearance.mode]);
     const getTheme = (adjustColor = true) => {
         let color = tinycolor(theme);
-        if (darkMode && adjustColor) {
+        if (appearance.mode === "dark" && adjustColor) {
             color = color.lighten(10);
             //if still not readable, increase again
             if (tinycolor.readability(color, "#282828") < 2.5) {
@@ -28,38 +40,43 @@ const AppAppearance = () => {
         }
         return color.clone();
     };
-    const onDarkModeToggle = (type = null) => {
+    const onAppearanceToggle = (type = null) => {
         if(type != null) {
             if(type === "system") {
-                Cookies.remove("prefs_darkMode");
+                Cookies.remove("prefs_appearance");
                 if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.body.classList.add("dark");
-                    setDarkMode(true);
+                    setAppearance({...appearance, mode: "dark", systemDefault: true});
                 } else {
                     document.body.classList.remove("dark");
-                    setDarkMode(false);
+                    setAppearance({...appearance, mode: "light", systemDefault: true});
                 }
             } else if(type === "dark") {
-                Cookies.set("prefs_darkMode", "true", {expires: 10 * 365 * 7 /* 10 years */});
+                Cookies.set("prefs_appearance", "dark", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+                setAppearance({...appearance, mode: "dark", systemDefault: false});
                 document.body.classList.add("dark");
-                setDarkMode(true);
             } else if(type === "light") {
-                Cookies.set("prefs_darkMode", "false", {expires: 10 * 365 * 7 /* 10 years */});
+                Cookies.set("prefs_appearance", "light", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+                setAppearance({...appearance, mode: "light", systemDefault: false});
                 document.body.classList.remove("dark");
-                setDarkMode(false);
             }
             return;
         }
-        let darkModeEnabled = (getCookieOrDefault("prefs_darkMode", "false") === 'true');
-        Cookies.set("prefs_darkMode", (!darkModeEnabled).toString(), {expires: 10 * 365 * 7 /* 10 years */});
-        if (darkMode) {
+        if(appearance.mode === "dark") {
+            setAppearance({...appearance, mode: "light"});
             document.body.classList.remove("dark");
-        } else {
+            if(!appearance.systemDefault) {
+                Cookies.set("prefs_appearance", "light", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+            }
+        } else if(appearance.mode === "light") {
+            setAppearance({...appearance, mode: "dark"});
             document.body.classList.add("dark");
+            if(!appearance.systemDefault) {
+                Cookies.set("prefs_appearance", "dark", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+            }
         }
-        setDarkMode(!darkMode);
     };
-    return <App appearanceSettings={{theme, setTheme, darkMode, getTheme, onDarkModeToggle}}/>
+    return <App appearanceSettings={{theme, setTheme, appearance, setAppearance, getTheme, onAppearanceToggle: onAppearanceToggle}}/>
 };
 
 export default AppAppearance;
