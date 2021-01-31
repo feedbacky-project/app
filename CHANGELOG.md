@@ -22,6 +22,7 @@
 * upvote buttons are now grey if they're not upvoted
 * replaced default color palette in theme selector with more color contrast safe colors
 * made some changes towards easier keyboard accessibility (brought back links outlines, made new idea button tabindex 1)
+* moved dark mode toggle from navbar dropdown to Settings > Appearance
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 TODO border setupcard theme based

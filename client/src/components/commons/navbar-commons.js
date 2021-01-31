@@ -25,11 +25,8 @@ export const renderLogIn = (onNotLoggedClick, context) => {
                 <strong className={"d-inline-block align-middle text-truncate"} style={{maxWidth: 100}}>{context.user.data.username}</strong>
             </UiDropdownElement>
             <div className={"my-1"}/>
-            <UiDropdownElement className={"d-inline-block"} onClick={context.onDarkModeToggle}>
-                {context.user.darkMode ? "🌔 Light Mode" : "🌘 Dark Mode"}
-            </UiDropdownElement>
             <UiDropdownElement as={Link} to={"/me"}>
-                View Profile
+                Settings
             </UiDropdownElement>
             <UiDropdownElement onClick={context.user.onLogOut}>
                 Log Out

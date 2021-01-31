@@ -5,7 +5,7 @@ const UiDropdown = (props) => {
     const {className, toggleClassName, toggle, children} = props;
     return <Dropdown alignRight onClick={e => e.preventDefault()} className={className}>
         {/* dropdowns aren't accessible anyway, tabindex -1 removes them from tabbing order  */}
-        <Dropdown.Toggle tabindex={-1} variant={""} className={toggleClassName}>
+        <Dropdown.Toggle tabIndex={-1} variant={""} className={toggleClassName}>
             {toggle}
         </Dropdown.Toggle>
         <Dropdown.Menu>

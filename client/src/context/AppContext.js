@@ -8,7 +8,7 @@ const AppContext = React.createContext({
     },
     serviceData: [],
     onLocalPreferencesUpdate: () => void 0,
-    onDarkModeToggle: () => void 0,
+    onDarkModeToggle: (type) => void 0,
     getTheme: () => void 0,
     theme: "#343a40",
     defaultTheme: "#343a40",

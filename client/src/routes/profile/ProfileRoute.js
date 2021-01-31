@@ -10,8 +10,9 @@ import {UiLoadingSpinner} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {retry} from "utils/lazy-init";
 
-const SettingsSubview = lazy(() => retry(() => import("routes/profile/subroutes/SettingsSubroute")));
-const NotificationsSubview = lazy(() => retry(() => import("routes/profile/subroutes/NotificationsSubroute")));
+const SettingsSubroute = lazy(() => retry(() => import("routes/profile/subroutes/SettingsSubroute")));
+const AppearanceSubroute = lazy(() => retry(() => import("routes/profile/subroutes/AppearanceSubroute")));
+const NotificationsSubroute = lazy(() => retry(() => import("routes/profile/subroutes/NotificationsSubroute")));
 
 const ProfileRoute = () => {
     const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -29,9 +30,10 @@ const ProfileRoute = () => {
                 <ProfileSidebar currentNode={currentNode} reRouteTo={destination => history.push({pathname: "/me/" + destination})}/>
                 <Suspense fallback={<UiCol xs={12} md={9}><UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow></UiCol>}>
                     <Switch>
-                        <Route path={"/me/settings"} component={SettingsSubview}/>
-                        <Route path={"/me/notifications"} component={NotificationsSubview}/>
-                        <Route component={SettingsSubview}/>
+                        <Route path={"/me/settings"} component={SettingsSubroute}/>
+                        <Route path={"/me/appearance"} component={AppearanceSubroute}/>
+                        <Route path={"/me/notifications"} component={NotificationsSubroute}/>
+                        <Route component={SettingsSubroute}/>
                     </Switch>
                 </Suspense>
             </UiRow>
