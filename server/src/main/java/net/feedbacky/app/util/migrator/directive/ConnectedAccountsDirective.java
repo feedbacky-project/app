@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +66,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
       for(Object[] object : result) {
         String data = (String) object[0];
         int type = (int) object[1];
-        long id = (long) object[2];
+        BigInteger id = (BigInteger) object[2];
         String provider;
         switch(type) {
           case 0:
@@ -85,7 +86,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
           JsonNode node = new ObjectMapper().readTree(data);
           Set<ConnectedAccount> updatedAccounts = new HashSet<>();
           for(ConnectedAccount account : user.getConnectedAccounts()) {
-            if(account.getId() != id) {
+            if(account.getId() != id.longValue()) {
               continue;
             }
             long accountId;
