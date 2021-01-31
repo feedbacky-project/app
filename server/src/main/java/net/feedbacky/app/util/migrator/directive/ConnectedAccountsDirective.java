@@ -63,6 +63,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
         logger.log(Level.WARNING, "Encountered SQL exception, probably missing some fields to migrate, switching to non SQL migration.");
         continue;
       }
+      Set<ConnectedAccount> updatedAccounts = new HashSet<>();
       for(Object[] object : result) {
         String data = (String) object[0];
         int type = (int) object[1];
@@ -84,7 +85,6 @@ public class ConnectedAccountsDirective extends MigrationDirective {
         }
         try {
           JsonNode node = new ObjectMapper().readTree(data);
-          Set<ConnectedAccount> updatedAccounts = new HashSet<>();
           for(ConnectedAccount account : user.getConnectedAccounts()) {
             if(account.getId() != id.longValue()) {
               continue;
@@ -106,14 +106,15 @@ public class ConnectedAccountsDirective extends MigrationDirective {
             account.setAccountId(accountId);
             account.setProvider(provider);
             updatedAccounts.add(account);
+            super.migrateNewEntry();
           }
-          user.setConnectedAccounts(updatedAccounts);
-          userRepository.save(user);
         } catch(Exception e) {
           logger.log(Level.WARNING, "Failed to process data for user id " + user.getId() + ", skipping.");
           continue;
         }
       }
+      user.setConnectedAccounts(updatedAccounts);
+      userRepository.save(user);
     }
     logger.log(Level.INFO, "Migrated to version 3 (connected accounts revamp).");
   }
