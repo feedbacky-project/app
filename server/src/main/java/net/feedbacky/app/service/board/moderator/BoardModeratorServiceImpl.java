@@ -163,7 +163,6 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     Moderator moderator = optional.get();
     board.getModerators().remove(moderator);
     boardRepository.save(board);
-    moderatorRepository.delete(moderator);
     new MailBuilder()
             .withRecipient(eventUser)
             .withEventBoard(board)

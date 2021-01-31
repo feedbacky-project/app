@@ -11,13 +11,12 @@ import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const SuspensionSettings = () => {
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
-    useEffect(() => setCurrentNode("suspensions"), [setCurrentNode]);
+    useEffect(() => setCurrentNode("suspended"), [setCurrentNode]);
     const renderContent = () => {
         return <UiCol xs={12}>
             <div className={"mb-1 text-black-60"}>Suspended Users</div>

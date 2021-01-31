@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 import axios from "axios";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import PropTypes from "prop-types";
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {Form} from "react-bootstrap";
 import {FaCog, FaUserLock} from "react-icons/all";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
@@ -15,7 +16,6 @@ import tinycolor from "tinycolor2";
 import {UiBadge} from "ui";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {toastAwait, toastError, toastSuccess} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const IconToggle = styled(FaCog)`
   transition: all 0.7s ease-in-out 0s;
@@ -45,87 +45,55 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData, updateState: updateBoardState} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
+    const [modal, setModal] = useState({open: false, type: ""});
     const history = useHistory();
     const visible = boardData.moderators.find(mod => mod.userId === user.data.id);
     const onIdeaOpen = () => {
-        swalGenerator.fire({
-            title: "Please confirm",
-            html: "Once you reopen idea you can close it again.",
-            icon: "question",
-            showCancelButton: true,
-            animation: false,
-            confirmButtonColor: "#d33",
-            reverseButtons: true,
-            focusCancel: true,
-            confirmButtonText: "Open Idea",
-        }).then(willClose => {
-            if (!willClose.value) {
+        axios.patch("/ideas/" + ideaData.id, {"open": true}).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                toastError();
                 return;
             }
-            axios.patch("/ideas/" + ideaData.id, {"open": true}).then(res => {
-                if (res.status !== 200 && res.status !== 204) {
-                    toastError();
-                    return;
-                }
-                updateState({...ideaData, open: true});
-                toastSuccess("Idea opened.");
-            }).catch(err => toastError(err.response.data.errors[0]));
-        });
+            updateState({...ideaData, open: true});
+            toastSuccess("Idea opened.");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onIdeaClose = () => {
-        popupSwal("question", "Please confirm", "Once you close idea you can open it again.",
-            "Close Idea", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.patch("/ideas/" + ideaData.id, {"open": false}).then(res => {
-                    if (res.status !== 200 && res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    updateState({...ideaData, open: false});
-                    toastSuccess("Idea closed.");
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+        axios.patch("/ideas/" + ideaData.id, {"open": false}).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                toastError();
+                return;
+            }
+            updateState({...ideaData, open: false});
+            toastSuccess("Idea closed.");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const doIdeaDelete = () => {
-        popupSwal("warning", "Dangerous action", "This action is <strong>irreversible</strong> and will delete the idea, please confirm your action.",
-            "Delete Idea", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                axios.delete("/ideas/" + ideaData.id).then(res => {
-                    if (res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    toastSuccess("Idea permanently deleted.");
-                    history.push("/b/" + ideaData.boardDiscriminator);
-                    onIdeaDelete();
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+        axios.delete("/ideas/" + ideaData.id).then(res => {
+            if (res.status !== 204) {
+                toastError();
+                return;
+            }
+            toastSuccess("Idea permanently deleted.");
+            history.push("/b/" + ideaData.boardDiscriminator);
+            onIdeaDelete();
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const doSuspendUser = () => {
-        popupSwal("warning", "Dangerous action", "Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.",
-            "Suspend", "#d33", willClose => {
-                if (!willClose.value) {
-                    return;
-                }
-                //todo finite suspension dates
-                const date = new Date();
-                const id = toastAwait("Pending suspension...");
-                axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
-                    userId: ideaData.user.id,
-                    suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
-                }).then(res => {
-                    if (res.status !== 201) {
-                        toastError("Failed to suspend the user.", id);
-                        return;
-                    }
-                    toastSuccess("User suspended.", id);
-                    updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
-                }).catch(err => toastError(err.response.data.errors[0]));
-            });
+        //todo finite suspension dates
+        const date = new Date();
+        const id = toastAwait("Pending suspension...");
+        axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
+            userId: ideaData.user.id,
+            suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
+        }).then(res => {
+            if (res.status !== 201) {
+                toastError("Failed to suspend the user.", id);
+                return;
+            }
+            toastSuccess("User suspended.", id);
+            updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onTagsManage = () => {
         let html = [];
@@ -183,13 +151,21 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
         color = color.setAlpha(.8);
     }
     return <UiDropdown className={"d-inline"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline cursor-click"}/>}>
+        <DangerousActionModal id={"close"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "close"} onAction={onIdeaClose}
+                              actionDescription={<div>Once you close idea you can open it again.</div>} actionButtonName={"Close"}/>
+        <DangerousActionModal id={"open"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "open"} onAction={onIdeaOpen}
+                              actionDescription={<div>Once you reopen idea you can close it again.</div>} actionButtonName={"Open"}/>
+        <DangerousActionModal id={"delete"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "delete"} onAction={doIdeaDelete}
+                              actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
+        <DangerousActionModal id={"suspend"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "suspend"} onAction={doSuspendUser} actionButtonName={"Suspend"}
+                              actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
         <DropdownOption onClick={onTagsManage} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Change Tags</DropdownOption>
         {ideaData.open ?
-            <DropdownOption onClick={onIdeaClose} as={"span"}><FaLock className={"mr-1 move-top-2px"} style={{color}}/> Close Idea</DropdownOption> :
-            <DropdownOption onClick={onIdeaOpen} as={"span"}><FaUnlock className={"mr-1 move-top-2px"} style={{color}}/> Open Idea</DropdownOption>
+            <DropdownOption onClick={() => setModal({open: true, type: "close"})} as={"span"}><FaLock className={"mr-1 move-top-2px"} style={{color}}/> Close Idea</DropdownOption> :
+            <DropdownOption onClick={() => setModal({open: true, type: "open"})} as={"span"}><FaUnlock className={"mr-1 move-top-2px"} style={{color}}/> Open Idea</DropdownOption>
         }
-        <DropdownOption onClick={doIdeaDelete} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Idea</DropdownOption>
-        {isSuspendable() && <DropdownOption onClick={doSuspendUser} className={"text-danger"} as={"span"}>
+        <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Idea</DropdownOption>
+        {isSuspendable() && <DropdownOption onClick={() => setModal({open: true, type: "suspend"})} className={"text-danger"} as={"span"}>
             <FaUserLock className={"mr-1 move-top-2px"} style={{color: getTheme()}}/> Suspend User
         </DropdownOption>
         }

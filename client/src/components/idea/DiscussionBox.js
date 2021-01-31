@@ -11,13 +11,12 @@ import TextareaAutosize from 'react-autosize-textarea';
 import {FaFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroller";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiLoadingSpinner, UiPrettyUsername} from "ui";
+import {UiClickableTip, UiLoadingSpinner, UiPrettyUsername} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {prepareFilterAndSortRequests, toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
-import {popupSwal} from "utils/sweetalert-utils";
 
 const DiscussionBox = () => {
     const {user, serviceData, onLocalPreferencesUpdate} = useContext(AppContext);
