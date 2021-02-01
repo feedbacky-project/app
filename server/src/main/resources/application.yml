@@ -8,6 +8,7 @@ server:
 spring:
   main:
     allow-bean-definition-overriding: true
+    banner-mode: "off"
   mvc:
     throw-exception-if-no-handler-found: true
   resources:
