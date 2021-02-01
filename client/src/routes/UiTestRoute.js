@@ -9,9 +9,10 @@ import React, {useContext, useEffect} from "react";
 import {FaCogs} from "react-icons/all";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiCountableFormControl, UiLoadingSpinner, UiPrettyUsername, UiProgressBar} from "ui";
+import {UiBadge, UiClickableTip, UiLoadingSpinner, UiPrettyUsername, UiProgressBar} from "ui";
 import {UiButton, UiCancelButton, UiClassicButton, UiElementDeleteButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
+import {UiCountableFormControl, UiFormControl} from "ui/form";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {UiAvatar, UiImage} from "ui/image";
 import {UiNavbar} from "ui/navbar";
@@ -101,7 +102,7 @@ const UiTestRoute = () => {
                         </UiProgressBar>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
-                        <UiCountableFormControl placeholder={"Example form"} maxLength={15} id={"form1"}/>
+                        <UiFormControl placeholder={"Example form"} maxLength={15} id={"form1"}/>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
                         <UiCountableFormControl placeholder={"Example form"} defaultValue={"hello default value maxLength 99"} maxLength={99} id={"form2"}/>

@@ -3,16 +3,20 @@ import AppContext from "context/AppContext";
 import IdeaContext from "context/IdeaContext";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
-import Button from "react-bootstrap/Button";
 import {FiChevronsUp, FiChevronUp} from "react-icons/all";
+import {UiClassicButton} from "ui/button";
 
-const VoteBtn = styled(Button)`
+const VoteBtn = styled(UiClassicButton)`
   line-height: 16px;
   min-width: 35px;
   min-height: 45px;
   padding: .25rem .5rem;
   margin: 0;
   box-shadow: none !important;
+  background-color: transparent;
+  &:hover {
+   background-color: transparent;
+  }
   
   .to-upvote, .upvoted {
     transition: .2s ease-in-out;

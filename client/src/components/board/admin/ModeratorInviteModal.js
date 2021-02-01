@@ -4,6 +4,7 @@ import React, {useContext} from 'react';
 import Form from "react-bootstrap/Form";
 import {UiModal} from "ui";
 import {UiLoadableButton} from "ui/button";
+import {UiFormControl} from "ui/form";
 import {UiAvatar} from "ui/image";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
@@ -40,7 +41,7 @@ const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
         <Form noValidate>
             <Form.Group className={"mt-2 mb-1"}>
                 <Form.Label className={"mr-1 text-black-60"}>User Email</Form.Label>
-                <Form.Control style={{minHeight: 38, resize: "none"}} rows={1} required type={"email"} placeholder={"Existing user email."} id={"inviteEmailTextarea"}/>
+                <UiFormControl type={"email"} placeholder={"Existing user email."} id={"inviteEmailTextarea"}/>
             </Form.Group>
         </Form>
     </UiModal>

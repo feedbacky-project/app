@@ -8,8 +8,9 @@ import React, {useContext, useEffect, useState} from "react";
 import {Form} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiCountableFormControl, UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
+import {UiCountableFormControl, UiFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
@@ -111,8 +112,7 @@ const SettingsSubroute = () => {
             </UiCol>
             <UiCol xs={{span: 12, order: 3}} lg={6}>
                 <Form.Label className={"mr-1 mt-2 text-black-60"}>Email</Form.Label>
-                <Form.Control style={{minHeight: 38, resize: "none"}} minLength={4} maxLength={20} rows={1} required
-                              disabled value={user.data.email} id={"emailTextarea"}/>
+                <UiFormControl rows={1} disabled value={user.data.email} id={"emailTextarea"}/>
                 <Form.Text className={"text-right text-black-60"} id={"remainingUsername"}>
                     Cannot Change
                 </Form.Text>

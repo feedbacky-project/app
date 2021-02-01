@@ -1,6 +1,5 @@
 export {UiBadge} from "ui/UiBadge";
 export {UiClickableTip} from "ui/UiClickableTip";
-export {UiCountableFormControl} from "ui/UiCountableFormControl";
 export {UiLoadingSpinner} from "ui/UiLoadingSpinner";
 export {UiModal} from "ui/UiModal";
 export {UiPrettyUsername} from "ui/UiPrettyUsername";

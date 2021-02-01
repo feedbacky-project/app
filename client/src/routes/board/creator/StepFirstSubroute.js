@@ -1,6 +1,7 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import React from 'react';
-import {UiClickableTip, UiCountableFormControl} from "ui";
+import {UiClickableTip} from "ui";
+import {UiCountableFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 
 const StepFirstSubroute = ({updateSettings, settings}) => {

@@ -1,6 +1,6 @@
 import UndrawSetUrl from "assets/svg/undraw/set_url.svg";
 import React from 'react';
-import {Form} from "react-bootstrap";
+import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 
 const StepThirdSubroute = ({updateSettings, settings}) => {
@@ -10,15 +10,15 @@ const StepThirdSubroute = ({updateSettings, settings}) => {
             <h2>Set Webhook URL</h2>
             <span className={"text-black-60"}>
                 Type webhook link URL where events data will be send.
+                Please include https:// or http:// at the beginning.
             </span>
         </UiCol>
         <UiCol sm={12} md={10} className={"offset-md-1 mt-4 px-md-5 px-3"}>
             <div className={"text-black-60 mb-2"}>
                 Webhook URL
             </div>
-            <Form.Control style={{minHeight: 38, resize: "none"}} rows={1} required type={"text"}
-                          placeholder={"URL to webhook, include http/https:// state."} id={"url"} defaultValue={settings.url}
-                          onChange={() => updateSettings({...settings, url: document.getElementById("url").value})}/>
+            <UiFormControl id={"url"} rows={1} type={"text"} defaultValue={settings.url} placeholder={"Example https://feedbacky.net/webhook/api/1234"}
+                           onChange={e => updateSettings({...settings, url: e.target.value})}/>
         </UiCol>
     </React.Fragment>
 };

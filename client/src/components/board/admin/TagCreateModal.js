@@ -4,8 +4,9 @@ import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
 import Form from "react-bootstrap/Form";
 import tinycolor from "tinycolor2";
-import {UiClickableTip, UiCountableFormControl, UiModal} from "ui";
+import {UiClickableTip, UiModal} from "ui";
 import {UiLoadableButton} from "ui/button";
+import {UiCountableFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 

@@ -38,7 +38,7 @@ const SocialLinksSubroute = () => {
         if (socialLinks.data.length === 0) {
             return <SvgNotice Component={UndrawNoData} title={"No social links yet."} description={"How about creating one?"}/>
         }
-        return socialLinks.data.map((link) => {
+        return socialLinks.data.map(link => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={link.id}>
                 <div className={"text-center"} id={"socialPreviewContainer"}>
                     <img className={"bg-dark rounded p-2"} alt={"Logo"} src={link.logoUrl} height={40} width={40}/>

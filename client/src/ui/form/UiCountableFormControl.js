@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import {Form} from "react-bootstrap";
+import {UiFormControl} from "ui/form/UiFormControl";
 
 const UiCountableFormControl = (props) => {
     const {minLength, maxLength, defaultValue, onChange = () => void 0, ...otherProps} = props;
     const [currentLength, setCurrentLength] = useState(defaultValue == null ? 0 : defaultValue.length);
     return <React.Fragment>
-        <Form.Control style={{minHeight: 38, resize: "none"}} required onChange={e => {
+        <UiFormControl onChange={e => {
             e.target.value = e.target.value.substring(0, maxLength);
             setCurrentLength(e.target.value.length);
             onChange(e);

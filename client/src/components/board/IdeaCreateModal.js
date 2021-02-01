@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import AppContext from "context/AppContext";
+import Form from "react-bootstrap/Form";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import Form from "react-bootstrap/Form";
 import {FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip, UiModal} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
+import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {formatRemainingCharacters, getBase64FromFile, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
 
@@ -23,7 +23,6 @@ const AttachmentButton = styled(UiClassicButton)`
 `;
 
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
-    const appContext = useContext(AppContext);
     const {discriminator, tags} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
     const [attachment, setAttachment] = useState(null);
@@ -73,7 +72,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
 
     const renderAttachmentButton = () => {
         return <div className={"float-right"}>
-            <UiCol xs={"auto"}  className={"d-inline-block px-0"}>
+            <UiCol xs={"auto"} className={"d-inline-block px-0"}>
                 <AttachmentButton variant={""} className={"m-0 p-0"}>
                     <input accept={"image/jpeg, image/png"} type={"file"} className={"d-none"} id={"attachmentUpload"} onChange={onAttachmentUpload}/>
                     <label htmlFor={"attachmentUpload"} className={"mb-0 cursor-click"} style={{height: 38, width: 38, color: "hsl(210, 11%, 15%)"}}>
@@ -107,12 +106,11 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             </div>
             <UiCol xs={12} className={"d-inline-block px-0"}>
                 <UiCol xs={10} className={"pr-sm-0 pr-2 px-0 d-inline-block"}>
-                    <Form.Control style={{minHeight: 38, resize: "none"}} minLength={10} maxLength={50} rows={1}
-                                  required type={"text"} defaultValue={title}
-                                  placeholder={"Brief and descriptive title."} id={"titleTextarea"} onChange={e => {
-                        formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
-                        setTitle(e.target.value.substring(0, 50));
-                    }}/>
+                    <UiFormControl minLength={10} maxLength={50} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
+                                   onChange={e => {
+                                       formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
+                                       setTitle(e.target.value.substring(0, 50));
+                                   }}/>
                 </UiCol>
                 {renderAttachmentButton()}
             </UiCol>
@@ -159,7 +157,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                 <div>
                     {applicableTags.map((tag, i) => {
                         return <Form.Check id={"applicableTag_" + tag.id} key={i} custom inline type={"checkbox"} defaultChecked={false}
-                                           label={<UiBadge color={tinycolor(tag.color)} context={appContext}>{tag.name}</UiBadge>}/>
+                                           label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
                     })}
                 </div>
             </div>
