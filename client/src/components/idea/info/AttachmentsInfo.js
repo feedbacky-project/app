@@ -18,7 +18,7 @@ const AttachmentsInfo = () => {
         return <React.Fragment/>
     }
     const onAttachmentDelete = () => {
-        axios.delete("/attachments/" + modal.data).then(res => {
+        return axios.delete("/attachments/" + modal.data).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;

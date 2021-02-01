@@ -23,7 +23,7 @@ $box-shadow: none;
     background-color: var(--dark-quaternary) !important;
   }
 
-  .modal-content, .swal2-modal, .swal2-content, .swal2-validation-message {
+  .modal-content {
     background-color: var(--dark-background);
     color: var(--dark-font-color) !important;
     box-shadow: var(--dark-box-shadow) !important;
@@ -55,17 +55,8 @@ $box-shadow: none;
     background-color: var(--dark-hover);
   }
 
-  .swal2-cancel {
-    @extend .text-black-60;
-  }
-
-  .fa-attachment, .swal2-title, .btn-link, small, .hidden-anchor {
+  .fa-attachment, .btn-link, small, .hidden-anchor {
     color: var(--dark-font-color) !important;
-  }
-
-  .swal2-warning {
-    color: hsl(41, 100%, 76%) !important;
-    border-color: hsl(41, 99%, 58%) !important;
   }
 
   .text-black-75 {
@@ -76,7 +67,7 @@ $box-shadow: none;
     color: hsla(0, 0%, 95%, .6) !important;
   }
 
-  textarea, .form-control, .swal2-input {
+  textarea, .form-control {
     background-color: var(--dark-secondary) !important;
     box-shadow: var(--dark-box-shadow) !important;
     @extend .text-black-60;
@@ -98,7 +89,7 @@ $box-shadow: none;
     }
   }
 
-  .card, .jumbotron, .btn, .navbar, .swal2-styled {
+  .card, .jumbotron, .btn, .navbar {
     box-shadow: var(--dark-box-shadow) !important;
   }
 

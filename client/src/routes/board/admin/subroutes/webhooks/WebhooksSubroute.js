@@ -83,7 +83,7 @@ const WebhooksSubroute = () => {
         return hook.events.map(event => <div key={hook.id + event}><UiBadge className={"d-block my-1"}>{prettifyEnum(event)}</UiBadge></div>);
     };
     const onWebhookDelete = () => {
-        axios.delete("/webhooks/" + modal.data).then(res => {
+        return axios.delete("/webhooks/" + modal.data).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;

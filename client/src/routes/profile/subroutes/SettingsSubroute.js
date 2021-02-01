@@ -1,4 +1,5 @@
 import axios from "axios";
+import ConfirmationActionModal from "components/commons/ConfirmationActionModal";
 import ComponentLoader from "components/ComponentLoader";
 import AvatarSelectionModal from "components/profile/AvatarSelectionModal";
 import AppContext from "context/AppContext";
@@ -6,8 +7,6 @@ import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from "react";
 import {Form} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
-import Swal from "sweetalert2";
-import swalReact from "sweetalert2-react-content";
 import tinycolor from "tinycolor2";
 import {UiCountableFormControl, UiLoadingSpinner} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
@@ -19,11 +18,10 @@ const SettingsSubroute = () => {
     const {user, getTheme} = useContext(AppContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const history = useHistory();
-    const swalGenerator = swalReact(Swal);
     const [username, setUsername] = useState(user.data.username);
     const [avatar, setAvatar] = useState(user.data.avatar);
     const [connectedAccounts, setConnectedAccounts] = useState({data: [], loaded: false, error: false});
-    const [modalOpened, setModalOpened] = useState(false);
+    const [modal, setModal] = useState({open: false, type: ""});
     useEffect(() => setCurrentNode("settings"), [setCurrentNode]);
     const onChangesSave = () => {
         if (username.length < 3) {
@@ -51,41 +49,16 @@ const SettingsSubroute = () => {
         });
     };
     const onAccountDeactivation = () => {
-        return swalGenerator.fire({
-            title: "Irreversible action!",
-            html: "Hold on, <strong>this is one way road</strong>.<br/>All your content <strong>will be anonymized</strong> and you won't be able to log into this account anymore." +
-                "<br/><br/>Type your email (" + user.data.email + ") to confirm deactivation and continue.",
-            icon: "error",
-            showCancelButton: true,
-            animation: false,
-            reverseButtons: true,
-            focusCancel: true,
-            cancelButtonColor: "#00c851",
-            confirmButtonColor: "#d33",
-            confirmButtonText: "Deactivate Now",
-            input: "text",
-            preConfirm: (email) => {
-                if (user.data.email === email) {
-                    return true;
-                }
-                Swal.showValidationMessage("Type your email properly.");
-                return false;
-            }
-        }).then(willClose => {
-            if (!willClose.value) {
+        let toastId = toastAwait("Deactivating account, you're getting logged out...");
+        return axios.delete("/users/@me").then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                toastError();
                 return;
             }
-            let toastId = toastAwait("Deactivating account, you're getting logged out...");
-            axios.delete("/users/@me").then(res => {
-                if (res.status !== 200 && res.status !== 204) {
-                    toastError();
-                    return;
-                }
-                user.onLogOut();
-                history.push("/me/explore");
-                toastSuccess("Account permanently deactivated.", toastId);
-            }).catch(err => toastError(err.response.data.errors[0]));
-        });
+            user.onLogOut();
+            history.push("/me");
+            toastSuccess("Account permanently deactivated.", toastId);
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
 
     useEffect(() => {
@@ -107,12 +80,19 @@ const SettingsSubroute = () => {
     const renderContent = () => {
         return <React.Fragment>
             <ComponentLoader loaded={connectedAccounts.loaded} component={
-                <AvatarSelectionModal isOpen={modalOpened} onHide={() => setModalOpened(false)}
+                <AvatarSelectionModal isOpen={modal.open && modal.type === "avatar"} onHide={() => setModal({...modal, open: false})}
                                       connectedAccounts={connectedAccounts} onAvatarChoose={av => {
-                    setModalOpened(false);
+                    setModal({...modal, open: false});
                     setAvatar(av);
                 }}/>
             } loader={<React.Fragment/>}/>
+            <ConfirmationActionModal id={"accDel"} isOpen={modal.open && modal.type === "anonymize"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Deactivate"} onAction={onAccountDeactivation}
+                                     confirmText={user.data.email} confirmFailMessage={"Type your email properly."}
+                                     actionDescription={<div>
+                                         <strong>This is one-way road</strong> your account will be <strong>fully anonymized</strong> but your content on the page will be kept.
+                                         <div>You won't be able to log-in to this account anymore.</div>
+                                         <div>Type <kbd>{user.data.email}</kbd> to continue.</div>
+                                     </div>}/>
             <UiCol xs={{span: 12, order: 2}} lg={{span: 6, order: 1}}>
                 <Form.Label className={"mr-1 mt-lg-0 mt-2 text-black-60"}>Username</Form.Label>
                 <UiCountableFormControl id={"usernameTextarea"} className={"bg-light"} defaultValue={user.data.username} minLength={4} maxLength={20} placeholder={"Name of your account."}
@@ -123,7 +103,7 @@ const SettingsSubroute = () => {
                 <br/>
                 <img alt={"avatar"} src={avatar} className={"rounded-circle"} width={100} height={100}/>
                 <ComponentLoader loaded={connectedAccounts.loaded}
-                                 component={<UiButton color={tinycolor("#00c851")} className={"align-top mx-3 my-0"} onClick={() => setModalOpened(true)}>Change</UiButton>}
+                                 component={<UiButton color={tinycolor("#00c851")} className={"align-top mx-3 my-0"} onClick={() => setModal({open: true, type: "avatar"})}>Change</UiButton>}
                                  loader={<UiButton color={tinycolor("#00c851")} disabled className={"align-top mx-3 my-0"}>
                                      <UiLoadingSpinner color={tinycolor("#f2f2f2")} className={"mr-1"} size={"sm"}/> Loading
                                  </UiButton>}
@@ -157,7 +137,7 @@ const SettingsSubroute = () => {
                         </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiLoadableButton color={tinycolor("#ff3547")} onClick={onAccountDeactivation}>
+                    <UiLoadableButton color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "anonymize"}))}>
                         Deactivate
                     </UiLoadableButton>
                 </UiCol>

@@ -35,7 +35,7 @@ const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
         }).catch(err => toastError(err.response.data.errors[0], toastId));
     };
 
-    return <UiModal id={"moderatorInvite"} isOpen={isOpen} onHide={onHide} title={"Invite New Moderator"}
+    return <UiModal id={"moderatorInvite"} size={"sm"} isOpen={isOpen} onHide={onHide} title={"Invite New Moderator"}
                     applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Invite</UiLoadableButton>}>
         <Form noValidate>
             <Form.Group className={"mt-2 mb-1"}>

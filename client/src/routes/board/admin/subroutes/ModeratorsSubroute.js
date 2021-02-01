@@ -18,7 +18,6 @@ const ModeratorsSubroute = () => {
     const {setCurrentNode} = useContext(PageNodesContext);
     const [moderators, setModerators] = useState(boardData.moderators);
     const [invited, setInvited] = useState({data: [], loaded: false, error: false});
-    const [modalOpen, setModalOpen] = useState(false);
     const [modal, setModal] = useState({open: false, type: "", data: ""});
     const getQuota = () => 10 - (boardData.moderators.length + invited.data.length);
     useEffect(() => {
@@ -81,7 +80,7 @@ const ModeratorsSubroute = () => {
                     return <div className={"d-inline-flex justify-content-center mr-2"} key={i}>
                         <div className={"text-center"}>
                             <UiAvatar roundedCircle user={invited.user} size={35}/>
-                            <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={() => setModal({open: true, type: "invite", data: invited.id})}/>
+                            <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={() => setModal({open: true, type: "inviteDelete", data: invited.id})}/>
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
                             <div className={"cursor-click"} onClick={() => {
@@ -94,7 +93,7 @@ const ModeratorsSubroute = () => {
             </UiCol>
             <UiCol xs={12}>
                 <UiLoadableButton className={"m-0 mt-3 float-right"} onClick={() => {
-                    setModalOpen(true);
+                    setModal({...modal, open: true, type: "invite"});
                     return Promise.resolve();
                 }}>Invite New</UiLoadableButton>
             </UiCol>
@@ -107,7 +106,7 @@ const ModeratorsSubroute = () => {
         return <UiElementDeleteButton id={"mod_del_" + i} tooltipName={"Revoke Permissions"} onClick={() => setModal({open: true, type: "revoke", data: mod.userId})}/>;
     };
     const onPermissionsRevoke = () => {
-        axios.delete("/boards/" + boardData.discriminator + "/moderators/" + modal.data).then(res => {
+        return axios.delete("/boards/" + boardData.discriminator + "/moderators/" + modal.data).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;
@@ -119,7 +118,7 @@ const ModeratorsSubroute = () => {
     };
     const onModInvitationSend = (inviteData) => setInvited({...invited, data: invited.data.concat(inviteData)});
     const onInvalidation = () => {
-        axios.delete("/moderatorInvitations/" + modal.data).then(res => {
+        return axios.delete("/moderatorInvitations/" + modal.data).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;
@@ -129,8 +128,8 @@ const ModeratorsSubroute = () => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <UiCol xs={12} md={9}>
-        <ModeratorInviteModal onModInvitationSend={onModInvitationSend} onHide={() => setModalOpen(false)} isOpen={modalOpen}/>
-        <DangerousActionModal id={"inviteDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "invite"} onAction={onInvalidation}
+        <ModeratorInviteModal onModInvitationSend={onModInvitationSend} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "invite"}/>
+        <DangerousActionModal id={"inviteDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "inviteDelete"} onAction={onInvalidation}
                               actionDescription={<div>User won't be able to accept this invitation anymore.</div>}/>
         <DangerousActionModal id={"revokeMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "revoke"} onAction={onPermissionsRevoke}
                               actionDescription={<div>User permissions to moderate the board will be <u>revoked</u>.</div>} actionButtonName={"Revoke"}/>

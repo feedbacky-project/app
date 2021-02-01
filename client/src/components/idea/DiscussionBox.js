@@ -176,7 +176,7 @@ const DiscussionBox = () => {
         //todo finite suspension dates
         const date = new Date();
         const id = toastAwait("Pending suspension...");
-        axios.post("/boards/" + data.discriminator + "/suspendedUsers", {
+        return axios.post("/boards/" + data.discriminator + "/suspendedUsers", {
             userId: modal.data,
             suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
         }).then(res => {
@@ -190,7 +190,7 @@ const DiscussionBox = () => {
     };
     const onCommentPreDelete = id => setModal({open: true, type: "delete", data: id});
     const onCommentDelete = () => {
-        axios.delete("/comments/" + modal.data).then(res => {
+        return axios.delete("/comments/" + modal.data).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;

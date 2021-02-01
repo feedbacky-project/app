@@ -19,10 +19,7 @@ import {toastError, toastSuccess} from "utils/basic-utils";
 const TagsSubroute = () => {
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
-    const [modalOpen, setModalOpen] = useState(false);
-    const [editModalOpen, setEditModalOpen] = useState(false);
-    const [editData, setEditData] = useState({});
-    const [deleteModal, setDeleteModal] = useState({open: false, data: "", dataColor: {}});
+    const [modal, setModal] = useState({open: false, type: "", data: {}});
     const getQuota = () => 10 - boardData.tags.length;
     useEffect(() => setCurrentNode("tags"), [setCurrentNode]);
     const onTagCreate = (data) => {
@@ -56,7 +53,7 @@ const TagsSubroute = () => {
                     <FaPen className={"fa-xs ml-1 hoverable-option"} onClick={() => onTagEdit(tag)}/>
                 </UiTooltip>
                 <UiTooltip id={"tag" + i + "delete"} text={"Delete Tag"}>
-                    <FaTrashAlt className={"fa-xs ml-1 hoverable-option"} onClick={() => setDeleteModal({open: true, data: tag.name, dataColor: tinycolor(tag.color)})}/>
+                    <FaTrashAlt className={"fa-xs ml-1 hoverable-option"} onClick={() => setModal({open: true, type: "delete", data: {name: tag.name, color: tinycolor(tag.color)}})}/>
                 </UiTooltip>
             </div>
         });
@@ -68,13 +65,12 @@ const TagsSubroute = () => {
             </UiTooltip>
         }
         return <UiLoadableButton className={"m-0 mt-3 float-right"} onClick={() => {
-            setModalOpen(true);
+            setModal({open: true, type: "new", data: {}});
             return Promise.resolve();
         }}>Add New</UiLoadableButton>
     };
     const onTagEdit = (tag) => {
-        setEditData(tag);
-        setEditModalOpen(true);
+        setModal({open: true, type: "edit", data: tag});
     };
     const onEdit = (oldTag, tag) => {
         const tags = boardData.tags;
@@ -83,20 +79,20 @@ const TagsSubroute = () => {
         updateState({...boardData, tags});
     };
     const onTagDelete = () => {
-        axios.delete("/boards/" + boardData.discriminator + "/tags/" + deleteModal.data).then(res => {
+        return axios.delete("/boards/" + boardData.discriminator + "/tags/" + modal.data.name).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;
             }
-            updateState({...boardData, tags: boardData.tags.filter(item => item.name !== deleteModal.data)});
+            updateState({...boardData, tags: boardData.tags.filter(item => item.name !== modal.data.name)});
             toastSuccess("Tag permanently deleted.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     return <React.Fragment>
-        <TagCreateModal onTagCreate={onTagCreate} onHide={() => setModalOpen(false)} isOpen={modalOpen}/>
-        <TagEditModal isOpen={editModalOpen} onHide={() => setEditModalOpen(false)} tag={editData} onEdit={onEdit}/>
-        <DangerousActionModal id={"tagDel"} onHide={() => setDeleteModal({...deleteModal, open: false})} isOpen={deleteModal.open} onAction={onTagDelete}
-                              actionDescription={<div>Tag <UiBadge color={deleteModal.dataColor}>{deleteModal.data}</UiBadge> will be <u>deleted from all ideas</u> and list of available tags.</div>}/>
+        <TagCreateModal isOpen={modal.open && modal.type === "new"} onTagCreate={onTagCreate} onHide={() => setModal({...modal, open: false})}/>
+        <TagEditModal isOpen={modal.open && modal.type === "edit"} onHide={() => setModal({...modal, open: false})} tag={modal.data} onEdit={onEdit}/>
+        <DangerousActionModal isOpen={modal.open && modal.type === "delete"}  id={"tagDel"} onHide={() => setModal({...modal, open: false})} onAction={onTagDelete}
+                              actionDescription={<div>Tag <UiBadge color={tinycolor(modal.data.color)}>{modal.data.name}</UiBadge> will be <u>deleted from all ideas</u> and list of available tags.</div>}/>
         <UiCol xs={12} md={9}>
             <UiViewBox title={"Tags Management"} description={"Edit your board tags here."}>
                 {renderContent()}

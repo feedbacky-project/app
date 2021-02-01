@@ -62,7 +62,7 @@ const IdeaInfoBox = () => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onDelete = () => {
-        axios.delete("/ideas/" + ideaData.id).then(res => {
+        return axios.delete("/ideas/" + ideaData.id).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;

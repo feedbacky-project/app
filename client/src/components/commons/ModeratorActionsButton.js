@@ -1,19 +1,15 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
+import ModeratorTagsUpdateModal from "components/commons/ModeratorTagsUpdateModal";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from 'react';
-import {Form} from "react-bootstrap";
 import {FaCog, FaUserLock} from "react-icons/all";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
-import Swal from "sweetalert2";
-import swalReact from "sweetalert2-react-content";
-import tinycolor from "tinycolor2";
-import {UiBadge} from "ui";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {toastAwait, toastError, toastSuccess} from "utils/basic-utils";
 
@@ -40,8 +36,6 @@ const DropdownOption = styled(UiDropdownElement)`
 `;
 
 const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
-    const swalGenerator = swalReact(Swal);
-    const context = useContext(AppContext);
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData, updateState: updateBoardState} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
@@ -49,7 +43,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     const history = useHistory();
     const visible = boardData.moderators.find(mod => mod.userId === user.data.id);
     const onIdeaOpen = () => {
-        axios.patch("/ideas/" + ideaData.id, {"open": true}).then(res => {
+        return axios.patch("/ideas/" + ideaData.id, {"open": true}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 toastError();
                 return;
@@ -59,7 +53,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onIdeaClose = () => {
-        axios.patch("/ideas/" + ideaData.id, {"open": false}).then(res => {
+        return axios.patch("/ideas/" + ideaData.id, {"open": false}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 toastError();
                 return;
@@ -69,7 +63,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
         }).catch(err => toastError(err.response.data.errors[0]));
     };
     const doIdeaDelete = () => {
-        axios.delete("/ideas/" + ideaData.id).then(res => {
+        return axios.delete("/ideas/" + ideaData.id).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;
@@ -83,7 +77,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
         //todo finite suspension dates
         const date = new Date();
         const id = toastAwait("Pending suspension...");
-        axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
+        return axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
             userId: ideaData.user.id,
             suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
         }).then(res => {
@@ -95,46 +89,19 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
         }).catch(err => toastError(err.response.data.errors[0]));
     };
-    const onTagsManage = () => {
-        let html = [];
-        boardData.tags.forEach((tag, i) => {
-            const applied = ideaData.tags.find(ideaTag => ideaTag.name === tag.name);
-            html.push(<Form.Check id={"tagManage_" + tag.name} key={i} custom inline type={"checkbox"} defaultChecked={applied}
-                                  label={<UiBadge color={tinycolor(tag.color)} context={context}>{tag.name}</UiBadge>}/>)
+    const onTagsManage = (appliedTags) => {
+        let data = [];
+        boardData.tags.forEach(tag => {
+            data.push({name: tag.name, apply: appliedTags.some(d => d.name === tag.name)});
         });
-        swalGenerator.fire({
-            html: <React.Fragment>
-                Choose tags to add or remove and click Update to confirm.
-                <br className={"mb-3"}/>
-                <Form>
-                    {html.map(data => {
-                        return data;
-                    })}
-                </Form>
-            </React.Fragment>,
-            icon: "info",
-            showCancelButton: true,
-            animation: false,
-            reverseButtons: true,
-            focusCancel: true,
-            confirmButtonText: "Update",
-            preConfirm: () => {
-                let data = [];
-                boardData.tags.forEach((tag) => {
-                    let tagName = tag.name;
-                    let obj = document.getElementById("tagManage_" + tagName);
-                    data.push({name: tagName, apply: obj.checked});
-                });
-                axios.patch("/ideas/" + ideaData.id + "/tags", data).then(res => {
-                    if (res.status !== 200 && res.status !== 204) {
-                        toastError();
-                        return;
-                    }
-                    updateState({...ideaData, tags: res.data});
-                    toastSuccess("Tags updated!");
-                }).catch(err => toastError(err.response.data.errors[0]));
+        return axios.patch("/ideas/" + ideaData.id + "/tags", data).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                toastError();
+                return;
             }
-        });
+            updateState({...ideaData, tags: res.data});
+            toastSuccess("Tags updated!");
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const isSuspendable = () => {
         if (boardData.moderators.find(mod => mod.user.id === ideaData.user.id)) {
@@ -159,7 +126,10 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                               actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
         <DangerousActionModal id={"suspend"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "suspend"} onAction={doSuspendUser} actionButtonName={"Suspend"}
                               actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
-        <DropdownOption onClick={onTagsManage} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Change Tags</DropdownOption>
+        <ModeratorTagsUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "tags"} onAction={onTagsManage}/>
+        <DropdownOption onClick={() => {
+            setModal({open: true, type: "tags"})
+        }} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Change Tags</DropdownOption>
         {ideaData.open ?
             <DropdownOption onClick={() => setModal({open: true, type: "close"})} as={"span"}><FaLock className={"mr-1 move-top-2px"} style={{color}}/> Close Idea</DropdownOption> :
             <DropdownOption onClick={() => setModal({open: true, type: "open"})} as={"span"}><FaUnlock className={"mr-1 move-top-2px"} style={{color}}/> Open Idea</DropdownOption>

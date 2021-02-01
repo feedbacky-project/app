@@ -84,7 +84,7 @@ const SocialLinksSubroute = () => {
         return hostname.replace("www.", "");
     };
     const onSocialLinkDelete = () => {
-        axios.delete("/socialLinks/" + modal.data).then(res => {
+        return axios.delete("/socialLinks/" + modal.data).then(res => {
             if (res.status !== 204) {
                 toastError();
                 return;

@@ -109,7 +109,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
     return <IdeaContext.Provider value={{
         ideaData: idea, loaded: true, error: false,
         updateState: data => {
-            setIdea({...idea, data});
+            setIdea(data);
             history.replace({pathname: location.pathname, state: null});
         },
     }}>

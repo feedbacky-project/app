@@ -6,7 +6,6 @@ $pure-dark-half: hsla(0, 0%, 0%, .5);
 @import "commons/override-variables";
 @import "commons/align-utils";
 @import "commons/font-face";
-@import "commons/swal-override";
 
 :root {
   --box-shadow: 0 3px 5px 0 hsla(0, 0%, 0%, .15);
@@ -21,7 +20,7 @@ $pure-dark-half: hsla(0, 0%, 0%, .5);
   font-display: swap;
 }
 
-.swal2-modal, .modal-content, .Toastify__toast {
+.modal-content, .Toastify__toast {
   box-shadow: var(--box-shadow);
 }
 
@@ -127,7 +126,6 @@ body {
   min-height: 100vh;
   position: relative;
   margin: 0;
-  padding-right: 0 !important; /* fixes sweetalert modal padding override */
 }
 
 .form-control::placeholder {

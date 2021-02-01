@@ -44,7 +44,7 @@ const SuspensionSettings = () => {
     };
     const onUnsuspension = () => {
         const id = toastAwait("Pending unsuspension...");
-        axios.delete("/suspendedUsers/" + modal.data).then(res => {
+        return axios.delete("/suspendedUsers/" + modal.data).then(res => {
             if (res.status !== 204) {
                 toastError("Failed to unsuspend the user", id);
                 return;

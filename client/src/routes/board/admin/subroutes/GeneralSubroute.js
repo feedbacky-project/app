@@ -1,5 +1,6 @@
 import axios from "axios";
 import ThemeSelectionModal from "components/board/admin/ThemeSelectionModal";
+import ConfirmationActionModal from "components/commons/ConfirmationActionModal";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
@@ -8,8 +9,6 @@ import TextareaAutosize from "react-autosize-textarea";
 import {Form} from "react-bootstrap";
 import {FaEllipsisH, FaUpload} from "react-icons/all";
 import {useHistory} from "react-router-dom";
-import Swal from "sweetalert2";
-import swalReact from "sweetalert2-react-content";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiCountableFormControl, UiLoadingSpinner} from "ui";
 import {UiLoadableButton} from "ui/button";
@@ -25,14 +24,13 @@ const GeneralSubroute = ({updateState}) => {
     const {onThemeChange, getTheme, user} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
-    const swalGenerator = swalReact(Swal);
+    const [modal, setModal] = useState({open: false, type: ""});
     const [bannerInput, setBannerInput] = useState(null);
     const [logoInput, setLogoInput] = useState(null);
-    const [modalOpen, setModalOpen] = useState(false);
     useEffect(() => setCurrentNode("general"), [setCurrentNode]);
     const renderContent = () => {
         return <React.Fragment>
-            <ThemeSelectionModal isOpen={modalOpen} onHide={() => setModalOpen(false)} onUpdate={color => onThemeChange(color)}/>
+            <ThemeSelectionModal isOpen={modal.open && modal.type === "theme"} onHide={() => setModal({...modal, open: false})} onUpdate={color => onThemeChange(color)}/>
             <UiCol xs={12} lg={6}>
                 <Form.Label className={"mr-1 text-black-60"}>Board Name</Form.Label>
                 <UiClickableTip id={"boardName"} title={"Set Board Name"} description={"Name of your board should be at least 4 and maximum 25 characters long."}/>
@@ -83,7 +81,7 @@ const GeneralSubroute = ({updateState}) => {
                         circleSpacing={4} color={getTheme(false)}
                         onChangeComplete={color => onThemeChange(color.hex)}>
                     </CirclePicker>
-                    <div className={"hoverable-option"} style={{width: 28, height: 28, marginRight: 4, marginTop: 4}} onClick={() => setModalOpen(true)}>
+                    <div className={"hoverable-option"} style={{width: 28, height: 28, marginRight: 4, marginTop: 4}} onClick={() => setModal({open: true, type: "theme"})}>
                         <span>
                         <div style={{
                             background: "transparent none repeat scroll 0% 0%", height: "100%", width: "100%", cursor: "pointer", position: "relative",
@@ -148,7 +146,7 @@ const GeneralSubroute = ({updateState}) => {
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiLoadableButton color={tinycolor("#ff3547")} onClick={onBoardDelete}>
+                    <UiLoadableButton color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "delete"}))}>
                         Delete
                     </UiLoadableButton>
                 </UiCol>
@@ -156,42 +154,17 @@ const GeneralSubroute = ({updateState}) => {
         </div>
     };
     const onBoardDelete = () => {
-        return swalGenerator.fire({
-            title: "Irreversible action!",
-            html: "Hold on, <strong>this is one way road</strong>.<br/>Your board with all ideas will be <strong>permanently lost.</strong>" +
-                "<br/><br/>Type board name (" + boardData.name + ") to confirm deletion and continue.",
-            icon: "error",
-            showCancelButton: true,
-            animation: false,
-            reverseButtons: true,
-            focusCancel: true,
-            cancelButtonColor: "#00c851",
-            confirmButtonColor: "#d33",
-            confirmButtonText: "Delete Now",
-            input: "text",
-            preConfirm: (name) => {
-                if (boardData.name === name) {
-                    return true;
-                }
-                Swal.showValidationMessage("Type valid board name.");
-                return false;
-            }
-        }).then(willClose => {
-            if (!willClose.value) {
+        const toastId = toastAwait("Deleting board, hold on...");
+        return axios.delete("/boards/" + boardData.discriminator).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                toastError();
                 return;
             }
-            let toastId = toastAwait("Deleting board, hold on...");
-            axios.delete("/boards/" + boardData.discriminator).then(res => {
-                if (res.status !== 200 && res.status !== 204) {
-                    toastError();
-                    return;
-                }
-                //user no longer owns this board, remove from local context
-                user.data.permissions = user.data.permissions.filter(board => board.boardDiscriminator !== boardData.discriminator);
-                history.push("/me");
-                toastSuccess("Board permanently deleted.", toastId);
-            }).catch(err => toastError(err.response.data.errors[0]));
-        });
+            //user no longer owns this board, remove from local context
+            user.data.permissions = user.data.permissions.filter(board => board.boardDiscriminator !== boardData.discriminator);
+            history.push("/me");
+            toastSuccess("Board permanently deleted.", toastId);
+        }).catch(err => toastError(err.response.data.errors[0]));
     };
     const onChangesSave = () => {
         const banner = bannerInput;
@@ -242,6 +215,12 @@ const GeneralSubroute = ({updateState}) => {
         });
     };
     return <UiCol xs={12} md={9}>
+        <ConfirmationActionModal id={"boardDel"} actionButtonName={"Delete Now"} isOpen={modal.open && modal.type === "delete"} onAction={onBoardDelete} onHide={() => setModal({...modal, open: false})}
+                                 actionDescription={<div>
+                                     <strong>This is one-way road</strong> and your board and all the data <strong>will be permanently deleted.</strong>
+                                     <div>Are you really sure?</div>
+                                     <div>Type <kbd>{boardData.name}</kbd> to continue.</div>
+                                 </div>} confirmText={boardData.name} confirmFailMessage={"Type valid board name."}/>
         <UiViewBox title={"General Settings"} description={"Configure your board base settings here."}>
             {renderContent()}
         </UiViewBox>

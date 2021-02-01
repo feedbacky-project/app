@@ -24,6 +24,7 @@
 * made some changes towards easier keyboard accessibility (brought back links outlines, made new idea button tabindex 1)
 * moved dark mode toggle from navbar dropdown to Settings > Appearance
 * fixed suspensions feature didn't work on months and days with one digit (server validates date 2020-01-01 not 2020-1-1)
+* removed sweetalert2, now using only react bootstrap modals (soon only react-overlays modals)
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 TODO border setupcard theme based
