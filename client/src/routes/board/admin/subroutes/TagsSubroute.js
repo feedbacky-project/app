@@ -14,6 +14,7 @@ import {UiBadge, UiClickableTip, UiTooltip} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
+import {UiFormLabel} from "ui/form";
 import {toastError, toastSuccess} from "utils/basic-utils";
 
 const TagsSubroute = () => {
@@ -27,7 +28,7 @@ const TagsSubroute = () => {
     };
     const renderContent = () => {
         return <UiCol xs={12}>
-            <span className={"mr-1 text-black-60"}>Tags Quota ({getQuota()} left)</span>
+            <UiFormLabel>Tags Quota ({getQuota()} left)</UiFormLabel>
             <UiClickableTip id={"quota"} title={"Tags Quota"} description={"Amount of tags your board can have, you're limited to 10 tags per board."}/>
             {renderTags()}
             <br/>
@@ -64,7 +65,7 @@ const TagsSubroute = () => {
                 <UiButton className={"m-0 mt-3 float-right"}><FaExclamation/> Add New</UiButton>
             </UiTooltip>
         }
-        return <UiLoadableButton className={"m-0 mt-3 float-right"} onClick={() => {
+        return <UiLoadableButton className={"mt-3 float-right"} onClick={() => {
             setModal({open: true, type: "new", data: {}});
             return Promise.resolve();
         }}>Add New</UiLoadableButton>

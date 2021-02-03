@@ -20,7 +20,7 @@ export const QuestionIcon = styled(FaQuestion)`
 
 const DangerousActionModal = ({id, isOpen, onHide, onAction, actionButtonName = "Delete", actionDescription, size = "sm"}) => {
     return <UiDismissibleModal id={id} isOpen={isOpen} onHide={onHide} title={""} size={size} className={"mx-0"}
-                               applyButton={<UiLoadableButton color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction().then(onHide)}>
+                               applyButton={<UiLoadableButton className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction().then(onHide)}>
                                    <FaExclamation className={"move-top-1px"}/> {actionButtonName}
                                </UiLoadableButton>}>
         <UiRow centered className={"mt-3"}>

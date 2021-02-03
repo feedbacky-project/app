@@ -1,8 +1,21 @@
+import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol} from "ui/grid";
+
+const SearchBar = styled(TextareaAutosize)`
+  overflow: hidden !important;
+  max-height: 33px;
+  min-height: 33px;
+  white-space: nowrap;
+  
+  @media(max-width: 576px) {
+    margin-top: .5rem;
+    margin-bottom: .25rem;
+  }
+`;
 
 const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     const {user, onLocalPreferencesUpdate} = useContext(AppContext);
@@ -40,15 +53,14 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
         return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, sort: key}})}>{value}</UiDropdownElement>
     });
     return <React.Fragment>
-        <UiCol sm={8} className={"my-1 text-left"}>
+        <UiCol sm={8} className={"my-1"}>
             Filtering {" "}
             <UiSelectableDropdown id={"filter"} className={"d-inline mr-1"} currentValue={filterCurrentValue} values={filterValues}/>
             and Sorting {" "}
             <UiSelectableDropdown id={"sort"} className={"d-inline"} currentValue={sortCurrentValue} values={sortValues}/>
         </UiCol>
         <UiCol sm={4}>
-            <TextareaAutosize ref={queryRef} className={"form-control search-bar bg-lighter mt-sm-0 mt-2 mb-sm-0 mb-1"} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery}
-                              placeholder={"Search"} onInput={() => {
+            <SearchBar ref={queryRef} className={"form-control"} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery} placeholder={"Search"} onInput={() => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
             }}/>

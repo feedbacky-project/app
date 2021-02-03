@@ -31,7 +31,7 @@ const NotificationsInfo = () => {
         }).catch(() => toastError());
     };
     const renderButton = () => {
-        return <UiLoadableButton size={"sm"} className={"m-0 mt-sm-0"} onClick={onSubscribeToggle}>
+        return <UiLoadableButton size={"sm"} onClick={onSubscribeToggle}>
             {ideaData.subscribed ?
                 <React.Fragment><FaRegBellSlash className={"move-top-1px"}/> Unsubscribe</React.Fragment>
                 : <React.Fragment><FaRegBell className={"move-top-1px"}/> Subscribe</React.Fragment>}

@@ -1,9 +1,9 @@
-import {renderLogIn, UiNavbarBrand} from "components/commons/navbar-commons";
+import {renderLogIn} from "components/commons/navbar-commons";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {UiContainer} from "ui/grid";
 import {UiAvatar} from "ui/image";
-import {UiNavbar} from "ui/navbar";
+import {UiNavbar, UiNavbarBrand} from "ui/navbar";
 
 const ProfileNavbar = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);
@@ -27,9 +27,7 @@ const ProfileNavbar = ({onNotLoggedClick}) => {
             <UiNavbarBrand to={"/me"}>
                 {renderHello(context)}
             </UiNavbarBrand>
-            <div className={"ml-auto py-0 text-nowrap"}>
-                {renderLogIn(onNotLoggedClick, context)}
-            </div>
+            {renderLogIn(onNotLoggedClick, context)}
         </UiContainer>
     </UiNavbar>
 };

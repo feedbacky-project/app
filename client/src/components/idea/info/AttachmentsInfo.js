@@ -40,12 +40,12 @@ const AttachmentsInfo = () => {
                 return <React.Fragment key={attachment.id}>
                     <UiElementDeleteButton tooltipName={"Remove"} id={"attachment-del"} onClick={() => setModal({open: true, data: attachment.id, dataUrl: attachment.url})}/>
                     <SafeAnchor url={attachment.url}>
-                        <UiImage className={"img-thumbnail"} src={attachment.url} alt={"Social Icon"} width={125}/>
+                        <UiImage thumbnail src={attachment.url} alt={"Attachment"} width={125}/>
                     </SafeAnchor>
                 </React.Fragment>
             }
             return <SafeAnchor key={attachment.id} url={attachment.url}>
-                <img width={125} className={"img-thumbnail"} alt={"attachment"} src={attachment.url}/>
+                <UiImage thumbnail src={attachment.url} alt={"Attachment"} width={125}/>
             </SafeAnchor>
         })}
     </React.Fragment>

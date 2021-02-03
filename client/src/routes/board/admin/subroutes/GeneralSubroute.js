@@ -120,7 +120,7 @@ const GeneralSubroute = ({updateState}) => {
                 <input hidden accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} onChange={onLogoChange}/>
             </UiCol>
             <UiCol xs={12}>
-                <UiLoadableButton className={"m-0 mt-3 float-right"} onClick={onChangesSave}>
+                <UiLoadableButton className={"mt-3 float-right"} onClick={onChangesSave}>
                     Save Settings
                 </UiLoadableButton>
             </UiCol>
@@ -136,7 +136,7 @@ const GeneralSubroute = ({updateState}) => {
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiLoadableButton color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "delete"}))}>
+                    <UiLoadableButton className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "delete"}))}>
                         Delete
                     </UiLoadableButton>
                 </UiCol>

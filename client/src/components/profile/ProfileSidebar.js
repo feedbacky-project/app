@@ -1,4 +1,4 @@
-import {renderSidebarRoutes, Sidebar} from "components/commons/sidebar-commons";
+import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/sidebar-commons";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {FaRegAddressCard, FaRegBell, FaRegKeyboard} from "react-icons/all";
@@ -9,9 +9,9 @@ export const PROFILE_DARK_THEME_COLOR = "#00e25b";
 
 const ProfileSidebar = ({currentNode, reRouteTo}) => {
     const routes = [
-        {settings: data => <React.Fragment><FaRegAddressCard className={"mr-1 move-top-1px"} style={data}/> Settings</React.Fragment>},
-        {appearance: data => <React.Fragment><FaRegKeyboard className={"mr-1 move-top-1px"} style={data}/> Appearance</React.Fragment>},
-        {notifications: data => <React.Fragment><FaRegBell className={"mr-1 move-top-1px"} style={data}/> Notifications</React.Fragment>},
+        {settings: data => <React.Fragment><SidebarIcon as={FaRegAddressCard} style={data}/> Settings</React.Fragment>},
+        {appearance: data => <React.Fragment><SidebarIcon as={FaRegKeyboard} style={data}/> Appearance</React.Fragment>},
+        {notifications: data => <React.Fragment><SidebarIcon as={FaRegBell} style={data}/> Notifications</React.Fragment>},
     ];
     const {user} = useContext(AppContext);
     const themeColor = user.darkMode ? PROFILE_DARK_THEME_COLOR : PROFILE_LIGHT_THEME_COLOR;

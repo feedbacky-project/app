@@ -39,7 +39,7 @@ export const BoardRoadmapBox = ({roadmapData}) => {
         return <SvgNotice Component={UndrawNoData} title={"This Roadmap Is Empty"}/>
     }
     return roadmapData.map(element => {
-        return <UiCol xs={4} className={"mt-4"} key={element.tag.name}>
+        return <UiCol xs={12} md={6} lg={4} className={"mt-4"} key={element.tag.name}>
             <h3>
                 <strong style={{color: element.tag.color}}>{element.tag.name}</strong>
             </h3>

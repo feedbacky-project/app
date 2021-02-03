@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "@emotion/styled";
 
+export const SidebarIcon = styled.div`
+  margin-right: .25rem;
+  transform: translateY(-2px);
+`;
+
 export const Sidebar = styled.div`
   margin-top: 1.5rem;
 

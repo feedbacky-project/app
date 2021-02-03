@@ -19,6 +19,15 @@ const CardStyle = styled(UiCard)`
   margin: .5rem 0;
 `;
 
+export const IdeaCardDescription = styled.small`
+  color: hsla(0, 0%, 0%, .6);;
+  letter-spacing: -.1pt;
+   
+  .dark & {
+    color: hsla(0, 0%, 95%, .6) !important;
+  }
+`;
+
 const BadgeContainer = styled.span`
     margin-left: .25rem;
     @media(max-width: 576px) {
@@ -79,7 +88,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
         return <InfoContainer>
             By {" "}
             <UiPrettyUsername user={idea.user} truncate={20}/> {" "}
-            <UiAvatar className={"m-0 move-top-1px"} roundedCircle user={idea.user} size={16}/>
+            <UiAvatar className={"align-top"} roundedCircle user={idea.user} size={16}/>
         </InfoContainer>
     };
     const onUpvote = () => {
@@ -126,7 +135,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             <span className={"my-auto mr-3"}>
                 <VoteButton onVote={onUpvote}/>
             </span>
-            <UiCol as={Link} className={"d-inline px-0 text-left hidden-anchor"} to={{
+            <UiCol as={Link} className={"px-0 hidden-anchor"} to={{
                 pathname: "/i/" + convertIdeaToSlug(idea),
                 state: {_ideaData: idea, _boardData: data}
             }}>
@@ -139,7 +148,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
                     {renderTags()}
                     <ModeratorActionsButton onIdeaDelete={() => onIdeaDelete(idea.id)}/>
                 </div>
-                <small className={"text-black-60"} style={{letterSpacing: `-.1pt`}} dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
+                <IdeaCardDescription dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
                 {renderAuthor()}
             </UiCol>
         </CardStyle>

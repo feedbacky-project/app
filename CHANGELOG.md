@@ -25,9 +25,10 @@
 * moved dark mode toggle from navbar dropdown to Settings > Appearance
 * fixed suspensions feature didn't work on months and days with one digit (server validates date 2020-01-01 not 2020-1-1)
 * removed sweetalert2, now using only react bootstrap modals (soon only react-overlays modals)
+* isolated react-bootstrap components inside ui package
+* slowly removing bootstrap and it's usages in code (only basic utilities and grid system will remain)
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
-TODO border setupcard theme based
 
 !! TODO UI CARD INNER REF https://github.com/reactjs/reactjs.org/issues/2120
 

@@ -1,4 +1,5 @@
 import UndrawBrandProject from "assets/svg/undraw/brand_project.svg";
+import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import {Banner} from "components/board/BoardBanner";
 import UploadIconBox from "components/commons/UploadIconBox";
 import React from 'react';
@@ -29,13 +30,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
         });
     };
     return <React.Fragment>
-        <UiCol xs={12} className={"mt-4 text-center"}>
-            <img alt={"Banner"} src={UndrawBrandProject} className={"my-2"} width={150} height={150}/>
-            <h2>Brand Your Board</h2>
-            <span className={"text-black-60"}>
-                Upload your board logo and banner. This step is required.
-            </span>
-        </UiCol>
+        <SetupImageBanner svg={UndrawBrandProject} stepName={"Brand Your Board"} stepDescription={"Upload your board logo and banner. This step is required."}/>
         <UiCol xs={12} sm={6} className={"mt-4 px-md-5 px-3"}>
             <UiFormLabel>Board Banner</UiFormLabel>
             <UiClickableTip id={"banner"} title={"Set Board Banner"} description={<React.Fragment>

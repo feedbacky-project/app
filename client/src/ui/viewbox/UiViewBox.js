@@ -13,7 +13,11 @@ const ViewBox = styled.div`
   padding: 1rem 1.5rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
-}
+`;
+
+const ViewBoxContent = styled(UiRow)`
+  padding: 3.25rem 1rem 1.5rem 1rem;
+  margin-bottom: 1rem;
 `;
 
 const UiViewBox = (props) => {
@@ -25,9 +29,9 @@ const UiViewBox = (props) => {
             <div>{description}</div>
         </UiCard>
         <UiCol className={"view-box-bg"}>
-            <UiRow className={"py-4 px-3 px-0 pt-5 mb-3"}>
+            <ViewBoxContent>
                 {children}
-            </UiRow>
+            </ViewBoxContent>
         </UiCol>
     </React.Fragment>
 };

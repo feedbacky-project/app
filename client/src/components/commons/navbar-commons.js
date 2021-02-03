@@ -3,34 +3,23 @@ import React from "react";
 import {FaAngleDown, FaUserCog} from "react-icons/all";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
+import {UiClassicButton} from "ui/button";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {UiAvatar} from "ui/image";
 import {isServiceAdmin} from "utils/basic-utils";
 
-export const UiNavbarBrand = styled(Link)`
-  color: white;
-  flex: 1;
-  margin-right: 0;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  font-size: 1.25rem;
-  display: inline-block;
-  padding: .25rem 0;
-  &:hover {
-    color: white;
-  }
-`;
-
-const LoginButton = styled.div`
+const LoginButton = styled(UiClassicButton)`
   padding: 0 .75rem;
   color: white;
+  background-color: transparent !important;
   transition: var(--hover-transition);
   cursor: pointer;
+  box-shadow: none;
   
-  &:hover {
+  &:hover, &:focus {
     color: white;
+    box-shadow: none;
+    background-color: transparent !important;
     transform: scale(1.2);
   }
 `;

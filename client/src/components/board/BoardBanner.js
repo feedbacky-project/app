@@ -12,14 +12,30 @@ export const Banner = styled.div`
   background-position: center;
   box-shadow: var(--box-shadow);
   border-radius: .35rem;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
+  @media(min-width: 576px) {
+   padding: 4rem 2rem;
+  }
   color: white;
   margin-bottom: .5rem;
   text-shadow: 0 0 4px black;
   background-image: url("${props => props.image}");
   
   .dark & {
-    box-shadow: var(--dark-box-shadow);
+    box-shadow: var(--dark-box-shadow) !important;
+  }
+`;
+
+const SocialLinkContainer = styled.div`
+  @media(max-width: 576px) {
+    position: relative;
+    display: inline-block;
+    bottom: -26px;
+    height: 0;
+  }
+  @media(min-width: 576px) {
+    position: absolute;
+    bottom: 6.5%;
   }
 `;
 
@@ -46,24 +62,7 @@ const BoardBanner = ({customName}) => {
     const {data: boardData} = useContext(BoardContext);
     const {socialLinks, name, shortDescription, banner, discriminator} = boardData;
     const renderSocialLinks = () => {
-        let offset = 0;
-        return <div className={"d-none d-sm-block"} style={{position: "relative", bottom: "-72px"}}>
-            {socialLinks.map(link => {
-                offset += 50;
-                return <SocialLink key={link.id} to={{pathname: link.url}} rel={"noreferrer noopener"} target={"_blank"}
-                                   style={{position: "absolute", bottom: "8px", left: (offset - 50) + "px"}}>
-                    <UiImage src={link.logoUrl} alt={"Social Icon"} width={18} height={18}/>
-                </SocialLink>
-            })}
-            <SocialLink to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}}
-                        style={{position: "absolute", bottom: "8px", left: (offset) + "px", backgroundColor: getTheme().setAlpha(.5)}}>
-                <FaMap style={{color: "white"}}/>
-            </SocialLink>
-        </div>
-    };
-
-    const renderSocialLinksMobile = () => {
-        return <div className={"d-inline-block d-sm-none"} style={{position: "relative", bottom: "-26px", height: 0}}>
+        return <SocialLinkContainer>
             {socialLinks.map(link => {
                 return <SocialLink key={link.id} to={{pathname: link.url}} rel={"noreferrer noopener"} target={"_blank"}>
                     <UiImage src={link.logoUrl} alt={"Social Icon"} width={18} height={18}/>
@@ -73,15 +72,13 @@ const BoardBanner = ({customName}) => {
                         style={{backgroundColor: getTheme().setAlpha(.5)}}>
                 <FaMap style={{color: "white"}}/>
             </SocialLink>
-        </div>
+        </SocialLinkContainer>
     };
-
     return <UiCol sm={12} className={"mt-3"}>
         <Banner image={banner}>
             <h3 style={{fontWeight: 500}}>{customName || name}</h3>
             <h5 style={{fontWeight: 300}} dangerouslySetInnerHTML={{__html: shortDescription}}/>
             {renderSocialLinks()}
-            {renderSocialLinksMobile()}
         </Banner>
     </UiCol>
 };

@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-const SafeAnchor = ({url, children}) => {
-    return <a href={url} target={"_blank"} rel={"noreferrer noopener"}>{children}</a>
+const SafeAnchor = ({url, className, children}) => {
+    return <a href={url} className={className} target={"_blank"} rel={"noreferrer noopener"}>{children}</a>
 };
 
 export default SafeAnchor;

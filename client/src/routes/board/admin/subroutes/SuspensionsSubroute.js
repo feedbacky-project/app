@@ -7,6 +7,7 @@ import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from "react";
 import {UiBadge} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
+import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
@@ -19,7 +20,7 @@ const SuspensionSettings = () => {
     useEffect(() => setCurrentNode("suspended"), [setCurrentNode]);
     const renderContent = () => {
         return <UiCol xs={12}>
-            <div className={"mb-1 text-black-60"}>Suspended Users</div>
+            <UiFormLabel>Suspended Users</UiFormLabel>
             {renderSuspensions()}
             <div>
                 <UiButton className={"m-0 mt-3 float-right"} onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</UiButton>

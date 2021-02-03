@@ -9,9 +9,28 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {UiBadge, UiClickableTip, UiLoadingSpinner} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
+import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
+import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
+import styled from "@emotion/styled";
+
+const EventsContainer = styled.div`
+  max-height: 80px;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  &::-webkit-scrollbar {
+    width: 0;
+    background: transparent; /* Chrome/Safari/Webkit */
+  }
+`;
+
+const WebhookIcon = styled(UiImage)`
+  padding: .5rem;
+  background-color: var(--dark-quaternary) !important;
+`;
 
 const WebhooksSubroute = () => {
     const {data: boardData} = useContext(BoardContext);
@@ -38,14 +57,12 @@ const WebhooksSubroute = () => {
         return webhooks.data.map((hook, i) => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={hook.id}>
                 <div className={"text-center"}>
-                    <img alt={"Webhook"} className={"rounded bg-dark p-2"} src={getTypeIcon(hook)} height={40} width={40}/>
+                    <WebhookIcon alt={"Webhook"} rounded src={getTypeIcon(hook)} height={40} width={40}/>
                     <UiElementDeleteButton id={"webhook_del_" + i} tooltipName={"Delete"}
                                            onClick={() => setModal({open: true, data: hook.id, dataName: prettifyEnum(hook.type) + " #" + hook.id})}/>
                     <br/>
                     <small className={"text-truncate text-center d-block"}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
-                    <div className={"disable-scrollbars"} style={{maxHeight: 80, overflowY: "scroll"}}>
-                        {renderEvents(hook)}
-                    </div>
+                    <EventsContainer>{renderEvents(hook)}</EventsContainer>
                 </div>
             </div>
         })
@@ -56,8 +73,8 @@ const WebhooksSubroute = () => {
         }
         return <ComponentLoader loaded={webhooks.loaded} component={
             <UiCol xs={12} className={"mb-sm-0 mb-3"}>
-                <div className={"text-black-60 mb-1"}>
-                    <span className={"mr-1"}>Webhooks Quota ({getQuota()} left)</span>
+                <div>
+                    <UiFormLabel>Webhooks Quota ({getQuota()} left)</UiFormLabel>
                     <UiClickableTip id={"moderatorsQuota"} title={"Webhooks Quota"} description={"Amount of webhooks your board can have."}/>
                 </div>
                 {renderWebhooks()}

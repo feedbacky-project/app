@@ -18,6 +18,10 @@ const CommentInternal = styled.span`
   }
 `;
 
+const LikeContainer = styled.span`
+  cursor: pointer;
+`;
+
 const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onSuspend}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
@@ -55,9 +59,9 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
     const renderLikes = () => {
         const likes = data.likesAmount;
         if (data.liked) {
-            return <span className={"cursor-click"} onClick={() => onCommentUnlike(data)}><FaHeart className={"red move-top-1px"}/> {likes}</span>
+            return <LikeContainer onClick={() => onCommentUnlike(data)}><FaHeart className={"red move-top-1px"}/> {likes}</LikeContainer>
         }
-        return <span className={"cursor-click"} onClick={() => onCommentLike(data)}><FaRegHeart className={"move-top-1px"}/> {likes}</span>
+        return <LikeContainer onClick={() => onCommentLike(data)}><FaRegHeart className={"move-top-1px"}/> {likes}</LikeContainer>
     };
     if (!data.special) {
         return <React.Fragment key={data.id}>

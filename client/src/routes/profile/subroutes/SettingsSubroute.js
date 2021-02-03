@@ -117,7 +117,7 @@ const SettingsSubroute = () => {
                 </UiFormText>
             </UiCol>
             <UiCol xs={{span: 12, order: 4}}>
-                <UiLoadableButton color={tinycolor("#00c851")} className={"m-0 mt-3 ml-3 float-right"} onClick={onChangesSave}>
+                <UiLoadableButton color={tinycolor("#00c851")} className={"m-0 mt-3 float-right"} onClick={onChangesSave}>
                     Save Settings
                 </UiLoadableButton>
             </UiCol>
@@ -136,7 +136,7 @@ const SettingsSubroute = () => {
                         </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiLoadableButton color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "anonymize"}))}>
+                    <UiLoadableButton className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "anonymize"}))}>
                         Deactivate
                     </UiLoadableButton>
                 </UiCol>

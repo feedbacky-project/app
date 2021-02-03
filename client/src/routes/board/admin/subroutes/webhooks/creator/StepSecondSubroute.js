@@ -1,5 +1,6 @@
 import UndrawChooseEvents from "assets/svg/undraw/choose_events.svg";
 import SetupCard from "components/board/admin/SetupCard";
+import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
 import {UiCol, UiRow} from "ui/grid";
 
@@ -24,13 +25,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
     };
 
     return <React.Fragment>
-        <UiCol xs={12} className={"mt-4 text-center"}>
-            <img alt={"Banner"} src={UndrawChooseEvents} className={"my-2"} width={150} height={150}/>
-            <h2>Choose Listened Events</h2>
-            <span className={"text-black-60"}>
-                Select events that this webhook will listen for.
-            </span>
-        </UiCol>
+        <SetupImageBanner svg={UndrawChooseEvents} stepName={"Choose Listened Events"} stepDescription={"Select events that this webhook will listen for."}/>
         <UiCol xs={12} className={"mt-4"}>
             <UiCol centered as={UiRow} className={"mx-0"} xs={12}>
                 {renderCards()}

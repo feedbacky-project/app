@@ -1,5 +1,6 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import SetupCard from "components/board/admin/SetupCard";
+import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
 import {FaFileUpload} from "react-icons/all";
 import {FaDiscord, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
@@ -49,13 +50,7 @@ const StepFirstRoute = ({settings, updateSettings}) => {
 
     return <React.Fragment>
         <input id={"logoInput"} type={"file"} accept={"image/jpeg, image/png"} className={"d-none"} name={"logo"} onChange={e => onUpload(e)}/>
-        <UiCol xs={12} className={"mt-4 text-center"}>
-            <img alt={"Banner"} src={UndrawCreateProject} className={"my-2"} width={150} height={150}/>
-            <h2>Choose Link Icon</h2>
-            <span className={"text-black-60"}>
-                Select icon that your Social Link will represent.
-            </span>
-        </UiCol>
+        <SetupImageBanner svg={UndrawCreateProject} stepName={"Choose Link Icon"} stepDescription={"Select icon that your Social Link will represent."}/>
         <UiCol xs={12} className={"mt-3"}>
             <UiCol centered as={UiRow} className={"mx-0"} xs={12}>
                 {renderCards()}

@@ -3,7 +3,7 @@
 //going shadowless on dark mode
 $box-shadow: none;
 
-.dark {
+:root {
   --dark-background: hsl(217, 11%, 14%);
   --dark-secondary: hsl(214, 8%, 17%);
   --dark-tertiary: hsl(214, 7%, 19%);
@@ -12,6 +12,9 @@ $box-shadow: none;
   --dark-disabled: hsl(217, 11%, 14%);
   --dark-hover: hsl(219, 11%, 32%);
   --dark-box-shadow: var(--dark-box-shadow);
+}
+
+.dark {
   background-color: var(--dark-background);
   color: var(--dark-font-color);
 
@@ -21,12 +24,6 @@ $box-shadow: none;
 
   .bg-dark, kbd {
     background-color: var(--dark-quaternary) !important;
-  }
-
-  .modal-content {
-    background-color: var(--dark-background);
-    color: var(--dark-font-color) !important;
-    box-shadow: var(--dark-box-shadow) !important;
   }
 
   .chrome-picker {
@@ -73,10 +70,6 @@ $box-shadow: none;
     @extend .text-black-60;
   }
 
-  .search-bar {
-    box-shadow: var(--dark-box-shadow) !important;
-  }
-
   .form-control:disabled {
     background-color: var(--dark-disabled) !important;
   }
@@ -89,11 +82,11 @@ $box-shadow: none;
     }
   }
 
-  .card, .jumbotron, .btn, .navbar {
+  .btn {
     box-shadow: var(--dark-box-shadow) !important;
   }
 
-  .card, hr {
+  hr {
     background-color: var(--dark-secondary);
   }
 
@@ -131,10 +124,6 @@ $box-shadow: none;
     background-color: var(--dark-secondary);
     color: var(--dark-font-color);
     box-shadow: var(--dark-box-shadow) !important;
-  }
-
-  .img-thumbnail {
-    background-color: var(--dark-tertiary);
   }
 
   .view-box-bg {

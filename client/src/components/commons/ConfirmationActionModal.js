@@ -11,7 +11,7 @@ import {toastWarning} from "utils/basic-utils";
 const ConfirmationActionModal = ({id, isOpen, onHide, onAction, actionButtonName = "Delete", actionDescription, confirmText, confirmFailMessage}) => {
     const [text, setText] = useState("");
     return <UiDismissibleModal id={id} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
-                               applyButton={<UiLoadableButton color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => {
+                               applyButton={<UiLoadableButton className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => {
                                    if (text !== confirmText) {
                                        toastWarning(confirmFailMessage);
                                        return Promise.resolve();

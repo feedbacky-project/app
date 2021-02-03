@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 import tinycolor from "tinycolor2";
 import {UiClickableTip} from "ui";
 import {UiLoadableButton} from "ui/button";
-import {UiCountableFormControl} from "ui/form";
+import {UiCountableFormControl, UiFormLabel} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
 import {toastError, toastSuccess, toastWarning} from "utils/basic-utils";
@@ -39,7 +39,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
                                applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}>
         <UiRow>
             <UiCol xs={12} className={"mt-2 mb-1"}>
-                <Form.Label className={"mr-1 text-black-60"}>Tag Name</Form.Label>
+                <UiFormLabel>Tag Name</UiFormLabel>
                 <UiClickableTip id={"tagName"} title={"Tag Name"} description={"Descriptive and under 20 characters name of tag."}/>
                 <UiCountableFormControl id={"tagNameTextarea"} minLength={2} maxLength={15} placeholder={"Short and descriptive."}/>
             </UiCol>
@@ -48,13 +48,13 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             </UiCol>
             <UiCol xs={12} sm={6} className={"mb-2"}>
                 <div>
-                    <Form.Label className={"mr-1 text-black-60"}>Ignore Roadmap</Form.Label>
+                    <UiFormLabel>Ignore Roadmap</UiFormLabel>
                     <UiClickableTip id={"tagColor"} title={"Ignore Roadmap"} description={"Select if you don't want to include show tag and ideas with this tag in roadmap view."}/>
                     <br/>
                     <Form.Check id={"roadmapIgnored"} custom inline label={"Roadmap Ignored"} type={"checkbox"} defaultChecked={false}/>
                 </div>
                 <div className={"mt-2"}>
-                    <Form.Label className={"mr-1 text-black-60"}>Publicly Accessbile</Form.Label>
+                    <UiFormLabel>Publicly Accessbile</UiFormLabel>
                     <UiClickableTip id={"tagColor"} title={"Ignore Roadmap"} description={"Select if you want this tag to be selectable by users when they create new ideas."}/>
                     <br/>
                     <Form.Check id={"publicUse"} custom inline label={"Public Use"} type={"checkbox"} defaultChecked={false}/>

@@ -11,7 +11,9 @@ import {FaExclamation} from "react-icons/all";
 import {Link} from "react-router-dom";
 import {UiBadge, UiLoadingSpinner, UiTooltip} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
+import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
+import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {toastError, toastSuccess} from "utils/basic-utils";
 
@@ -41,7 +43,7 @@ const SocialLinksSubroute = () => {
         return socialLinks.data.map(link => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={link.id}>
                 <div className={"text-center"} id={"socialPreviewContainer"}>
-                    <img className={"bg-dark rounded p-2"} alt={"Logo"} src={link.logoUrl} height={40} width={40}/>
+                    <UiImage className={"bg-dark p-2"} rounded alt={"Logo"} src={link.logoUrl} height={40} width={40}/>
                     <UiElementDeleteButton tooltipName={"Delete"} id={"social-" + link.id + "-del"}
                                            onClick={() => setModal({...modal, open: true, data: link.id, dataName: extractHostname(link.url)})}/>
                     <br/>
@@ -56,8 +58,10 @@ const SocialLinksSubroute = () => {
         }
         return <ComponentLoader loaded={socialLinks.loaded} component={
             <UiCol xs={12}>
-                <div className={"text-black-60 mb-1"}>Current Social Links ({getQuota()} left)</div>
-                {renderSocialLinks()}
+                <UiFormLabel>Current Social Links ({getQuota()} left)</UiFormLabel>
+                <div>
+                    {renderSocialLinks()}
+                </div>
                 <div>
                     {renderAddButton()}
                 </div>

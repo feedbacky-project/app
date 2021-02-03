@@ -8,6 +8,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip} from "ui";
 import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
+import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
@@ -55,8 +56,8 @@ const ModeratorsSubroute = () => {
     const renderModerators = () => {
         return <React.Fragment>
             <UiCol xs={12} sm={6} className={"mb-sm-0 mb-3"}>
-                <div className={"text-black-60 mb-1"}>
-                    <span className={"mr-1"}>Moderators Quota ({getQuota()} left)</span>
+                <div>
+                    <UiFormLabel>Moderators Quota ({getQuota()} left)</UiFormLabel>
                     <UiClickableTip id={"quota"} title={"Moderators Quota"} description={"Amount of moderators your board can have."}/>
                 </div>
                 {moderators.map((mod, i) => {
@@ -72,8 +73,8 @@ const ModeratorsSubroute = () => {
                 })}
             </UiCol>
             <UiCol xs={12} sm={6}>
-                <div className={"text-black-60 mb-1"}>
-                    <span className={"mr-1"}>Invited Moderators</span>
+                <div>
+                    <UiFormLabel>Invited Moderators</UiFormLabel>
                     <UiClickableTip id={"invited"} title={"Invited Moderators"} description={"Moderators that were invited and received invitation email."}/>
                 </div>
                 {invited.data.map((invited, i) => {
@@ -92,7 +93,7 @@ const ModeratorsSubroute = () => {
                 })}
             </UiCol>
             <UiCol xs={12}>
-                <UiLoadableButton className={"m-0 mt-3 float-right"} onClick={() => {
+                <UiLoadableButton className={"mt-3 float-right"} onClick={() => {
                     setModal({...modal, open: true, type: "invite"});
                     return Promise.resolve();
                 }}>Invite New</UiLoadableButton>

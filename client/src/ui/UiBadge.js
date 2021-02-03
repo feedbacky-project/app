@@ -15,7 +15,8 @@ const Badge = styled.div`
     text-align: center;
     color: white;
     white-space: nowrap;
-    vertical-align: baseline
+    vertical-align: baseline;
+    background-color: ${props => props.theme};
 `;
 
 // fixme sneaky workaround for missing context when inserting html directly
@@ -33,9 +34,9 @@ const UiBadge = (props) => {
         if (tinycolor.readability(badgeColor, "#282828") < 2.5) {
             badgeColor = badgeColor.lighten(25);
         }
-        return <Badge color={""} style={{color: badgeColor, fontWeight: "bold", backgroundColor: badgeColor.clone().setAlpha(.1)}} {...otherProps}>{children}</Badge>
+        return <Badge theme={badgeColor.clone().setAlpha(.1).toString()} style={{color: badgeColor, fontWeight: "bold"}} {...otherProps}>{children}</Badge>
     }
-    return <Badge color={""} style={{backgroundColor: badgeColor}} {...otherProps}>{children}</Badge>
+    return <Badge theme={badgeColor.toString()} {...otherProps}>{children}</Badge>
 };
 
 export {UiBadge};

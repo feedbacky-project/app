@@ -1,5 +1,5 @@
 import axios from "axios";
-import {InfoContainer} from "components/board/IdeaCard";
+import {IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
 import VoteButton from "components/commons/VoteButton";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
@@ -87,7 +87,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
                             {renderComments()}
                         </div>
                     </div>
-                    <small className={"text-black-60"} style={{letterSpacing: `-.15pt`}} dangerouslySetInnerHTML={{__html: truncateText(idea.description, 90)}}/>
+                    <IdeaCardDescription dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
                 </UiCol>
             </UiRow>
         </div>

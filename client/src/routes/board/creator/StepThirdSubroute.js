@@ -1,4 +1,5 @@
 import UndrawChooseTheme from "assets/svg/undraw/choose_theme.svg";
+import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React, {Suspense} from 'react';
 import {CirclePicker} from "react-color";
 import {UiLoadingSpinner} from "ui";
@@ -6,13 +7,7 @@ import {UiCol} from "ui/grid";
 
 const StepThirdSubroute = ({updateSettings, settings}) => {
     return <React.Fragment>
-        <UiCol xs={12} className={"mt-4 text-center"}>
-            <img alt={"Banner"} src={UndrawChooseTheme} className={"my-2"} width={150} height={150}/>
-            <h2>Select Theme</h2>
-            <span className={"text-black-60"}>
-                Pick theme for your board. Theme will affect how your board looks.
-            </span>
-        </UiCol>
+        <SetupImageBanner svg={UndrawChooseTheme} stepName={"Select Theme"} stepDescription={"Pick theme for your board. Theme will affect how your board looks."}/>
         <UiCol xs={12} className={"mt-4 px-3"}>
             <Suspense fallback={<UiLoadingSpinner/>}>
                 <CirclePicker colors={["#273c75", "#2c3e50", "#8e44ad", "#B33771",

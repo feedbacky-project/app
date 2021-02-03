@@ -1,5 +1,6 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import SetupCard from "components/board/admin/SetupCard";
+import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
 import {FaDiscord, FaGlobe} from "react-icons/fa";
 import {UiCol, UiRow} from "ui/grid";
@@ -25,13 +26,7 @@ const StepFirstSubroute = ({updateSettings, settings}) => {
     };
 
     return <React.Fragment>
-        <UiCol xs={12} className={"mt-4 text-center"}>
-            <img alt={"Banner"} src={UndrawCreateProject} className={"my-2"} width={150} height={150}/>
-            <h2>Select Webhook Type</h2>
-            <span className={"text-black-60"}>
-                Select in which way you'll utilize this webhook.
-            </span>
-        </UiCol>
+        <SetupImageBanner svg={UndrawCreateProject} stepName={"Select Webhook Type"} stepDescription={"Select in which way you'll utilize this webhook."}/>
         <UiCol xs={12} className={"mt-4"}>
             <UiCol as={UiRow} centered className={"mx-0"} xs={12}>
                 {renderCards()}

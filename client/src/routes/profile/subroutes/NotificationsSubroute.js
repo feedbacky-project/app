@@ -58,7 +58,7 @@ const NotificationsSubroute = () => {
                 {conditionalButton(notificationsEnabled, () => setNotificationsEnabled(true), () => setNotificationsEnabled(false))}
             </UiCol>
             <UiCol xs={12}>
-                <UiLoadableButton color={tinycolor("#00c851")} className={"mt-3 ml-3 float-right"} onClick={onChangesSave}>
+                <UiLoadableButton color={tinycolor("#00c851")} className={"mt-3 float-right"} onClick={onChangesSave}>
                     Save Settings
                 </UiLoadableButton>
             </UiCol>
