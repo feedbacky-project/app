@@ -17,14 +17,14 @@ const StepFirstSubroute = ({updateSettings, settings}) => {
             <div className={"text-black-60 mb-2"}>
                 <span className={"mr-1"}>Board Discriminator</span>
                 <UiClickableTip id={"boardDiscriminator"} title={"Set Board Discriminator"}
-                                description={<React.Fragment>Must be an unique combination of alphanumeric characters.
+                                description={<React.Fragment>Text with alphanumeric characters <kbd>a-Z 0-9 and -</kbd>
                                     <br/>
-                                    For example if your project is called My Awesome Project
-                                    you can set your discriminator to <kbd>myawproj</kbd> or something similar
+                                    <strong>Example:</strong> Project is called My Awesome Project
+                                    discriminator can be set to <kbd>myawproj</kbd> or similar.
                                     <br/>
-                                    <strong>Minimum 3 and maximum of 20 characters.</strong></React.Fragment>}/>
+                                    <strong>Minimum 3 and maximum 20 characters.</strong></React.Fragment>}/>
             </div>
-            <UiCountableFormControl id={"discriminator"} minLength={3} maxLength={20} placeholder={"Short discriminator eg. my-project-123."}
+            <UiCountableFormControl id={"discriminator"} minLength={3} maxLength={20} placeholder={"Example: git-tool-feedback"}
                                     defaultValue={settings.discriminator} onChange={e => updateSettings({...settings, discriminator: e.target.value})}/>
         </UiCol>
         <UiCol xs={12} sm={6} className={"mt-4 px-md-5 px-3"}>

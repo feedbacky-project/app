@@ -88,17 +88,15 @@ const TagsSubroute = () => {
             toastSuccess("Tag permanently deleted.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };
-    return <React.Fragment>
+    return <UiCol xs={12} md={9}>
         <TagCreateModal isOpen={modal.open && modal.type === "new"} onTagCreate={onTagCreate} onHide={() => setModal({...modal, open: false})}/>
         <TagEditModal isOpen={modal.open && modal.type === "edit"} onHide={() => setModal({...modal, open: false})} tag={modal.data} onEdit={onEdit}/>
-        <DangerousActionModal isOpen={modal.open && modal.type === "delete"}  id={"tagDel"} onHide={() => setModal({...modal, open: false})} onAction={onTagDelete}
+        <DangerousActionModal isOpen={modal.open && modal.type === "delete"} id={"tagDel"} onHide={() => setModal({...modal, open: false})} onAction={onTagDelete}
                               actionDescription={<div>Tag <UiBadge color={tinycolor(modal.data.color)}>{modal.data.name}</UiBadge> will be <u>deleted from all ideas</u> and list of available tags.</div>}/>
-        <UiCol xs={12} md={9}>
-            <UiViewBox title={"Tags Management"} description={"Edit your board tags here."}>
-                {renderContent()}
-            </UiViewBox>
-        </UiCol>
-    </React.Fragment>
+        <UiViewBox title={"Tags Management"} description={"Edit your board tags here."}>
+            {renderContent()}
+        </UiViewBox>
+    </UiCol>
 };
 
 export default TagsSubroute;

@@ -6,16 +6,25 @@ import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from 'react';
-import {Card} from "react-bootstrap";
 import {FaLock, FaRegComment} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiPrettyUsername} from "ui";
+import {UiBadge, UiCard, UiPrettyUsername} from "ui";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
 
+const CardStyle = styled(UiCard)`
+  padding: 0 1rem;
+  margin: .5rem 0;
+`;
+
 const BadgeContainer = styled.span`
+    margin-left: .25rem;
+    @media(max-width: 576px) {
+      margin-left: 0;
+    }
+    
     & > div:first-of-type {
         border-radius: .35rem 0 0 .35rem;
     }
@@ -61,7 +70,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
         }
         return <span>
             <br className={"d-sm-none"}/>
-            <BadgeContainer className={"mx-sm-1 mx-0"}>
+            <BadgeContainer>
                 {idea.tags.map((tag, i) => <UiBadge key={i} color={tinycolor(tag.color)} className={"move-top-2px"}>{tag.name}</UiBadge>)}
             </BadgeContainer>
         </span>
@@ -113,29 +122,27 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             history.replace({pathname: location.pathname, state: null});
         },
     }}>
-        <Card ref={cardRef} id={"ideac_" + idea.id} className={"my-2 px-3"}>
-            <Card.Body as={UiRow} className={"py-3"}>
-                <span className={"my-auto mr-3"}>
-                    <VoteButton onVote={onUpvote}/>
-                </span>
-                <UiCol as={Link} className={"d-inline px-0 text-left hidden-anchor"} to={{
-                    pathname: "/i/" + convertIdeaToSlug(idea),
-                    state: {_ideaData: idea, _boardData: data}
-                }}>
-                    <div>
-                        <div className={"d-inline mr-1"} style={{fontSize: `1.15em`}}>
-                            {idea.open || <FaLock className={"fa-xs mr-1 move-top-2px"}/>}
-                            <span dangerouslySetInnerHTML={{__html: idea.title}}/>
-                            {renderComments()}
-                        </div>
-                        {renderTags()}
-                        <ModeratorActionsButton onIdeaDelete={() => onIdeaDelete(idea.id)}/>
+        <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"}>
+            <span className={"my-auto mr-3"}>
+                <VoteButton onVote={onUpvote}/>
+            </span>
+            <UiCol as={Link} className={"d-inline px-0 text-left hidden-anchor"} to={{
+                pathname: "/i/" + convertIdeaToSlug(idea),
+                state: {_ideaData: idea, _boardData: data}
+            }}>
+                <div>
+                    <div className={"d-inline"} style={{fontSize: `1.15em`}}>
+                        {idea.open || <FaLock className={"fa-xs mr-1 move-top-2px"}/>}
+                        <span dangerouslySetInnerHTML={{__html: idea.title}}/>
+                        {renderComments()}
                     </div>
-                    <small className={"text-black-60"} style={{letterSpacing: `-.1pt`}} dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
-                    {renderAuthor()}
-                </UiCol>
-            </Card.Body>
-        </Card>
+                    {renderTags()}
+                    <ModeratorActionsButton onIdeaDelete={() => onIdeaDelete(idea.id)}/>
+                </div>
+                <small className={"text-black-60"} style={{letterSpacing: `-.1pt`}} dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
+                {renderAuthor()}
+            </UiCol>
+        </CardStyle>
     </IdeaContext.Provider>
 };
 

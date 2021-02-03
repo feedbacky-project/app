@@ -56,7 +56,7 @@ const StepFirstRoute = ({settings, updateSettings}) => {
                 Select icon that your Social Link will represent.
             </span>
         </UiCol>
-        <UiCol xs={12} className={"mt-3 px-md-5 px-3"}>
+        <UiCol xs={12} className={"mt-3"}>
             <UiCol centered as={UiRow} className={"mx-0"} xs={12}>
                 {renderCards()}
             </UiCol>

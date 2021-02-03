@@ -5,19 +5,20 @@ import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from "react";
 import {FaExclamation} from "react-icons/all";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiModal} from "ui";
+import {UiBadge} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiRow} from "ui/grid";
+import {UiDismissibleModal} from "ui/modal";
 
 const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const {data: boardData} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
     const [tags, setTags] = useState(ideaData.tags);
 
-    return <UiModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
-                    applyButton={<UiLoadableButton color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
-                        <FaExclamation className={"move-top-1px"}/> Update
-                    </UiLoadableButton>}>
+    return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
+                               applyButton={<UiLoadableButton color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
+                                   <FaExclamation className={"move-top-1px"}/> Update
+                               </UiLoadableButton>}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
                 <QuestionIcon/>
@@ -43,7 +44,7 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
                 </div>
             </div>
         </UiRow>
-    </UiModal>
+    </UiDismissibleModal>
 };
 
 export default ModeratorTagsUpdateModal;

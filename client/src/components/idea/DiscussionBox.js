@@ -115,12 +115,12 @@ const DiscussionBox = () => {
         }
         const moderator = data.moderators.find(mod => mod.userId === user.data.id);
         return <div className={"mt-2"}>
-            <UiLoadableButton size={"sm"} className={"ml-0 mb-0"} style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(false)}>
+            <UiLoadableButton size={"sm"} style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(false)}>
                 Submit
             </UiLoadableButton>
 
             {moderator && <React.Fragment>
-                <UiLoadableButton color={tinycolor("#0080FF")} size={"sm"} className={"ml-2 mr-1 mb-0"} style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(true)}>
+                <UiLoadableButton color={tinycolor("#0080FF")} size={"sm"} className={"mx-1"} style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(true)}>
                     Submit Internal
                 </UiLoadableButton>
                 <div className="d-inline-flex align-top"><UiClickableTip id={"internalTip"} title={"Internal Comments"} description={"Comments visible only for moderators of the project, hidden from public view."}/></div>

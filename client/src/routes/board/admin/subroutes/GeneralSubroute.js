@@ -1,18 +1,19 @@
 import axios from "axios";
 import ThemeSelectionModal from "components/board/admin/ThemeSelectionModal";
+import {Banner} from "components/board/BoardBanner";
 import ConfirmationActionModal from "components/commons/ConfirmationActionModal";
+import UploadIconBox from "components/commons/UploadIconBox";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import {Form} from "react-bootstrap";
-import {FaEllipsisH, FaUpload} from "react-icons/all";
+import {FaEllipsisH} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiLoadingSpinner} from "ui";
 import {UiLoadableButton} from "ui/button";
-import {UiCountableFormControl} from "ui/form";
+import {UiCountableFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
@@ -33,24 +34,24 @@ const GeneralSubroute = ({updateState}) => {
         return <React.Fragment>
             <ThemeSelectionModal isOpen={modal.open && modal.type === "theme"} onHide={() => setModal({...modal, open: false})} onUpdate={color => onThemeChange(color)}/>
             <UiCol xs={12} lg={6}>
-                <Form.Label className={"mr-1 text-black-60"}>Board Name</Form.Label>
+                <UiFormLabel>Board Name</UiFormLabel>
                 <UiClickableTip id={"boardName"} title={"Set Board Name"} description={"Name of your board should be at least 4 and maximum 25 characters long."}/>
                 <UiCountableFormControl id={"boardTextarea"} className={"bg-light"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={boardData.name}/>
             </UiCol>
-            <UiCol xs={12} lg={6}>
-                <Form.Label className={"mr-1 mt-lg-0 mt-2 text-black-60"}>Short Description</Form.Label>
+            <UiCol xs={12} lg={6} className={"mt-lg-0 mt-2"}>
+                <UiFormLabel>Short Description</UiFormLabel>
                 <UiClickableTip id={"boardShortDescription"} title={"Set Short Description"} description={"Very short board description used for thumbnail purposes. Keep it under 50 characters long."}/>
                 <UiCountableFormControl id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
                                         defaultValue={boardData.shortDescription}/>
             </UiCol>
             <UiCol xs={12} lg={6} className={"mt-2"}>
-                <Form.Label className={"mr-1 text-black-60"}>Full Description</Form.Label>
+                <UiFormLabel>Full Description</UiFormLabel>
                 <UiClickableTip id={"boardDescription"} title={"Set Description"} description={<React.Fragment>
                     Full description visible at your board, markdown supported. Keep it under 2500
                     characters long.
                     <br/>
                     <strong>Markdown Tips:</strong>
-                    <br/><strong>**bold text**</strong> <i>*italic text*</i>
+                    <br/><kbd><strong>**bold text**</strong></kbd> <kbd><i>*italic text*</i></kbd>
                 </React.Fragment>}/>
                 <TextareaAutosize className={"form-control bg-light"} minLength={10} maxLength={2500} rows={6}
                                   maxRows={13} required as={"textarea"}
@@ -61,15 +62,15 @@ const GeneralSubroute = ({updateState}) => {
                                       e.target.value = e.target.value.substring(0, 2500);
                                       formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);
                                   }}/>
-                <Form.Text className={"d-inline float-left text-black-60 d-inline"}>
+                <UiFormText className={"float-left"}>
                     Markdown Supported
-                </Form.Text>
-                <Form.Text className={"d-inline float-right text-black-60"} id={"remainingFullDescr"}>
+                </UiFormText>
+                <UiFormText className={"float-right"} id={"remainingFullDescr"}>
                     {2500 - boardData.fullDescription.length} Remaining
-                </Form.Text>
+                </UiFormText>
             </UiCol>
             <UiCol xs={12} lg={6} className={"mt-2"}>
-                <Form.Label className={"mr-1 text-black-60"}>Theme Color</Form.Label>
+                <UiFormLabel>Theme Color</UiFormLabel>
                 <UiClickableTip id={"themeColor"} title={"Set Theme Color"} description={"Configure theme color of your board. It will affect elements of your board. Colors might look differently across Light and Dark Themes."}/>
                 <br/>
                 <Suspense fallback={<UiLoadingSpinner/>}>
@@ -78,7 +79,7 @@ const GeneralSubroute = ({updateState}) => {
                             "#d35400", "#e74c3c", "#706fd3", "#218c74",
                             "#2980b9", "#16a085", "#e67e22", "#27ae60",
                             "#44bd32", "#1B9CFC", "#3498db", "#EE5A24"]}
-                        className={"text-center color-picker-admin"}
+                        className={"color-picker-admin"}
                         circleSpacing={4} color={getTheme(false)}
                         onChangeComplete={color => onThemeChange(color.hex)}>
                     </CirclePicker>
@@ -95,38 +96,26 @@ const GeneralSubroute = ({updateState}) => {
                 </Suspense>
             </UiCol>
             <UiCol xs={12} lg={8} className={"mt-2"}>
-                <Form.Label className={"mr-1 text-black-60"}>Board Banner</Form.Label>
+                <UiFormLabel>Board Banner</UiFormLabel>
                 <UiClickableTip id={"banner"} title={"Set Board Banner"} description={"Suggested size: 1120x400. Maximum size 500 kb, PNG and JPG only."}/>
                 <br/>
                 <div onClick={() => document.getElementById("bannerInput").click()}>
-                    <div id={"boardBannerPreview"} className={"jumbotron mb-2"}
-                         style={{backgroundImage: `url("` + boardData.banner + `")`, minHeight: 200, position: "relative"}}>
+                    <Banner image={boardData.banner} id={"boardBannerPreview"} className={"mb-2"}
+                            style={{minHeight: 200, position: "relative"}}>
                         <h3 style={{color: "transparent"}}>{boardData.name}</h3>
                         <h5 style={{color: "transparent"}}>{boardData.shortDescription}</h5>
-                        <div className={"p-3 rounded-circle hoverable-option"} style={{
-                            backgroundColor: getTheme().setAlpha(.8), cursor: "pointer",
-                            width: "90px", height: "90px", position: "absolute", inset: 0, margin: "auto"
-                        }}>
-                            <FaUpload className={"mb-1"} style={{width: "1.8em", height: "1.8em"}}/>
-                            <div>Update</div>
-                        </div>
-                    </div>
+                        <UploadIconBox/>
+                    </Banner>
                 </div>
                 <input hidden accept={"image/jpeg, image/png"} id={"bannerInput"} type={"file"} name={"banner"} onChange={onBannerChange}/>
             </UiCol>
             <UiCol xs={12} lg={4} className={"mt-2"}>
-                <Form.Label className={"mr-1 text-black-60"}>Board Logo</Form.Label>
+                <UiFormLabel>Board Logo</UiFormLabel>
                 <UiClickableTip id={"logo"} title={"Set Board Logo"}
                                 description={"Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."}/>
                 <div style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
                     <img alt={"logo"} src={boardData.logo} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
-                    <div className={"p-3 rounded-circle hoverable-option text-center text-white"} style={{
-                        backgroundColor: getTheme().setAlpha(.8), cursor: "pointer",
-                        width: "90px", height: "90px", position: "absolute", inset: 0, margin: "auto"
-                    }}>
-                        <FaUpload className={"mb-1"} style={{width: "1.8em", height: "1.8em"}}/>
-                        <div>Update</div>
-                    </div>
+                    <UploadIconBox/>
                 </div>
                 <input hidden accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} onChange={onLogoChange}/>
             </UiCol>

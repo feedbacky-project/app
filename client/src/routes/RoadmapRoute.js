@@ -69,9 +69,7 @@ const RoadmapRoute = () => {
         <IdeaNavbar/>
         <UiContainer className={"pb-5"}>
             <UiRow centered className={"pb-4"}>
-                <BoardBanner customName={<React.Fragment>
-                    {board.data.name} - Roadmap
-                </React.Fragment>}/>
+                <BoardBanner customName={board.data.name + " - Roadmap"}/>
                 <ComponentLoader loaded={roadmap.loaded} loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}
                                  component={<BoardRoadmapBox roadmapData={roadmap.data}/>}/>
             </UiRow>

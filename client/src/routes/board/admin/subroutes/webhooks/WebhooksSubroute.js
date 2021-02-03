@@ -55,18 +55,16 @@ const WebhooksSubroute = () => {
             return <span className={"text-danger"}>Failed to obtain webhooks data</span>
         }
         return <ComponentLoader loaded={webhooks.loaded} component={
-            <React.Fragment>
-                <UiCol xs={12} className={"mb-sm-0 mb-3"}>
-                    <div className={"text-black-60 mb-1"}>
-                        <span className={"mr-1"}>Webhooks Quota ({getQuota()} left)</span>
-                        <UiClickableTip id={"moderatorsQuota"} title={"Webhooks Quota"} description={"Amount of webhooks your board can have."}/>
-                    </div>
-                    {renderWebhooks()}
-                    <div>
-                        <UiButton className={"m-0 mt-3 float-right"} as={Link} to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</UiButton>
-                    </div>
-                </UiCol>
-            </React.Fragment>
+            <UiCol xs={12} className={"mb-sm-0 mb-3"}>
+                <div className={"text-black-60 mb-1"}>
+                    <span className={"mr-1"}>Webhooks Quota ({getQuota()} left)</span>
+                    <UiClickableTip id={"moderatorsQuota"} title={"Webhooks Quota"} description={"Amount of webhooks your board can have."}/>
+                </div>
+                {renderWebhooks()}
+                <div>
+                    <UiButton className={"m-0 mt-3 float-right"} as={Link} to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</UiButton>
+                </div>
+            </UiCol>
         } loader={<UiCol className={"text-center my-5 py-5"}><UiLoadingSpinner/></UiCol>}/>
     };
     const getTypeIcon = (hook) => {

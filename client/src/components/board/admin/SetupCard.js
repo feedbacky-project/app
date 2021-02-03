@@ -1,10 +1,10 @@
+import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
-import {Card} from "react-bootstrap";
-import styled from "@emotion/styled";
+import {UiCard} from "ui";
 
-const OptionCard = styled(Card)`
+const OptionCard = styled(UiCard)`
   min-width: 150px;
   width: 200px;
   max-width: 250px;
@@ -13,17 +13,15 @@ const OptionCard = styled(Card)`
 const SetupCard = ({icon, chosen = false, text, onClick, className = ""}) => {
     const {getTheme} = useContext(AppContext);
     let style;
-    if(chosen) {
+    if (chosen) {
         style = {border: "2px solid " + getTheme()};
     } else {
         style = {border: "2px solid transparent"};
     }
-    return <OptionCard className={className} onClick={onClick} style={style}>
-        <Card.Body className={"text-center"}>
-            {icon}
-            <br className={"my-3"}/>
-            <strong style={{fontSize: "1.25rem"}}>{text}</strong>
-        </Card.Body>
+    return <OptionCard className={className} bodyClassName={"text-center"} onClick={onClick} style={style}>
+        {icon}
+        <br className={"my-3"}/>
+        <strong style={{fontSize: "1.25rem"}}>{text}</strong>
     </OptionCard>
 };
 

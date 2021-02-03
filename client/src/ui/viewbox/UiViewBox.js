@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import PropTypes from "prop-types";
 import React, {useContext} from 'react';
-import {Card} from "react-bootstrap";
 import {UiCol, UiRow} from "ui/grid";
+import {UiCard} from "ui/UiCard";
 
 const ViewBox = styled.div`
   z-index: 1;
@@ -20,10 +20,10 @@ const UiViewBox = (props) => {
     const {getTheme} = useContext(AppContext);
     const {theme = getTheme(), title, description, children} = props;
     return <React.Fragment>
-        <Card as={ViewBox} style={{backgroundColor: theme}}>
+        <UiCard as={ViewBox} style={{backgroundColor: theme}} bodyClassName={"p-0"}>
             <h3 className={"mb-0"}>{title}</h3>
             <div>{description}</div>
-        </Card>
+        </UiCard>
         <UiCol className={"view-box-bg"}>
             <UiRow className={"py-4 px-3 px-0 pt-5 mb-3"}>
                 {children}

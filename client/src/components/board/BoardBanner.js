@@ -2,11 +2,26 @@ import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
-import {Jumbotron} from "react-bootstrap";
 import {FaMap} from "react-icons/all";
 import {Link} from "react-router-dom";
 import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";
+
+export const Banner = styled.div`
+  text-align: center;
+  background-position: center;
+  box-shadow: var(--box-shadow);
+  border-radius: .35rem;
+  padding: 4rem 2rem;
+  color: white;
+  margin-bottom: .5rem;
+  text-shadow: 0 0 4px black;
+  background-image: url("${props => props.image}");
+  
+  .dark & {
+    box-shadow: var(--dark-box-shadow);
+  }
+`;
 
 const SocialLink = styled(Link)`
   padding: .5rem 1rem;
@@ -40,7 +55,7 @@ const BoardBanner = ({customName}) => {
                     <UiImage src={link.logoUrl} alt={"Social Icon"} width={18} height={18}/>
                 </SocialLink>
             })}
-            <SocialLink className={"d-inline"} to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}}
+            <SocialLink to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}}
                         style={{position: "absolute", bottom: "8px", left: (offset) + "px", backgroundColor: getTheme().setAlpha(.5)}}>
                 <FaMap style={{color: "white"}}/>
             </SocialLink>
@@ -50,11 +65,11 @@ const BoardBanner = ({customName}) => {
     const renderSocialLinksMobile = () => {
         return <div className={"d-inline-block d-sm-none"} style={{position: "relative", bottom: "-26px", height: 0}}>
             {socialLinks.map(link => {
-                return <SocialLink key={link.id} className={"d-inline"} to={{pathname: link.url}} rel={"noreferrer noopener"} target={"_blank"}>
+                return <SocialLink key={link.id} to={{pathname: link.url}} rel={"noreferrer noopener"} target={"_blank"}>
                     <UiImage src={link.logoUrl} alt={"Social Icon"} width={18} height={18}/>
                 </SocialLink>
             })}
-            <SocialLink className={"d-inline"} to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}}
+            <SocialLink to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}}
                         style={{backgroundColor: getTheme().setAlpha(.5)}}>
                 <FaMap style={{color: "white"}}/>
             </SocialLink>
@@ -62,12 +77,12 @@ const BoardBanner = ({customName}) => {
     };
 
     return <UiCol sm={12} className={"mt-3"}>
-        <Jumbotron className={"mb-2 small-text-shadow"} style={{backgroundImage: `url("` + banner + `")`}}>
+        <Banner image={banner}>
             <h3 style={{fontWeight: 500}}>{customName || name}</h3>
             <h5 style={{fontWeight: 300}} dangerouslySetInnerHTML={{__html: shortDescription}}/>
             {renderSocialLinks()}
             {renderSocialLinksMobile()}
-        </Jumbotron>
+        </Banner>
     </UiCol>
 };
 

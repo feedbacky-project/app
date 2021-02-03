@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form} from "react-bootstrap";
+import {UiFormText} from "ui/form/index";
 import {UiFormControl} from "ui/form/UiFormControl";
 
 const UiCountableFormControl = (props) => {
@@ -11,9 +11,9 @@ const UiCountableFormControl = (props) => {
             setCurrentLength(e.target.value.length);
             onChange(e);
         }} defaultValue={defaultValue} minLength={minLength} maxLength={maxLength} {...otherProps}/>
-        <Form.Text className={"text-right text-black-60"}>
+        <UiFormText className={"text-right"}>
             {maxLength - currentLength} Remaining
-        </Form.Text>
+        </UiFormText>
     </React.Fragment>
 };
 

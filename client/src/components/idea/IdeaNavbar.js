@@ -1,8 +1,7 @@
-import {renderLogIn} from "components/commons/navbar-commons";
+import {renderLogIn, UiNavbarBrand} from "components/commons/navbar-commons";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
-import {NavbarBrand} from "react-bootstrap";
 import {FaChevronLeft} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiContainer} from "ui/grid";
@@ -20,13 +19,13 @@ const IdeaNavbar = () => {
             <FaChevronLeft className={"ml-2"}/>
         </Link>
         <UiContainer className={"d-flex"}>
-            <NavbarBrand as={Link} to={{
+            <UiNavbarBrand to={{
                 pathname: "/b/" + data.discriminator,
                 state: {_boardData: data}
             }}>
                 <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Logo"}/>
                 <span>{data.name}</span>
-            </NavbarBrand>
+            </UiNavbarBrand>
             <div className={"ml-auto py-0 text-nowrap"}>
                 {renderLogIn(onNotLoggedClick, context)}
             </div>

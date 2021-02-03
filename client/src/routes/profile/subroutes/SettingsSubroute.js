@@ -5,12 +5,11 @@ import AvatarSelectionModal from "components/profile/AvatarSelectionModal";
 import AppContext from "context/AppContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from "react";
-import {Form} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiLoadingSpinner} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
-import {UiCountableFormControl, UiFormControl} from "ui/form";
+import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
@@ -95,12 +94,12 @@ const SettingsSubroute = () => {
                                          <div>Type <kbd>{user.data.email}</kbd> to continue.</div>
                                      </div>}/>
             <UiCol xs={{span: 12, order: 2}} lg={{span: 6, order: 1}}>
-                <Form.Label className={"mr-1 mt-lg-0 mt-2 text-black-60"}>Username</Form.Label>
+                <UiFormLabel className={"mt-lg-0 mt-2"}>Username</UiFormLabel>
                 <UiCountableFormControl id={"usernameTextarea"} className={"bg-light"} defaultValue={user.data.username} minLength={4} maxLength={20} placeholder={"Name of your account."}
                                         onChange={e => setUsername(e.target.value.substring(0, 20))}/>
             </UiCol>
             <UiCol xs={{span: 12, order: 1}} lg={{span: 6, order: 2}}>
-                <Form.Label className={"mr-1 text-black-60"}>Avatar</Form.Label>
+                <UiFormLabel>Avatar</UiFormLabel>
                 <br/>
                 <img alt={"avatar"} src={avatar} className={"rounded-circle"} width={100} height={100}/>
                 <ComponentLoader loaded={connectedAccounts.loaded}
@@ -111,11 +110,11 @@ const SettingsSubroute = () => {
                 />
             </UiCol>
             <UiCol xs={{span: 12, order: 3}} lg={6}>
-                <Form.Label className={"mr-1 mt-2 text-black-60"}>Email</Form.Label>
+                <UiFormLabel className={"mt-2"}>Email</UiFormLabel>
                 <UiFormControl rows={1} disabled value={user.data.email} id={"emailTextarea"}/>
-                <Form.Text className={"text-right text-black-60"} id={"remainingUsername"}>
+                <UiFormText className={"text-right"} id={"remainingUsername"}>
                     Cannot Change
-                </Form.Text>
+                </UiFormText>
             </UiCol>
             <UiCol xs={{span: 12, order: 4}}>
                 <UiLoadableButton color={tinycolor("#00c851")} className={"m-0 mt-3 ml-3 float-right"} onClick={onChangesSave}>

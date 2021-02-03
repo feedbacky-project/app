@@ -6,10 +6,11 @@ import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiModal} from "ui";
+import {UiBadge, UiClickableTip} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
+import {UiDismissibleModal} from "ui/modal";
 import {formatRemainingCharacters, getBase64FromFile, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
 
 const AttachmentButton = styled(UiClassicButton)`
@@ -97,8 +98,8 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             setAttachmentName(file.name);
         });
     };
-    return <UiModal id={"ideaPost"} isOpen={isOpen} onHide={onHide} title={"Post Feedback"}
-                    applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}>
+    return <UiDismissibleModal id={"ideaPost"} isOpen={isOpen} onHide={onHide} title={"Post Feedback"}
+                               applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}>
         <div className={"mt-2 mb-1"}>
             <div className={"mb-2"}>
                 <div className={"mr-1 d-inline"}>Title</div>
@@ -150,9 +151,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             <div className={"my-2"}>
                 <div className={"mb-2"}>
                     <div className={"d-inline mr-1"}>Tags</div>
-                    <UiClickableTip id={"ideaTags"} title={"Choosing Tags"} description={<React.Fragment>
-                        Choose tags you wish to be used in your idea.<br/>
-                    </React.Fragment>}/>
+                    <UiClickableTip id={"ideaTags"} title={"Choosing Tags"} description={"Choose tags you wish to be used in your idea."}/>
                 </div>
                 <div>
                     {applicableTags.map((tag, i) => {
@@ -163,7 +162,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             </div>
         </React.Fragment>
         }
-    </UiModal>
+    </UiDismissibleModal>
 };
 
 export default IdeaCreateModal;

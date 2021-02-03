@@ -13,7 +13,7 @@ const StepSecondRoute = ({settings, updateSettings}) => {
                 Please include https:// or http:// at the beginning.
             </span>
         </UiCol>
-        <UiCol sm={12} md={10} className={"offset-md-1 mt-4 px-md-5 px-3"}>
+        <UiCol xs={12} md={{span: 8, offset: 2}} className={"mt-4"}>
             <div className={"text-black-60 mb-2"}>
                 Social URL
             </div>

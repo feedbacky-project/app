@@ -13,9 +13,9 @@ const VoteBtn = styled(UiClassicButton)`
   padding: .25rem .5rem;
   margin: 0;
   box-shadow: none !important;
-  background-color: transparent;
-  &:hover {
-   background-color: transparent;
+  background-color: transparent !important;
+  &:hover, &:focus {
+   background-color: transparent !important;
   }
   
   .to-upvote, .upvoted {
@@ -94,21 +94,17 @@ const VoteButton = ({onVote}) => {
     const {ideaData} = useContext(IdeaContext);
     let color = getTheme();
 
-    let btn;
     if (!ideaData.upvoted) {
-        btn = <ToUpvoteBtn onClick={onVote} variant={""}>
+        return <ToUpvoteBtn onClick={onVote} variant={""}>
             <ToUpvoteIcon className={"to-upvote"}/>
             <strong className={"d-block"}>{ideaData.votersAmount}</strong>
         </ToUpvoteBtn>
     } else {
-        btn = <VoteBtn onClick={onVote} variant={""}>
+        return <VoteBtn onClick={onVote} variant={""}>
             <FiChevronsUp className={"upvoted"} style={{color}}/>
             <strong className={"d-block"} style={{color: color}}>{ideaData.votersAmount}</strong>
         </VoteBtn>
     }
-    return <span className={"my-auto"}>
-        {btn}
-    </span>
 };
 
 VoteButton.propTypes = {

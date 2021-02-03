@@ -1,7 +1,6 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import SetupCard from "components/board/admin/SetupCard";
 import React from 'react';
-import {CardDeck} from "react-bootstrap";
 import {FaDiscord, FaGlobe} from "react-icons/fa";
 import {UiCol, UiRow} from "ui/grid";
 import {toastWarning} from "utils/basic-utils";
@@ -21,7 +20,7 @@ const StepFirstSubroute = ({updateSettings, settings}) => {
     const renderCards = () => {
         return type.map((item, i) => {
             let name = typeName[i];
-            return <SetupCard key={i} icon={typeIcon[i]} text={name} onClick={() => onChoose(item)} className={"mb-3"} chosen={settings.type === item}/>
+            return <SetupCard key={i} icon={typeIcon[i]} text={name} onClick={() => onChoose(item)} className={"m-2"} chosen={settings.type === item}/>
         });
     };
 
@@ -33,12 +32,10 @@ const StepFirstSubroute = ({updateSettings, settings}) => {
                 Select in which way you'll utilize this webhook.
             </span>
         </UiCol>
-        <UiCol xs={12} className={"mt-4 px-md-5 px-3"}>
-            <UiRow centered>
-                <CardDeck>
-                    {renderCards()}
-                </CardDeck>
-            </UiRow>
+        <UiCol xs={12} className={"mt-4"}>
+            <UiCol as={UiRow} centered className={"mx-0"} xs={12}>
+                {renderCards()}
+            </UiCol>
         </UiCol>
     </React.Fragment>;
 };

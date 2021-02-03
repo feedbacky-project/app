@@ -1,7 +1,9 @@
 import UndrawBrandProject from "assets/svg/undraw/brand_project.svg";
+import {Banner} from "components/board/BoardBanner";
+import UploadIconBox from "components/commons/UploadIconBox";
 import React from 'react';
-import {Form} from "react-bootstrap";
 import {UiClickableTip} from "ui";
+import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {getBase64FromFile, validateImageWithWarning} from "utils/basic-utils";
 
@@ -35,7 +37,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
             </span>
         </UiCol>
         <UiCol xs={12} sm={6} className={"mt-4 px-md-5 px-3"}>
-            <Form.Label className={"mr-1 text-black-60"}>Board Banner</Form.Label>
+            <UiFormLabel>Board Banner</UiFormLabel>
             <UiClickableTip id={"banner"} title={"Set Board Banner"} description={<React.Fragment>
                 Upload your board banner.
                 <br/>
@@ -47,14 +49,16 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
             </React.Fragment>}/>
             <br/>
             {/* simulate real board jumbotron to show properly sized image */}
-            <div id={"boardBanner"} className={"jumbotron mb-2"} style={{backgroundImage: `url("` + settings.banner + `")`}}>
+            <Banner image={settings.banner || "https://cdn.feedbacky.net/static/img/main-background.png"} id={"boardBanner"} className={"mb-2"}
+                    onClick={() => document.getElementById("bannerInput").click()}>
                 <h3 style={{color: "transparent"}}>Example Board</h3>
-                <h5 style={{color: "transparent"}}>Descriptive example Board</h5>
-            </div>
-            <input className={"small"} accept={"image/jpeg, image/png"} id={"bannerInput"} type={"file"} name={"banner"} onChange={e => onBannerChange(e)}/>
+                <h5 style={{color: "transparent"}}>Description of board</h5>
+                <UploadIconBox/>
+            </Banner>
+            <input hidden accept={"image/jpeg, image/png"} id={"bannerInput"} type={"file"} name={"banner"} onChange={e => onBannerChange(e)}/>
         </UiCol>
         <UiCol xs={12} sm={6} className={"mt-4 px-md-5 px-3"}>
-            <Form.Label className={"mr-1 text-black-60"}>Board Logo</Form.Label>
+            <UiFormLabel>Board Logo</UiFormLabel>
             <UiClickableTip id={"logo"} title={"Set Board Logo"} description={<React.Fragment>
                 Upload your board logo.
                 <br/>
@@ -65,9 +69,11 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
                 </strong>
             </React.Fragment>}/>
             <br/>
-            <img alt={"logo"} src={settings.logo} id={"boardLogo"} className={"mb-2"} width={50} height={50}/>
-            <br/>
-            <input className={"small"} accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} onChange={e => onLogoChange(e)}/>
+            <div style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
+                <img alt={"logo"} src={settings.logo || "https://cdn.feedbacky.net/static/img/logo.png"} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
+                <UploadIconBox/>
+            </div>
+            <input hidden accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} onChange={e => onLogoChange(e)}/>
         </UiCol>
     </React.Fragment>
 };

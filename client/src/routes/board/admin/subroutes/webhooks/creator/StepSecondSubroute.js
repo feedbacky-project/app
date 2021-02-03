@@ -1,7 +1,6 @@
 import UndrawChooseEvents from "assets/svg/undraw/choose_events.svg";
 import SetupCard from "components/board/admin/SetupCard";
 import React from 'react';
-import CardGroup from "react-bootstrap/CardGroup";
 import {UiCol, UiRow} from "ui/grid";
 
 const events = ["IDEA_CREATE", "IDEA_DELETE", "IDEA_COMMENT", "IDEA_COMMENT_DELETE", "IDEA_EDIT", "IDEA_TAG_CHANGE", "IDEA_OPEN", "IDEA_CLOSE"];
@@ -20,7 +19,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
         return events.map((item, i) => {
             let name = eventNames[i];
             return <SetupCard key={i} icon={<img alt={item} src={"https://cdn.feedbacky.net/static/svg/webhooks/" + eventIcons[i]} style={{width: "2.5rem", height: "2.5rem"}}/>}
-                              text={name} onClick={() => onChoose(item)} className={"mb-3 mx-2"} chosen={settings.listenedEvents.includes(item)}/>
+                              text={name} onClick={() => onChoose(item)} className={"m-2"} chosen={settings.listenedEvents.includes(item)}/>
         });
     };
 
@@ -32,12 +31,10 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
                 Select events that this webhook will listen for.
             </span>
         </UiCol>
-        <UiCol xs={12} className={"mt-4 px-md-5 px-3"}>
-            <UiRow centered>
-                <CardGroup>
-                    {renderCards()}
-                </CardGroup>
-            </UiRow>
+        <UiCol xs={12} className={"mt-4"}>
+            <UiCol centered as={UiRow} className={"mx-0"} xs={12}>
+                {renderCards()}
+            </UiCol>
         </UiCol>
     </React.Fragment>
 };

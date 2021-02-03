@@ -1,11 +1,27 @@
 import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
-import {Modal, ModalDialog} from "react-bootstrap";
+import {ModalDialog} from "react-bootstrap";
+import {UiClassicButton} from "ui/button";
 import {UiImage} from "ui/image";
+import {UiModal} from "ui/modal";
 
+//todo replace me
 const CascadingModal = styled(ModalDialog)`
-  margin-top: 6rem;
+  height: calc(100vh - 3.5rem);
+  transform: none;
+  transition: transform .3s ease-out;
+  margin: 1.76rem auto;
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: auto;
+  pointer-events: none;
+  &::before {
+    height: calc(100vh - 3.5rem);
+    display: block;
+    content: "";
+  }
   
   .modal-header {
     margin: -6rem 0 -1rem;
@@ -22,20 +38,18 @@ const CascadingModal = styled(ModalDialog)`
 
 const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
     const {serviceData, getTheme} = useContext(AppContext);
-    return <Modal size={"sm"} dialogAs={CascadingModal} centered id={"loginModal"} show={isOpen} onHide={onHide}>
-        <Modal.Header>
-            <UiImage src={image} alt={"Avatar"} roundedCircle className={"img-thumbnail"}/>
-        </Modal.Header>
-        <Modal.Body className={"text-center pt-2 pb-3 my-3 text-black-75"}>
+    return <UiModal size={"sm"} dialogAs={CascadingModal} id={"loginModal"} show={isOpen} onHide={onHide}
+                    header={<UiImage src={image} alt={"Avatar"} roundedCircle className={"img-thumbnail"}/>}>
+        <div className={"text-center pt-2 mt-3 text-black-75"}>
             <div className={"mb-2"}>Sign in to <span style={{color: getTheme()}}>{boardName}</span> with</div>
             {serviceData.loginProviders.map((data, i) => {
                 let provider = data;
                 return <a key={i} href={provider.oauthLink + redirectUrl}>
-                    <button type={"button"} className={"btn btn-social mx-1"} style={{color: "#fff", backgroundColor: provider.color}}><img alt={provider.name} src={provider.icon} width={16} height={16}/></button>
+                    <UiClassicButton className={"mx-1"} style={{color: "#fff", backgroundColor: provider.color}}><img alt={provider.name} src={provider.icon} width={16} height={16}/></UiClassicButton>
                 </a>
             })}
-        </Modal.Body>
-    </Modal>
+        </div>
+    </UiModal>
 };
 
 export default LoginModal;

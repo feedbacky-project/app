@@ -113,9 +113,7 @@ const IdeaInfoBox = () => {
         if (editor.enabled) {
             return renderEditorMode();
         }
-        return <React.Fragment>
-            <span className={"markdown-box"} dangerouslySetInnerHTML={{__html: parseMarkdown(ideaData.description)}}/>
-        </React.Fragment>
+        return <span className={"markdown-box"} dangerouslySetInnerHTML={{__html: parseMarkdown(ideaData.description)}}/>
     };
     const renderEditorMode = () => {
         return <React.Fragment>
@@ -135,10 +133,10 @@ const IdeaInfoBox = () => {
     };
     const renderDetails = () => {
         return <React.Fragment>
-            <span className={"mr-1"} style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
+            <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
             <ModeratorActionsButton/>
             {renderDeletionButton()}
-            {ideaData.user.id !== user.data.id || <FaPen className={"ml-2 fa-xs cursor-click move-top-2px text-black-60"} onClick={() => setEditor({...editor, enabled: true})}/>}
+            {ideaData.user.id !== user.data.id || <FaPen className={"ml-1 fa-xs cursor-click move-top-2px text-black-60"} onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
             <UiAvatar roundedCircle className={"mr-1"} user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
             <small><UiPrettyUsername user={ideaData.user}/> ·{" "}</small>

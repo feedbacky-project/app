@@ -4,10 +4,11 @@ import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
 import Form from "react-bootstrap/Form";
 import tinycolor from "tinycolor2";
-import {UiClickableTip, UiModal} from "ui";
+import {UiClickableTip} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiCountableFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
+import {UiDismissibleModal} from "ui/modal";
 import {toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
@@ -34,8 +35,8 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             toastSuccess("Tag with name " + name + " created.");
         }).catch(err => toastError(err.response.data.errors[0]));
     };
-    return <UiModal id={"tagCreate"} isOpen={isOpen} onHide={onHide} title={"Add new Tag"}
-                    applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}>
+    return <UiDismissibleModal id={"tagCreate"} isOpen={isOpen} onHide={onHide} title={"Add new Tag"}
+                               applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}>
         <UiRow>
             <UiCol xs={12} className={"mt-2 mb-1"}>
                 <Form.Label className={"mr-1 text-black-60"}>Tag Name</Form.Label>
@@ -60,7 +61,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
                 </div>
             </UiCol>
         </UiRow>
-    </UiModal>
+    </UiDismissibleModal>
 };
 
 export default TagCreateModal;

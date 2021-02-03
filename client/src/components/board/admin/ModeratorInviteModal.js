@@ -2,10 +2,10 @@ import axios from "axios";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import Form from "react-bootstrap/Form";
-import {UiModal} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiAvatar} from "ui/image";
+import {UiDismissibleModal} from "ui/modal";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
@@ -36,15 +36,15 @@ const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
         }).catch(err => toastError(err.response.data.errors[0], toastId));
     };
 
-    return <UiModal id={"moderatorInvite"} size={"sm"} isOpen={isOpen} onHide={onHide} title={"Invite New Moderator"}
-                    applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Invite</UiLoadableButton>}>
+    return <UiDismissibleModal id={"moderatorInvite"} size={"sm"} isOpen={isOpen} onHide={onHide} title={"Invite New Moderator"}
+                                applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Invite</UiLoadableButton>}>
         <Form noValidate>
             <Form.Group className={"mt-2 mb-1"}>
                 <Form.Label className={"mr-1 text-black-60"}>User Email</Form.Label>
                 <UiFormControl type={"email"} placeholder={"Existing user email."} id={"inviteEmailTextarea"}/>
             </Form.Group>
         </Form>
-    </UiModal>
+    </UiDismissibleModal>
 };
 
 export default ModeratorInviteModal;

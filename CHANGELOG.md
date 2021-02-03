@@ -29,6 +29,8 @@
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 TODO border setupcard theme based
 
+!! TODO UI CARD INNER REF https://github.com/reactjs/reactjs.org/issues/2120
+
 ### 0.6.0-beta
 * **[FEATURE]** Added search bar to search ideas by specific title (requested by [eartharoid](https://app.feedbacky.net/i/add-a-search-feature.2313))
 * **[FEATURE]** Added self assignable tags that everyone can set when creating new idea (requested by [VentureKraft](https://app.feedbacky.net/i/self-assignable-tags.982))
