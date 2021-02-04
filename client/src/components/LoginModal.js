@@ -38,18 +38,24 @@ const CascadingModal = styled(ModalDialog)`
 
 const LoginHeader = styled(UiImage)`
   background-color: white;
+  
+  .dark & {
+    background-color: var(--dark-tertiary);
+  }
 `;
 
 const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
     const {serviceData, getTheme} = useContext(AppContext);
-    return <UiModal size={"sm"} dialogAs={CascadingModal} id={"loginModal"} show={isOpen} onHide={onHide}
+    return <UiModal size={"sm"} dialogAs={CascadingModal} id={"loginModal"} isOpen={isOpen} onHide={onHide}
                     header={<LoginHeader src={image} alt={"Avatar"} roundedCircle thumbnail/>}>
         <div className={"text-center pt-2 mt-3 text-black-75"}>
             <div className={"mb-2"}>Sign in to <span style={{color: getTheme()}}>{boardName}</span> with</div>
             {serviceData.loginProviders.map((data, i) => {
                 let provider = data;
                 return <a key={i} href={provider.oauthLink + redirectUrl} tabIndex={-1}>
-                    <UiClassicButton className={"mx-1"} style={{color: "#fff", backgroundColor: provider.color}}><img alt={provider.name} src={provider.icon} width={16} height={16}/></UiClassicButton>
+                    <UiClassicButton label={provider.name + " Log-in"} className={"mx-1"} style={{color: "#fff", backgroundColor: provider.color}}>
+                        <img alt={provider.name} src={provider.icon} width={16} height={16}/>
+                    </UiClassicButton>
                 </a>
             })}
         </div>

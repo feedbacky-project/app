@@ -2,6 +2,9 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+$theme-colors: map-remove($theme-colors, "primary", "secondary", "success", "info", "warning", "danger");
+$colors: map-remove($colors, "blue", "indigo", "purple", "pink", "red", "orange", "yellow", "green", "teal", "cyan", "white", "gray", "gray-dark");
+
 @import "~bootstrap/scss/reboot";
 @import "~bootstrap/scss/type";
 @import "~bootstrap/scss/code";
@@ -11,7 +14,6 @@
 @import "~bootstrap/scss/custom-forms";
 @import "~bootstrap/scss/dropdown";
 @import "~bootstrap/scss/forms";
-@import "~bootstrap/scss/jumbotron";
 @import "~bootstrap/scss/modal";
 @import "~bootstrap/scss/popover";
 @import "~bootstrap/scss/progress";

@@ -69,7 +69,7 @@ const WebhooksSubroute = () => {
     };
     const renderContent = () => {
         if (webhooks.error) {
-            return <span className={"text-danger"}>Failed to obtain webhooks data</span>
+            return <span className={"text-red"}>Failed to obtain webhooks data</span>
         }
         return <ComponentLoader loaded={webhooks.loaded} component={
             <UiCol xs={12} className={"mb-sm-0 mb-3"}>
@@ -79,7 +79,7 @@ const WebhooksSubroute = () => {
                 </div>
                 {renderWebhooks()}
                 <div>
-                    <UiButton className={"m-0 mt-3 float-right"} as={Link} to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</UiButton>
+                    <UiButton label={"Add New"} className={"m-0 mt-3 float-right"} as={Link} to={"/ba/" + boardData.discriminator + "/webhooks/create"}>Add New</UiButton>
                 </div>
             </UiCol>
         } loader={<UiCol className={"text-center my-5 py-5"}><UiLoadingSpinner/></UiCol>}/>

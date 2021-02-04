@@ -55,15 +55,15 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     return <React.Fragment>
         <UiCol sm={8} className={"my-1"}>
             Filtering {" "}
-            <UiSelectableDropdown id={"filter"} className={"d-inline mr-1"} currentValue={filterCurrentValue} values={filterValues}/>
+            <UiSelectableDropdown label={"Choose Filter"} id={"filter"} className={"d-inline mr-1"} currentValue={filterCurrentValue} values={filterValues}/>
             and Sorting {" "}
-            <UiSelectableDropdown id={"sort"} className={"d-inline"} currentValue={sortCurrentValue} values={sortValues}/>
+            <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline"} currentValue={sortCurrentValue} values={sortValues}/>
         </UiCol>
         <UiCol sm={4}>
             <SearchBar ref={queryRef} className={"form-control"} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery} placeholder={"Search"} onInput={() => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
-            }}/>
+            }}  aria-label={"Search bar"}/>
         </UiCol>
     </React.Fragment>
 };

@@ -81,7 +81,7 @@ const IdeaRoute = () => {
                         redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
             <IdeaNavbar/>
             <UiContainer className={"pb-5"}>
-                <UiRow centered className={"pb-4"}>
+                <UiRow centered className={"my-4"}>
                     <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox/>}/>
                     <UiCol xs={12}>
                         <hr/>

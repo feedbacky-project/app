@@ -1,19 +1,15 @@
-$border-radius: .35rem;
 $font-color: hsl(210, 11%, 15%);
 $pure-dark-half: hsla(0, 0%, 0%, .5);
+
+@import "utilities/root";
+@import "utilities/toasts";
+@import "utilities/colors";
 
 @import "~react-toastify/dist/ReactToastify.css";
 @import "commons/override-variables";
 @import "commons/align-utils";
 @import "commons/font-face";
-
-:root {
-  --box-shadow: 0 3px 5px 0 hsla(0, 0%, 0%, .15);
-  --hover-transition: all .2s ease-in-out;
-  --hover-transform-scale: scale(1.05);
-  --font-color: hsl(210, 11%, 15%);
-  --pure-dark-half: hsla(0, 0%, 0%, .5);
-}
+@import "commons/bootstrap-imports";
 
 @font-face {
   font-family: 'Roboto', sans-serif;
@@ -26,40 +22,6 @@ $pure-dark-half: hsla(0, 0%, 0%, .5);
 
 .danger-shadow {
   box-shadow: 0 3px 5px 0 hsla(15, 100%, 40%, .5) !important;
-}
-
-@import "commons/bootstrap-imports";
-
-.dropdown-toggle::after {
-  display: none;
-}
-
-.btn, .btn:focus {
-  border: 1px solid transparent;
-}
-
-.btn {
-  border-radius: $border-radius;
-}
-
-.dropdown-menu {
-  padding: .2rem 0;
-
-  a {
-    font-size: 14px;
-    padding: 4px 10px;
-  }
-}
-
-.dropdown-item {
-  &:active {
-    background-color: hsla(0, 0%, 0%, .075);
-    color: var(--font-color);
-  }
-
-  &:hover {
-    background-color: hsla(0, 0%, 0%, .075);
-  }
 }
 
 hr {
@@ -85,40 +47,11 @@ body {
 
 .form-control::placeholder {
   font-size: 15px;
+  color: $pure-dark-half;
 }
 
 .form-control:-moz-focusring {
   text-shadow: none !important;
-}
-
-.go-back-button {
-  color: white;
-
-  &:hover {
-    color: white;
-    text-decoration: none;
-  }
-}
-
-.snarkdown-box p {
-  margin-bottom: 0;
-}
-
-.markdown-box {
-  word-break: break-word;
-}
-
-.markdown-box a {
-  color: hsl(195, 100%, 40%);
-
-  &:hover {
-    color: hsl(195, 100%, 20%);
-  }
-}
-
-.hidden-anchor {
-  text-decoration: none !important;
-  color: var(--font-color) !important;
 }
 
 @keyframes pulse {
@@ -159,18 +92,6 @@ body {
   width: .7em;
 }
 
-a.pre-href {
-  cursor: text;
-}
-
-.text-black-60 {
-  color: hsla(0, 0%, 0%, .6);
-}
-
-.text-black-75 {
-  color: hsla(0, 0%, 0%, .75);
-}
-
 .color-picker-admin {
   width: 260px !important;
 }
@@ -181,37 +102,8 @@ a.pre-href {
   }
 }
 
-.toast-style {
-  color: var(--font-color);
-  background-color: white;
-
-  &.info {
-    border-left: 5px solid hsl(207, 90%, 54%);
-  }
-
-  &.error {
-    border-left: 5px solid hsl(0, 75%, 57%);
-  }
-
-  &.warning {
-    border-left: 5px solid hsl(52, 100%, 52%);
-  }
-
-  &.success {
-    border-left: 5px solid hsl(139, 54%, 51%);
-  }
-
-  &.await {
-    border-left: 5px solid hsl(205, 93%, 50%);
-  }
-}
-
 .justify-content-center {
   justify-content: center !important;
-}
-
-.form-control::placeholder {
-  color: $pure-dark-half;
 }
 
 .cursor-click {
@@ -220,28 +112,6 @@ a.pre-href {
 
   &:hover {
     transform: var(--hover-transform-scale);
-  }
-}
-
-.red {
-  color: $red;
-}
-
-.blue {
-  color: $blue;
-}
-
-.view-box-bg {
-  background-color: white;
-  border-radius: $border-radius;
-  box-shadow: var(--box-shadow);
-}
-
-.hoverable-option {
-  transition: var(--hover-transition);
-
-  &:hover {
-    transform: scale(1.2);
   }
 }
 

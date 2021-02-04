@@ -4,6 +4,7 @@ import {SvgNotice} from "components/commons/SvgNotice";
 import {SimpleIdeaCard} from "components/roadmap/SimpleIdeaCard";
 import React from "react";
 import {UiCol} from "ui/grid";
+import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 
 const RoadmapContainer = styled.div`
   padding: 0 1rem;
@@ -43,11 +44,11 @@ export const BoardRoadmapBox = ({roadmapData}) => {
             <h3>
                 <strong style={{color: element.tag.color}}>{element.tag.name}</strong>
             </h3>
-            <RoadmapContainer className={"view-box-bg"}>
+            <UiViewBoxBackground as={RoadmapContainer}>
                 {element.ideas.data.map(idea => {
                     return <SimpleIdeaCard key={idea.id} ideaData={idea}/>
                 })}
-            </RoadmapContainer>
+            </UiViewBoxBackground>
         </UiCol>
     });
 };

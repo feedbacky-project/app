@@ -15,6 +15,9 @@ const SelectableAvatar = styled(UiImage)`
   &:hover {
     transform: scale(1.2);
   }
+  .dark & {
+    background-color: var(--dark-tertiary);
+  }
 `;
 
 const AvatarSelectionModal = ({isOpen, onHide, connectedAccounts, onAvatarChoose}) => {

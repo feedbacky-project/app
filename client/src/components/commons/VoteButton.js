@@ -95,12 +95,12 @@ const VoteButton = ({onVote}) => {
     let color = getTheme();
 
     if (!ideaData.upvoted) {
-        return <ToUpvoteBtn onClick={onVote} variant={""}>
+        return <ToUpvoteBtn label={"Downvote"} onClick={onVote} variant={""}>
             <ToUpvoteIcon className={"to-upvote"}/>
             <strong className={"d-block"}>{ideaData.votersAmount}</strong>
         </ToUpvoteBtn>
     } else {
-        return <VoteBtn onClick={onVote} variant={""}>
+        return <VoteBtn label={"Upvote"} onClick={onVote} variant={""}>
             <FiChevronsUp className={"upvoted"} style={{color}}/>
             <strong className={"d-block"} style={{color: color}}>{ideaData.votersAmount}</strong>
         </VoteBtn>

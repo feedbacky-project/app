@@ -12,6 +12,7 @@ import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
+import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const SettingsSubroute = () => {
@@ -96,28 +97,29 @@ const SettingsSubroute = () => {
             <UiCol xs={{span: 12, order: 2}} lg={{span: 6, order: 1}}>
                 <UiFormLabel className={"mt-lg-0 mt-2"}>Username</UiFormLabel>
                 <UiCountableFormControl id={"usernameTextarea"} className={"bg-light"} defaultValue={user.data.username} minLength={4} maxLength={20} placeholder={"Name of your account."}
-                                        onChange={e => setUsername(e.target.value.substring(0, 20))}/>
+                                        onChange={e => setUsername(e.target.value.substring(0, 20))} label={"Type your username"}/>
             </UiCol>
             <UiCol xs={{span: 12, order: 1}} lg={{span: 6, order: 2}}>
                 <UiFormLabel>Avatar</UiFormLabel>
                 <br/>
                 <img alt={"avatar"} src={avatar} className={"rounded-circle"} width={100} height={100}/>
                 <ComponentLoader loaded={connectedAccounts.loaded}
-                                 component={<UiButton color={tinycolor("#00c851")} className={"align-top mx-3 my-0"} onClick={() => setModal({open: true, type: "avatar"})}>Change</UiButton>}
-                                 loader={<UiButton color={tinycolor("#00c851")} disabled className={"align-top mx-3 my-0"}>
+                                 component={<UiButton label={"Change"} color={tinycolor("#00c851")} className={"align-top mx-3 my-0"}
+                                                      onClick={() => setModal({open: true, type: "avatar"})}>Change</UiButton>}
+                                 loader={<UiButton label={"Loading..."} color={tinycolor("#00c851")} disabled className={"align-top mx-3 my-0"}>
                                      <UiLoadingSpinner color={tinycolor("#f2f2f2")} className={"mr-1"} size={"sm"}/> Loading
                                  </UiButton>}
                 />
             </UiCol>
             <UiCol xs={{span: 12, order: 3}} lg={6}>
                 <UiFormLabel className={"mt-2"}>Email</UiFormLabel>
-                <UiFormControl rows={1} disabled value={user.data.email} id={"emailTextarea"}/>
+                <UiFormControl rows={1} disabled value={user.data.email} id={"emailTextarea"} label={"Email"}/>
                 <UiFormText className={"text-right"} id={"remainingUsername"}>
                     Cannot Change
                 </UiFormText>
             </UiCol>
             <UiCol xs={{span: 12, order: 4}}>
-                <UiLoadableButton color={tinycolor("#00c851")} className={"m-0 mt-3 float-right"} onClick={onChangesSave}>
+                <UiLoadableButton label={"Save"} color={tinycolor("#00c851")} className={"m-0 mt-3 float-right"} onClick={onChangesSave}>
                     Save Settings
                 </UiLoadableButton>
             </UiCol>
@@ -127,21 +129,22 @@ const SettingsSubroute = () => {
         <UiViewBox theme={getTheme(false)} title={"User Settings"} description={"Edit your account here."}>
             {renderContent()}
         </UiViewBox>
-        <UiCol xs={12} className={"mb-3 view-box-bg mt-2 py-2 danger-shadow"}>
+        <UiViewBoxBackground xs={12} className={"mb-3 mt-2 py-2 danger-shadow"}>
             <UiRow noGutters className={"p-3"}>
                 <UiCol sm={9} xs={12}>
-                    <h4 className={"mb-1 text-danger"}>Deactivate Account</h4>
+                    <h4 className={"mb-1 text-red"}>Deactivate Account</h4>
                     <span className={"text-black-60"} style={{fontSize: ".9em"}}>
                             Personal information will be <strong>permanently removed</strong> but all your content will be anonymized. <strong>Irreversible action.</strong>
                         </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiLoadableButton className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "anonymize"}))}>
+                    <UiLoadableButton label={"Deactivate Account"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")}
+                                      onClick={() => Promise.resolve(setModal({...modal, open: true, type: "anonymize"}))}>
                         Deactivate
                     </UiLoadableButton>
                 </UiCol>
             </UiRow>
-        </UiCol>
+        </UiViewBoxBackground>
     </UiCol>
 };
 

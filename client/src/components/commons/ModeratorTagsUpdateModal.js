@@ -16,7 +16,7 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const [tags, setTags] = useState(ideaData.tags);
 
     return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
-                               applyButton={<UiLoadableButton className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
+                               applyButton={<UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
                                    <FaExclamation className={"move-top-1px"}/> Update
                                </UiLoadableButton>}>
         <UiRow centered className={"mt-3"}>

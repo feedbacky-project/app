@@ -24,15 +24,29 @@ const LoginButton = styled(UiClassicButton)`
   }
 `;
 
+const OptionsButton = styled.div`
+  background-color: transparent;
+  padding: 0;
+  box-shadow: none;
+  color: white;
+  line-height: 1.65rem;
+  
+  &:hover, &:focus {
+    color: white;
+    background-color: transparent;
+    box-shadow: none;
+  }
+`;
+
 export const renderLogIn = (onNotLoggedClick, context) => {
     if (!context.user.loggedIn) {
-        return <LoginButton onClick={onNotLoggedClick}><FaSignInAlt/></LoginButton>
+        return <LoginButton label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/></LoginButton>
     }
-    return <UiDropdown toggleClassName={"btn btn-link pr-1 text-white"} toggle={
-        <React.Fragment>
+    return <UiDropdown label={"Options"} toggleClassName={"px-0"} toggle={
+        <OptionsButton>
             <UiAvatar className={"mr-1"} roundedCircle user={context.user.data} size={24}/>
             <FaAngleDown/>
-        </React.Fragment>
+        </OptionsButton>
     }>
         <UiDropdownElement>
             <FaUserAlt className={"mr-2 move-top-1px"}/>

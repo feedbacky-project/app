@@ -19,6 +19,17 @@ const CardStyle = styled(UiCard)`
   margin: .5rem 0;
 `;
 
+export const CardLinkStyle = styled(UiCol)`
+  padding-left: 0;
+  padding-right: 0;
+  text-decoration: none !important;
+  color: var(--font-color) !important;
+  
+  .dark & {
+    color: var(--dark-font-color) !important;
+  }
+`;
+
 export const IdeaCardDescription = styled.small`
   color: hsla(0, 0%, 0%, .6);;
   letter-spacing: -.1pt;
@@ -135,10 +146,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             <span className={"my-auto mr-3"}>
                 <VoteButton onVote={onUpvote}/>
             </span>
-            <UiCol as={Link} className={"px-0 hidden-anchor"} to={{
-                pathname: "/i/" + convertIdeaToSlug(idea),
-                state: {_ideaData: idea, _boardData: data}
-            }}>
+            <CardLinkStyle as={Link} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                 <div>
                     <div className={"d-inline"} style={{fontSize: `1.15em`}}>
                         {idea.open || <FaLock className={"fa-xs mr-1 move-top-2px"}/>}
@@ -150,7 +158,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
                 </div>
                 <IdeaCardDescription dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
                 {renderAuthor()}
-            </UiCol>
+            </CardLinkStyle>
         </CardStyle>
     </IdeaContext.Provider>
 };

@@ -1,13 +1,12 @@
 import styled from "@emotion/styled";
 
 const Label = styled.div`
-  color: hsla(0, 0%, 0%, .6);
-  margin-right: .25rem;
+  color: hsla(0, 0%, 0%, .75);
   margin-bottom: .5rem;
   display: inline-block;
   
   .dark & {
-    color: hsla(0, 0%, 95%, .6);
+    color: hsla(0, 0%, 95%, .75);
   }
 `;
 

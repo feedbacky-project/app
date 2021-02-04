@@ -10,17 +10,17 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiTooltip} from "ui";
+import {UiBadge, UiClickableTip, UiHoverableIcon, UiTooltip} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
+import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import {UiFormLabel} from "ui/form";
 import {toastError, toastSuccess} from "utils/basic-utils";
 
 const TagsSubroute = () => {
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
-    const [modal, setModal] = useState({open: false, type: "", data: {}});
+    const [modal, setModal] = useState({open: false, type: "", data: {name: ""}});
     const getQuota = () => 10 - boardData.tags.length;
     useEffect(() => setCurrentNode("tags"), [setCurrentNode]);
     const onTagCreate = (data) => {
@@ -44,17 +44,17 @@ const TagsSubroute = () => {
                 <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>
                 {!tag.roadmapIgnored ||
                 <UiTooltip id={"tag" + i + "map"} text={"Ignores Roadmap"}>
-                    <FaEyeSlash className={"fa-xs ml-1 red"}/>
+                    <UiHoverableIcon as={FaEyeSlash} className={"text-red"}/>
                 </UiTooltip>}
                 {!tag.publicUse ||
                 <UiTooltip id={"tag" + i + "public"} text={"Publicly Accessible"}>
-                    <FaUserTag className={"fa-xs ml-1 blue"}/>
+                    <UiHoverableIcon as={FaUserTag} className={"text-blue"}/>
                 </UiTooltip>}
                 <UiTooltip id={"tag" + i + "edit"} text={"Edit Tag"}>
-                    <FaPen className={"fa-xs ml-1 hoverable-option"} onClick={() => onTagEdit(tag)}/>
+                    <UiHoverableIcon as={FaPen} onClick={() => onTagEdit(tag)}/>
                 </UiTooltip>
                 <UiTooltip id={"tag" + i + "delete"} text={"Delete Tag"}>
-                    <FaTrashAlt className={"fa-xs ml-1 hoverable-option"} onClick={() => setModal({open: true, type: "delete", data: {name: tag.name, color: tinycolor(tag.color)}})}/>
+                    <UiHoverableIcon as={FaTrashAlt} onClick={() => setModal({open: true, type: "delete", data: {name: tag.name, color: tinycolor(tag.color)}})}/>
                 </UiTooltip>
             </div>
         });
@@ -62,11 +62,11 @@ const TagsSubroute = () => {
     const renderNewTagButton = () => {
         if (getQuota() <= 0) {
             return <UiTooltip id={"quota"} text={"Quota Limit Reached"}>
-                <UiButton className={"m-0 mt-3 float-right"}><FaExclamation/> Add New</UiButton>
+                <UiButton label={"Add New"} className={"m-0 mt-3 float-right"}><FaExclamation/> Add New</UiButton>
             </UiTooltip>
         }
-        return <UiLoadableButton className={"mt-3 float-right"} onClick={() => {
-            setModal({open: true, type: "new", data: {}});
+        return <UiLoadableButton label={"Add New"} className={"mt-3 float-right"} onClick={() => {
+            setModal({open: true, type: "new", data: {name: ""}});
             return Promise.resolve();
         }}>Add New</UiLoadableButton>
     };

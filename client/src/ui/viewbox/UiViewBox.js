@@ -20,6 +20,21 @@ const ViewBoxContent = styled(UiRow)`
   margin-bottom: 1rem;
 `;
 
+export const UiViewBoxBackground = styled(UiCol)`
+  background-color: white;
+  border-radius: .35rem;
+  box-shadow: var(--box-shadow);
+  
+  .dark & {
+    background-color: var(--dark-secondary);
+    box-shadow: var(--dark-box-shadow) !important;
+    
+    .form-control:not(:disabled) {
+      background-color: var(--dark-quaternary) !important;
+    }
+  }
+`;
+
 const UiViewBox = (props) => {
     const {getTheme} = useContext(AppContext);
     const {theme = getTheme(), title, description, children} = props;
@@ -28,18 +43,18 @@ const UiViewBox = (props) => {
             <h3 className={"mb-0"}>{title}</h3>
             <div>{description}</div>
         </UiCard>
-        <UiCol className={"view-box-bg"}>
+        <UiViewBoxBackground>
             <ViewBoxContent>
                 {children}
             </ViewBoxContent>
-        </UiCol>
+        </UiViewBoxBackground>
     </React.Fragment>
 };
 
 export {UiViewBox};
 
 UiViewBox.propTypes = {
-    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    theme: PropTypes.object,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     children: PropTypes.object.isRequired

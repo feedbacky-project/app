@@ -1,14 +1,11 @@
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 import React from "react";
 
 const Image = styled.img`
   vertical-align: middle;
   border-radius: ${props => props.borderRadius};
   padding: ${props => props.padding};
-
-  .dark & {
-    background-color: var(--dark-tertiary);
-  }
 `;
 
 const UiImage = (props) => {
@@ -23,11 +20,17 @@ const UiImage = (props) => {
     let padding = 0;
     if (thumbnail) {
         padding = ".25rem";
-        if(borderRadius === 0) {
+        if (borderRadius === 0) {
             borderRadius = ".35rem";
         }
     }
     return <Image className={className} borderRadius={borderRadius} padding={padding} onError={onError} {...otherProps}/>
+};
+
+UiImage.propTypes = {
+    rounded: PropTypes.bool,
+    roundedCircle: PropTypes.bool,
+    thumbnail: PropTypes.bool
 };
 
 export {UiImage};

@@ -22,7 +22,7 @@ const CancelButton = styled(Button)`
 
 const UiCancelButton = (props) => {
     const {children, ...otherProps} = props;
-    return <CancelButton variant={"link"} {...otherProps}>{children}</CancelButton>
+    return <CancelButton aria-label={"Cancel"} variant={"link"} {...otherProps}>{children}</CancelButton>
 };
 
 export {UiCancelButton};

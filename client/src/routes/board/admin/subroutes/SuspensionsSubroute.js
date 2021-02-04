@@ -23,7 +23,7 @@ const SuspensionSettings = () => {
             <UiFormLabel>Suspended Users</UiFormLabel>
             {renderSuspensions()}
             <div>
-                <UiButton className={"m-0 mt-3 float-right"} onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</UiButton>
+                <UiButton label={"Add New"} className={"m-0 mt-3 float-right"} onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</UiButton>
             </div>
         </UiCol>
     };

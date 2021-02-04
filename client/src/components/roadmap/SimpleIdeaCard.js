@@ -1,5 +1,5 @@
 import axios from "axios";
-import {IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
+import {CardLinkStyle, IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
 import VoteButton from "components/commons/VoteButton";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
@@ -7,7 +7,7 @@ import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from "react";
 import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
-import {UiCol, UiRow} from "ui/grid";
+import {UiRow} from "ui/grid";
 import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
 
 export const SimpleIdeaCard = ({ideaData}) => {
@@ -76,10 +76,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
                 <span className={"my-auto mr-2"}>
                     <VoteButton onVote={onVote}/>
                 </span>
-                <UiCol as={Link} className={"d-inline px-0 text-left hidden-anchor"} to={{
-                    pathname: "/i/" + convertIdeaToSlug(idea),
-                    state: {_ideaData: idea, _boardData: data}
-                }}>
+                <CardLinkStyle as={Link} className={"d-inline text-left"} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                     <div>
                         <div className={"d-inline mr-1"} style={{letterSpacing: `-.15pt`}}>
                             {renderLockState()}
@@ -88,7 +85,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
                         </div>
                     </div>
                     <IdeaCardDescription dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
-                </UiCol>
+                </CardLinkStyle>
             </UiRow>
         </div>
     </IdeaContext.Provider>

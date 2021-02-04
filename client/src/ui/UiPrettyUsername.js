@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import BoardContext from "context/BoardContext";
+import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {FaBan} from "react-icons/all";
 import {truncateText} from "utils/basic-utils";
@@ -48,6 +49,11 @@ const UiPrettyUsername = (props) => {
         default:
             return username;
     }
+};
+
+UiPrettyUsername.propTypes = {
+    user: PropTypes.object.isRequired,
+    truncate: PropTypes.number
 };
 
 export {UiPrettyUsername};

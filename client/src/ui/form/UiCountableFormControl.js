@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React, {useState} from "react";
 import {UiFormText} from "ui/form/index";
 import {UiFormControl} from "ui/form/UiFormControl";
@@ -15,6 +16,13 @@ const UiCountableFormControl = (props) => {
             {maxLength - currentLength} Remaining
         </UiFormText>
     </React.Fragment>
+};
+
+UiCountableFormControl.propTypes = {
+    label: PropTypes.string.isRequired,
+    minLength: PropTypes.number.isRequired,
+    maxLength: PropTypes.number.isRequired,
+    defaultValue: PropTypes.string.isRequired,
 };
 
 export {UiCountableFormControl};

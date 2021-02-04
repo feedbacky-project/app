@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import Form from "react-bootstrap/Form";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
+import Form from "react-bootstrap/Form";
 import {FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
-import {UiFormControl} from "ui/form";
+import {UiFormControl, UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
 import {formatRemainingCharacters, getBase64FromFile, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
@@ -74,7 +74,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
     const renderAttachmentButton = () => {
         return <div className={"float-right"}>
             <UiCol xs={"auto"} className={"d-inline-block px-0"}>
-                <AttachmentButton variant={""} className={"m-0 p-0"}>
+                <AttachmentButton label={"Add Attachment"} variant={""} className={"m-0 p-0"}>
                     <input accept={"image/jpeg, image/png"} type={"file"} className={"d-none"} id={"attachmentUpload"} onChange={onAttachmentUpload}/>
                     <label htmlFor={"attachmentUpload"} className={"mb-0 cursor-click"} style={{height: 38, width: 38, color: "hsl(210, 11%, 15%)"}}>
                         <FaRegImage className={"align-top cursor-click"} style={{position: "relative", top: "50%", transform: "translateY(-50%)"}}/>
@@ -99,19 +99,17 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
         });
     };
     return <UiDismissibleModal id={"ideaPost"} isOpen={isOpen} onHide={onHide} title={"Post Feedback"}
-                               applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}>
+                               applyButton={<UiLoadableButton label={"Post Idea"} onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}>
         <div className={"mt-2 mb-1"}>
-            <div className={"mb-2"}>
-                <div className={"mr-1 d-inline"}>Title</div>
-                <UiClickableTip id={"ideaTitle"} title={"Writing a Title"} description={"Keep longer than 10 and shorter than 50 characters."}/>
-            </div>
+            <UiFormLabel>Title</UiFormLabel>
+            <UiClickableTip id={"ideaTitle"} title={"Writing a Title"} description={"Keep longer than 10 and shorter than 50 characters."}/>
             <UiCol xs={12} className={"d-inline-block px-0"}>
                 <UiCol xs={10} className={"pr-sm-0 pr-2 px-0 d-inline-block"}>
                     <UiFormControl minLength={10} maxLength={50} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
                                    onChange={e => {
                                        formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
                                        setTitle(e.target.value.substring(0, 50));
-                                   }}/>
+                                   }} label={"Idea title"}/>
                 </UiCol>
                 {renderAttachmentButton()}
             </UiCol>
@@ -124,21 +122,19 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
         </div>
         <br/>
         <div className={"my-2"}>
-            <div className={"mb-2"}>
-                <div className={"mr-1 d-inline"}>Description</div>
-                <UiClickableTip id={"ideaDescription"} title={"Writing a Description"} description={<React.Fragment>
-                    Write a detailed description of your feedback suggestion.<br/>
-                    Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
-                    Please keep under 1800 characters.
-                </React.Fragment>}/>
-            </div>
-            <TextareaAutosize className={"form-control"} id={"descriptionTextarea"} rows={5} maxRows={10}
-                              placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
-                              as={"textarea"} style={{resize: "none", overflow: "hidden"}}
-                              onChange={e => {
-                                  e.target.value = e.target.value.substring(0, 1800);
-                                  formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
-                              }}/>
+            <UiFormLabel>Description</UiFormLabel>
+            <UiClickableTip id={"ideaDescription"} title={"Writing a Description"} description={<React.Fragment>
+                Write a detailed description of your feedback suggestion.<br/>
+                Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
+                Please keep under 1800 characters.
+            </React.Fragment>} aria-label={"Idea description"}/>
+            <UiFormControl label={"Write description"} as={TextareaAutosize} id={"descriptionTextarea"} rows={5} maxRows={10}
+                           placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
+                           style={{resize: "none", overflow: "hidden"}}
+                           onChange={e => {
+                               e.target.value = e.target.value.substring(0, 1800);
+                               formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
+                           }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 1800 Remaining
             </small>
@@ -149,10 +145,8 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
         {applicableTags.length === 0 || <React.Fragment>
             <br/>
             <div className={"my-2"}>
-                <div className={"mb-2"}>
-                    <div className={"d-inline mr-1"}>Tags</div>
-                    <UiClickableTip id={"ideaTags"} title={"Choosing Tags"} description={"Choose tags you wish to be used in your idea."}/>
-                </div>
+                <UiFormLabel>Tags</UiFormLabel>
+                <UiClickableTip id={"ideaTags"} title={"Choosing Tags"} description={"Choose tags you wish to be used in your idea."}/>
                 <div>
                     {applicableTags.map((tag, i) => {
                         return <Form.Check id={"applicableTag_" + tag.id} key={i} custom inline type={"checkbox"} defaultChecked={false}

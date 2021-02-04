@@ -42,9 +42,9 @@ const NotificationsSubroute = () => {
     }
     const conditionalButton = (conditionEnabled, funcEnable, funcDisable) => {
         if (conditionEnabled) {
-            return <UiButton color={tinycolor("#ff3547")} onClick={funcDisable}>Disable</UiButton>
+            return <UiButton label={"Disable"} color={tinycolor("#ff3547")} onClick={funcDisable}>Disable</UiButton>
         }
-        return <UiButton color={tinycolor("#00c851")} onClick={funcEnable}>Enable</UiButton>
+        return <UiButton label={"Enable"} color={tinycolor("#00c851")} onClick={funcEnable}>Enable</UiButton>
     };
     const renderContent = () => {
         return <React.Fragment>
@@ -58,7 +58,7 @@ const NotificationsSubroute = () => {
                 {conditionalButton(notificationsEnabled, () => setNotificationsEnabled(true), () => setNotificationsEnabled(false))}
             </UiCol>
             <UiCol xs={12}>
-                <UiLoadableButton color={tinycolor("#00c851")} className={"mt-3 float-right"} onClick={onChangesSave}>
+                <UiLoadableButton label={"Save"} color={tinycolor("#00c851")} className={"mt-3 float-right"} onClick={onChangesSave}>
                     Save Settings
                 </UiLoadableButton>
             </UiCol>

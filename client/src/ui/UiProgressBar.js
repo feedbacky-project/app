@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
+import "assets/scss/commons/setup-steps.scss";
 import AppContext from "context/AppContext";
+import PropTypes from "prop-types";
 import Steps from "rc-steps";
 import React, {useContext} from "react";
 import {ProgressBar} from "react-bootstrap";
-import "assets/scss/commons/setup-steps.scss";
 import {UiCol} from "ui/grid";
 
 const ProgressSteps = styled(Steps)`
@@ -19,6 +20,9 @@ const ProgressSteps = styled(Steps)`
 `;
 
 const PageProgressBar = styled(ProgressBar)`
+  .dark & {
+    background-color: var(--dark-font-color) !important;
+  }
   .progress-bar-striped {
     background-color: ${props => props.theme.toHexString()};
   }
@@ -38,6 +42,11 @@ const UiProgressBar = (props) => {
             <PageProgressBar striped theme={getTheme()} now={(currentStep / steps) * 100}/>
         </UiCol>
     </React.Fragment>
+};
+
+UiProgressBar.propTypes = {
+    currentStep: PropTypes.number,
+    steps: PropTypes.number
 };
 
 export {UiProgressBar};

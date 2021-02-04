@@ -1,4 +1,5 @@
 import IdeaCreateModal from "components/board/IdeaCreateModal";
+import MarkdownContainer from "components/commons/MarkdownContainer";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
@@ -8,7 +9,6 @@ import {Link} from "react-router-dom";
 import {UiCard} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
-import {parseMarkdown} from "utils/basic-utils";
 
 const BoardInfoCard = ({onIdeaCreation}) => {
     const {user} = useContext(AppContext);
@@ -26,12 +26,7 @@ const BoardInfoCard = ({onIdeaCreation}) => {
         if (!contains) {
             return;
         }
-        return <UiButton as={Link} to={{
-            pathname: "/ba/" + data.discriminator,
-            state: {
-                _boardData: data,
-            },
-        }} className={"py-1 float-right"}>
+        return <UiButton label={"Edit Board"} as={Link} to={{pathname: "/ba/" + data.discriminator, state: {_boardData: data}}} className={"py-1 float-right"}>
             Manage <FaAlignRight className={"ml-1 move-top-1px"}/>
         </UiButton>
     };
@@ -39,10 +34,10 @@ const BoardInfoCard = ({onIdeaCreation}) => {
     return <UiCol xs={{span: 12, order: 1}} lg={{span: 4, order: 12}}>
         <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation}/>
         <UiCard className={"my-2 text-left"}>
-            <div className={"markdown-box"} dangerouslySetInnerHTML={{__html: parseMarkdown(data.fullDescription)}}/>
-            <hr/>
+            <MarkdownContainer text={data.fullDescription}/>
+            <hr className={"pb-1"}/>
             {/* eslint-disable-next-line */}
-            <UiLoadableButton tabIndex={1} className={"py-1"} onClick={() => {
+            <UiLoadableButton label={"Create Idea"} tabIndex={1} className={"py-1"} onClick={() => {
                 onCreateIdeaModalClick();
                 return Promise.resolve();
             }}>

@@ -1,20 +1,30 @@
+import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
+import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {Dropdown} from "react-bootstrap";
 import {FaAngleDown} from "react-icons/all";
-import styled from "@emotion/styled";
 import tinycolor from "tinycolor2";
+import {UiClassicButton} from "ui/button";
+import {DropdownMenu, DropdownToggle} from "ui/dropdown/UiDropdown";
 
-const SelectableDropdown = styled.div`
+const SelectableDropdown = styled(UiClassicButton)`
   margin: 0;
   padding: 0;
   font-weight: bold;
   text-decoration: underline;
   color: var(--font-color);
+  box-shadow: none;
+  background-color: hsl(210, 17%, 98%);
 
   &:hover {
+    box-shadow: none;
     text-decoration: underline;
     color: var(--font-color);
+  }
+  
+  &:focus {
+    background-color: hsl(210, 17%, 98%);;
   }
   
   .dark & {
@@ -32,28 +42,36 @@ const SelectableDropdown = styled.div`
 
 const UiSelectableDropdown = (props) => {
     const {user, getTheme} = useContext(AppContext);
-    const {id, className, currentValue, values} = props;
+    const {id, className = null, currentValue, label, values} = props;
     let children;
-    if(user.darkMode) {
+    if (user.darkMode) {
         let color = getTheme().lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(color, "#282828") < 2.5) {
             color = color.lighten(25);
         }
-        children = <Dropdown.Toggle as={SelectableDropdown} id={id} variant={""} className={"btn btn-link move-top-1px"} style={{backgroundColor: getTheme().setAlpha(.1)}}>
+        children = <SelectableDropdown label={label} as={DropdownToggle} id={id} variant={""} className={"move-top-1px"}
+                                       style={{backgroundColor: getTheme().setAlpha(.1)}}>
             <span style={{color, marginRight: "0.2rem"}}>{currentValue}</span>
-            <FaAngleDown/>
-        </Dropdown.Toggle>
+            <FaAngleDown style={{color: getTheme()}}/>
+        </SelectableDropdown>
     } else {
-        children = <Dropdown.Toggle as={SelectableDropdown} id={id} variant={""} className={"btn btn-link move-top-1px"}>
+        children = <SelectableDropdown label={label} as={DropdownToggle} id={id} variant={""} className={"move-top-1px"}>
             <span>{currentValue}</span>
             <FaAngleDown/>
-        </Dropdown.Toggle>
+        </SelectableDropdown>
     }
     return <Dropdown className={className} style={{zIndex: 1}}>
         {children}
-        <Dropdown.Menu alignRight>{values}</Dropdown.Menu>
+        <DropdownMenu alignRight>{values}</DropdownMenu>
     </Dropdown>
+};
+
+UiSelectableDropdown.propTypes = {
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    currentValue: PropTypes.array.isRequired,
+    values: PropTypes.array.isRequired
 };
 
 export {UiSelectableDropdown};

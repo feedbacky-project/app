@@ -42,6 +42,5 @@ const UiBadge = (props) => {
 export {UiBadge};
 
 UiBadge.propTypes = {
-    color: PropTypes.object,
-    className: PropTypes.string
+    color: PropTypes.object
 };

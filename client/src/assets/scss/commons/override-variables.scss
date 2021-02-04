@@ -19,21 +19,3 @@ $dropdown-item-padding-x: .5rem;
 $dropdown-font-size: 14px;
 $dropdown-min-width: 8.5rem;
 $input-box-shadow: $box-shadow;
-
-$green: hsl(144, 100%, 39%);
-$red: hsl(355, 100%, 60%);
-$orange: hsl(46, 51%, 51%);
-$blue: hsl(211, 79%, 43%);
-
-$theme-colors: (
-        "primary": $blue,
-        "success": $green,
-        "danger": $red,
-        "warning": $orange,
-);
-$colors: (
-        "blue": $blue,
-        "green": $green,
-        "orange": $orange,
-        "red": $red,
-);

@@ -22,11 +22,11 @@ const ErrorRoute = ({Icon, message, notes = "", crash = false, onBackButtonClick
                     <h3 className={"mb-0"}>{message}</h3>
                     {notes && <div className={"my-1"}>{notes}</div>}
                     <Link to={"/"} onClick={onBackButtonClick}>
-                        <UiButton color={tinycolor("#ff3547")} className={"mx-0 py-3 px-4 mt-1"}>
+                        <UiButton label={"Go Back"} color={tinycolor("#ff3547")} className={"mx-0 py-3 px-4 mt-1"}>
                             Back to the Main Page
                         </UiButton>
                     </Link>
-                    {crash && <UiButton color={tinycolor("#e0a800")} className={"mx-0 py-3 px-4 mt-1 ml-3"} onClick={() => hardResetData()}>
+                    {crash && <UiButton label={"Reset Data"} color={tinycolor("#e0a800")} className={"mx-0 py-3 px-4 mt-1 ml-3"} onClick={() => hardResetData()}>
                         Reset Data
                     </UiButton>}
                 </div>

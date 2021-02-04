@@ -31,7 +31,7 @@ const NotificationsInfo = () => {
         }).catch(() => toastError());
     };
     const renderButton = () => {
-        return <UiLoadableButton size={"sm"} onClick={onSubscribeToggle}>
+        return <UiLoadableButton label={"Subscribe Toggle"} size={"sm"} onClick={onSubscribeToggle}>
             {ideaData.subscribed ?
                 <React.Fragment><FaRegBellSlash className={"move-top-1px"}/> Unsubscribe</React.Fragment>
                 : <React.Fragment><FaRegBell className={"move-top-1px"}/> Subscribe</React.Fragment>}
@@ -40,7 +40,7 @@ const NotificationsInfo = () => {
     return <React.Fragment>
         <div className={"my-1 text-black-75"}>
             Mail Subscription
-            <span className={"ml-1"}><UiClickableTip id={"subTip"} title={"Mail Subscriptions"} description={"Subscribe idea to receive mail notifications, configure settings at profile page."}/></span>
+            <UiClickableTip id={"subTip"} title={"Mail Subscriptions"} description={"Subscribe idea to receive mail notifications, configure settings at profile page."}/>
         </div>
         {renderButton()}
     </React.Fragment>

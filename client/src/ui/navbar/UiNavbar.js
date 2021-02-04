@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
-import PropTypes from 'prop-types';
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 
@@ -41,13 +40,9 @@ const Brand = styled(Link)`
 const UiNavbar = (props) => {
     const {getTheme} = useContext(AppContext);
     const {theme = getTheme(), children, ...otherProps} = props;
-    return <StyledNavbar theme={theme.toString()} {...otherProps}>
+    return <StyledNavbar role={"navigation"} theme={theme.toString()} {...otherProps}>
         {children}
     </StyledNavbar>
 };
 
 export {UiNavbar, Brand};
-
-UiNavbar.propTypes = {
-    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-};

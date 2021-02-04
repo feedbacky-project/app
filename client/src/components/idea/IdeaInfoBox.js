@@ -1,5 +1,6 @@
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
+import MarkdownContainer from "components/commons/MarkdownContainer";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import AttachmentsInfo from "components/idea/info/AttachmentsInfo";
@@ -15,11 +16,11 @@ import {FaPen} from "react-icons/all";
 import {FaLock, FaTrash} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import TimeAgo from "timeago-react";
-import {UiPrettyUsername} from "ui";
+import {UiHoverableIcon, UiPrettyUsername} from "ui";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
-import {htmlDecode, parseMarkdown, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {htmlDecode, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const IdeaInfoBox = () => {
     const {user} = useContext(AppContext);
@@ -113,15 +114,15 @@ const IdeaInfoBox = () => {
         if (editor.enabled) {
             return renderEditorMode();
         }
-        return <span className={"markdown-box"} dangerouslySetInnerHTML={{__html: parseMarkdown(ideaData.description)}}/>
+        return <MarkdownContainer text={ideaData.description}/>
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <TextareaAutosize className={"form-control bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
+            <TextareaAutosize className={"form-control bg-lighter"} aria-label={"Write a description"} id={"editorBox"} rows={4} maxRows={12}
                               placeholder={"Write a description..."} required as={"textarea"}
                               style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
             <div className={"m-0 mt-2"}>
-                <UiLoadableButton size={"sm"} onClick={onEditApply}>Save</UiLoadableButton>
+                <UiLoadableButton label={"Save"} size={"sm"} onClick={onEditApply}>Save</UiLoadableButton>
                 <UiCancelButton size={"sm"} onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
             </div>
         </React.Fragment>
@@ -131,14 +132,14 @@ const IdeaInfoBox = () => {
         if (ideaData.user.id !== user.data.id || data.moderators.find(mod => mod.userId === user.data.id)) {
             return;
         }
-        return <FaTrash className={"ml-1 fa-xs cursor-click move-top-2px text-black-60"} onClick={() => setModal({open: true})}/>
+        return <UiHoverableIcon as={FaTrash} className={"move-top-2px text-black-60"} onClick={() => setModal({open: true})}/>
     };
     const renderDetails = () => {
         return <React.Fragment>
             <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
             <ModeratorActionsButton/>
             {renderDeletionButton()}
-            {ideaData.user.id !== user.data.id || <FaPen className={"ml-1 fa-xs cursor-click move-top-2px text-black-60"} onClick={() => setEditor({...editor, enabled: true})}/>}
+            {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60"} onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
             <UiAvatar roundedCircle className={"mr-1"} user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
             <small><UiPrettyUsername user={ideaData.user}/> ·{" "}</small>
@@ -149,7 +150,7 @@ const IdeaInfoBox = () => {
     return <React.Fragment>
         <DangerousActionModal id={"ideaDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onDelete}
                               actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
-        <UiCol sm={12} md={10} className={"mt-4"}>
+        <UiCol sm={12} md={10}>
             <UiCol xs={12} className={"d-inline-flex mb-2 p-0"}>
                 <div className={"my-auto mr-2"} ref={voteRef}>
                     <VoteButton onVote={onUpvote}/>

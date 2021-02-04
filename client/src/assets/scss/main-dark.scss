@@ -1,26 +1,8 @@
 // Dark Mode overrides for main.scss
 
-//going shadowless on dark mode
-$box-shadow: none;
-
-:root {
-  --dark-background: hsl(217, 11%, 14%);
-  --dark-secondary: hsl(214, 8%, 17%);
-  --dark-tertiary: hsl(214, 7%, 19%);
-  --dark-quaternary: hsl(213, 7%, 24%);
-  --dark-font-color: hsl(0, 0%, 95%);
-  --dark-disabled: hsl(217, 11%, 14%);
-  --dark-hover: hsl(219, 11%, 32%);
-  --dark-box-shadow: var(--dark-box-shadow);
-}
-
 .dark {
   background-color: var(--dark-background);
   color: var(--dark-font-color);
-
-  .blue {
-    color: hsl(210, 100%, 60%);
-  }
 
   .bg-dark, kbd {
     background-color: var(--dark-quaternary) !important;
@@ -48,20 +30,8 @@ $box-shadow: none;
     color: hsl(0, 0%, 49%);
   }
 
-  .dropdown-item:hover {
-    background-color: var(--dark-hover);
-  }
-
-  .fa-attachment, .btn-link, small, .hidden-anchor {
+  small {
     color: var(--dark-font-color) !important;
-  }
-
-  .text-black-75 {
-    color: hsla(0, 0%, 95%, .75) !important;
-  }
-
-  .text-black-60 {
-    color: hsla(0, 0%, 95%, .6) !important;
   }
 
   textarea, .form-control {
@@ -74,34 +44,8 @@ $box-shadow: none;
     background-color: var(--dark-disabled) !important;
   }
 
-  .btn-attachment {
-    background-color: var(--dark-secondary);
-
-    *:hover {
-      color: var(--dark-font-color);
-    }
-  }
-
-  .btn {
-    box-shadow: var(--dark-box-shadow) !important;
-  }
-
   hr {
     background-color: var(--dark-secondary);
-  }
-
-  .dropdown-menu, .dropdown-item {
-    box-shadow: var(--dark-box-shadow);
-    background-color: var(--dark-quaternary);
-    color: var(--dark-font-color);
-  }
-
-  .dropdown-divider {
-    border-color: var(--dark-background) !important;
-  }
-
-  .progress {
-    background-color: var(--dark-font-color) !important;
   }
 
   .rc-steps-item-title {
@@ -112,47 +56,8 @@ $box-shadow: none;
     background-color: var(--dark-font-color) !important;
   }
 
-  #commentContainer a, #socialPreviewContainer a, .markdown-box a:not(.pre-href), .markdown-box a *, .snarkdown-box a:not(.pre-href) {
-    color: hsl(208, 100%, 62%) !important;
-
-    &:hover {
-      color: hsl(208, 100%, 75%) !important;
-    }
-  }
-
-  .toast-style {
-    background-color: var(--dark-secondary);
-    color: var(--dark-font-color);
-    box-shadow: var(--dark-box-shadow) !important;
-  }
-
-  .view-box-bg {
-    background-color: var(--dark-secondary);
-    box-shadow: var(--dark-box-shadow) !important;
-
-    .form-control:not(:disabled) {
-      background-color: var(--dark-quaternary) !important;
-    }
-  }
-
   //simulate border on shadowless dark mode
   .danger-shadow {
     border: hsla(2, 100%, 60%, .3) 1px solid;
-  }
-
-  .text-danger {
-    color: hsl(2, 95%, 66%) !important;
-  }
-
-  .search-dropdown-bar {
-    background-color: var(--dark-tertiary);
-    padding: 0 .5rem;
-    text-decoration: none;
-    box-shadow: var(--dark-box-shadow) !important;
-
-    &:hover {
-      text-decoration: none;
-      background-color: var(--dark-hover);
-    }
   }
 }

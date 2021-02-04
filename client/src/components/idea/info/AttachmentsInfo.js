@@ -8,6 +8,13 @@ import React, {useContext, useState} from "react";
 import {UiElementDeleteButton} from "ui/button";
 import {UiImage} from "ui/image";
 import {toastError, toastSuccess} from "utils/basic-utils";
+import styled from "@emotion/styled";
+
+const Attachment = styled(UiImage)`
+  .dark & {
+    background-color: var(--dark-tertiary);
+  }
+`;
 
 const AttachmentsInfo = () => {
     const {user} = useContext(AppContext);
@@ -40,7 +47,7 @@ const AttachmentsInfo = () => {
                 return <React.Fragment key={attachment.id}>
                     <UiElementDeleteButton tooltipName={"Remove"} id={"attachment-del"} onClick={() => setModal({open: true, data: attachment.id, dataUrl: attachment.url})}/>
                     <SafeAnchor url={attachment.url}>
-                        <UiImage thumbnail src={attachment.url} alt={"Attachment"} width={125}/>
+                        <Attachment thumbnail src={attachment.url} alt={"Attachment"} width={125}/>
                     </SafeAnchor>
                 </React.Fragment>
             }

@@ -44,20 +44,20 @@ const UiTestRoute = () => {
             <div style={{position: "fixed", zIndex: 1000, left: "15px", top: "50%", width: 150, borderRadius: ".35rem", backgroundColor: "#2d2d2d"}}>
                 <UiContainer className={"py-2 justify-content-center"}>
                     <div style={{textAlign: "center", marginBottom: ".5rem", color: "white"}}>Debug Card</div>
-                    <UiButton size={"sm"} className={"my-1"} onClick={() => context.onAppearanceToggle()}>Dark Mode</UiButton>
-                    <UiButton size={"sm"} className={"my-1"} onClick={() => context.onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
-                    <UiButton size={"sm"} className={"my-1"} onClick={() => toastSuccess("Toast test")}>Toast Test</UiButton>
+                    <UiButton label={"Dark Mode"} size={"sm"} className={"my-1"} onClick={() => context.onAppearanceToggle()}>Dark Mode</UiButton>
+                    <UiButton label={"Random Theme"} size={"sm"} className={"my-1"} onClick={() => context.onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
+                    <UiButton label={"Toast Test"} size={"sm"} className={"my-1"} onClick={() => toastSuccess("Toast test")}>Toast Test</UiButton>
                 </UiContainer>
             </div>
             <UiContainer>
                 <UiRow className={"mt-5"}>
                     <BoardBanner/>
                     <UiCol xs={12} className={"my-3"}>
-                        <UiButton className={"mx-2"}>Test</UiButton>
-                        <UiButton className={"mx-2"} color={customTheme}>Colored</UiButton>
+                        <UiButton label={"Test"} className={"mx-2"}>Test</UiButton>
+                        <UiButton label={"Test Colored"} className={"mx-2"} color={customTheme}>Colored</UiButton>
                         <UiCancelButton className={"mx-2"}>TestCancel</UiCancelButton>
-                        <UiLoadableButton id={"loadable"} className={"mx-2"} onClick={() => new Promise(resolve => setTimeout(void 0, 1000))}>Loading</UiLoadableButton>
-                        <UiClassicButton className={"mx-2"}>Classic</UiClassicButton>
+                        <UiLoadableButton label={"Test"} id={"loadable"} className={"mx-2"} onClick={() => new Promise(() => setTimeout(void 0, 1000))}>Loading</UiLoadableButton>
+                        <UiClassicButton label={"Classic Test"} className={"mx-2"}>Classic</UiClassicButton>
 
                         <UiElementDeleteButton tooltipName={"Delete Btn"} onClick={() => void 0} id={"elDel"}/>
                         <UiNextStepButton nextStep={() => void 0}/>
@@ -102,10 +102,10 @@ const UiTestRoute = () => {
                         </UiProgressBar>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
-                        <UiFormControl placeholder={"Example form"} maxLength={15} id={"form1"}/>
+                        <UiFormControl placeholder={"Example form"} maxLength={15} id={"form1"} label={"Form1"}/>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
-                        <UiCountableFormControl placeholder={"Example form"} defaultValue={"hello default value maxLength 99"} maxLength={99} id={"form2"}/>
+                        <UiCountableFormControl label={"Example form control"} placeholder={"Example form"} defaultValue={"hello default value maxLength 99"} maxLength={99} id={"form2"}/>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
                         <UiAvatar className={"mx-2"} user={context.user.data} size={120}/>
@@ -118,7 +118,7 @@ const UiTestRoute = () => {
                         <UiImage className={"mx-2"} src={"https://static.plajer.xyz/avatar/generator.php?name=Generator"} roundedCircle width={32} height={32}/>
                     </UiCol>
                     <UiCol xs={12} className={"my-3"}>
-                        <UiSelectableDropdown values={<React.Fragment><UiDropdownElement>Test</UiDropdownElement><UiDropdownElement>Second</UiDropdownElement></React.Fragment>}
+                        <UiSelectableDropdown label={"Test Choose"} values={<React.Fragment><UiDropdownElement>Test</UiDropdownElement><UiDropdownElement>Second</UiDropdownElement></React.Fragment>}
                                               currentValue={"Test Dropdown"} id={"selectDropdown"}/>
                     </UiCol>
                 </UiRow>

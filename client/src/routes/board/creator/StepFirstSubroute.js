@@ -18,13 +18,13 @@ const StepFirstSubroute = ({updateSettings, settings}) => {
                                 <br/>
                                 <strong>Minimum 3 and maximum 20 characters.</strong></React.Fragment>}/>
 
-            <UiCountableFormControl id={"discriminator"} minLength={3} maxLength={20} placeholder={"Example: git-tool-feedback"}
+            <UiCountableFormControl label={"Type board discriminator"} id={"discriminator"} minLength={3} maxLength={20} placeholder={"Example: git-tool-feedback"}
                                     defaultValue={settings.discriminator} onChange={e => updateSettings({...settings, discriminator: e.target.value})}/>
         </UiCol>
         <UiCol xs={12} sm={6} className={"mt-4 px-md-5 px-3"}>
             <UiFormLabel>Board Name</UiFormLabel>
             <UiClickableTip id={"boardName"} title={"Set Board Name"} description={"Name of your board should be at least 4 and maximum 25 characters long."}/>
-            <UiCountableFormControl id={"name"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={settings.name}
+            <UiCountableFormControl label={"Type board name"} id={"name"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={settings.name}
                                     onChange={e => updateSettings({...settings, name: e.target.value})}/>
         </UiCol>
     </React.Fragment>

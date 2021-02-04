@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import {UiImage} from "ui/image/UiImage";
 import {getDefaultAvatar} from "utils/basic-utils";
@@ -27,6 +28,11 @@ const UiAvatar = (props) => {
         src = getSizedAvatarByUrl(user.avatar, getNearestAvatarSize(size));
     }
     return <UiImage alt={"Avatar"} onError={e => e.target.src = getDefaultAvatar(user.username)} src={src} width={size} height={size} {...otherProps}/>
+};
+
+UiAvatar.propTypes = {
+    user: PropTypes.object,
+    size: PropTypes.number.isRequired
 };
 
 export {UiAvatar};

@@ -51,7 +51,7 @@ const DiscussionBox = () => {
     };
     const renderComments = () => {
         if (comments.error) {
-            return <div className={"text-danger mt-2 mb-3"}><FaFrown/> Failed to load comments</div>
+            return <div className={"text-red mt-2 mb-3"}><FaFrown/> Failed to load comments</div>
         }
         return <InfiniteScroll
             pageStart={0}
@@ -88,7 +88,7 @@ const DiscussionBox = () => {
                     <small style={{fontWeight: "bold"}}><UiPrettyUsername user={user.data}/></small>
                     <br/>
                     <TextareaAutosize className={"form-control mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                      style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp}/>
+                                      style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp} aria-label={"Write a comment"}/>
                     {renderSubmitButton()}
                 </UiCol>
             </UiCol>
@@ -102,7 +102,7 @@ const DiscussionBox = () => {
                 <small style={{fontWeight: "bold"}}>Anonymous</small>
                 <br/>
                 <TextareaAutosize className={"form-control mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                  style={{resize: "none", overflow: "hidden"}} onChange={onNotLoggedClick} onClick={e => {
+                                  style={{resize: "none", overflow: "hidden"}} onChange={onNotLoggedClick} aria-label={"Write a comment"} onClick={e => {
                     e.target.blur();
                     onNotLoggedClick();
                 }}/>
@@ -115,12 +115,12 @@ const DiscussionBox = () => {
         }
         const moderator = data.moderators.find(mod => mod.userId === user.data.id);
         return <div className={"mt-2"}>
-            <UiLoadableButton size={"sm"} style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(false)}>
+            <UiLoadableButton label={"Submit"} size={"sm"} onClick={() => onCommentSubmit(false)}>
                 Submit
             </UiLoadableButton>
 
             {moderator && <React.Fragment>
-                <UiLoadableButton color={tinycolor("#0080FF")} size={"sm"} className={"mx-1"} style={{fontSize: "0.75em"}} onClick={() => onCommentSubmit(true)}>
+                <UiLoadableButton label={"Submit Internal"} color={tinycolor("#0080FF")} size={"sm"} className={"mx-1"} onClick={() => onCommentSubmit(true)}>
                     Submit Internal
                 </UiLoadableButton>
                 <div className="d-inline-flex align-top"><UiClickableTip id={"internalTip"} title={"Internal Comments"} description={"Comments visible only for moderators of the project, hidden from public view."}/></div>
@@ -258,13 +258,13 @@ const DiscussionBox = () => {
                               actionDescription={<div>Comment will be permanently <u>deleted</u>.</div>}/>
         <div>
             <div className={"d-inline-block text-black-75 mr-1"}>Discussion ({ideaData.commentsAmount} comments)</div>
-            <UiSelectableDropdown id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
+            <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>
             {renderCommentBox()}
             {renderNoDataImage()}
         </UiCol>
-        <UiCol xs={11} md={10} className={"px-0"} id={"commentContainer"}>
+        <UiCol xs={11} md={10} className={"px-0"}>
             {renderComments()}
         </UiCol>
     </UiCol>

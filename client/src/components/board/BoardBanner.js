@@ -30,17 +30,17 @@ const SocialLinkContainer = styled.div`
   @media(max-width: 576px) {
     position: relative;
     display: inline-block;
-    bottom: -26px;
+    bottom: -23px;
     height: 0;
   }
   @media(min-width: 576px) {
     position: absolute;
-    bottom: 6.5%;
+    bottom: 8.2%;
   }
 `;
 
 const SocialLink = styled(Link)`
-  padding: .5rem 1rem;
+  padding: .7rem 1rem;
   background-color: hsla(0, 0%, 0%, .5);
   transition: .2s ease-in-out;
 
@@ -68,8 +68,7 @@ const BoardBanner = ({customName}) => {
                     <UiImage src={link.logoUrl} alt={"Social Icon"} width={18} height={18}/>
                 </SocialLink>
             })}
-            <SocialLink to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}}
-                        style={{backgroundColor: getTheme().setAlpha(.5)}}>
+            <SocialLink to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}} style={{backgroundColor: getTheme().setAlpha(.5)}} aria-label={"Roadmap"}>
                 <FaMap style={{color: "white"}}/>
             </SocialLink>
         </SocialLinkContainer>

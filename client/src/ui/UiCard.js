@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 import React from "react";
 
 const StyledCard = styled.div`
@@ -33,6 +34,12 @@ const UiCard = (props) => {
             {children}
         </StyledBody>
     </StyledCard>
+};
+
+UiCard.propTypes = {
+    bodyClassName: PropTypes.string,
+    bodyAs: PropTypes.func,
+    innerRef: PropTypes.object
 };
 
 export {UiCard};

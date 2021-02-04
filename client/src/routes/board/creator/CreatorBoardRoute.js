@@ -68,7 +68,7 @@ const CreatorBoardRoute = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 3) {
-            return <UiButton color={tinycolor("#00c851")} className={"ml-2"} onClick={nextStep}>Create Board</UiButton>
+            return <UiButton label={"Create Board"} color={tinycolor("#00c851")} className={"ml-2"} onClick={nextStep}>Create Board</UiButton>
         }
         return <UiNextStepButton nextStep={nextStep}/>
     };

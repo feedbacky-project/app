@@ -36,10 +36,10 @@ const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
     };
 
     return <UiDismissibleModal id={"moderatorInvite"} size={"sm"} isOpen={isOpen} onHide={onHide} title={"Invite New Moderator"}
-                               applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Invite</UiLoadableButton>}>
+                               applyButton={<UiLoadableButton label={"Invite"} onClick={handleSubmit} className={"mx-0"}>Invite</UiLoadableButton>}>
         <div className={"mt-2 mb-1"}>
-            <UiFormLabel className={"mr-1 text-black-60"}>User Email</UiFormLabel>
-            <UiFormControl type={"email"} placeholder={"Existing user email."} id={"inviteEmailTextarea"}/>
+            <UiFormLabel>User Email</UiFormLabel>
+            <UiFormControl type={"email"} placeholder={"Existing user email."} id={"inviteEmailTextarea"} label={"Type email"}/>
         </div>
     </UiDismissibleModal>
 };

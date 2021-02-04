@@ -1,10 +1,8 @@
 import Cookies from "js-cookie";
-import marked from "marked";
 import React from "react";
 import {FaCheck, FaExclamation, FaExclamationTriangle} from "react-icons/fa";
 import {Slide, toast} from "react-toastify";
 import {UiLoadingSpinner} from "ui";
-import {parseEmojis} from "utils/emoji-filter";
 
 export const getDefaultAvatar = (username) => {
     const avatar = process.env.REACT_APP_DEFAULT_USER_AVATAR;
@@ -28,10 +26,6 @@ export const convertIdeaToSlug = (ideaData) => {
         .replace(/^(-)/, "")
         .replace(/(-)$/, "");
     return slug + "." + ideaData.id;
-};
-
-export const parseMarkdown = (html) => {
-    return parseEmojis(marked(html, {breaks: true}));
 };
 
 export const popupToast = (content, type, toastId) => {

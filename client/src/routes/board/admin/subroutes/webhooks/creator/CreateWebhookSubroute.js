@@ -59,7 +59,7 @@ const CreateWebhookSubroute = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 3) {
-            return <UiButton color={tinycolor("#00c851")} className={"ml-2"} onClick={nextStep}>Finish</UiButton>
+            return <UiButton label={"Finish"} color={tinycolor("#00c851")} className={"ml-2"} onClick={nextStep}>Finish</UiButton>
         }
         return <UiNextStepButton nextStep={nextStep}/>
     };

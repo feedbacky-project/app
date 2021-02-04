@@ -93,7 +93,7 @@ const ModeratorsSubroute = () => {
                 })}
             </UiCol>
             <UiCol xs={12}>
-                <UiLoadableButton className={"mt-3 float-right"} onClick={() => {
+                <UiLoadableButton label={"Invite"} className={"mt-3 float-right"} onClick={() => {
                     setModal({...modal, open: true, type: "invite"});
                     return Promise.resolve();
                 }}>Invite New</UiLoadableButton>

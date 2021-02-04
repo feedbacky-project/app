@@ -117,7 +117,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     if (user.darkMode) {
         color = color.setAlpha(.8);
     }
-    return <UiDropdown className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline cursor-click"}/>}>
+    return <UiDropdown label={"Moderate Idea"} className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline cursor-click"}/>}>
         <DangerousActionModal id={"close"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "close"} onAction={onIdeaClose}
                               actionDescription={<div>Once you close idea you can open it again.</div>} actionButtonName={"Close"}/>
         <DangerousActionModal id={"open"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "open"} onAction={onIdeaOpen}
@@ -135,7 +135,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             <DropdownOption onClick={() => setModal({open: true, type: "open"})} as={"span"}><FaUnlock className={"mr-1 move-top-2px"} style={{color}}/> Open Idea</DropdownOption>
         }
         <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Idea</DropdownOption>
-        {isSuspendable() && <DropdownOption onClick={() => setModal({open: true, type: "suspend"})} className={"text-danger"} as={"span"}>
+        {isSuspendable() && <DropdownOption onClick={() => setModal({open: true, type: "suspend"})} className={"text-red"} as={"span"}>
             <FaUserLock className={"mr-1 move-top-2px"} style={{color: getTheme()}}/> Suspend User
         </DropdownOption>
         }

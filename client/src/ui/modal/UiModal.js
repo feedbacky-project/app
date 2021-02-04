@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 
@@ -40,4 +41,12 @@ const UiModal = (props) => {
     </StyledModal>
 };
 
+
+UiModal.propTypes = {
+    id: PropTypes.string.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    onHide: PropTypes.func.isRequired,
+    header: PropTypes.object,
+    footer: PropTypes.object
+};
 export {UiModal};

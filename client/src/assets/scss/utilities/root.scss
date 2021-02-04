@@ -1,0 +1,16 @@
+:root {
+  --box-shadow: 0 3px 5px 0 hsla(0, 0%, 0%, .15);
+  --hover-transition: all .2s ease-in-out;
+  --hover-transform-scale: scale(1.05);
+  --font-color: hsl(210, 11%, 15%);
+  --pure-dark-half: hsla(0, 0%, 0%, .5);
+
+  --dark-background: hsl(217, 11%, 14%);
+  --dark-secondary: hsl(214, 8%, 17%);
+  --dark-tertiary: hsl(214, 7%, 19%);
+  --dark-quaternary: hsl(213, 7%, 24%);
+  --dark-font-color: hsl(0, 0%, 95%);
+  --dark-disabled: hsl(217, 11%, 14%);
+  --dark-hover: hsl(219, 11%, 32%);
+  --dark-box-shadow: none;
+}

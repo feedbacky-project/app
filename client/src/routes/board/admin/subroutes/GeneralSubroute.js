@@ -16,8 +16,22 @@ import {UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
+import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
 import {retry} from "utils/lazy-init";
+import styled from "@emotion/styled";
+
+const ThemeSelector = styled.div`
+  width: 28px;
+  height: 28px;
+  margin-right: 4px;
+  margin-top: 4px;
+  transition: var(--hover-transition);
+  
+  &:hover {
+    transform: scale(1.2);
+  }
+`;
 
 const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
@@ -36,12 +50,12 @@ const GeneralSubroute = ({updateState}) => {
             <UiCol xs={12} lg={6}>
                 <UiFormLabel>Board Name</UiFormLabel>
                 <UiClickableTip id={"boardName"} title={"Set Board Name"} description={"Name of your board should be at least 4 and maximum 25 characters long."}/>
-                <UiCountableFormControl id={"boardTextarea"} className={"bg-light"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={boardData.name}/>
+                <UiCountableFormControl label={"Type board name"} id={"boardTextarea"} className={"bg-light"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={boardData.name}/>
             </UiCol>
             <UiCol xs={12} lg={6} className={"mt-lg-0 mt-2"}>
                 <UiFormLabel>Short Description</UiFormLabel>
                 <UiClickableTip id={"boardShortDescription"} title={"Set Short Description"} description={"Very short board description used for thumbnail purposes. Keep it under 50 characters long."}/>
-                <UiCountableFormControl id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
+                <UiCountableFormControl label={"Type board short description"} id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
                                         defaultValue={boardData.shortDescription}/>
             </UiCol>
             <UiCol xs={12} lg={6} className={"mt-2"}>
@@ -53,7 +67,7 @@ const GeneralSubroute = ({updateState}) => {
                     <strong>Markdown Tips:</strong>
                     <br/><kbd><strong>**bold text**</strong></kbd> <kbd><i>*italic text*</i></kbd>
                 </React.Fragment>}/>
-                <TextareaAutosize className={"form-control bg-light"} minLength={10} maxLength={2500} rows={6}
+                <TextareaAutosize aria-label={"Type board description"} className={"form-control bg-light"} minLength={10} maxLength={2500} rows={6}
                                   maxRows={13} required as={"textarea"}
                                   placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
                                   defaultValue={htmlDecode(boardData.fullDescription)}
@@ -83,16 +97,14 @@ const GeneralSubroute = ({updateState}) => {
                         circleSpacing={4} color={getTheme(false)}
                         onChangeComplete={color => onThemeChange(color.hex)}>
                     </CirclePicker>
-                    <div className={"hoverable-option"} style={{width: 28, height: 28, marginRight: 4, marginTop: 4}} onClick={() => setModal({open: true, type: "theme"})}>
-                        <span>
+                    <ThemeSelector onClick={() => setModal({open: true, type: "theme"})}>
                         <div style={{
                             background: "transparent none repeat scroll 0% 0%", height: "100%", width: "100%", cursor: "pointer", position: "relative",
                             outline: "currentcolor none medium", borderRadius: "50%", boxShadow: getTheme() + " 0px 0px 0px 15px inset"
                         }}>
                             <FaEllipsisH className={"text-white"} style={{left: 0, right: 0, bottom: 0, top: 0, margin: "auto", position: "absolute"}}/>
                         </div>
-                        </span>
-                    </div>
+                    </ThemeSelector>
                 </Suspense>
             </UiCol>
             <UiCol xs={12} lg={8} className={"mt-2"}>
@@ -120,28 +132,28 @@ const GeneralSubroute = ({updateState}) => {
                 <input hidden accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} onChange={onLogoChange}/>
             </UiCol>
             <UiCol xs={12}>
-                <UiLoadableButton className={"mt-3 float-right"} onClick={onChangesSave}>
+                <UiLoadableButton label={"Save"} className={"mt-3 float-right"} onClick={onChangesSave}>
                     Save Settings
                 </UiLoadableButton>
             </UiCol>
         </React.Fragment>
     };
     const renderDangerContent = () => {
-        return <div className={"mb-3 view-box-bg px-1 py-3 rounded mt-2 danger-shadow rounded-bottom"}>
+        return <UiViewBoxBackground className={"mb-3 px-1 py-3 rounded mt-2 danger-shadow rounded-bottom"}>
             <UiRow noGutters className={"m-0 p-0 px-4 my-2"}>
                 <UiCol sm={9} xs={12}>
-                    <h4 className={"mb-1 text-danger"}>Delete Board</h4>
+                    <h4 className={"mb-1 text-red"}>Delete Board</h4>
                     <span className={"text-black-60"} style={{fontSize: ".9em"}}>
                         Permanently delete your board and all ideas in it. <strong>Irreversible action.</strong>
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiLoadableButton className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "delete"}))}>
+                    <UiLoadableButton label={"Delete"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={() => Promise.resolve(setModal({...modal, open: true, type: "delete"}))}>
                         Delete
                     </UiLoadableButton>
                 </UiCol>
             </UiRow>
-        </div>
+        </UiViewBoxBackground>
     };
     const onBoardDelete = () => {
         const toastId = toastAwait("Deleting board, hold on...");

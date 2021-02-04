@@ -10,12 +10,12 @@ import {UiDismissibleModal} from "ui/modal";
 
 export const renderModal = (isOpen, onHide, title, handleSubmit, color, setColor, tagData = {name: "", roadmapIgnored: false, publicUse: false}) => {
     return <UiDismissibleModal id={"tagCreate"} isOpen={isOpen} onHide={onHide} title={title}
-                               applyButton={<UiLoadableButton onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}>
+                               applyButton={<UiLoadableButton label={"Save"} onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}>
         <UiRow>
             <UiCol xs={12} className={"mt-2 mb-1"}>
                 <UiFormLabel>Tag Name</UiFormLabel>
                 <UiClickableTip id={"tagName"} title={"Tag Name"} description={"Descriptive and under 20 characters name of tag."}/>
-                <UiCountableFormControl id={"tagNameTextarea"} minLength={2} maxLength={15} placeholder={"Short and descriptive."} defaultValue={tagData.name}/>
+                <UiCountableFormControl label={"Type tag name"} id={"tagNameTextarea"} minLength={2} maxLength={15} placeholder={"Short and descriptive."} defaultValue={tagData.name}/>
             </UiCol>
             <UiCol xs={12} sm={6} className={"mb-2"}>
                 <ColorSelectionHelper title={"Tag Color"} color={tinycolor(color)} setColor={setColor} colorWarning={true}/>

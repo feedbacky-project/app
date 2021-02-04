@@ -1,3 +1,5 @@
+import styled from "@emotion/styled";
+import MarkdownContainer from "components/commons/MarkdownContainer";
 import parseComment from "components/idea/discussion/comment-parser";
 import CommentIcon from "components/idea/discussion/CommentIcon";
 import AppContext from "context/AppContext";
@@ -5,10 +7,8 @@ import BoardContext from "context/BoardContext";
 import React, {useContext} from "react";
 import {FaHeart, FaLowVision, FaRegHeart, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
-import {UiPrettyUsername, UiTooltip} from "ui";
+import {UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
-import {parseMarkdown} from "utils/basic-utils";
-import styled from "@emotion/styled";
 
 const CommentInternal = styled.span`
   color: hsl(210, 100%, 50%);
@@ -41,7 +41,7 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
         if (data.user.id !== user.data.id && !moderator) {
             return;
         }
-        return <FaTrashAlt className={"ml-1 fa-xs cursor-click text-black-60"} onClick={() => onCommentDelete(data.id)}/>
+        return <UiHoverableIcon as={FaTrashAlt} className={"text-black-60"} onClick={() => onCommentDelete(data.id)}/>
     };
     const isSuspendable = () => {
         if (boardData.moderators.find(mod => mod.user.id === data.user.id)) {
@@ -54,12 +54,12 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
         if (!moderator || !isSuspendable()) {
             return;
         }
-        return <FaUserLock className={"ml-1 fa-xs cursor-click text-black-60"} onClick={() => onSuspend(data)}/>
+        return <UiHoverableIcon as={FaUserLock} className={"text-black-60"} onClick={() => onSuspend(data)}/>
     };
     const renderLikes = () => {
         const likes = data.likesAmount;
         if (data.liked) {
-            return <LikeContainer onClick={() => onCommentUnlike(data)}><FaHeart className={"red move-top-1px"}/> {likes}</LikeContainer>
+            return <LikeContainer onClick={() => onCommentUnlike(data)}><FaHeart className={"text-red move-top-1px"}/> {likes}</LikeContainer>
         }
         return <LikeContainer onClick={() => onCommentLike(data)}><FaRegHeart className={"move-top-1px"}/> {likes}</LikeContainer>
     };
@@ -72,7 +72,7 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
                     {renderDeletionButton(data)}
                     {renderSuspensionButton(data)}
                     <br/>
-                    <span className={"snarkdown-box"} dangerouslySetInnerHTML={{__html: parseMarkdown(data.description)}}/>
+                    <MarkdownContainer text={data.description}/>
                     <small className={"text-black-60"}> {renderLikes(data)} · <TimeAgo datetime={data.creationDate}/></small>
                 </div>
             </div>

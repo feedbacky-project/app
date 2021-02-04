@@ -43,7 +43,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
                 </strong>
             </React.Fragment>}/>
             <br/>
-            {/* simulate real board jumbotron to show properly sized image */}
+            {/* simulate real board banner to show properly sized image */}
             <Banner image={settings.banner || "https://cdn.feedbacky.net/static/img/main-background.png"} id={"boardBanner"} className={"mb-2"}
                     onClick={() => document.getElementById("bannerInput").click()}>
                 <h3 style={{color: "transparent"}}>Example Board</h3>

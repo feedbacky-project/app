@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import {FaQuestionCircle} from "react-icons/all";
+import {UiHoverableIcon} from "ui/index";
 
 const PopoverBox = styled(Popover)`
   .dark & {
@@ -32,7 +33,7 @@ const PopoverHeader = styled(Popover.Title)`
 `;
 
 const UiClickableTip = (props) => {
-    const {id, title, description, icon = <FaQuestionCircle className={"fa-xs cursor-pointer text-black-60 align-top hoverable-option"}/>} = props;
+    const {id, title, description, icon = <UiHoverableIcon as={FaQuestionCircle} className={"text-black-60 align-top"}/>} = props;
     return <OverlayTrigger
         trigger={"click"} placement={"top"} rootClose={true} rootCloseEvent={"click"}
         overlay={

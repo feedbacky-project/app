@@ -48,7 +48,7 @@ const VotersInfo = ({data}) => {
             </React.Fragment>
         }
         if (data.error) {
-            return <div className={"text-danger"}><FaFrown className={"move-top-2px"}/> Failed to load</div>
+            return <div className={"text-red"}><FaFrown className={"move-top-2px"}/> Failed to load</div>
         }
         if (data.data.length === 0) {
             return <div style={{height: 25}}><FaFrown className={"move-top-2px"}/> None</div>
@@ -70,7 +70,7 @@ const VotersInfo = ({data}) => {
         return <MoreVotersText> + {amount - 5} more</MoreVotersText>
     };
     return <React.Fragment>
-        <div className={"mt-4 text-black-75"}>Voters ({votersAmount} votes)</div>
+        <div className={"text-black-75"}>Voters ({votersAmount} votes)</div>
         {renderVoters()}
     </React.Fragment>
 };

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 import React from "react";
 import {PageButton} from "ui/button/UiButton";
 
@@ -14,8 +15,12 @@ const ClassicButton = styled(PageButton)`
 `;
 
 const UiClassicButton = (props) => {
-    const {children, ...otherProps} = props;
-    return <ClassicButton {...otherProps}>{children}</ClassicButton>
+    const {children, label, ...otherProps} = props;
+    return <ClassicButton aria-label={label} {...otherProps}>{children}</ClassicButton>
+};
+
+UiClassicButton.propTypes = {
+    label: PropTypes.string.isRequired,
 };
 
 export {UiClassicButton};

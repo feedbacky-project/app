@@ -42,7 +42,7 @@ const SocialLinksSubroute = () => {
         }
         return socialLinks.data.map(link => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={link.id}>
-                <div className={"text-center"} id={"socialPreviewContainer"}>
+                <div className={"text-center"}>
                     <UiImage className={"bg-dark p-2"} rounded alt={"Logo"} src={link.logoUrl} height={40} width={40}/>
                     <UiElementDeleteButton tooltipName={"Delete"} id={"social-" + link.id + "-del"}
                                            onClick={() => setModal({...modal, open: true, data: link.id, dataName: extractHostname(link.url)})}/>
@@ -54,7 +54,7 @@ const SocialLinksSubroute = () => {
     };
     const renderContent = () => {
         if (socialLinks.error) {
-            return <span className={"text-danger"}>Failed to obtain social links data</span>
+            return <span className={"text-red"}>Failed to obtain social links data</span>
         }
         return <ComponentLoader loaded={socialLinks.loaded} component={
             <UiCol xs={12}>
@@ -71,10 +71,10 @@ const SocialLinksSubroute = () => {
     const renderAddButton = () => {
         if (getQuota() <= 0) {
             return <UiTooltip id={"quota"} text={"Quota Limit Reached"}>
-                <UiButton className={"m-0 mt-3 float-right"}><FaExclamation/> Add New</UiButton>
+                <UiButton label={"Add New"} className={"m-0 mt-3 float-right"}><FaExclamation/> Add New</UiButton>
             </UiTooltip>
         }
-        return <UiButton className={"m-0 mt-3 float-right"} as={Link} to={"/ba/" + boardData.discriminator + "/social/create"}>Add New</UiButton>
+        return <UiButton label={"Add New"} className={"m-0 mt-3 float-right"} as={Link} to={"/ba/" + boardData.discriminator + "/social/create"}>Add New</UiButton>
     };
     const extractHostname = (url) => {
         let hostname;
