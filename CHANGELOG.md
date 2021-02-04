@@ -27,6 +27,7 @@
 * removed sweetalert2, now using only react bootstrap modals (soon only react-overlays modals)
 * isolated react-bootstrap components inside ui package
 * slowly removing bootstrap and it's usages in code (only basic utilities and grid system will remain)
+* add meta description and update meta tags for SEO
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 
