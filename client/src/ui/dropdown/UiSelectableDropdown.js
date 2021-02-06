@@ -70,7 +70,7 @@ const UiSelectableDropdown = (props) => {
 UiSelectableDropdown.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    currentValue: PropTypes.array.isRequired,
+    currentValue: PropTypes.any.isRequired,
     values: PropTypes.array.isRequired
 };
 
