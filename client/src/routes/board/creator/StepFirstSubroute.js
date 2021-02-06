@@ -1,7 +1,7 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
-import {UiClickableTip} from "ui";
+import {UiClickableTip, UiKeyboardInput} from "ui";
 import {UiCountableFormControl, UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 
@@ -11,10 +11,10 @@ const StepFirstSubroute = ({updateSettings, settings}) => {
         <UiCol xs={12} sm={6} className={"mt-4 px-md-5 px-3"}>
             <UiFormLabel>Board Discriminator</UiFormLabel>
             <UiClickableTip id={"boardDiscriminator"} title={"Set Board Discriminator"}
-                            description={<React.Fragment>Text with alphanumeric characters <kbd>a-Z 0-9 and -</kbd>
+                            description={<React.Fragment>Text with alphanumeric characters <UiKeyboardInput>a-Z 0-9 and -</UiKeyboardInput>
                                 <br/>
                                 <strong>Example:</strong> Project is called My Awesome Project
-                                discriminator can be set to <kbd>myawproj</kbd> or similar.
+                                discriminator can be set to <UiKeyboardInput>myawproj</UiKeyboardInput> or similar.
                                 <br/>
                                 <strong>Minimum 3 and maximum 20 characters.</strong></React.Fragment>}/>
 

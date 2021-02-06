@@ -14,6 +14,7 @@ import tinycolor from "tinycolor2";
 import {UiClickableTip, UiLoadingSpinner, UiPrettyUsername} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
+import {UiFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {prepareFilterAndSortRequests, toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
@@ -87,8 +88,8 @@ const DiscussionBox = () => {
                 <UiCol xs={12} className={"px-0"}>
                     <small style={{fontWeight: "bold"}}><UiPrettyUsername user={user.data}/></small>
                     <br/>
-                    <TextareaAutosize className={"form-control mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                      style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp} aria-label={"Write a comment"}/>
+                    <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
+                                      style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp} label={"Write a comment"}/>
                     {renderSubmitButton()}
                 </UiCol>
             </UiCol>
@@ -101,8 +102,8 @@ const DiscussionBox = () => {
             <UiCol xs={12} className={"px-0"}>
                 <small style={{fontWeight: "bold"}}>Anonymous</small>
                 <br/>
-                <TextareaAutosize className={"form-control mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                  style={{resize: "none", overflow: "hidden"}} onChange={onNotLoggedClick} aria-label={"Write a comment"} onClick={e => {
+                <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
+                                  style={{overflow: "hidden"}} onChange={onNotLoggedClick} label={"Write a comment"} onClick={e => {
                     e.target.blur();
                     onNotLoggedClick();
                 }}/>

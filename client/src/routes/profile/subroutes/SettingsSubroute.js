@@ -7,7 +7,7 @@ import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiLoadingSpinner} from "ui";
+import {UiKeyboardInput, UiLoadingSpinner} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
@@ -92,7 +92,7 @@ const SettingsSubroute = () => {
                                      actionDescription={<div>
                                          <strong>This is one-way road</strong> your account will be <strong>fully anonymized</strong> but your content on the page will be kept.
                                          <div>You won't be able to log-in to this account anymore.</div>
-                                         <div>Type <kbd>{user.data.email}</kbd> to continue.</div>
+                                         <div>Type <UiKeyboardInput>{user.data.email}</UiKeyboardInput> to continue.</div>
                                      </div>}/>
             <UiCol xs={{span: 12, order: 2}} lg={{span: 6, order: 1}}>
                 <UiFormLabel className={"mt-lg-0 mt-2"}>Username</UiFormLabel>

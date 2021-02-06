@@ -3,6 +3,7 @@ import BoardContext from "context/BoardContext";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {FaBan} from "react-icons/all";
+import {UiClassicIcon} from "ui/index";
 import {truncateText} from "utils/basic-utils";
 
 const AdminRole = styled.span`
@@ -33,7 +34,7 @@ const UiPrettyUsername = (props) => {
         username = truncateText(username, truncate);
     }
     if (isSuspended) {
-        return <SuspendedRole><FaBan className={"fa-xs move-top-1px"}/> {username}</SuspendedRole>
+        return <SuspendedRole><UiClassicIcon as={FaBan} className={"move-top-1px"}/> {username}</SuspendedRole>
     }
     const moderator = moderators.find(mod => mod.userId === user.id);
     if (moderator == null) {

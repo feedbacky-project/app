@@ -4,10 +4,6 @@
   background-color: var(--dark-background);
   color: var(--dark-font-color);
 
-  .bg-dark, kbd {
-    background-color: var(--dark-quaternary) !important;
-  }
-
   .chrome-picker {
     box-shadow: var(--dark-box-shadow) !important;
 
@@ -26,26 +22,8 @@
     }
   }
 
-  .form-control::placeholder {
-    color: hsl(0, 0%, 49%);
-  }
-
   small {
     color: var(--dark-font-color) !important;
-  }
-
-  textarea, .form-control {
-    background-color: var(--dark-secondary) !important;
-    box-shadow: var(--dark-box-shadow) !important;
-    @extend .text-black-60;
-  }
-
-  .form-control:disabled {
-    background-color: var(--dark-disabled) !important;
-  }
-
-  hr {
-    background-color: var(--dark-secondary);
   }
 
   .rc-steps-item-title {

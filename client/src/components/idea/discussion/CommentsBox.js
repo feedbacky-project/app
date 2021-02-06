@@ -7,7 +7,7 @@ import BoardContext from "context/BoardContext";
 import React, {useContext} from "react";
 import {FaHeart, FaLowVision, FaRegHeart, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
-import {UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
+import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
 
 const CommentInternal = styled.span`
@@ -30,7 +30,7 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
             return <React.Fragment>
                 <small style={{fontWeight: "bold"}}><CommentInternal>{data.user.username}</CommentInternal></small>
                 <UiTooltip id={"internalT_" + data.id} text={"Internal Comment"}>
-                    <FaLowVision className={"fa-xs ml-1"}/>
+                    <UiClassicIcon className={"ml-1"} as={FaLowVision}/>
                 </UiTooltip>
             </React.Fragment>
         }
@@ -41,7 +41,7 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
         if (data.user.id !== user.data.id && !moderator) {
             return;
         }
-        return <UiHoverableIcon as={FaTrashAlt} className={"text-black-60"} onClick={() => onCommentDelete(data.id)}/>
+        return <UiHoverableIcon as={FaTrashAlt} className={"text-black-60 ml-1"} onClick={() => onCommentDelete(data.id)}/>
     };
     const isSuspendable = () => {
         if (boardData.moderators.find(mod => mod.user.id === data.user.id)) {
@@ -54,7 +54,7 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
         if (!moderator || !isSuspendable()) {
             return;
         }
-        return <UiHoverableIcon as={FaUserLock} className={"text-black-60"} onClick={() => onSuspend(data)}/>
+        return <UiHoverableIcon as={FaUserLock} className={"text-black-60 ml-1"} onClick={() => onSuspend(data)}/>
     };
     const renderLikes = () => {
         const likes = data.likesAmount;

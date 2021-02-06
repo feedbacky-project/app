@@ -8,6 +8,12 @@ const OptionCard = styled(UiCard)`
   min-width: 150px;
   width: 200px;
   max-width: 250px;
+  cursor: pointer;
+`;
+
+export const SetupCardIcon = styled.div`
+  height: 1.5rem !important;
+  width: 1.5rem !important;
 `;
 
 const SetupCard = ({icon, chosen = false, text, onClick, className = ""}) => {

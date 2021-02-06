@@ -16,6 +16,12 @@ import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {toastError, toastSuccess} from "utils/basic-utils";
+import styled from "@emotion/styled";
+
+const SocialIcon = styled(UiImage)`
+  padding: .5rem;
+  background-color: var(--dark-quaternary) !important;
+`;
 
 const SocialLinksSubroute = () => {
     const {updateState, data: boardData} = useContext(BoardContext);
@@ -43,7 +49,7 @@ const SocialLinksSubroute = () => {
         return socialLinks.data.map(link => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={link.id}>
                 <div className={"text-center"}>
-                    <UiImage className={"bg-dark p-2"} rounded alt={"Logo"} src={link.logoUrl} height={40} width={40}/>
+                    <SocialIcon rounded alt={"Logo"} src={link.logoUrl} height={40} width={40}/>
                     <UiElementDeleteButton tooltipName={"Delete"} id={"social-" + link.id + "-del"}
                                            onClick={() => setModal({...modal, open: true, data: link.id, dataName: extractHostname(link.url)})}/>
                     <br/>

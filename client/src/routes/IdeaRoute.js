@@ -12,6 +12,7 @@ import {useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
+import {UiHorizontalRule} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {convertIdeaToSlug} from "utils/basic-utils";
 
@@ -83,9 +84,7 @@ const IdeaRoute = () => {
             <UiContainer className={"pb-5"}>
                 <UiRow centered className={"my-4"}>
                     <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox/>}/>
-                    <UiCol xs={12}>
-                        <hr/>
-                    </UiCol>
+                    <UiCol xs={12}><UiHorizontalRule/></UiCol>
                     <ComponentLoader loaded={idea.loaded} component={<DiscussionBox/>}/>
                 </UiRow>
             </UiContainer>

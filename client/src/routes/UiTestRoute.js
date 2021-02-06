@@ -1,20 +1,22 @@
 import BoardBanner from "components/board/BoardBanner";
 import BoardNavbar from "components/board/BoardNavbar";
+import {QuestionIcon} from "components/commons/DangerousActionModal";
 import IdeaNavbar from "components/idea/IdeaNavbar";
 import ProfileNavbar from "components/profile/ProfileNavbar";
 import AppContext from "context/AppContext";
 import IdeaContext from "context/IdeaContext";
 import {Step} from "rc-steps";
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {FaCogs} from "react-icons/all";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiLoadingSpinner, UiPrettyUsername, UiProgressBar} from "ui";
+import {UiBadge, UiClickableTip, UiHorizontalRule, UiKeyboardInput, UiLoadingSpinner, UiPrettyUsername, UiProgressBar} from "ui";
 import {UiButton, UiCancelButton, UiClassicButton, UiElementDeleteButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCountableFormControl, UiFormControl} from "ui/form";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {UiAvatar, UiImage} from "ui/image";
+import {UiDismissibleModal} from "ui/modal";
 import {UiNavbar} from "ui/navbar";
 import {UiViewBox} from "ui/viewbox";
 import {toastSuccess} from "utils/basic-utils";
@@ -28,6 +30,7 @@ const UiTestRoute = () => {
         []);
     const customTheme = tinycolor("#e74c3c");
     const themes = ["#c0392b", "#9b59b6", "#16a085", "#2980b9"];
+    const [modal, setModal] = useState({open: false});
     return <BoardContextedRouteUtil board={{
         data: {
             name: "Test Board", discriminator: "test", shortDescription: "UI test Feedbacky", logo: "https://cdn.feedbacky.net/static/img/logo.png",
@@ -41,6 +44,13 @@ const UiTestRoute = () => {
             </UiNavbar>
             <BoardNavbar/>
             <IdeaNavbar/>
+            <UiDismissibleModal id={"testModal"} isOpen={modal.open} onHide={() => setModal({open: false})} title={"Dismissible Test"}
+                                applyButton={<UiButton label={"Apply"} onClick={() => setModal({open: false})}>Apply</UiButton>}>
+                <UiCol className={"text-center"}>
+                    <QuestionIcon/>
+                    <div>Dismissible modal testing.</div>
+                </UiCol>
+            </UiDismissibleModal>
             <div style={{position: "fixed", zIndex: 1000, left: "15px", top: "50%", width: 150, borderRadius: ".35rem", backgroundColor: "#2d2d2d"}}>
                 <UiContainer className={"py-2 justify-content-center"}>
                     <div style={{textAlign: "center", marginBottom: ".5rem", color: "white"}}>Debug Card</div>
@@ -58,6 +68,8 @@ const UiTestRoute = () => {
                         <UiCancelButton className={"mx-2"}>TestCancel</UiCancelButton>
                         <UiLoadableButton label={"Test"} id={"loadable"} className={"mx-2"} onClick={() => new Promise(() => setTimeout(void 0, 1000))}>Loading</UiLoadableButton>
                         <UiClassicButton label={"Classic Test"} className={"mx-2"}>Classic</UiClassicButton>
+
+                        <UiButton label={"Modal Test"} className={"mx-2"} onClick={() => setModal({open: true})}>Modal Test</UiButton>
 
                         <UiElementDeleteButton tooltipName={"Delete Btn"} onClick={() => void 0} id={"elDel"}/>
                         <UiNextStepButton nextStep={() => void 0}/>
@@ -105,7 +117,8 @@ const UiTestRoute = () => {
                         <UiFormControl placeholder={"Example form"} maxLength={15} id={"form1"} label={"Form1"}/>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
-                        <UiCountableFormControl label={"Example form control"} placeholder={"Example form"} defaultValue={"hello default value maxLength 99"} maxLength={99} id={"form2"}/>
+                        <UiCountableFormControl label={"Example form control"} placeholder={"Example form"} defaultValue={"hello default value maxLength 99"}
+                                                minLength={2} maxLength={99} id={"form2"}/>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
                         <UiAvatar className={"mx-2"} user={context.user.data} size={120}/>
@@ -120,6 +133,10 @@ const UiTestRoute = () => {
                     <UiCol xs={12} className={"my-3"}>
                         <UiSelectableDropdown label={"Test Choose"} values={<React.Fragment><UiDropdownElement>Test</UiDropdownElement><UiDropdownElement>Second</UiDropdownElement></React.Fragment>}
                                               currentValue={"Test Dropdown"} id={"selectDropdown"}/>
+                    </UiCol>
+                    <UiCol xs={12} className={"my-3"}>
+                        <UiHorizontalRule/>
+                        <UiKeyboardInput>Input</UiKeyboardInput>
                     </UiCol>
                 </UiRow>
             </UiContainer>

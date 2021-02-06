@@ -7,6 +7,7 @@ import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from "react";
 import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
+import {UiClassicIcon} from "ui";
 import {UiRow} from "ui/grid";
 import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
 
@@ -21,7 +22,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
         if (idea.open) {
             return;
         }
-        return <FaLock className={"fa-xs mr-1 move-top-2px"}/>
+        return <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>
     };
     const renderComments = () => {
         if (idea.commentsAmount > 0) {

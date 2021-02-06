@@ -6,7 +6,7 @@ import React, {useContext, useState} from 'react';
 import {FaAlignRight} from "react-icons/all";
 import {FaPencilAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
-import {UiCard} from "ui";
+import {UiCard, UiHorizontalRule} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 
@@ -35,7 +35,7 @@ const BoardInfoCard = ({onIdeaCreation}) => {
         <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation}/>
         <UiCard className={"my-2 text-left"}>
             <MarkdownContainer text={data.fullDescription}/>
-            <hr className={"pb-1"}/>
+            <UiHorizontalRule className={"pb-1"}/>
             {/* eslint-disable-next-line */}
             <UiLoadableButton label={"Create Idea"} tabIndex={1} className={"py-1"} onClick={() => {
                 onCreateIdeaModalClick();

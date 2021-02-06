@@ -6,13 +6,23 @@ import PageNodesContext from "context/PageNodesContext";
 import copy from "copy-text-to-clipboard";
 import React, {useContext, useEffect, useState} from 'react';
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip} from "ui";
+import {UiBadge, UiClickableTip, UiKeyboardInput} from "ui";
 import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
+import styled from "@emotion/styled";
+
+const InviteCopyButton = styled.div`
+  cursor: pointer;
+  transition: var(--hover-transition);
+  
+  &:hover {
+    transform: var(--hover-transform-scale);
+  }
+`;
 
 const ModeratorsSubroute = () => {
     const {data: boardData} = useContext(BoardContext);
@@ -36,7 +46,7 @@ const ModeratorsSubroute = () => {
         return <React.Fragment>
             <UiCol xs={12} className={"text-black-60"}>Permissions Overview</UiCol>
             <UiCol xs={12} sm={6} className={"mb-sm-2 mb-3"}>
-                <kbd>Owner Permissions</kbd>
+                <UiKeyboardInput>Owner Permissions</UiKeyboardInput>
                 <ul className={"mb-0 pl-3"}>
                     <li>Admin panel access</li>
                     <li>Remove moderators from board</li>
@@ -44,7 +54,7 @@ const ModeratorsSubroute = () => {
                 </ul>
             </UiCol>
             <UiCol xs={12} sm={6} className={"mb-sm-2 mb-3"}>
-                <kbd>Moderator Permissions</kbd>
+                <UiKeyboardInput>Moderator Permissions</UiKeyboardInput>
                 <ul className={"mb-0 pl-3"}>
                     <li>Close and Delete Ideas</li>
                     <li>Add and Remove Tags from Ideas</li>
@@ -84,10 +94,10 @@ const ModeratorsSubroute = () => {
                             <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={() => setModal({open: true, type: "inviteDelete", data: invited.id})}/>
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
-                            <div className={"cursor-click"} onClick={() => {
+                            <InviteCopyButton onClick={() => {
                                 copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
                                 toastSuccess("Copied to clipboard.");
-                            }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></div>
+                            }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></InviteCopyButton>
                         </div>
                     </div>
                 })}

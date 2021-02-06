@@ -3,12 +3,13 @@ import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
+import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 
 const SearchBar = styled(TextareaAutosize)`
   overflow: hidden !important;
-  max-height: 33px;
-  min-height: 33px;
+  max-height: 33px !important;
+  min-height: 33px !important;
   white-space: nowrap;
   
   @media(max-width: 576px) {
@@ -60,7 +61,7 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline"} currentValue={sortCurrentValue} values={sortValues}/>
         </UiCol>
         <UiCol sm={4}>
-            <SearchBar ref={queryRef} className={"form-control"} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery} placeholder={"Search"} onInput={() => {
+            <UiFormControl label={"Search Ideas"} as={SearchBar} innerRef={queryRef} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery} placeholder={"Search"} onInput={() => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
             }}  aria-label={"Search bar"}/>

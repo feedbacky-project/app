@@ -1,4 +1,3 @@
-$font-color: hsl(210, 11%, 15%);
 $pure-dark-half: hsla(0, 0%, 0%, .5);
 
 @import "utilities/root";
@@ -14,18 +13,6 @@ $pure-dark-half: hsla(0, 0%, 0%, .5);
 @font-face {
   font-family: 'Roboto', sans-serif;
   font-display: swap;
-}
-
-.Toastify__toast {
-  box-shadow: var(--box-shadow) !important;
-}
-
-.danger-shadow {
-  box-shadow: 0 3px 5px 0 hsla(15, 100%, 40%, .5) !important;
-}
-
-hr {
-  border-top: 1px solid hsla(0, 0%, 0%, .1);
 }
 
 /* fixes scrollbar repositioning page */
@@ -45,15 +32,6 @@ body {
   margin: 0;
 }
 
-.form-control::placeholder {
-  font-size: 15px;
-  color: $pure-dark-half;
-}
-
-.form-control:-moz-focusring {
-  text-shadow: none !important;
-}
-
 @keyframes pulse {
   from, to {
     transform: scale3d(1, 1, 1);
@@ -71,48 +49,17 @@ body {
   z-index: 1;
 }
 
-.fa-lg {
-  height: 2em;
-  width: 2em;
-}
-
-.fa-md {
-  height: 1.5em;
-  width: 1.5em;
-}
-
-@media (max-width: 768px) {
-  .fa-xs {
-    font-size: 1rem !important;
-  }
-}
-
-.fa-xs {
-  height: .7em;
-  width: .7em;
-}
-
-.color-picker-admin {
-  width: 260px !important;
-}
-
-@media (max-width: 315px) {
-  .color-picker-admin {
-    width: 200px !important;
-  }
-}
-
 .justify-content-center {
   justify-content: center !important;
 }
 
-.cursor-click {
-  cursor: pointer;
-  transition: var(--hover-transition);
-
-  &:hover {
-    transform: var(--hover-transform-scale);
-  }
+.Toastify__toast {
+  box-shadow: var(--box-shadow) !important;
 }
+
+.danger-shadow {
+  box-shadow: 0 3px 5px 0 hsla(15, 100%, 40%, .5) !important;
+}
+
 
 @import "main-dark";

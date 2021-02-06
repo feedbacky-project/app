@@ -1,5 +1,5 @@
 import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
-import SetupCard from "components/board/admin/SetupCard";
+import SetupCard, {SetupCardIcon} from "components/board/admin/SetupCard";
 import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
 import {FaDiscord, FaGlobe} from "react-icons/fa";
@@ -8,7 +8,7 @@ import {toastWarning} from "utils/basic-utils";
 
 const type = ["DISCORD", "CUSTOM_ENDPOINT"];
 const typeName = ["Discord", "Custom Endpoint"];
-const typeIcon = [<FaDiscord className={"fa-md"}/>, <FaGlobe className={"fa-md"}/>];
+const typeIcon = [<SetupCardIcon as={FaDiscord}/>, <SetupCardIcon as={FaGlobe}/>];
 
 const StepFirstSubroute = ({updateSettings, settings}) => {
     const onChoose = (item) => {

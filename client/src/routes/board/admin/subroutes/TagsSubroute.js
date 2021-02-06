@@ -10,7 +10,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiHoverableIcon, UiTooltip} from "ui";
+import {UiBadge, UiClassicIcon, UiClickableTip, UiHoverableIcon, UiTooltip} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -44,17 +44,18 @@ const TagsSubroute = () => {
                 <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>
                 {!tag.roadmapIgnored ||
                 <UiTooltip id={"tag" + i + "map"} text={"Ignores Roadmap"}>
-                    <UiHoverableIcon as={FaEyeSlash} className={"text-red"}/>
+                    <UiHoverableIcon as={FaEyeSlash} className={"text-red ml-1"}/>
                 </UiTooltip>}
                 {!tag.publicUse ||
                 <UiTooltip id={"tag" + i + "public"} text={"Publicly Accessible"}>
-                    <UiHoverableIcon as={FaUserTag} className={"text-blue"}/>
+                    <UiHoverableIcon as={FaUserTag} className={"text-blue ml-1"}/>
                 </UiTooltip>}
                 <UiTooltip id={"tag" + i + "edit"} text={"Edit Tag"}>
-                    <UiHoverableIcon as={FaPen} onClick={() => onTagEdit(tag)}/>
+                    <UiHoverableIcon as={FaPen} onClick={() => onTagEdit(tag)} className={"ml-1"}/>
                 </UiTooltip>
                 <UiTooltip id={"tag" + i + "delete"} text={"Delete Tag"}>
-                    <UiHoverableIcon as={FaTrashAlt} onClick={() => setModal({open: true, type: "delete", data: {name: tag.name, color: tinycolor(tag.color)}})}/>
+                    <UiHoverableIcon as={FaTrashAlt} onClick={() => setModal({open: true, type: "delete", data: {name: tag.name, color: tinycolor(tag.color)}})}
+                                     className={"ml-1"}/>
                 </UiTooltip>
             </div>
         });

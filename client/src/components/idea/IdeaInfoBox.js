@@ -18,6 +18,7 @@ import {useHistory} from "react-router-dom";
 import TimeAgo from "timeago-react";
 import {UiHoverableIcon, UiPrettyUsername} from "ui";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
+import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {htmlDecode, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
@@ -118,8 +119,8 @@ const IdeaInfoBox = () => {
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <TextareaAutosize className={"form-control bg-lighter"} aria-label={"Write a description"} id={"editorBox"} rows={4} maxRows={12}
-                              placeholder={"Write a description..."} required as={"textarea"}
+            <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
+                              placeholder={"Write a description..."} required label={"Write a description"}
                               style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} size={"sm"} onClick={onEditApply}>Save</UiLoadableButton>
@@ -132,14 +133,14 @@ const IdeaInfoBox = () => {
         if (ideaData.user.id !== user.data.id || data.moderators.find(mod => mod.userId === user.data.id)) {
             return;
         }
-        return <UiHoverableIcon as={FaTrash} className={"move-top-2px text-black-60"} onClick={() => setModal({open: true})}/>
+        return <UiHoverableIcon as={FaTrash} className={"move-top-2px text-black-60 ml-1"} onClick={() => setModal({open: true})}/>
     };
     const renderDetails = () => {
         return <React.Fragment>
             <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
             <ModeratorActionsButton/>
             {renderDeletionButton()}
-            {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60"} onClick={() => setEditor({...editor, enabled: true})}/>}
+            {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60 ml-1"} onClick={() => setEditor({...editor, enabled: true})}/>}
             <br/>
             <UiAvatar roundedCircle className={"mr-1"} user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
             <small><UiPrettyUsername user={ideaData.user}/> ·{" "}</small>

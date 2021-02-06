@@ -1,25 +1,25 @@
+import styled from "@emotion/styled";
 import axios from "axios";
 import ThemeSelectionModal from "components/board/admin/ThemeSelectionModal";
 import {Banner} from "components/board/BoardBanner";
+import ColorPickerContainer from "components/commons/ColorPickerContainer";
 import ConfirmationActionModal from "components/commons/ConfirmationActionModal";
 import UploadIconBox from "components/commons/UploadIconBox";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
-import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {FaEllipsisH} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiClickableTip, UiLoadingSpinner} from "ui";
+import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner} from "ui";
 import {UiLoadableButton} from "ui/button";
-import {UiCountableFormControl, UiFormLabel, UiFormText} from "ui/form";
+import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
-import {retry} from "utils/lazy-init";
-import styled from "@emotion/styled";
 
 const ThemeSelector = styled.div`
   width: 28px;
@@ -32,8 +32,6 @@ const ThemeSelector = styled.div`
     transform: scale(1.2);
   }
 `;
-
-const CirclePicker = lazy(() => retry(() => import ("react-color").then(module => ({default: module.CirclePicker}))));
 
 const GeneralSubroute = ({updateState}) => {
     const history = useHistory();
@@ -65,17 +63,15 @@ const GeneralSubroute = ({updateState}) => {
                     characters long.
                     <br/>
                     <strong>Markdown Tips:</strong>
-                    <br/><kbd><strong>**bold text**</strong></kbd> <kbd><i>*italic text*</i></kbd>
+                    <br/><UiKeyboardInput><strong>**bold text**</strong></UiKeyboardInput> <UiKeyboardInput><i>*italic text*</i></UiKeyboardInput>
                 </React.Fragment>}/>
-                <TextareaAutosize aria-label={"Type board description"} className={"form-control bg-light"} minLength={10} maxLength={2500} rows={6}
-                                  maxRows={13} required as={"textarea"}
-                                  placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
-                                  defaultValue={htmlDecode(boardData.fullDescription)}
-                                  id={"fullDescrTextarea"}
-                                  onChange={e => {
-                                      e.target.value = e.target.value.substring(0, 2500);
-                                      formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);
-                                  }}/>
+                <UiFormControl as={TextareaAutosize} label={"Type board description"} className={"bg-light"} minLength={10} maxLength={2500} rows={6}
+                               maxRows={13} required placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
+                               defaultValue={htmlDecode(boardData.fullDescription)} id={"fullDescrTextarea"}
+                               onChange={e => {
+                                   e.target.value = e.target.value.substring(0, 2500);
+                                   formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);
+                               }}/>
                 <UiFormText className={"float-left"}>
                     Markdown Supported
                 </UiFormText>
@@ -88,15 +84,7 @@ const GeneralSubroute = ({updateState}) => {
                 <UiClickableTip id={"themeColor"} title={"Set Theme Color"} description={"Configure theme color of your board. It will affect elements of your board. Colors might look differently across Light and Dark Themes."}/>
                 <br/>
                 <Suspense fallback={<UiLoadingSpinner/>}>
-                    <CirclePicker
-                        colors={["#273c75", "#2c3e50", "#8e44ad", "#B33771",
-                            "#d35400", "#e74c3c", "#706fd3", "#218c74",
-                            "#2980b9", "#16a085", "#e67e22", "#27ae60",
-                            "#44bd32", "#1B9CFC", "#3498db", "#EE5A24"]}
-                        className={"color-picker-admin"}
-                        circleSpacing={4} color={getTheme(false)}
-                        onChangeComplete={color => onThemeChange(color.hex)}>
-                    </CirclePicker>
+                    <ColorPickerContainer color={getTheme(false)} onChange={color => onThemeChange(color.hex)}/>
                     <ThemeSelector onClick={() => setModal({open: true, type: "theme"})}>
                         <div style={{
                             background: "transparent none repeat scroll 0% 0%", height: "100%", width: "100%", cursor: "pointer", position: "relative",

@@ -117,7 +117,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     if (user.darkMode) {
         color = color.setAlpha(.8);
     }
-    return <UiDropdown label={"Moderate Idea"} className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline cursor-click"}/>}>
+    return <UiDropdown label={"Moderate Idea"} className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline"}/>}>
         <DangerousActionModal id={"close"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "close"} onAction={onIdeaClose}
                               actionDescription={<div>Once you close idea you can open it again.</div>} actionButtonName={"Close"}/>
         <DangerousActionModal id={"open"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "open"} onAction={onIdeaOpen}

@@ -1,15 +1,17 @@
 import styled from "@emotion/styled";
 
-export const HoverableIcon = styled.div`
-  margin-left: .25rem;
-  height: .7rem;
-  width: .7rem;
-  transition: var(--hover-transition);
+export const Icon = styled.div`
+  height: .7em;
+  width: .7em;
   cursor: pointer;
   
   @media (max-width: 768px) {
-    font-size: 1rem !important;
+    font-size: 1em !important;
   }
+`;
+
+export const HoverableIcon = styled(Icon)`
+  transition: var(--hover-transition);
   
   &:hover {
     transform: scale(1.2);

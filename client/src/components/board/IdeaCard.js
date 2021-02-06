@@ -9,7 +9,7 @@ import React, {useContext, useState} from 'react';
 import {FaLock, FaRegComment} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiCard, UiPrettyUsername} from "ui";
+import {UiBadge, UiCard, UiClassicIcon, UiPrettyUsername} from "ui";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
@@ -119,7 +119,9 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             upvoted = true;
             votersAmount = idea.votersAmount + 1;
         }
+        let source = axios.CancelToken.source();
         axios({
+            cancelToken: source.token,
             method: request,
             url: "/ideas/" + idea.id + "/voters"
         }).then(res => {
@@ -149,7 +151,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             <CardLinkStyle as={Link} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                 <div>
                     <div className={"d-inline"} style={{fontSize: `1.15em`}}>
-                        {idea.open || <FaLock className={"fa-xs mr-1 move-top-2px"}/>}
+                        {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
                         <span dangerouslySetInnerHTML={{__html: idea.title}}/>
                         {renderComments()}
                     </div>
