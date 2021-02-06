@@ -74,7 +74,7 @@ public class Idea implements Serializable {
   private Set<Tag> tags = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "idea")
   private Set<Attachment> attachments = new HashSet<>();
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> subscribers = new HashSet<>();
   private IdeaStatus status;
   @CreationTimestamp
@@ -104,16 +104,12 @@ public class Idea implements Serializable {
   public FetchIdeaDto convertToDto(User user) {
     FetchIdeaDto dto = new ModelMapper().map(this, FetchIdeaDto.class);
     dto.setOpen(status == IdeaStatus.OPENED);
-    Set<FetchTagDto> tagDtos = new HashSet<>();
-    for(Tag tag : tags) {
-      tagDtos.add(tag.convertToDto());
-    }
     dto.setAttachments(attachments.stream().map(Attachment::convertToDto).collect(Collectors.toList()));
     dto.setBoardDiscriminator(board.getDiscriminator());
     dto.setVotersAmount(voters.size());
     //count only public and non special comments
     dto.setCommentsAmount(comments.stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count());
-    dto.setTags(tagDtos);
+    dto.setTags(tags.stream().map(Tag::convertToDto).collect(Collectors.toSet()));
     dto.setUpvoted(voters.contains(user));
     dto.setSubscribed(subscribers.contains(user));
     dto.setUser(creator.convertToDto().exposeSensitiveData(false).convertToSimpleDto());

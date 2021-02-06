@@ -49,7 +49,7 @@ public class User implements Serializable {
   private String avatar;
   private String email;
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<Moderator> permissions = new HashSet<>();
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<ConnectedAccount> connectedAccounts = new HashSet<>();
