@@ -178,7 +178,7 @@ public class ServiceLoginController {
     ConnectedAccount account = new ConnectedAccount();
     account.setUser(user);
     account.setProvider(id);
-    account.setAccountId((Long) data.get(fields.getId()));
+    account.setAccountId(Long.parseLong((String) data.get(fields.getId())));
     return account;
   }
 
