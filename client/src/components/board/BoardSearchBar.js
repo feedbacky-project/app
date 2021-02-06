@@ -47,7 +47,7 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
         const key = Object.keys(val)[0];
         const value = Object.values(val)[0];
         return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: key}})}>
-            <React.Fragment>{value.name} <UiBadge className={"move-top-1px float-right"}>{value.data}</UiBadge></React.Fragment>
+            <React.Fragment>{value.name} <UiBadge className={"float-right"}>{value.data}</UiBadge></React.Fragment>
         </UiDropdownElement>
     });
     const sortCurrentValue = Object.values(sorts.find(obj => {
