@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
+import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
+import {UiBadge} from "ui";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -20,14 +22,15 @@ const SearchBar = styled(TextareaAutosize)`
 
 const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {allIdeas, openedIdeas, closedIdeas} = useContext(BoardContext).data;
     const queryRef = React.useRef();
     if (searchQuery === "" && queryRef.current) {
         queryRef.current.value = "";
     }
     const filters = [
-        {opened: "Opened"},
-        {closed: "Closed"},
-        {all: "All"}
+        {opened: {name: "Opened", data: openedIdeas}},
+        {closed: {name: "Closed", data: closedIdeas}},
+        {all: {name: "All", data: allIdeas}}
     ];
     const sorts = [
         {trending: "Trending"},
@@ -39,11 +42,13 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     let searchTimeout;
     const filterCurrentValue = Object.values(filters.find(obj => {
         return Object.keys(obj)[0] === (user.localPreferences.ideas.filter || "opened")
-    }));
+    }))[0].name;
     const filterValues = filters.map(val => {
         const key = Object.keys(val)[0];
         const value = Object.values(val)[0];
-        return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: key}})}>{value}</UiDropdownElement>
+        return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: key}})}>
+            <React.Fragment>{value.name} <UiBadge className={"move-top-1px float-right"}>5</UiBadge></React.Fragment>
+        </UiDropdownElement>
     });
     const sortCurrentValue = Object.values(sorts.find(obj => {
         return Object.keys(obj)[0] === (user.localPreferences.ideas.sort || "trending")

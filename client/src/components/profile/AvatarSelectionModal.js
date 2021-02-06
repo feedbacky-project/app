@@ -12,6 +12,7 @@ const SelectableAvatar = styled(UiImage)`
   transition: var(--hover-transition);
   max-width: 100%;
   height: auto;
+  cursor: pointer;
   &:hover {
     transform: scale(1.2);
   }
@@ -27,11 +28,11 @@ const AvatarSelectionModal = ({isOpen, onHide, connectedAccounts, onAvatarChoose
     }
     return <UiDismissibleModal id={"avatarSelection"} isOpen={isOpen} onHide={onHide} title={"Choose Avatar"} applyButton={<React.Fragment/>}>
         <UiRow centered className={"mt-3"}>
-            <UiCol xs={5} sm={3} className={"cursor-click text-center"} onClick={() => onAvatarChoose(getDefaultAvatar(user.data.username))}>
+            <UiCol xs={5} sm={3} className={"text-center"} onClick={() => onAvatarChoose(getDefaultAvatar(user.data.username))}>
                 <SelectableAvatar src={getDefaultAvatar(user.data.username)} roundedCircle thumbnail alt={"Default Avatar"} width={100} height={100}/>
                 <div className={"mt-1"}>Default</div>
             </UiCol>
-            <UiCol xs={5} sm={3} className={"cursor-click text-center"} onClick={() => onAvatarChoose("https://www.gravatar.com/avatar/" + md5(user.data.email) + ".jpg?s=100")}>
+            <UiCol xs={5} sm={3} className={"text-center"} onClick={() => onAvatarChoose("https://www.gravatar.com/avatar/" + md5(user.data.email) + ".jpg?s=100")}>
                 <SelectableAvatar src={"https://www.gravatar.com/avatar/" + md5(user.data.email) + ".jpg?s=100"} alt={"Gravatar Avatar"} roundedCircle thumbnail width={100} height={100}/>
                 <div className={"mt-1"}>Gravatar</div>
             </UiCol>

@@ -41,6 +41,10 @@ public class FetchBoardDto {
   private List<FetchModeratorDto> moderators;
   private List<FetchSuspendedUserDto> suspendedUsers;
 
+  private long allIdeas;
+  private long openedIdeas;
+  private long closedIdeas;
+
   private String themeColor;
   private String logo;
   private String banner;

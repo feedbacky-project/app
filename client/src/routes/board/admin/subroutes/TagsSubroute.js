@@ -10,7 +10,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
 import {FaExclamation, FaTrashAlt} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClassicIcon, UiClickableTip, UiHoverableIcon, UiTooltip} from "ui";
+import {UiBadge, UiClickableTip, UiHoverableIcon, UiTooltip} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
