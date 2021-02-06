@@ -28,6 +28,7 @@
 * isolated react-bootstrap components inside ui package
 * slowly removing bootstrap and it's usages in code (only basic utilities and grid system will remain)
 * add meta description and update meta tags for SEO
+* added https://app.feedbacky.net/i/show-amount-of-open-closed-and-total-ideas.191 idea
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 
