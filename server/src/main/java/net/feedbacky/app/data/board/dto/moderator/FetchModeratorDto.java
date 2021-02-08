@@ -19,7 +19,7 @@ public class FetchModeratorDto implements FetchResponseDto<FetchModeratorDto, Mo
 
   @Override
   public FetchModeratorDto from(Moderator entity) {
-    this.userId = entity.getId();
+    this.userId = entity.getUser().getId();
     this.user = new FetchSimpleUserDto().from(entity.getUser());
     this.role = entity.getRole();
     return this;
