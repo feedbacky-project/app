@@ -3,6 +3,7 @@ package net.feedbacky.app.data.idea.dto;
 import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.attachment.FetchAttachmentDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.user.User;
@@ -52,7 +53,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
     this.tags = entity.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toSet());
     this.attachments = entity.getAttachments().stream().map(attachment -> new FetchAttachmentDto().from(attachment)).collect(Collectors.toList());
     this.votersAmount = entity.getVoters().size();
-    this.commentsAmount = entity.getComments().size();
+    this.commentsAmount = entity.getComments().stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count();
     this.upvoted = false;
     this.subscribed = false;
     this.open = entity.getStatus() == Idea.IdeaStatus.OPENED;
