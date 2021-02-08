@@ -50,7 +50,6 @@ public class Comment implements Serializable {
   @LazyToOne(LazyToOneOption.NO_PROXY)
   private Idea idea;
   @ManyToOne(fetch = FetchType.LAZY)
-  @LazyToOne(LazyToOneOption.NO_PROXY)
   private User creator;
   @Column(name = "description", columnDefinition = "text", length = 65_535)
   private String description;
