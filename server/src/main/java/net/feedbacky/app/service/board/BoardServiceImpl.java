@@ -27,6 +27,9 @@ import net.feedbacky.app.util.mailservice.MailHandler;
 import net.feedbacky.app.util.mailservice.MailService;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -69,7 +72,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public PaginableRequest<List<FetchBoardDto>> getAll(int page, int pageSize) {
-    Page<Board> pageData = boardRepository.findAll(PageRequest.of(page, pageSize));
+    Page<Board> pageData = boardRepository.findAll(PageRequest.of(page, pageSize), EntityGraphs.named("Board.fetch"));
     List<Board> boards = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
@@ -78,7 +81,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public FetchBoardDto getOne(String discriminator) {
-    Board board = boardRepository.findByDiscriminator(discriminator)
+    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.named("Board.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
     return new FetchBoardDto().from(board);
   }
@@ -200,7 +203,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public List<FetchTagDto> getAllTags(String discriminator) {
-    Board board = boardRepository.findByDiscriminator(discriminator)
+    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("tags"))
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
     return board.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
   }

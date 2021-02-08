@@ -35,6 +35,8 @@ import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -141,7 +143,8 @@ public class IdeaServiceImpl implements IdeaService {
       UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
-    Idea idea = ideaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " not found"));
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
+            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " not found"));
     return new FetchIdeaDto().from(idea).withUser(idea, user);
   }
 

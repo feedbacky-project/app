@@ -24,6 +24,8 @@ import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -89,7 +91,8 @@ public class CommentServiceImpl implements CommentService {
       UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
-    Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+    Comment comment = commentRepository.findById(id, EntityGraphs.named("Comments.fetch"))
+            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
     final User finalUser = user;
     boolean isModerator = comment.getIdea().getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
     if(comment.getViewType() == Comment.ViewType.INTERNAL && !isModerator) {

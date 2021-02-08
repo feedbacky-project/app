@@ -18,6 +18,8 @@ import net.feedbacky.app.repository.board.WebhookRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.RequestValidator;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
+
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +52,7 @@ public class WebhookServiceImpl implements WebhookService {
   @Override
   public List<FetchWebhookDto> getAll(String discriminator) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphUtils.fromAttributePaths("permissions"))
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));

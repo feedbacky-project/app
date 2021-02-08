@@ -15,6 +15,8 @@ import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.PaginableRequest;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,7 +56,7 @@ public class RoadmapServiceImpl implements RoadmapService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     final User finalUser = user;
-    Board board = boardRepository.findByDiscriminator(discriminator)
+    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("tags"))
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
     List<FetchRoadmapElement> elements = new ArrayList<>();
     for(Tag tag : board.getTags()) {

@@ -17,6 +17,8 @@ import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
 import net.feedbacky.app.util.mailservice.MailService;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -49,7 +51,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public FetchUserDto getSelf() {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphs.named("User.fetch"))
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     return new FetchUserDto().from(user).withConfidentialData(user);
   }
@@ -57,14 +59,15 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<FetchConnectedAccount> getSelfConnectedAccounts() {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphs.named("User.fetchConnections"))
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     return user.getConnectedAccounts().stream().map(acc -> new FetchConnectedAccount().from(acc)).collect(Collectors.toList());
   }
 
   @Override
   public FetchUserDto get(long id) {
-    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
+    User user = userRepository.findById(id, EntityGraphs.named("User.fetch"))
+            .orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
     return new FetchUserDto().from(user);
   }
 

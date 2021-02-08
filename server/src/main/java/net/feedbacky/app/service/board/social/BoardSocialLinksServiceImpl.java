@@ -19,6 +19,8 @@ import net.feedbacky.app.util.Constants;
 import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +52,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
   @Override
   public List<FetchSocialLinkDto> getAll(String discriminator) {
-    Board board = boardRepository.findByDiscriminator(discriminator)
+    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("socialLinks"))
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
     return board.getSocialLinks().stream().map(link -> new FetchSocialLinkDto().from(link)).collect(Collectors.toList());
   }
