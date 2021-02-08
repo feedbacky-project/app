@@ -115,7 +115,6 @@ const App = ({appearanceSettings}) => {
                 localPreferences: localPrefs,
                 darkMode: appearance.mode === "dark",
                 onLogOut: onLogOut,
-                hardResetData: hardResetData,
             },
             serviceData: serviceData.data,
             onLocalPreferencesUpdate: onLocalPreferencesUpdate,
@@ -126,6 +125,7 @@ const App = ({appearanceSettings}) => {
             setAppearance: setAppearance,
             defaultTheme: DEFAULT_THEME,
             onThemeChange: (newTheme = DEFAULT_THEME) => setTheme(newTheme),
+            hardResetData: hardResetData,
             clientVersion: CLIENT_VERSION
         }}>
             <Suspense fallback={<LoadingRouteUtil/>}>
