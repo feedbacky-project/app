@@ -4,6 +4,7 @@ import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.repository.UserRepository;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,7 +49,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3 (connected accounts revamp)...");
     logger.log(Level.INFO, "It may take some time depending on users amount in database.");
     boolean missingValues = false;
-    for(User user : userRepository.findAll()) {
+    for(User user : userRepository.findAll(EntityGraphUtils.fromAttributePaths("connectedAccounts"))) {
       if(missingValues) {
         continue;
       }
