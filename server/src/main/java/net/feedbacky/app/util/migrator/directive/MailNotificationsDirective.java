@@ -6,8 +6,11 @@ import net.feedbacky.app.repository.UserRepository;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,12 +42,24 @@ public class MailNotificationsDirective extends MigrationDirective {
   }
 
   @Override
+  @Transactional
   public void doMigrate() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3 (mail notifications revamp)...");
     logger.log(Level.INFO, "It may take some time depending on users amount in database.");
     boolean missingValues = false;
     for(User user : userRepository.findAll(EntityGraphUtils.fromAttributePaths("mailPreferences"))) {
+      Hibernate.initialize(user.getMailPreferences());
       MailPreferences preferences = user.getMailPreferences();
+      if(preferences == null) {
+        logger.log(Level.WARNING, "Mail preferences missing for " + user.getId());
+        preferences = new MailPreferences();
+        preferences.setUser(user);
+        preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+        preferences.setNotificationsEnabled(false);
+        user.setMailPreferences(preferences);
+        userRepository.save(user);
+        continue;
+      }
       if(missingValues) {
         preferences.setNotificationsEnabled(true);
         user.setMailPreferences(preferences);

@@ -8,8 +8,10 @@ import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -45,6 +47,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
   }
 
   @Override
+  @Transactional
   public void doMigrate() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3 (connected accounts revamp)...");
     logger.log(Level.INFO, "It may take some time depending on users amount in database.");
@@ -85,6 +88,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
         }
         try {
           JsonNode node = new ObjectMapper().readTree(data);
+          Hibernate.initialize(user.getConnectedAccounts());
           for(ConnectedAccount account : user.getConnectedAccounts()) {
             if(account.getId() != id.longValue()) {
               continue;

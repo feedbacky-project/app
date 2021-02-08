@@ -7,8 +7,10 @@ import net.feedbacky.app.repository.UserRepository;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.logging.Level;
 
@@ -33,10 +35,12 @@ public class MailPreferencesDirective extends MigrationDirective {
   }
 
   @Override
+  @Transactional
   public void doMigrate() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 1 to 2...");
     logger.log(Level.INFO, "It may take some time depending on users amount in database.");
     for(User user : userRepository.findAll(EntityGraphUtils.fromAttributePaths("mailPreferences"))) {
+      Hibernate.initialize(user.getMailPreferences());
       if(user.getMailPreferences() != null) {
         continue;
       }
