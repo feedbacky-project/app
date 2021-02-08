@@ -62,8 +62,8 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.moderators = entity.getModerators().stream().map(mod -> new FetchModeratorDto().from(mod)).collect(Collectors.toList());
     this.suspendedUsers = entity.getSuspensedList().stream().map(suspended -> new FetchSuspendedUserDto().from(suspended)).collect(Collectors.toList());
     this.allIdeas = entity.getIdeas().size();
-    this.openedIdeas = entity.getIdeas().stream().map(idea -> idea.getStatus() == Idea.IdeaStatus.OPENED).count();
-    this.closedIdeas = entity.getIdeas().stream().map(idea -> idea.getStatus() == Idea.IdeaStatus.CLOSED).count();
+    this.openedIdeas = entity.getIdeas().stream().filter(idea -> idea.getStatus() == Idea.IdeaStatus.OPENED).count();
+    this.closedIdeas = entity.getIdeas().stream().filter(idea -> idea.getStatus() == Idea.IdeaStatus.CLOSED).count();
     this.themeColor = entity.getThemeColor();
     this.logo = entity.getLogo();
     this.banner = entity.getBanner();
