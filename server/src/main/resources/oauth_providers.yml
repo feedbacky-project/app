@@ -17,7 +17,8 @@ discord:
     id: id
     email: email
     username: username
-    avatar: avatar
+    # Discord doesn't show avatar url instead shows hash, we need the url
+    avatar: null
     email-verified: verified
 github:
   provider-data:

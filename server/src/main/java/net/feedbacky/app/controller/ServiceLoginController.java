@@ -133,9 +133,11 @@ public class ServiceLoginController {
     if(responseData.get(provider.getOauthDetails().getDataFields().getEmail()) == null) {
       throw new LoginFailedException("Email address not found, please contact administrator if you think it's an error.");
     }
-    Boolean mailVerified = (Boolean) responseData.get(provider.getOauthDetails().getDataFields().getEmailVerified());
-    if(mailVerified != null && !mailVerified) {
-      throw new LoginFailedException("Email address you sign in with is not verified at '" + provider.getProviderData().getName() + "', please verify email to continue.");
+    if(provider.getOauthDetails().getDataFields().getEmailVerified() != null) {
+      Boolean mailVerified = (Boolean) responseData.get(provider.getOauthDetails().getDataFields().getEmailVerified());
+      if(mailVerified != null && !mailVerified) {
+        throw new LoginFailedException("Email address you sign in with is not verified at '" + provider.getProviderData().getName() + "', please verify email to continue.");
+      }
     }
 
     return createOrUpdateUser(id, responseData, provider.getOauthDetails().getDataFields());
@@ -147,7 +149,11 @@ public class ServiceLoginController {
       optional = Optional.of(new User());
       User user = optional.get();
       user.setEmail((String) data.get(fields.getEmail()));
-      user.setAvatar((String) data.get(fields.getAvatar()));
+      if(fields.getAvatar() == null || data.get(fields.getAvatar()) == null) {
+        user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", (String) data.get(fields.getUsername())));
+      } else {
+        user.setAvatar((String) data.get(fields.getAvatar()));
+      }
       user.setUsername((String) data.get(fields.getUsername()));
       MailPreferences preferences = new MailPreferences();
       preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
