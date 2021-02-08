@@ -5,22 +5,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
-import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.tag.Tag;
-import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.user.User;
-import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.util.mailservice.MailService;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
-import org.modelmapper.ModelMapper;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,7 +36,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer

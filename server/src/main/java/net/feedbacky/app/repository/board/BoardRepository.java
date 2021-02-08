@@ -5,7 +5,6 @@ import net.feedbacky.app.data.board.Board;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraph;
 import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.stereotype.Repository;
 

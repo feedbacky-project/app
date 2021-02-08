@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
@@ -14,13 +13,11 @@ import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.tag.Tag;
-import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
-import org.modelmapper.ModelMapper;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,7 +39,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer

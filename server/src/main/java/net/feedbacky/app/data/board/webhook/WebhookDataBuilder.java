@@ -3,7 +3,6 @@ package net.feedbacky.app.data.board.webhook;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.user.User;
-import net.feedbacky.app.util.mailservice.MailService;
 
 import org.apache.commons.text.StringEscapeUtils;
 

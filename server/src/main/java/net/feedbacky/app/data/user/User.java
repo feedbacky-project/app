@@ -6,13 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.moderator.Moderator;
-import net.feedbacky.app.data.user.dto.FetchMailPreferences;
-import net.feedbacky.app.data.user.dto.FetchUserDto;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
-import org.modelmapper.ModelMapper;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,7 +27,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer

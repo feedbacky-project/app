@@ -10,7 +10,6 @@ import net.feedbacky.app.login.LoginProviderRegistry;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.util.JwtTokenUtil;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.RandomStringUtils;

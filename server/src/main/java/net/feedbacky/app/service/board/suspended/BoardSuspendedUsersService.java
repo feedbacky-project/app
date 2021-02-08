@@ -6,8 +6,6 @@ import net.feedbacky.app.service.FeedbackyService;
 
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 /**
  * @author Plajer
  * <p>

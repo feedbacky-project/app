@@ -4,7 +4,6 @@ import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.repository.UserRepository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

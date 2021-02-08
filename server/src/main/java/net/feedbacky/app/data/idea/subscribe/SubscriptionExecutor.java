@@ -3,7 +3,6 @@ package net.feedbacky.app.data.idea.subscribe;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.user.User;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

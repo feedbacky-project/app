@@ -1,18 +1,18 @@
 package net.feedbacky.app.service.board.social;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
-import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.exception.types.InvalidAuthenticationException;
-import net.feedbacky.app.exception.types.ResourceNotFoundException;
-import net.feedbacky.app.repository.UserRepository;
-import net.feedbacky.app.repository.board.BoardRepository;
-import net.feedbacky.app.repository.board.SocialLinksRepository;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.data.board.dto.social.PostSocialLinkDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InvalidAuthenticationException;
+import net.feedbacky.app.exception.types.ResourceNotFoundException;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.repository.board.BoardRepository;
+import net.feedbacky.app.repository.board.SocialLinksRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.Constants;
