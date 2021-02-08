@@ -115,7 +115,7 @@ public class IdeaServiceImpl implements IdeaService {
     final User finalUser = user;
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
-            .map(idea -> idea.convertToDto(finalUser)).collect(Collectors.toList()));
+            .map(idea -> new FetchIdeaDto().from(idea).withUser(idea, finalUser)).collect(Collectors.toList()));
   }
 
   @Override
@@ -132,7 +132,7 @@ public class IdeaServiceImpl implements IdeaService {
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
-            .map(idea -> idea.convertToDto(finalUser)).collect(Collectors.toList()));
+            .map(idea -> new FetchIdeaDto().from(idea).withUser(idea, finalUser)).collect(Collectors.toList()));
   }
 
   @Override
@@ -143,7 +143,7 @@ public class IdeaServiceImpl implements IdeaService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Idea idea = ideaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " not found"));
-    return idea.convertToDto(user);
+    return new FetchIdeaDto().from(idea).withUser(idea, user);
   }
 
   @Override
@@ -199,7 +199,7 @@ public class IdeaServiceImpl implements IdeaService {
     idea.setAttachments(attachments);
     ideaRepository.save(idea);
 
-    FetchIdeaDto fetchDto = idea.convertToDto(user);
+    FetchIdeaDto fetchDto = new FetchIdeaDto().from(idea).withUser(idea, user);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
     idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_CREATE, builder.build());
     return ResponseEntity.status(HttpStatus.CREATED).body(fetchDto);
@@ -273,7 +273,7 @@ public class IdeaServiceImpl implements IdeaService {
       commentRepository.save(comment);
     }
     ideaRepository.save(idea);
-    return idea.convertToDto(user);
+    return new FetchIdeaDto().from(idea).withUser(idea, user);
   }
 
   @Override
@@ -295,14 +295,9 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public List<FetchUserDto> getAllVoters(long id) {
-    User user = null;
-    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
-      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
-    }
     Idea idea = ideaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
-    return idea.getVoters().stream().map(usr -> usr.convertToDto().exposeSensitiveData(false)).collect(Collectors.toList());
+    return idea.getVoters().stream().map(usr -> new FetchUserDto().from(usr)).collect(Collectors.toList());
   }
 
   @Override
@@ -323,8 +318,7 @@ public class IdeaServiceImpl implements IdeaService {
     voters.add(user);
     idea.setVoters(voters);
     ideaRepository.save(idea);
-    //no need to expose
-    return user.convertToDto().exposeSensitiveData(false);
+    return new FetchUserDto().from(user);
   }
 
   @Override
@@ -389,7 +383,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE,
             idea, prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));
-    return idea.getTags().stream().map(Tag::convertToDto).collect(Collectors.toList());
+    return idea.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
   }
 
   private Comment prepareTagsPatchComment(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags) {

@@ -65,7 +65,7 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
     suspendedUser = suspendedUserRepository.save(suspendedUser);
     board.getSuspensedList().add(suspendedUser);
     boardRepository.save(board);
-    return ResponseEntity.status(HttpStatus.CREATED).body(suspendedUser.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchSuspendedUserDto().from(suspendedUser));
   }
 
   @Override

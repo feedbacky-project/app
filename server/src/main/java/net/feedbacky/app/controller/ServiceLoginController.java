@@ -3,6 +3,7 @@ package net.feedbacky.app.controller;
 import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.types.LoginFailedException;
 import net.feedbacky.app.login.LoginProvider;
 import net.feedbacky.app.login.LoginProviderRegistry;
@@ -94,7 +95,7 @@ public class ServiceLoginController {
     Map<String, Object> json = new HashMap<>();
     String jwtToken = JwtTokenUtil.generateToken(user.getEmail());
     json.put("token", jwtToken);
-    json.put("user", user.convertToDto().exposeSensitiveData(true));
+    json.put("user", new FetchUserDto().from(user).withConfidentialData(user));
     return ResponseEntity.ok().body(json);
   }
 

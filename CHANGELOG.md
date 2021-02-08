@@ -29,6 +29,8 @@
 * slowly removing bootstrap and it's usages in code (only basic utilities and grid system will remain)
 * add meta description and update meta tags for SEO
 * added https://app.feedbacky.net/i/show-amount-of-open-closed-and-total-ideas.191 idea
+* remove model mapper from api requests fetch dtos
+* improve api fetching response time with entitygraphs
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 

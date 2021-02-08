@@ -49,10 +49,6 @@ public class Tag implements Serializable {
   private boolean roadmapIgnored = false;
   private boolean publicUse = false;
 
-  public FetchTagDto convertToDto() {
-    return new ModelMapper().map(this, FetchTagDto.class);
-  }
-
   public String convertToSpecialCommentMention() {
     return "{data_tag;" + id + ";" + name + ";" + color + "}";
   }

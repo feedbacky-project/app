@@ -42,9 +42,5 @@ public class MailPreferences implements Serializable {
   private boolean notificationsEnabled;
   private String unsubscribeToken;
 
-  public FetchMailPreferences convertToDto() {
-    return new ModelMapper().map(this, FetchMailPreferences.class);
-  }
-
 
 }

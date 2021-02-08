@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
 import org.modelmapper.ModelMapper;
 
@@ -45,11 +46,5 @@ public class Invitation implements Serializable {
   @JoinColumn(name = "user_id")
   private User user;
   private String code;
-
-  public FetchInviteDto convertToDto() {
-    FetchInviteDto dto = new ModelMapper().map(this, FetchInviteDto.class);
-    dto.setUser(user.convertToDto().exposeSensitiveData(false).convertToSimpleDto());
-    return dto;
-  }
 
 }

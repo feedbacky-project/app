@@ -46,8 +46,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
     idea.getSubscribers().add(user);
     ideaRepository.save(idea);
-    //no need to expose
-    return user.convertToDto().exposeSensitiveData(false);
+    return new FetchUserDto().from(user);
   }
 
   @Override

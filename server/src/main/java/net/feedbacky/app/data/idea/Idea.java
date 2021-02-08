@@ -1,6 +1,7 @@
 package net.feedbacky.app.data.idea;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +13,13 @@ import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.util.mailservice.MailService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.CascadeType;
@@ -27,6 +31,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -49,21 +55,29 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NamedEntityGraph(name = "Idea.fetch", attributeNodes = {
+        @NamedAttributeNode("board"), @NamedAttributeNode("creator"),
+        @NamedAttributeNode("voters"), @NamedAttributeNode("comments"),
+        @NamedAttributeNode("tags"), @NamedAttributeNode("attachments"),
+        @NamedAttributeNode("subscribers")})
 public class Idea implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @EqualsAndHashCode.Include
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @LazyToOne(LazyToOneOption.NO_PROXY)
   private Board board;
   private String title;
   @Column(name = "description", columnDefinition = "text", length = 65_535)
   private String description;
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
+  @LazyToOne(LazyToOneOption.NO_PROXY)
   private User creator;
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> voters = new HashSet<>();
   //always the same as voters.size()
   private int votersAmount;
@@ -99,21 +113,6 @@ public class Idea implements Serializable {
             .replaceAll("^(-)", "")
             .replaceAll("(-)$", "");
     return MailService.HOST_ADDRESS + "/i/" + slug + "." + id;
-  }
-
-  public FetchIdeaDto convertToDto(User user) {
-    FetchIdeaDto dto = new ModelMapper().map(this, FetchIdeaDto.class);
-    dto.setOpen(status == IdeaStatus.OPENED);
-    dto.setAttachments(attachments.stream().map(Attachment::convertToDto).collect(Collectors.toList()));
-    dto.setBoardDiscriminator(board.getDiscriminator());
-    dto.setVotersAmount(voters.size());
-    //count only public and non special comments
-    dto.setCommentsAmount(comments.stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count());
-    dto.setTags(tags.stream().map(Tag::convertToDto).collect(Collectors.toSet()));
-    dto.setUpvoted(voters.contains(user));
-    dto.setSubscribed(subscribers.contains(user));
-    dto.setUser(creator.convertToDto().exposeSensitiveData(false).convertToSimpleDto());
-    return dto;
   }
 
   public enum IdeaStatus {

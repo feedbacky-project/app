@@ -57,7 +57,7 @@ public class WebhookServiceImpl implements WebhookService {
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to view webhooks of this board.");
     }
-    return webhookRepository.findByBoard(board).stream().map(Webhook::convertToDto).collect(Collectors.toList());
+    return webhookRepository.findByBoard(board).stream().map(webhook -> new FetchWebhookDto().from(webhook)).collect(Collectors.toList());
   }
 
   @Override
@@ -82,7 +82,7 @@ public class WebhookServiceImpl implements WebhookService {
     boardRepository.save(board);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user);
     board.getWebhookExecutor().executeWebhooks(Webhook.Event.SAMPLE_EVENT, builder.build());
-    return ResponseEntity.status(HttpStatus.CREATED).body(webhook.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchWebhookDto().from(webhook));
   }
 
   @Override
@@ -99,7 +99,7 @@ public class WebhookServiceImpl implements WebhookService {
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, webhook);
-    return webhook.convertToDto();
+    return new FetchWebhookDto().from(webhook);
   }
 
   @Override

@@ -73,14 +73,14 @@ public class BoardServiceImpl implements BoardService {
     List<Board> boards = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
-            boards.stream().map(Board::convertToDto).collect(Collectors.toList()));
+            boards.stream().map(board -> new FetchBoardDto().from(board)).collect(Collectors.toList()));
   }
 
   @Override
   public FetchBoardDto getOne(String discriminator) {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    return board.convertToDto();
+    return new FetchBoardDto().from(board);
   }
 
   @Override
@@ -124,7 +124,7 @@ public class BoardServiceImpl implements BoardService {
     node.setUser(user);
     user.getPermissions().add(node);
     userRepository.save(user);
-    return ResponseEntity.status(HttpStatus.CREATED).body(board.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchBoardDto().from(board));
   }
 
   @Override
@@ -166,7 +166,7 @@ public class BoardServiceImpl implements BoardService {
     board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
 
     boardRepository.save(board);
-    return board.convertToDto();
+    return new FetchBoardDto().from(board);
   }
 
   @Override
@@ -202,7 +202,7 @@ public class BoardServiceImpl implements BoardService {
   public List<FetchTagDto> getAllTags(String discriminator) {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    return board.getTags().stream().map(Tag::convertToDto).collect(Collectors.toList());
+    return board.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
   }
 
   @Override
@@ -211,7 +211,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
     Tag tag = tagRepository.findByBoardAndName(board, name)
             .orElseThrow(() -> new ResourceNotFoundException("Tag with name " + name + " does not exist."));
-    return tag.convertToDto();
+    return new FetchTagDto().from(tag);
   }
 
   @Override
@@ -232,7 +232,7 @@ public class BoardServiceImpl implements BoardService {
     }
     Tag tag = dto.convertToEntity(board);
     tagRepository.save(tag);
-    return ResponseEntity.status(HttpStatus.CREATED).body(tag.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchTagDto().from(tag));
   }
 
   @Override
@@ -253,7 +253,7 @@ public class BoardServiceImpl implements BoardService {
     mapper.map(dto, tag);
 
     tagRepository.save(tag);
-    return tag.convertToDto();
+    return new FetchTagDto().from(tag);
   }
 
   @Override

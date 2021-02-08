@@ -42,8 +42,4 @@ public class SocialLink implements Serializable {
   private String logoUrl;
   private String url;
 
-  public FetchSocialLinkDto convertToDto() {
-    return new ModelMapper().map(this, FetchSocialLinkDto.class);
-  }
-
 }

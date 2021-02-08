@@ -41,7 +41,7 @@ public class AboutRestController {
     //lazy init to make sure all login providers are registered before
     if(this.aboutFeedbackyData == null) {
       boolean closedIdeasCommenting = Boolean.parseBoolean(System.getenv("SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS"));
-      List<FetchUserDto> admins = userRepository.findByServiceStaffTrue().stream().map(user -> user.convertToDto().exposeSensitiveData(false)).collect(Collectors.toList());
+      List<FetchUserDto> admins = userRepository.findByServiceStaffTrue().stream().map(user -> new FetchUserDto().from(user)).collect(Collectors.toList());
       List<LoginProvider.ProviderData> providers = loginProviderRegistry.getProviders().stream().filter(LoginProvider::isEnabled).map(LoginProvider::getProviderData).collect(Collectors.toList());
       data = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, providers, admins, closedIdeasCommenting);
       //only cache when there is at least 1 service admin registered (for first installation purposes)

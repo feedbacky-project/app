@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
-
-import org.modelmapper.ModelMapper;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,9 +38,5 @@ public class ConnectedAccount implements Serializable {
   private User user;
   private String provider;
   private long accountId;
-
-  public FetchConnectedAccount convertToDto() {
-    return new ModelMapper().map(this, FetchConnectedAccount.class);
-  }
 
 }

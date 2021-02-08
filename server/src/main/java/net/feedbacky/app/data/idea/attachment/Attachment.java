@@ -8,6 +8,8 @@ import lombok.ToString;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.dto.attachment.FetchAttachmentDto;
 
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.Entity;
@@ -40,10 +42,7 @@ public class Attachment implements Serializable {
 
   private String url;
   @ManyToOne(fetch = FetchType.LAZY)
+  @LazyToOne(LazyToOneOption.NO_PROXY)
   private Idea idea;
-
-  public FetchAttachmentDto convertToDto() {
-    return new ModelMapper().map(this, FetchAttachmentDto.class);
-  }
 
 }

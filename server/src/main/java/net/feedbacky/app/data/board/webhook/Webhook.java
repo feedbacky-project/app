@@ -48,10 +48,6 @@ public class Webhook implements Serializable {
   @ElementCollection(targetClass = Event.class)
   private List<Event> events = new ArrayList<>();
 
-  public FetchWebhookDto convertToDto() {
-    return new ModelMapper().map(this, FetchWebhookDto.class);
-  }
-
   public enum Type {
     CUSTOM_ENDPOINT(0), DISCORD(1);
 

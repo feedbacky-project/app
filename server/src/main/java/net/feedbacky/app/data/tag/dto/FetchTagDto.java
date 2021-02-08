@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.FetchResponseDto;
+import net.feedbacky.app.data.tag.Tag;
 
 /**
  * @author Plajer
@@ -14,7 +16,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FetchTagDto {
+public class FetchTagDto implements FetchResponseDto<FetchTagDto, Tag> {
 
   private long id;
   private String name;
@@ -22,4 +24,13 @@ public class FetchTagDto {
   private boolean roadmapIgnored;
   private boolean publicUse;
 
+  @Override
+  public FetchTagDto from(Tag entity) {
+    this.id = entity.getId();
+    this.name = entity.getName();
+    this.color = entity.getColor();
+    this.roadmapIgnored = entity.isRoadmapIgnored();
+    this.publicUse = entity.isPublicUse();
+    return this;
+  }
 }

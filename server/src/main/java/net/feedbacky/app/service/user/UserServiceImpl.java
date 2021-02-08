@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    return user.convertToDto().exposeSensitiveData(true);
+    return new FetchUserDto().from(user).withConfidentialData(user);
   }
 
   @Override
@@ -65,15 +65,13 @@ public class UserServiceImpl implements UserService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    return user.getConnectedAccounts().stream().map(ConnectedAccount::convertToDto).collect(Collectors.toList());
+    return user.getConnectedAccounts().stream().map(acc -> new FetchConnectedAccount().from(acc)).collect(Collectors.toList());
   }
 
   @Override
   public FetchUserDto get(long id) {
     User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
-    TypeReference<HashMap<String, Object>> ref = new TypeReference<HashMap<String, Object>>() {};
-    Map<String, Object> data = new ObjectMapper().convertValue(user.convertToDto().exposeSensitiveData(false), ref);
-    return new ObjectMapper().convertValue(data, FetchUserDto.class);
+    return new FetchUserDto().from(user);
   }
 
   @Override
@@ -86,7 +84,7 @@ public class UserServiceImpl implements UserService {
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, user);
     userRepository.save(user);
-    return user.convertToDto().exposeSensitiveData(true);
+    return new FetchUserDto().from(user).withConfidentialData(user);
   }
 
   @Override
@@ -101,7 +99,7 @@ public class UserServiceImpl implements UserService {
     mapper.map(dto, preferences);
     user.setMailPreferences(preferences);
     userRepository.save(user);
-    return user.convertToDto().exposeSensitiveData(true);
+    return new FetchUserDto().from(user).withConfidentialData(user);
   }
 
   @Override

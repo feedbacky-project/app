@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.board.dto.moderator.FetchUserPermissionDto;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import org.modelmapper.ModelMapper;
+import net.feedbacky.app.data.user.User;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -22,11 +21,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonPropertyOrder({"id", "username", "avatar", "email", "permissionsUrl", "connectedAccountsUrl", "creationDate"})
-public class FetchUserDto {
+public class FetchUserDto implements FetchResponseDto<FetchUserDto, User> {
 
-  private final String permissionsUrl = "/v1/users/:id/permissions";
-  private final String connectedAccountsUrl = "/v1/users/@me/connectedAccounts";
   private long id;
   private String username;
   private String avatar;
@@ -35,8 +31,23 @@ public class FetchUserDto {
   private List<FetchUserPermissionDto> permissions;
   private Date creationDate;
 
-  public FetchSimpleUserDto convertToSimpleDto() {
-    return new ModelMapper().map(this, FetchSimpleUserDto.class);
+  private String connectedAccountsUrl = "/v1/users/@me/connectedAccounts";
+
+  @Override
+  public FetchUserDto from(User entity) {
+    this.id = entity.getId();
+    this.username = entity.getUsername();
+    this.avatar = entity.getAvatar();
+    this.email = null;
+    this.mailPreferences = new FetchMailPreferences().from(entity.getMailPreferences());
+    this.permissions = entity.getPermissions().stream().map(permission -> new FetchUserPermissionDto().from(permission)).collect(Collectors.toList());
+    this.creationDate = entity.getCreationDate();
+    return this;
+  }
+
+  public FetchUserDto withConfidentialData(User entity) {
+    this.email = entity.getEmail();
+    return this;
   }
 
 }

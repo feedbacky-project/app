@@ -1,9 +1,10 @@
 package net.feedbacky.app.data.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.FetchResponseDto;
+import net.feedbacky.app.data.user.ConnectedAccount;
 
 /**
  * @author Plajer
@@ -12,11 +13,17 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class FetchConnectedAccount {
+public class FetchConnectedAccount implements FetchResponseDto<FetchConnectedAccount, ConnectedAccount> {
 
   private String provider;
   private long accountId;
+
+  @Override
+  public FetchConnectedAccount from(ConnectedAccount account) {
+    this.provider = account.getProvider();
+    this.accountId = account.getAccountId();
+    return this;
+  }
 
 }

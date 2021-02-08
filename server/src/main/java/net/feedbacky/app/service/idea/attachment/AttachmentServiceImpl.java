@@ -63,7 +63,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     attachment = attachmentRepository.save(attachment);
     idea.getAttachments().add(attachment);
     ideaRepository.save(idea);
-    return ResponseEntity.status(HttpStatus.CREATED).body(attachment.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchAttachmentDto().from(attachment));
   }
   @Override
   public ResponseEntity deleteAttachment(long id) {

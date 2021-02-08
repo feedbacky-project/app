@@ -49,8 +49,4 @@ public class SuspendedUser implements Serializable {
   private User user;
   private Date suspensionEndDate;
 
-  public FetchSuspendedUserDto convertToDto() {
-    return new ModelMapper().map(this, FetchSuspendedUserDto.class);
-  }
-
 }

@@ -64,7 +64,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
       throw new InvalidAuthenticationException("No permission to view invited moderators of this board.");
     }
-    return board.getInvitedModerators().stream().map(Invitation::convertToDto).collect(Collectors.toList());
+    return board.getInvitedModerators().stream().map(invite -> new FetchInviteDto().from(invite)).collect(Collectors.toList());
   }
 
   @Override
@@ -85,7 +85,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     board.getModerators().add(moderator);
     boardRepository.save(board);
     invitationRepository.delete(invitation);
-    return board.convertToDto();
+    return new FetchBoardDto().from(board);
   }
 
   @Override
@@ -118,7 +118,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
             .withInvitation(invitation)
             .withTemplate(MailService.EmailTemplate.MODERATOR_INVITATION)
             .sendMail(mailHandler.getMailService()).async();
-    return ResponseEntity.status(HttpStatus.CREATED).body(invitation.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchInviteDto().from(invitation));
   }
 
   @Override

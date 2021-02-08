@@ -52,7 +52,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
   public List<FetchSocialLinkDto> getAll(String discriminator) {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    return board.getSocialLinks().stream().map(SocialLink::convertToDto).collect(Collectors.toList());
+    return board.getSocialLinks().stream().map(link -> new FetchSocialLinkDto().from(link)).collect(Collectors.toList());
   }
 
   @Override
@@ -81,7 +81,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     socialLink = socialLinksRepository.save(socialLink);
     board.getSocialLinks().add(socialLink);
     boardRepository.save(board);
-    return ResponseEntity.status(HttpStatus.CREATED).body(socialLink.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchSocialLinkDto().from(socialLink));
   }
 
   @Override

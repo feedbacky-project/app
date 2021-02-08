@@ -1,9 +1,10 @@
 package net.feedbacky.app.data.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.FetchResponseDto;
+import net.feedbacky.app.data.user.User;
 
 /**
  * @author Plajer
@@ -12,13 +13,21 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class FetchSimpleUserDto {
+public class FetchSimpleUserDto implements FetchResponseDto<FetchSimpleUserDto, User> {
 
   private long id;
   private String username;
   private String avatar;
-  private final String userUrl = "/v1/users/:id";
+
+  private String userUrl = "/v1/users/:id";
+
+  @Override
+  public FetchSimpleUserDto from(User entity) {
+    this.id = entity.getId();
+    this.username = entity.getUsername();
+    this.avatar = entity.getAvatar();
+    return this;
+  }
 
 }
