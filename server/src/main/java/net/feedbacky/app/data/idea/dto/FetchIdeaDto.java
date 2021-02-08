@@ -1,8 +1,6 @@
 package net.feedbacky.app.data.idea.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.dto.attachment.FetchAttachmentDto;
@@ -23,8 +21,6 @@ import java.util.stream.Collectors;
  * Created at 07.10.2019
  */
 @Getter
-@Setter
-@NoArgsConstructor
 public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
 
   private long id;

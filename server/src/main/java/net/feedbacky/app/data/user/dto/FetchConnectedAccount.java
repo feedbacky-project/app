@@ -1,8 +1,6 @@
 package net.feedbacky.app.data.user.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.user.ConnectedAccount;
 
@@ -12,8 +10,6 @@ import net.feedbacky.app.data.user.ConnectedAccount;
  * Created at 22.01.2020
  */
 @Getter
-@Setter
-@NoArgsConstructor
 public class FetchConnectedAccount implements FetchResponseDto<FetchConnectedAccount, ConnectedAccount> {
 
   private String provider;

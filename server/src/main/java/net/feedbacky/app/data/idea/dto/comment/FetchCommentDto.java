@@ -1,7 +1,6 @@
 package net.feedbacky.app.data.idea.dto.comment;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.user.User;
@@ -17,7 +16,6 @@ import java.util.Date;
  * Created at 11.10.2019
  */
 @Getter
-@NoArgsConstructor
 public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Comment> {
 
   private long id;

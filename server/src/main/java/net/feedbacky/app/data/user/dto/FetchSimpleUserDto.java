@@ -1,8 +1,6 @@
 package net.feedbacky.app.data.user.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.user.User;
 
@@ -12,8 +10,6 @@ import net.feedbacky.app.data.user.User;
  * Created at 27.10.2019
  */
 @Getter
-@Setter
-@NoArgsConstructor
 public class FetchSimpleUserDto implements FetchResponseDto<FetchSimpleUserDto, User> {
 
   private long id;

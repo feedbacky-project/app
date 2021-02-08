@@ -1,23 +1,16 @@
 package net.feedbacky.app.data.board.dto.suspended;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.board.suspended.SuspendedUser;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Plajer
  * <p>
  * Created at 17.11.2020
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class FetchSuspendedUserDto implements FetchResponseDto<FetchSuspendedUserDto, SuspendedUser> {
 
   private long id;

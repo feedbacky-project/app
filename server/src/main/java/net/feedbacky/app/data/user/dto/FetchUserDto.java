@@ -1,9 +1,6 @@
 package net.feedbacky.app.data.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.board.dto.moderator.FetchUserPermissionDto;
 import net.feedbacky.app.data.user.User;
@@ -18,9 +15,6 @@ import java.util.stream.Collectors;
  * Created at 07.10.2019
  */
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class FetchUserDto implements FetchResponseDto<FetchUserDto, User> {
 
   private long id;

@@ -1,10 +1,6 @@
 package net.feedbacky.app.data.board.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
@@ -12,8 +8,6 @@ import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 import java.util.List;
@@ -25,11 +19,6 @@ import java.util.stream.Collectors;
  * Created at 07.10.2019
  */
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
 
   private long id;

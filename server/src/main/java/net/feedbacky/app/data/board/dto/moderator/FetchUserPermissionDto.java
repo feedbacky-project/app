@@ -1,22 +1,15 @@
 package net.feedbacky.app.data.board.dto.moderator;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Plajer
  * <p>
  * Created at 02.11.2019
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class FetchUserPermissionDto implements FetchResponseDto<FetchUserPermissionDto, Moderator> {
 
   private String boardDiscriminator;

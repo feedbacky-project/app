@@ -1,9 +1,6 @@
 package net.feedbacky.app.data.tag.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.tag.Tag;
 
@@ -13,9 +10,6 @@ import net.feedbacky.app.data.tag.Tag;
  * Created at 13.10.2019
  */
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class FetchTagDto implements FetchResponseDto<FetchTagDto, Tag> {
 
   private long id;
