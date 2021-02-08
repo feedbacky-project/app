@@ -17,6 +17,7 @@ import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -35,6 +36,7 @@ import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -296,10 +298,10 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
-  public List<FetchUserDto> getAllVoters(long id) {
-    Idea idea = ideaRepository.findById(id)
+  public List<FetchSimpleUserDto> getAllVoters(long id) {
+    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("voters"))
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
-    return idea.getVoters().stream().map(usr -> new FetchUserDto().from(usr)).collect(Collectors.toList());
+    return idea.getVoters().stream().map(usr -> new FetchSimpleUserDto().from(usr)).collect(Collectors.toList());
   }
 
   @Override

@@ -5,6 +5,7 @@ import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
+import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
@@ -32,7 +33,7 @@ public interface IdeaService extends FeedbackyService {
 
   ResponseEntity delete(long id);
 
-  List<FetchUserDto> getAllVoters(long id);
+  List<FetchSimpleUserDto> getAllVoters(long id);
 
   FetchUserDto postUpvote(long id);
 
