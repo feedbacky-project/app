@@ -50,10 +50,9 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedEntityGraph(name = "Idea.fetch", attributeNodes = {
-        @NamedAttributeNode("board"), @NamedAttributeNode("creator"),
-        @NamedAttributeNode("voters"), @NamedAttributeNode("comments"),
-        @NamedAttributeNode("tags"), @NamedAttributeNode("attachments"),
-        @NamedAttributeNode("subscribers")})
+        @NamedAttributeNode("creator"), @NamedAttributeNode("voters"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"),
+        @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers")})
 public class Idea implements Serializable {
 
   @Id
