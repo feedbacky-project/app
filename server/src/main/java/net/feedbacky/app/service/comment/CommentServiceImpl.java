@@ -194,9 +194,9 @@ public class CommentServiceImpl implements CommentService {
     if(!comment.getCreator().equals(user) && !hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to delete comment with id " + id + ".");
     }
-    commentRepository.delete(comment);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     comment.getIdea().getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
+    commentRepository.delete(comment);
     return ResponseEntity.noContent().build();
   }
 

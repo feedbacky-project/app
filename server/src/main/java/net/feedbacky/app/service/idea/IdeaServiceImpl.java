@@ -291,9 +291,9 @@ public class IdeaServiceImpl implements IdeaService {
       throw new InvalidAuthenticationException("No permission to delete idea with id " + id + ".");
     }
     idea.getAttachments().forEach(attachment -> objectStorage.deleteImage(attachment.getUrl()));
-    ideaRepository.delete(idea);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
     idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_DELETE, builder.build());
+    ideaRepository.delete(idea);
     return ResponseEntity.noContent().build();
   }
 
