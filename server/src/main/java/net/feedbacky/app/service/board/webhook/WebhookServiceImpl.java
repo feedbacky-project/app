@@ -83,7 +83,7 @@ public class WebhookServiceImpl implements WebhookService {
     board.getWebhooks().add(webhook);
     boardRepository.save(board);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user);
-    board.getWebhookExecutor().executeWebhooks(Webhook.Event.SAMPLE_EVENT, builder.build());
+    board.getWebhookExecutor().executeWebhook(webhook, Webhook.Event.SAMPLE_EVENT, builder.build());
     return ResponseEntity.status(HttpStatus.CREATED).body(new FetchWebhookDto().from(webhook));
   }
 

@@ -32,6 +32,7 @@
 * remove model mapper from api requests fetch dtos
 * improve api fetching response time with entitygraphs
 * force break-word on idea cards to avoid [this](https://cdn.discordapp.com/attachments/618782782348591111/796316504835751956/Screenshot_2021-01-06-10-57-17-570_org.mozilla.firefox.jpg)
+* on new webhook creation it should notify only created webhook not all board webhooks now
 
 TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
 

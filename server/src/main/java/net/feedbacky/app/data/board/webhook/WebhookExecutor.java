@@ -27,14 +27,18 @@ public class WebhookExecutor {
       if(!webhook.getEvents().contains(event) && event != Webhook.Event.SAMPLE_EVENT) {
         continue;
       }
-      switch(webhook.getType()) {
-        case CUSTOM_ENDPOINT:
-          executeCustomEndpoint(webhook, event, data);
-          break;
-        case DISCORD:
-          executeDiscordEndpoint(webhook, event, data);
-          break;
-      }
+      executeWebhook(webhook, event, data);
+    }
+  }
+
+  public void executeWebhook(Webhook webhook, Webhook.Event event, Map<String, String> data) {
+    switch(webhook.getType()) {
+      case CUSTOM_ENDPOINT:
+        executeCustomEndpoint(webhook, event, data);
+        break;
+      case DISCORD:
+        executeDiscordEndpoint(webhook, event, data);
+        break;
     }
   }
 
