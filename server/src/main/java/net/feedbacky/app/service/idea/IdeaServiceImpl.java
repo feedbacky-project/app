@@ -214,7 +214,7 @@ public class IdeaServiceImpl implements IdeaService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    Idea idea = ideaRepository.findById(id)
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
     if(dto.getOpen() != null && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to patch idea 'open' field with id " + id + ".");
@@ -285,7 +285,7 @@ public class IdeaServiceImpl implements IdeaService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    Idea idea = ideaRepository.findById(id)
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
     if(!idea.getCreator().equals(user) && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to delete idea with id " + id + ".");
@@ -310,7 +310,7 @@ public class IdeaServiceImpl implements IdeaService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    Idea idea = ideaRepository.findById(id)
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
     if(idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is already upvoted by you.");
@@ -330,7 +330,7 @@ public class IdeaServiceImpl implements IdeaService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    Idea idea = ideaRepository.findById(id)
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
     if(!idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is not upvoted by you.");
@@ -350,7 +350,7 @@ public class IdeaServiceImpl implements IdeaService {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
-    Idea idea = ideaRepository.findById(id)
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
     if(!hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InvalidAuthenticationException("No permission to modify tags for idea with id " + id + ".");
