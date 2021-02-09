@@ -33,6 +33,7 @@ export const CardLinkStyle = styled(UiCol)`
 export const IdeaCardDescription = styled.small`
   color: hsla(0, 0%, 0%, .6);;
   letter-spacing: -.1pt;
+  word-break: break-word;
    
   .dark & {
     color: hsla(0, 0%, 95%, .6) !important;
