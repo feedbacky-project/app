@@ -6,10 +6,10 @@ import CommentsBox from "components/idea/discussion/CommentsBox";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import TextareaAutosize from 'react-autosize-textarea';
 import {FaFrown} from "react-icons/fa";
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "react-infinite-scroll-component";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiLoadingSpinner, UiPrettyUsername} from "ui";
 import {UiLoadableButton} from "ui/button";
@@ -25,27 +25,25 @@ const DiscussionBox = () => {
     const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [submitOpen, setSubmitOpen] = useState(false);
+    const [page, setPage] = useState(0);
     const [modal, setModal] = useState({open: true, type: "", data: -1});
     const sorts = [
         {oldest: "Oldest"},
         {newest: "Newest"}
     ];
-    const isInitialMount = useRef(true);
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            onLoadRequest(1, true);
-        }
+        onLoadRequest(true);
         // eslint-disable-next-line
     }, [user.localPreferences]);
-    const onLoadRequest = (page, override) => {
-        return axios.get("/ideas/" + ideaData.id + "/comments?page=" + (page - 1) + prepareFilterAndSortRequests(user.localPreferences.comments)).then(res => {
+    const onLoadRequest = (override) => {
+        const currentPage = override ? 0 : page;
+        return axios.get("/ideas/" + ideaData.id + "/comments?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.comments)).then(res => {
             if (override) {
                 setComments({...comments, data: res.data.data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
             } else {
                 setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
             }
+            setPage(currentPage + 1);
         }).catch(() => {
             setComments({...comments, loaded: true, error: true})
         });
@@ -55,11 +53,11 @@ const DiscussionBox = () => {
             return <div className={"text-red mt-2 mb-3"}><FaFrown/> Failed to load comments</div>
         }
         return <InfiniteScroll
-            pageStart={0}
-            initialLoad={true}
-            loadMore={page => onLoadRequest(page)}
+            style={{overflow: "hidden"}}
+            next={onLoadRequest}
             hasMore={comments.moreToLoad}
-            loader={<UiRow centered className={"mt-5 pt-5"} key={comments.data.length}><UiLoadingSpinner/></UiRow>}>
+            dataLength={comments.data.length}
+            loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}>
             {comments.data.map(data =>
                 <CommentsBox key={data.id} data={data} onCommentDelete={onCommentPreDelete} onCommentLike={onCommentLike}
                              onCommentUnlike={onCommentUnlike} onSuspend={onPreSuspend}/>
@@ -89,7 +87,7 @@ const DiscussionBox = () => {
                     <small style={{fontWeight: "bold"}}><UiPrettyUsername user={user.data}/></small>
                     <br/>
                     <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                      style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp} label={"Write a comment"}/>
+                                   style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp} label={"Write a comment"}/>
                     {renderSubmitButton()}
                 </UiCol>
             </UiCol>
@@ -103,7 +101,7 @@ const DiscussionBox = () => {
                 <small style={{fontWeight: "bold"}}>Anonymous</small>
                 <br/>
                 <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                  style={{overflow: "hidden"}} onChange={onNotLoggedClick} label={"Write a comment"} onClick={e => {
+                               style={{overflow: "hidden"}} onChange={onNotLoggedClick} label={"Write a comment"} onClick={e => {
                     e.target.blur();
                     onNotLoggedClick();
                 }}/>
