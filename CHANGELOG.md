@@ -1,49 +1,41 @@
-### 1.0.0-alpha
-* social links are now properly updated in admin panel and changes are reflected on main page without the need to reload
-* staged creators for webhooks and social links are now inside admin panel not separate page
-* buttons all over the page now respect dark mode and use badge-like background and color scheme
-* changed badges background alpha value to 10%, looks better (just my opinion)
-* changed small text shadow size from 3 to 4 px (better to read the text)
-* borders in webhooks creator were broken, now they're fixed
-* dark mode is now shadowless, every ui element now won't have shadows, previously only texteareas and forms did
-* special comment icons on dark mode are no longer full color, alpha color is applied to look better
-* loading spinners now do implement theme color of board where applicable
-* removed brightness filter on board image (jumbotron) on dark mode
-* another fix for color selection modal in admin panel
-* added MAINTENANCE.md inside client folder to describe file structure and file naming for future code maintenance and contributors
-* fixed client side didn't use optimized bootstrap-imports file, now it does and css size is smaller
-* move social icons buttons hover url for the whole button not only the icon (Tigerpanzer suggestion)
-* changed moderator actions icons to cog
-* make more page elements theme dependant (use page theme for background or color)
-* added accessibility support for prefers-reduced-motion for some non-essential animations (upvote, settings, loaders)
-* replaced color in profile navbar on light mode with darker accent to meet AAA color contrast
-* replaced some text with text-black-50 color to text-black-60 to meet AAA color contrast
-* fixed issue that anyone could access admin panel of any board (couldn't use it and saw only public data no private data)
-* upvote buttons are now grey if they're not upvoted
-* replaced default color palette in theme selector with more color contrast safe colors
-* made some changes towards easier keyboard accessibility (brought back links outlines, made new idea button tabindex 1)
-* moved dark mode toggle from navbar dropdown to Settings > Appearance
-* fixed suspensions feature didn't work on months and days with one digit (server validates date 2020-01-01 not 2020-1-1)
-* removed sweetalert2, now using only react bootstrap modals (soon only react-overlays modals)
-* isolated react-bootstrap components inside ui package
-* slowly removing bootstrap and it's usages in code (only basic utilities and grid system will remain)
-* add meta description and update meta tags for SEO
-* added https://app.feedbacky.net/i/show-amount-of-open-closed-and-total-ideas.191 idea
-* remove model mapper from api requests fetch dtos
-* improve api fetching response time with entitygraphs
-* force break-word on idea cards to avoid [this](https://cdn.discordapp.com/attachments/618782782348591111/796316504835751956/Screenshot_2021-01-06-10-57-17-570_org.mozilla.firefox.jpg)
-* on new webhook creation it should notify only created webhook not all board webhooks now
-* replaced react-infinite-scroller with react-infinite-scroll-component library and fixed common issues with ideas/comments loading
-such as race conditions and data not loading on components state update
-
-TODO dynamically load SVGs from assets/svg/undraw for smaller js chunk sizes
-
+### 1.0.0.alpha.2
 !! TODO UI CARD INNER REF https://github.com/reactjs/reactjs.org/issues/2120
 !! hover transform scale small/big
 
-### 0.6.0-beta
+### 1.0.0.alpha.1
+* **[FEATURE]** Added MAINTENANCE.md inside client folder to describe file structure and naming for future code maintenance and contributors
+* **[FEATURE]** Added reduced motion accessibility feature - if requested all non-essential animations (upvote, loaders, settings) won't display (prefers-reduced-motion: reduce)
+* **[FEATURE]** Added ability to show amount of opened/closed and all ideas in the filter selection ([this suggestion](https://app.feedbacky.net/i/show-amount-of-open-closed-and-total-ideas.191))
 * **[FEATURE]** Added search bar to search ideas by specific title (requested by [eartharoid](https://app.feedbacky.net/i/add-a-search-feature.2313))
 * **[FEATURE]** Added self assignable tags that everyone can set when creating new idea (requested by [VentureKraft](https://app.feedbacky.net/i/self-assignable-tags.982))
+* **[IMPROVEMENT]** Buttons all over the page now respect dark mode and use color and background depending on the chosen color mode
+* **[IMPROVEMENT]** Webhook and social links creator pages are now inside board admin panel not on a separate pages
+* **[IMPROVEMENT]** Updated colors at profile page to meet AAA color contrast
+* **[IMPROVEMENT]** Made some changes towards easier keyboard accessibility (brought back links outlines, tabbing performance improved)
+* **[IMPROVEMENT]** Smaller UI changes such as:
+    * Page loading spinner now uses board theme color where applicable
+    * Badges background on dark mode has now 10% alpha value instead 20%
+    * Text shadows (were applicable) now have 4px instead of 3px size
+    * Borders in webhooks creator cards now display properly
+    * Moderative comment icons on dark mode are no longer full color and have transparent background
+    * Removed brightness filter on board banner in dark mode
+    * Changed moderator actions (close/open idea, change tags) icon to animated cog icon
+    * Made more page elements board theme color dependant
+    * Other either quality-of-life improvements or glitches fixes
+* **[IMPROVEMENT]** Social links URLs are now clickable for the whole button not only the icon (reported by Tigerpanzer)
+* **[IMPROVEMENT]** Removed sweetalert2 modals and replaced them with bootstrap alternatives so every modal is now in bootstrap
+* **[IMPROVEMENT]** Added meta description tag and updated other meta tags for SEO purposes
+* **[IMPROVEMENT]** Improved server-side performance and some requests are now returned faster
+* **[IMPROVEMENT]** Replaced infinite scroller library and fixed some known issues with the old library while loading paginated content
+* **[IMPROVEMENT / IN PROGRESS]** Slowly turning away from bootstrap making CSS code base smaller
+* **[CHANGE / CONTROVERSIAL]** Dark mode is now shadowless, every UI element won't have shadow now, previously only forms didn't
+* **[CHANGE / CONTROVERSIAL]** Not upvoted ideas buttons are now in gray color
+* **[CHANGE]** Dark/light mode is no longer toggeable in navbar, you can change it at Settings > Appearance now
+* **[CHANGE]** Replaced previous color palette in theme color selector with more contrast safe colors (to pass AA and/or AAA color contrast standards)
+* **[FIX]** Social links are now properly updated without the need to reload when added/deleted in board admin panel
+* **[FIX]** Theme selection modal in board admin panel didn't work properly
+* **[FIX]** Suspensions feature wouldn't work when day or month number didn't have 2 digits (like 2020-1-1 instead of 2020-01-01)
+* **[FIX]** When creating new webhook only created webhook will receive sample event not every hook at the board
 * **[FIX]** Webhook messages contained user data tag instead of username in tag change webhook messages
 * **[FIX]** Migrator fixes, no more issues with version detection 
 
