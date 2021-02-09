@@ -26,7 +26,7 @@ const UiTestRoute = lazy(() => retry(() => import("routes/UiTestRoute")));
 
 toast.configure();
 
-const CLIENT_VERSION = "1.0.0-alpha";
+const CLIENT_VERSION = "1.0.0.alpha.1";
 const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
 
 const App = ({appearanceSettings}) => {
