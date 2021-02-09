@@ -161,7 +161,7 @@ const IdeaInfoBox = () => {
                     {renderDetails()}
                 </div>
             </UiCol>
-            <UiCol xs={12} className={"p-0"}>
+            <UiCol xs={12} className={"p-0 mb-3"}>
                 {renderDescription()}
             </UiCol>
         </UiCol>
