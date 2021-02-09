@@ -21,7 +21,9 @@ const SuspensionSettings = () => {
     const renderContent = () => {
         return <UiCol xs={12}>
             <UiFormLabel>Suspended Users</UiFormLabel>
-            {renderSuspensions()}
+            <div>
+                 {renderSuspensions()}
+            </div>
             <div>
                 <UiButton label={"Add New"} className={"m-0 mt-3 float-right"} onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</UiButton>
             </div>
