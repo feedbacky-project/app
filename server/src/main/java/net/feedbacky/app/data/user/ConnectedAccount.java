@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * @author Plajer
@@ -37,6 +38,6 @@ public class ConnectedAccount implements Serializable {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
   private String provider;
-  private long accountId;
+  private BigInteger accountId;
 
 }

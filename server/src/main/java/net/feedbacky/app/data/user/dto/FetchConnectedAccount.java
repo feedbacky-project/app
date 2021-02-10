@@ -4,6 +4,8 @@ import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.user.ConnectedAccount;
 
+import java.math.BigInteger;
+
 /**
  * @author Plajer
  * <p>
@@ -13,7 +15,7 @@ import net.feedbacky.app.data.user.ConnectedAccount;
 public class FetchConnectedAccount implements FetchResponseDto<FetchConnectedAccount, ConnectedAccount> {
 
   private String provider;
-  private long accountId;
+  private BigInteger accountId;
 
   @Override
   public FetchConnectedAccount from(ConnectedAccount account) {

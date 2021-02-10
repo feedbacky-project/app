@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -184,7 +185,7 @@ public class ServiceLoginController {
     ConnectedAccount account = new ConnectedAccount();
     account.setUser(user);
     account.setProvider(id);
-    account.setAccountId(Long.parseLong(String.valueOf(data.get(fields.getId()))));
+    account.setAccountId(new BigInteger(String.valueOf(data.get(fields.getId()))));
     return account;
   }
 

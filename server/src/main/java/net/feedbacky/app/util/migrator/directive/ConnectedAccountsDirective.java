@@ -107,7 +107,7 @@ public class ConnectedAccountsDirective extends MigrationDirective {
               default:
                 continue;
             }
-            account.setAccountId(accountId);
+            account.setAccountId(new BigInteger(String.valueOf(accountId)));
             account.setProvider(provider);
             updatedAccounts.add(account);
             super.migrateNewEntry();
