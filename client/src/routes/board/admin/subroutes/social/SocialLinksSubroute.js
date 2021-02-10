@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
@@ -16,7 +17,6 @@ import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {toastError, toastSuccess} from "utils/basic-utils";
-import styled from "@emotion/styled";
 
 const SocialIcon = styled(UiImage)`
   padding: .5rem;

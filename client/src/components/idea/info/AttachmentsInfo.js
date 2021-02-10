@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import SafeAnchor from "components/commons/SafeAnchor";
@@ -8,7 +9,6 @@ import React, {useContext, useState} from "react";
 import {UiElementDeleteButton} from "ui/button";
 import {UiImage} from "ui/image";
 import {toastError, toastSuccess} from "utils/basic-utils";
-import styled from "@emotion/styled";
 
 const Attachment = styled(UiImage)`
   .dark & {

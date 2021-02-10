@@ -1,6 +1,6 @@
+import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from "react";
-import styled from "@emotion/styled";
 import {FaEdit, FaLockOpen, FaTags, FaTimesCircle} from "react-icons/all";
 
 const Icon = styled.div`

@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import axios from "axios";
 import ModeratorInviteModal from "components/board/admin/ModeratorInviteModal";
 import DangerousActionModal from "components/commons/DangerousActionModal";
@@ -13,7 +14,6 @@ import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
-import styled from "@emotion/styled";
 
 const InviteCopyButton = styled.div`
   cursor: pointer;

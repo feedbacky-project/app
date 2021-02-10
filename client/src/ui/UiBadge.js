@@ -1,8 +1,8 @@
+import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";
-import styled from "@emotion/styled";
 
 const Badge = styled.div`
     display: inline-block;

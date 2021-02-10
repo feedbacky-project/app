@@ -1,6 +1,6 @@
+import styled from "@emotion/styled";
 import React from "react";
 import {CirclePicker} from "react-color";
-import styled from "@emotion/styled";
 
 const ColorContainer = styled(CirclePicker)`
   width: 260px !important;

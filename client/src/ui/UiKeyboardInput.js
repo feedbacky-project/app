@@ -1,5 +1,5 @@
-import React from "react";
 import styled from "@emotion/styled";
+import React from "react";
 
 const KeyboardInput = styled.kbd`
   padding: .2rem .4rem;

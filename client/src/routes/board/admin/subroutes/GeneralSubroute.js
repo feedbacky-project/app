@@ -19,7 +19,7 @@ import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
-import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
+import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, validateImageWithWarning} from "utils/basic-utils";
 
 const ThemeSelector = styled.div`
   width: 28px;

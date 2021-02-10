@@ -1,6 +1,6 @@
+import styled from "@emotion/styled";
 import React from "react";
 import {Button} from "react-bootstrap";
-import styled from "@emotion/styled";
 
 const CancelButton = styled(Button)`
   transition: var(--hover-transition) !important;

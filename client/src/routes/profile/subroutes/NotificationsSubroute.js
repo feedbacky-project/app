@@ -6,7 +6,7 @@ import tinycolor from "tinycolor2";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {toastAwait, toastError, toastSuccess} from "utils/basic-utils";
 
 const NotificationsSubroute = () => {
     const {user, getTheme} = useContext(AppContext);

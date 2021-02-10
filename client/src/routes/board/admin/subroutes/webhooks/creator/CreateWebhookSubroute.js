@@ -11,7 +11,7 @@ import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
 import {UiButton, UiCancelButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
-import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {toastAwait, toastSuccess, toastWarning} from "utils/basic-utils";
 
 const CreateWebhookSubroute = () => {
     const history = useHistory();

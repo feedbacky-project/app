@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import AppearanceCard from "components/profile/AppearanceCard";
 import AppContext from "context/AppContext";
 import PageNodesContext from "context/PageNodesContext";
@@ -5,7 +6,6 @@ import React, {useContext, useEffect} from "react";
 import {UiBadge} from "ui";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import styled from "@emotion/styled";
 
 const InlineCard = styled.div`
   margin-bottom: .5rem;

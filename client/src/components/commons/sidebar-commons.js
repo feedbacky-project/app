@@ -1,5 +1,5 @@
-import React from "react";
 import styled from "@emotion/styled";
+import React from "react";
 
 export const SidebarIcon = styled.div`
   margin-right: .25rem;

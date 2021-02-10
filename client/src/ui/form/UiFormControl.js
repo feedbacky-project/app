@@ -1,7 +1,7 @@
+import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import React from "react";
 import Form from "react-bootstrap/Form";
-import styled from "@emotion/styled";
 
 const FormControl = styled(Form.Control)`
   min-height: 36px;
