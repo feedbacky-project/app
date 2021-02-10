@@ -15,6 +15,7 @@ const LoginButton = styled(UiClassicButton)`
   transition: var(--hover-transition);
   cursor: pointer;
   box-shadow: none;
+  font-size: .9rem;
   
   &:hover, &:focus {
     color: white;
@@ -40,7 +41,7 @@ const OptionsButton = styled.div`
 
 export const renderLogIn = (onNotLoggedClick, context) => {
     if (!context.user.loggedIn) {
-        return <LoginButton label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/></LoginButton>
+        return <LoginButton label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
     }
     return <UiDropdown label={"Options"} toggleClassName={"px-0"} toggle={
         <OptionsButton>

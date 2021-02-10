@@ -1,4 +1,5 @@
 ### 1.0.0.alpha.2
+* **[IMPROVEMENT]** Added clearly visible Log In text in the log-in button
 !! TODO UI CARD INNER REF https://github.com/reactjs/reactjs.org/issues/2120
 !! hover transform scale small/big
 
