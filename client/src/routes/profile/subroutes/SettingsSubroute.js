@@ -56,6 +56,9 @@ const SettingsSubroute = () => {
     };
 
     useEffect(() => {
+        if(!user.loggedIn) {
+            return;
+        }
         axios.get("/users/@me/connectedAccounts").then(res => {
             if (res.status !== 200) {
                 return;
