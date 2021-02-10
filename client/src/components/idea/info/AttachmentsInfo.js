@@ -32,8 +32,6 @@ const AttachmentsInfo = () => {
             }
             updateState({...ideaData, attachments: ideaData.attachments.filter(data => data.url !== modal.dataUrl)});
             toastSuccess("Attachment removed.");
-        }).catch(err => {
-            toastError(err.response.data.errors[0]);
         });
     };
     //todo lightbox for attachments

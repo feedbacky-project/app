@@ -10,7 +10,7 @@ import {toast} from "react-toastify";
 
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import {getCookieOrDefault} from "utils/basic-utils";
+import {getCookieOrDefault, toastError, toastWarning} from "utils/basic-utils";
 import {retry} from "utils/lazy-init";
 
 const ProfileRoute = lazy(() => retry(() => import("routes/profile/ProfileRoute")));
@@ -28,6 +28,20 @@ toast.configure();
 
 const CLIENT_VERSION = "1.0.0.alpha.1";
 const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
+
+axios.interceptors.response.use(undefined, error => {
+    if (error.response === undefined) {
+        toastError("API server unreachable. Please contact administrator.");
+        return Promise.reject(error);
+    }
+    if (error.response.status === 500) {
+        toastError("Internal Server Error. Please contact administrator.");
+    }
+    if (error.response.data.errors !== undefined) {
+        error.response.data.errors.forEach(err => toastWarning(err));
+    }
+    return Promise.reject(error);
+});
 
 const App = ({appearanceSettings}) => {
     const {appearance, setAppearance, theme, setTheme, getTheme, onAppearanceToggle} = appearanceSettings;
@@ -104,7 +118,7 @@ const App = ({appearanceSettings}) => {
         setLocalPrefs(data);
     };
     if (serviceData.error) {
-        return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"}/></BrowserRouter>
+        return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"} onBackButtonClick={() => window.location.reload()}/></BrowserRouter>
     }
     return <ComponentLoader loader={<LoadingRouteUtil/>} loaded={serviceData.loaded && userData.loaded} component={
         <AppContext.Provider value={{

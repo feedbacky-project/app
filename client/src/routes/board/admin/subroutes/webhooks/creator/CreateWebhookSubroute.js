@@ -40,10 +40,7 @@ const CreateWebhookSubroute = () => {
                     }
                     toastSuccess("Added new webhook, sending sample response.", toastId);
                     history.push("/ba/" + boardData.discriminator + "/webhooks");
-                }).catch(err => {
-                    toastError(err.response.data.errors[0], toastId);
-                    setSettings({...settings, step: 3});
-                });
+                }).catch(() => setSettings({...settings, step: 3}));
                 return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");

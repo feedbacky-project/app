@@ -106,7 +106,7 @@ const WebhooksSubroute = () => {
             const data = webhooks.data.filter(item => item.id !== modal.data);
             setWebhooks({...webhooks, data});
             toastSuccess("Webhook deleted.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     return <UiCol xs={12} md={9}>
         <DangerousActionModal id={"webhookDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onWebhookDelete}

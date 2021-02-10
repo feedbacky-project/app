@@ -32,7 +32,7 @@ const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
                 {" " + res.data.user.username} sent.
             </span>;
             toastSuccess(toastMsg, toastId);
-        }).catch(err => toastError(err.response.data.errors[0], toastId));
+        });
     };
 
     return <UiDismissibleModal id={"moderatorInvite"} size={"sm"} isOpen={isOpen} onHide={onHide} title={"Invite New Moderator"}

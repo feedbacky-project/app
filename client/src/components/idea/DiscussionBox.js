@@ -153,13 +153,7 @@ const DiscussionBox = () => {
             setSubmitOpen(false);
             document.getElementById("commentMessage").value = "";
             updateBoardState({...data, commentsAmount: ideaData.commentsAmount + 1});
-        }).catch(err => {
-            if (err.response.status === 400) {
-                toastWarning(err.response.data.errors[0]);
-                return;
-            }
-            toastError();
-        })
+        });
     };
     const onCommentBoxKeyUp = (e) => {
         let chars = e.target.value.length;
@@ -197,7 +191,7 @@ const DiscussionBox = () => {
             setComments({...comments, data: comments.data.filter(item => item.id !== modal.data)});
             updateState({...ideaData, commentsAmount: ideaData.commentsAmount - 1});
             toastSuccess("Comment permanently deleted.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const onCommentLike = (data) => {
         if (!user.loggedIn) {

@@ -40,13 +40,6 @@ const SettingsSubroute = () => {
             user.data.username = username;
             user.data.avatar = avatar;
             toastSuccess("Settings successfully updated.", toastId);
-        }).catch(err => {
-            if (err.response === undefined) {
-                return;
-            }
-            err.response.data.errors.forEach(data => {
-                toastWarning(data);
-            });
         });
     };
     const onAccountDeactivation = () => {
@@ -59,7 +52,7 @@ const SettingsSubroute = () => {
             user.onLogOut();
             history.push("/me");
             toastSuccess("Account permanently deactivated.", toastId);
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
 
     useEffect(() => {

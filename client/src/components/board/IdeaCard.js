@@ -136,7 +136,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
                 cardRef.current.classList.remove("upvote-animation");
             }
             setIdea({...idea, upvoted, votersAmount});
-        }).catch(() => toastError());
+        });
     };
     return <IdeaContext.Provider value={{
         ideaData: idea, loaded: true, error: false,

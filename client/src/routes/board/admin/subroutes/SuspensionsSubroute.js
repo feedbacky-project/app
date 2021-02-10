@@ -55,7 +55,7 @@ const SuspensionSettings = () => {
             const suspendedUsers = boardData.suspendedUsers.filter(item => item.id !== modal.data);
             toastSuccess("User unsuspended.", id);
             updateState({...boardData, suspendedUsers: suspendedUsers});
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     return <UiCol xs={12} md={9}>
         <DangerousActionModal id={"suspensionDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onUnsuspension}

@@ -42,10 +42,7 @@ const CreateSocialLinkSubroute = () => {
                     });
                     const socialLinks = boardData.socialLinks.concat(res.data);
                     updateState({...boardData, socialLinks});
-                }).catch(err => {
-                    toastError(err.response.data.errors[0], toastId);
-                    setSettings({...settings, step: 2});
-                });
+                }).catch(() => setSettings({...settings, step: 2}));
                 return <StepSecondRoute updateSettings={updateSettings} settings={settings}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");

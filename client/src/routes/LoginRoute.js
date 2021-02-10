@@ -6,7 +6,6 @@ import {FaTimes} from "react-icons/fa";
 import {Redirect, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import {toastError} from "utils/basic-utils";
 
 const LoginRoute = ({onLogin}) => {
     const {provider} = useParams();
@@ -30,10 +29,7 @@ const LoginRoute = ({onLogin}) => {
             Cookies.set("FSID", response.token, {expires: 14});
             setData({...data, loaded: true});
             onLogin(response.token);
-        }).catch(err => {
-            toastError(err.response.data.errors[0]);
-            setData({...data, loaded: true, error: true, status: -1});
-        });
+        }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
     };
 
     if (data.error && data.status !== 403) {

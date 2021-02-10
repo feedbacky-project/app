@@ -29,7 +29,7 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
             onHide();
             onEdit(tag, res.data);
             toastSuccess("Tag edited.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     return renderModal(isOpen, onHide, "Edit Tag", handleSubmit, color, setColor, {name: tag.name, roadmapIgnored: tag.roadmapIgnored, publicUse: tag.publicUse});
 };

@@ -125,7 +125,7 @@ const ModeratorsSubroute = () => {
             const data = moderators.filter(item => item.userId !== modal.data);
             setModerators(data);
             toastSuccess("Permissions revoked.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const onModInvitationSend = (inviteData) => setInvited({...invited, data: invited.data.concat(inviteData)});
     const onInvalidation = () => {
@@ -136,7 +136,7 @@ const ModeratorsSubroute = () => {
             }
             setInvited({...invited, data: invited.data.filter(item => item.id !== modal.data)});
             toastSuccess("Invitation removed.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     return <UiCol xs={12} md={9}>
         <ModeratorInviteModal onModInvitationSend={onModInvitationSend} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "invite"}/>

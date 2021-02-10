@@ -88,7 +88,7 @@ const TagsSubroute = () => {
             }
             updateState({...boardData, tags: boardData.tags.filter(item => item.name !== modal.data.name)});
             toastSuccess("Tag permanently deleted.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     return <UiCol xs={12} md={9}>
         <TagCreateModal isOpen={modal.open && modal.type === "new"} onTagCreate={onTagCreate} onHide={() => setModal({...modal, open: false})}/>

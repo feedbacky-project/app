@@ -103,7 +103,7 @@ const SocialLinksSubroute = () => {
             setSocialLinks({...socialLinks, data});
             updateState({...boardData, socialLinks: data});
             toastSuccess("Social link deleted.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     return <UiCol xs={12} md={9}>
         <DangerousActionModal id={"socialDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onSocialLinkDelete}

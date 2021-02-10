@@ -28,7 +28,7 @@ const NotificationsInfo = () => {
             }
             updateState({...ideaData, subscribed: !ideaData.subscribed});
             toastSuccess("Toggled mail notifications for this idea.");
-        }).catch(() => toastError());
+        });
     };
     const renderButton = () => {
         return <UiLoadableButton label={"Subscribe Toggle"} size={"sm"} onClick={onSubscribeToggle}>

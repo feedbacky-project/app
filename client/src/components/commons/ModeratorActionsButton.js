@@ -50,7 +50,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             }
             updateState({...ideaData, open: true});
             toastSuccess("Idea opened.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const onIdeaClose = () => {
         return axios.patch("/ideas/" + ideaData.id, {"open": false}).then(res => {
@@ -60,7 +60,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             }
             updateState({...ideaData, open: false});
             toastSuccess("Idea closed.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const doIdeaDelete = () => {
         return axios.delete("/ideas/" + ideaData.id).then(res => {
@@ -71,7 +71,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             toastSuccess("Idea permanently deleted.");
             history.push("/b/" + ideaData.boardDiscriminator);
             onIdeaDelete();
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const doSuspendUser = () => {
         //todo finite suspension dates
@@ -87,7 +87,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             }
             toastSuccess("User suspended.", id);
             updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const onTagsManage = (appliedTags) => {
         let data = [];
@@ -101,7 +101,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             }
             updateState({...ideaData, tags: res.data});
             toastSuccess("Tags updated!");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const isSuspendable = () => {
         if (boardData.moderators.find(mod => mod.user.id === ideaData.user.id)) {

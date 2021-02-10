@@ -24,13 +24,6 @@ const NotificationsSubroute = () => {
             }
             user.data.mailPreferences.setNotificationsEnabled = setNotificationsEnabled;
             toastSuccess("Settings successfully updated.", toastId);
-        }).catch(err => {
-            if (err.response === undefined) {
-                return;
-            }
-            err.response.data.errors.forEach(data => {
-                toastWarning(data);
-            });
         });
     };
     if (!user.loggedIn) {

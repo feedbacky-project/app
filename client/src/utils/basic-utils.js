@@ -28,12 +28,12 @@ export const convertIdeaToSlug = (ideaData) => {
     return slug + "." + ideaData.id;
 };
 
-export const popupToast = (content, type, toastId) => {
+export const popupToast = (content, type, toastId, autoClose = 5000) => {
     if (toastId == null) {
         return toast(content, {
             type: type,
             position: "bottom-right",
-            autoClose: 5000,
+            autoClose: autoClose,
             hideProgressBar: true,
             closeOnClick: true,
             pauseOnHover: true,
@@ -58,7 +58,8 @@ export const toastError = (message = "Failed to connect to the server!", toastId
             <FaExclamationTriangle className={"mx-2"} style={{color: "#e43e3e"}}/> {message}
         </div>
     );
-    return popupToast(<Error/>, "error", toastId);
+    //errors should be displayed much longer
+    return popupToast(<Error/>, "error", toastId, 10000);
 };
 
 export const toastWarning = (message = "Well, that was unexpected...", toastId) => {

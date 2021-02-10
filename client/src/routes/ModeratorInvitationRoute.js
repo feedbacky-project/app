@@ -17,10 +17,7 @@ const ModeratorInvitationRoute = () => {
             }
             history.push("/b/" + res.data.discriminator);
             toastSuccess("Invitation accepted, welcome to " + res.data.name + " board moderator.");
-        }).catch(err => {
-            history.push("/me");
-            toastWarning(err.response.data.errors[0]);
-        });
+        }).catch(() => history.push("/me"));
         // eslint-disable-next-line
     }, []);
 

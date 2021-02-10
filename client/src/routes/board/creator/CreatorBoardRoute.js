@@ -53,7 +53,7 @@ const CreatorBoardRoute = () => {
                     }
                     toastSuccess("Created new board! Hooray!", toastId);
                     history.push("/b/" + settings.discriminator);
-                }).catch(err => toastError(err.response.data.errors[0]));
+                });
                 return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
             default:
                 toastWarning("Setup encountered unexpected issue.");

@@ -61,7 +61,7 @@ const IdeaInfoBox = () => {
             setEditor({enabled: false, value: htmlDecode(description)});
             updateState({...ideaData, description, edited: true});
             toastSuccess("Idea edited.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const onDelete = () => {
         return axios.delete("/ideas/" + ideaData.id).then(res => {
@@ -71,7 +71,7 @@ const IdeaInfoBox = () => {
             }
             history.push("/b/" + ideaData.boardDiscriminator);
             toastSuccess("Idea permanently deleted.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const onUpvote = () => {
         if (!user.loggedIn) {
@@ -109,7 +109,7 @@ const IdeaInfoBox = () => {
                 setVoters({...voters, data: voters.data.filter(item => item.id !== user.data.id)});
             }
             updateState({...ideaData, upvoted, votersAmount});
-        }).catch(() => toastError());
+        });
     };
     const renderDescription = () => {
         if (editor.enabled) {

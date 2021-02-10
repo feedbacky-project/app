@@ -61,13 +61,6 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             setTitle("");
             onHide();
             onIdeaCreation(res.data);
-        }).catch(err => {
-            if (err.response === undefined) {
-                return;
-            }
-            err.response.data.errors.forEach(data => {
-                toastWarning(data, toastId);
-            });
         });
     };
 

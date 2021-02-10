@@ -26,7 +26,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             onHide();
             onTagCreate(res.data);
             toastSuccess("Tag with name " + name + " created.");
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, {name: "", roadmapIgnored: false, publicUse: false});
 };

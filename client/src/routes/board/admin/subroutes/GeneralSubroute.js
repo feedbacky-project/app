@@ -154,7 +154,7 @@ const GeneralSubroute = ({updateState}) => {
             user.data.permissions = user.data.permissions.filter(board => board.boardDiscriminator !== boardData.discriminator);
             history.push("/me");
             toastSuccess("Board permanently deleted.", toastId);
-        }).catch(err => toastError(err.response.data.errors[0]));
+        });
     };
     const onChangesSave = () => {
         const banner = bannerInput;
@@ -177,11 +177,6 @@ const GeneralSubroute = ({updateState}) => {
                 name, shortDescription, fullDescription, themeColor,
                 banner: banner || boardData.banner, logo: logo || boardData.logo
             });
-        }).catch(err => {
-            if (err.response === undefined) {
-                return;
-            }
-            err.response.data.errors.forEach(data => toastWarning(data));
         });
     };
     const onLogoChange = (e) => {
