@@ -16,13 +16,6 @@ const AppearanceSubroute = () => {
     const {user, appearance, onAppearanceToggle, getTheme} = useContext(AppContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     useEffect(() => setCurrentNode("appearance"), [setCurrentNode]);
-    if (!user.loggedIn) {
-        return <UiCol xs={12} md={9}>
-            <UiViewBox theme={getTheme(false)} title={"Appearance"} description={"Configure how Feedbacky will look like."}>
-                <UiCol className={"text-center py-4"}>Please log in to see contents of this page.</UiCol>
-            </UiViewBox>
-        </UiCol>
-    }
     const renderContent = () => {
         return <UiCol xs={12} className={"my-2 text-center"}>
             <h4 className={"mb-1"}>Application Theme</h4>
