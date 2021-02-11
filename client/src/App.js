@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {FaDizzy, FaExclamationCircle} from "react-icons/fa";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {toast} from "react-toastify";
 
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
@@ -23,8 +22,6 @@ const IdeaRoute = lazy(() => retry(() => import("routes/IdeaRoute")));
 const LoginRoute = lazy(() => retry(() => import("routes/LoginRoute")));
 const NotificationUnsubscribeRoute = lazy(() => retry(() => import("routes/NotificationUnsubscribeRoute")));
 const UiTestRoute = lazy(() => retry(() => import("routes/UiTestRoute")));
-
-toast.configure();
 
 const CLIENT_VERSION = "1.0.0.alpha.1";
 const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
