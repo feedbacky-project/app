@@ -93,21 +93,21 @@ public class ConnectedAccountsDirective extends MigrationDirective {
             if(account.getId() != id.longValue()) {
               continue;
             }
-            long accountId;
+            String accountId;
             switch(provider) {
               case "discord":
-                accountId = node.get("SNOWFLAKE").asLong();
+                accountId = node.get("SNOWFLAKE").asText();
                 break;
               case "github":
-                accountId = node.get("GITHUB_UID").asLong();
+                accountId = node.get("GITHUB_UID").asText();
                 break;
               case "google":
-                accountId = node.get("GOOGLE_UID").asLong();
+                accountId = node.get("GOOGLE_UID").asText();
                 break;
               default:
                 continue;
             }
-            account.setAccountId(new BigInteger(String.valueOf(accountId)));
+            account.setAccountId(String.valueOf(accountId));
             account.setProvider(provider);
             updatedAccounts.add(account);
             super.migrateNewEntry();

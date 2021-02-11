@@ -38,6 +38,6 @@ public class ConnectedAccount implements Serializable {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
   private String provider;
-  private BigInteger accountId;
+  private String accountId;
 
 }

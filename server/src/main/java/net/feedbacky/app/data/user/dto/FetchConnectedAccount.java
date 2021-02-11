@@ -15,7 +15,7 @@ import java.math.BigInteger;
 public class FetchConnectedAccount implements FetchResponseDto<FetchConnectedAccount, ConnectedAccount> {
 
   private String provider;
-  private BigInteger accountId;
+  private String accountId;
 
   @Override
   public FetchConnectedAccount from(ConnectedAccount account) {
