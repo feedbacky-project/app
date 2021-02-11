@@ -1,6 +1,8 @@
 ### 1.0.0.alpha.2
 * **[IMPROVEMENT]** Added clearly visible Log In text in the log-in button
-* **[CHANGE]** Appearance profile route can be viewed while not logged in 
+* **[CHANGE]** Appearance profile route can be viewed while not logged in
+* **[CHANGE]** Replaced toast notifications with snackbar notifications
+* **[CHANGE]** Idea closed comment icon is now Lock icon not Circle X
 !! TODO UI CARD INNER REF https://github.com/reactjs/reactjs.org/issues/2120
 !! hover transform scale small/big
 

@@ -12,7 +12,7 @@ import tinycolor from "tinycolor2";
 import {UiBadge, UiCard, UiClassicIcon, UiPrettyUsername} from "ui";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
-import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
+import {convertIdeaToSlug, popupError, truncateText} from "utils/basic-utils";
 
 const CardStyle = styled(UiCard)`
   padding: 0 1rem;
@@ -127,7 +127,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             url: "/ideas/" + idea.id + "/voters"
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             if (upvoted) {

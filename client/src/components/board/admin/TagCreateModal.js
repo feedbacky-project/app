@@ -1,17 +1,19 @@
 import axios from "axios";
 import {renderModal} from "components/commons/tag-modal-commons";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import {useContext, useState} from 'react';
-import {toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
+    const {getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     const [color, setColor] = useState("#0994f6");
 
     const handleSubmit = () => {
         const name = document.getElementById("tagNameTextarea").value;
         if (name.length < 3 || name.length > 20) {
-            toastWarning("Tag name must be between 3 and 20 characters.");
+            popupWarning("Tag name must be between 3 and 20 characters");
             return Promise.resolve();
         }
         const roadmapIgnored = document.getElementById("roadmapIgnored").checked;
@@ -20,12 +22,12 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             name, color, roadmapIgnored, publicUse,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
-                toastError();
+                popupError();
                 return;
             }
             onHide();
             onTagCreate(res.data);
-            toastSuccess("Tag with name " + name + " created.");
+            popupNotification("Tag created", getTheme().toHexString());
         });
     };
     return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, {name: "", roadmapIgnored: false, publicUse: false});

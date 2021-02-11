@@ -13,28 +13,22 @@ const InlineCard = styled.div`
 `;
 
 const AppearanceSubroute = () => {
-    const {user, appearance, onAppearanceToggle, getTheme} = useContext(AppContext);
+    const {appearance, onAppearanceToggle, getTheme} = useContext(AppContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     useEffect(() => setCurrentNode("appearance"), [setCurrentNode]);
     const renderContent = () => {
         return <UiCol xs={12} className={"my-2 text-center"}>
             <h4 className={"mb-1"}>Application Theme</h4>
             <InlineCard>
-                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/system.png"} chosen={appearance.systemDefault} onClick={() => {
-                    onAppearanceToggle("system");
-                }}/>
+                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/system.png"} chosen={appearance.systemDefault} onClick={() => onAppearanceToggle("system")}/>
                 <UiBadge>System Default</UiBadge>
             </InlineCard>
             <InlineCard>
-                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/light.png"} chosen={appearance.mode === "light" && !appearance.systemDefault} onClick={() => {
-                    onAppearanceToggle("light");
-                }}/>
+                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/light.png"} chosen={appearance.mode === "light" && !appearance.systemDefault} onClick={() => onAppearanceToggle("light")}/>
                 <UiBadge>Light</UiBadge>
             </InlineCard>
             <InlineCard>
-                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/dark.png"} chosen={appearance.mode === "dark" && !appearance.systemDefault} onClick={() => {
-                    onAppearanceToggle("dark");
-                }}/>
+                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/dark.png"} chosen={appearance.mode === "dark" && !appearance.systemDefault} onClick={() => onAppearanceToggle("dark")}/>
                 <UiBadge>Dark</UiBadge>
             </InlineCard>
         </UiCol>

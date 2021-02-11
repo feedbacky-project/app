@@ -1,10 +1,9 @@
 $pure-dark-half: hsla(0, 0%, 0%, .5);
 
 @import "utilities/root";
-@import "utilities/toasts";
 @import "utilities/colors";
+@import "utilities/snackbars";
 
-@import "~react-toastify/dist/ReactToastify.css";
 @import "commons/override-variables";
 @import "commons/align-utils";
 @import "commons/font-face";

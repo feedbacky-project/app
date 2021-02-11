@@ -9,7 +9,7 @@ import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import {UiClassicIcon} from "ui";
 import {UiRow} from "ui/grid";
-import {convertIdeaToSlug, toastError, truncateText} from "utils/basic-utils";
+import {convertIdeaToSlug, popupError, truncateText} from "utils/basic-utils";
 
 export const SimpleIdeaCard = ({ideaData}) => {
     const cardRef = React.createRef();
@@ -54,7 +54,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
             url: "/ideas/" + idea.id + "/voters"
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             if (upvoted) {
@@ -63,7 +63,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
                 cardRef.current.classList.remove("upvote-animation");
             }
             setIdea({...idea, upvoted, votersAmount});
-        }).catch(() => toastError());
+        }).catch(() => popupError());
     };
     return <IdeaContext.Provider value={{
         ideaData: idea, loaded: true, error: false,

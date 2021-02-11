@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import ModeratorInviteModal from "components/board/admin/ModeratorInviteModal";
 import DangerousActionModal from "components/commons/DangerousActionModal";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import copy from "copy-text-to-clipboard";
@@ -13,7 +14,7 @@ import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
-import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification, prettifyEnum} from "utils/basic-utils";
 
 const InviteCopyButton = styled.div`
   cursor: pointer;
@@ -25,6 +26,7 @@ const InviteCopyButton = styled.div`
 `;
 
 const ModeratorsSubroute = () => {
+    const {getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [moderators, setModerators] = useState(boardData.moderators);
@@ -96,7 +98,7 @@ const ModeratorsSubroute = () => {
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
                             <InviteCopyButton onClick={() => {
                                 copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
-                                toastSuccess("Copied to clipboard.");
+                                popupNotification("Copied", getTheme().toHexString());
                             }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></InviteCopyButton>
                         </div>
                     </div>
@@ -119,23 +121,23 @@ const ModeratorsSubroute = () => {
     const onPermissionsRevoke = () => {
         return axios.delete("/boards/" + boardData.discriminator + "/moderators/" + modal.data).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             const data = moderators.filter(item => item.userId !== modal.data);
             setModerators(data);
-            toastSuccess("Permissions revoked.");
+            popupNotification("Permissions revoked", getTheme().toHexString());
         });
     };
     const onModInvitationSend = (inviteData) => setInvited({...invited, data: invited.data.concat(inviteData)});
     const onInvalidation = () => {
         return axios.delete("/moderatorInvitations/" + modal.data).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             setInvited({...invited, data: invited.data.filter(item => item.id !== modal.data)});
-            toastSuccess("Invitation removed.");
+            popupNotification("Invitation removed", getTheme().toHexString());
         });
     };
     return <UiCol xs={12} md={9}>

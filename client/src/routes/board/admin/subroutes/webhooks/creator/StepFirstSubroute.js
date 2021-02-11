@@ -4,7 +4,7 @@ import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
 import {FaDiscord, FaGlobe} from "react-icons/fa";
 import {UiCol, UiRow} from "ui/grid";
-import {toastWarning} from "utils/basic-utils";
+import {popupWarning} from "utils/basic-utils";
 
 const type = ["DISCORD", "CUSTOM_ENDPOINT"];
 const typeName = ["Discord", "Custom Endpoint"];
@@ -13,7 +13,7 @@ const typeIcon = [<SetupCardIcon as={FaDiscord}/>, <SetupCardIcon as={FaGlobe}/>
 const StepFirstSubroute = ({updateSettings, settings}) => {
     const onChoose = (item) => {
         if (item === "CUSTOM_ENDPOINT") {
-            toastWarning("Option not yet available.");
+            popupWarning("Option not yet available");
             return;
         }
         updateSettings({...settings, type: item});

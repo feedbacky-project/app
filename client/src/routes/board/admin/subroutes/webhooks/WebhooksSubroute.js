@@ -4,6 +4,7 @@ import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';
@@ -14,7 +15,7 @@ import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
-import {prettifyEnum, toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification, prettifyEnum} from "utils/basic-utils";
 
 const EventsContainer = styled.div`
   max-height: 80px;
@@ -33,6 +34,7 @@ const WebhookIcon = styled(UiImage)`
 `;
 
 const WebhooksSubroute = () => {
+    const {getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
@@ -100,12 +102,12 @@ const WebhooksSubroute = () => {
     const onWebhookDelete = () => {
         return axios.delete("/webhooks/" + modal.data).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             const data = webhooks.data.filter(item => item.id !== modal.data);
             setWebhooks({...webhooks, data});
-            toastSuccess("Webhook deleted.");
+            popupNotification("Webhook deleted", getTheme().toHexString());
         });
     };
     return <UiCol xs={12} md={9}>

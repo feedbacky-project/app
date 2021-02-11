@@ -21,10 +21,10 @@ import {UiCancelButton, UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
-import {htmlDecode, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {htmlDecode, popupError, popupNotification} from "utils/basic-utils";
 
 const IdeaInfoBox = () => {
-    const {user} = useContext(AppContext);
+    const {user, getTheme} = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
@@ -48,29 +48,29 @@ const IdeaInfoBox = () => {
         let description = document.getElementById("editorBox").value;
         if (ideaData.description === description) {
             setEditor({enabled: false, value: htmlDecode(description)});
-            toastWarning("Content not changed.");
+            popupNotification("Nothing changed", getTheme().toHexString());
             return Promise.resolve();
         }
         return axios.patch("/ideas/" + ideaData.id, {
             description
         }).then(res => {
             if (res.status !== 200) {
-                toastError();
+                popupError();
                 return;
             }
             setEditor({enabled: false, value: htmlDecode(description)});
             updateState({...ideaData, description, edited: true});
-            toastSuccess("Idea edited.");
+            popupNotification("Idea edited", getTheme().toHexString());
         });
     };
     const onDelete = () => {
         return axios.delete("/ideas/" + ideaData.id).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             history.push("/b/" + ideaData.boardDiscriminator);
-            toastSuccess("Idea permanently deleted.");
+            popupNotification("Idea deleted", getTheme().toHexString());
         });
     };
     const onUpvote = () => {
@@ -98,7 +98,7 @@ const IdeaInfoBox = () => {
             }
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             if (upvoted) {

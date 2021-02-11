@@ -19,7 +19,7 @@ import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
-import {formatRemainingCharacters, getBase64FromFile, htmlDecode, toastAwait, toastError, toastSuccess, validateImageWithWarning} from "utils/basic-utils";
+import {formatRemainingCharacters, getBase64FromFile, htmlDecode, popupError, popupNotification, validateImageWithWarning} from "utils/basic-utils";
 
 const ThemeSelector = styled.div`
   width: 28px;
@@ -144,22 +144,20 @@ const GeneralSubroute = ({updateState}) => {
         </UiViewBoxBackground>
     };
     const onBoardDelete = () => {
-        const toastId = toastAwait("Deleting board, hold on...");
         return axios.delete("/boards/" + boardData.discriminator).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             //user no longer owns this board, remove from local context
             user.data.permissions = user.data.permissions.filter(board => board.boardDiscriminator !== boardData.discriminator);
             history.push("/me");
-            toastSuccess("Board permanently deleted.", toastId);
+            popupNotification("Board deleted", getTheme().toHexString());
         });
     };
     const onChangesSave = () => {
         const banner = bannerInput;
         const logo = logoInput;
-        const toastId = toastAwait("Saving changes...");
         const name = document.getElementById("boardTextarea").value;
         const shortDescription = document.getElementById("shortDescrTextarea").value;
         const fullDescription = document.getElementById("fullDescrTextarea").value;
@@ -168,10 +166,10 @@ const GeneralSubroute = ({updateState}) => {
             name, shortDescription, fullDescription, themeColor, banner, logo,
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
-            toastSuccess("Settings successfully updated.", toastId);
+            popupNotification("Settings updated", getTheme().toHexString());
             updateState({
                 ...boardData,
                 name, shortDescription, fullDescription, themeColor,

@@ -11,10 +11,11 @@ import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
 import {UiButton, UiCancelButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
-import {isServiceAdmin, toastAwait, toastSuccess, toastWarning} from "utils/basic-utils";
+import {isServiceAdmin, popupNotification, popupWarning} from "utils/basic-utils";
 
 const CreatorBoardRoute = () => {
     const context = useContext(AppContext);
+    const {getTheme} = context;
     const {onThemeChange, user} = context;
     const history = useHistory();
     const [settings, setSettings] = useState({step: 1, name: "", discriminator: "", banner: null, logo: null, themeColor: "#2d3436"});
@@ -35,7 +36,6 @@ const CreatorBoardRoute = () => {
             case 3:
                 return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
             case 4:
-                let toastId = toastAwait("Creating new board...");
                 axios.post("/boards/", {
                     discriminator: settings.discriminator,
                     name: settings.name,
@@ -48,15 +48,15 @@ const CreatorBoardRoute = () => {
                     logo: settings.logo,
                 }).then(res => {
                     if (res.status !== 201) {
-                        toastWarning("Couldn't create new board due to unknown error!", toastId);
+                        popupWarning("Couldn't create new board due to unknown error!");
                         return;
                     }
-                    toastSuccess("Created new board! Hooray!", toastId);
+                    popupNotification("Board created", getTheme().toHexString());
                     history.push("/b/" + settings.discriminator);
                 });
                 return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
             default:
-                toastWarning("Setup encountered unexpected issue.");
+                popupWarning("Encountered unexpected issue");
                 return <StepFirstSubroute updateSettings={updateSettings} settings={settings}/>;
         }
     };
@@ -78,26 +78,26 @@ const CreatorBoardRoute = () => {
     const nextStep = () => {
         if (settings.step === 1) {
             if (settings.name === "" || settings.discriminator === "") {
-                toastWarning("Values must not be empty.");
+                popupWarning("Values must not be empty");
                 return;
             }
             if (settings.name.length < 4) {
-                toastWarning("Board name must be longer.");
+                popupWarning("Board name must be longer");
                 return;
             }
             if (settings.discriminator.length < 3) {
-                toastWarning("Discriminator must be longer.");
+                popupWarning("Discriminator must be longer");
                 return;
             }
             axios.get("/boards/" + settings.discriminator).then(res => {
                 if (res.status === 200) {
-                    toastWarning("Board with that discriminator already exists.");
+                    popupWarning("This discriminator is taken");
                 }
             }).catch(() => setSettings({...settings, step: settings.step + 1}));
             return;
         } else if (settings.step === 2) {
             if (settings.banner === null || settings.logo === null) {
-                toastWarning("Banner and logo must be set.");
+                popupWarning("Banner and logo must be set");
                 return;
             }
         }

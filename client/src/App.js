@@ -10,7 +10,7 @@ import {toast} from "react-toastify";
 
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import {getCookieOrDefault, toastError, toastWarning} from "utils/basic-utils";
+import {getCookieOrDefault, popupError, popupWarning} from "utils/basic-utils";
 import {retry} from "utils/lazy-init";
 
 const ProfileRoute = lazy(() => retry(() => import("routes/profile/ProfileRoute")));
@@ -31,14 +31,14 @@ const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedb
 
 axios.interceptors.response.use(undefined, error => {
     if (error.response === undefined) {
-        toastError("API server unreachable. Please contact administrator.");
+        popupError("API server unreachable. Please contact administrator.");
         return Promise.reject(error);
     }
     if (error.response.status === 500) {
-        toastError("Internal Server Error. Please contact administrator.");
+        popupError("Internal Server Error. Please contact administrator.");
     }
     if (error.response.data.errors !== undefined) {
-        error.response.data.errors.forEach(err => toastWarning(err));
+        error.response.data.errors.forEach(err => popupWarning(err));
     }
     return Promise.reject(error);
 });

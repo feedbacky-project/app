@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from "react";
-import {FaEdit, FaLockOpen, FaTags, FaTimesCircle} from "react-icons/all";
+import {FaEdit, FaLock, FaLockOpen, FaTags} from "react-icons/all";
 
 const Icon = styled.div`
   text-align: center;
@@ -31,7 +31,7 @@ const CommentIcon = ({specialType}) => {
         const fill = user.darkMode ? getTheme() : "white";
         switch (type) {
             case "IDEA_CLOSED":
-                return <FaTimesCircle className={"icon"} fill={fill}/>;
+                return <FaLock className={"icon"} fill={fill}/>;
             case "IDEA_OPENED":
                 return <FaLockOpen className={"icon"} fill={fill}/>;
             case "IDEA_EDITED":

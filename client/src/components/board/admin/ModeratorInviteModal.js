@@ -1,37 +1,33 @@
 import axios from "axios";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel} from "ui/form";
-import {UiAvatar} from "ui/image";
 import {UiDismissibleModal} from "ui/modal";
-import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
+    const {getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     const handleSubmit = () => {
         const userEmail = document.getElementById("inviteEmailTextarea").value;
         if (userEmail === "" || !userEmail.match(/\S+@\S+\.\S+/)) {
-            toastWarning("Please provide valid email address.");
+            popupWarning("Please provide valid email address");
             return Promise.resolve();
         }
-        const toastId = toastAwait("Sending invitation...");
         return axios.post("/boards/" + data.discriminator + "/moderators", {
             userEmail,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
-                toastError();
+                popupError();
                 return;
             }
             onHide();
             let mod = res.data;
             mod.role = "moderator";
             onModInvitationSend(mod);
-            const toastMsg = <span>
-                Invitation for user <UiAvatar roundedCircle user={res.data.user} size={16}/>
-                {" " + res.data.user.username} sent.
-            </span>;
-            toastSuccess(toastMsg, toastId);
+            popupNotification("Invitation to " + res.data.user.username + " sent", getTheme().toHexString());
         });
     };
 

@@ -1,8 +1,6 @@
 import Cookies from "js-cookie";
+import Snackbar from "node-snackbar";
 import React from "react";
-import {FaCheck, FaExclamation, FaExclamationTriangle} from "react-icons/fa";
-import {Slide, toast} from "react-toastify";
-import {UiLoadingSpinner} from "ui";
 
 export const getDefaultAvatar = (username) => {
     const avatar = process.env.REACT_APP_DEFAULT_USER_AVATAR;
@@ -28,65 +26,29 @@ export const convertIdeaToSlug = (ideaData) => {
     return slug + "." + ideaData.id;
 };
 
-export const popupToast = (content, type, toastId, autoClose = 5000) => {
-    if (toastId == null) {
-        return toast(content, {
-            type: type,
-            position: "bottom-right",
-            autoClose: autoClose,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            pauseOnFocusLoss: false,
-            draggable: true,
-            transition: Slide,
-            closeButton: false,
-            className: "toast-style " + type,
-        });
-    } else {
-        toast.update(toastId, {
-            render: content,
-            type: type,
-            className: "toast-style " + type,
-        })
-    }
+export const popupRevertableNotification = (content, color, onUndo) => {
+    popup(content, color, {showAction: true, actionText: "Undo", onActionClick: onUndo, actionTextColor: "#fff"});
 };
 
-export const toastError = (message = "Failed to connect to the server!", toastId) => {
-    const Error = () => (
-        <div>
-            <FaExclamationTriangle className={"mx-2"} style={{color: "#e43e3e"}}/> {message}
-        </div>
-    );
-    //errors should be displayed much longer
-    return popupToast(<Error/>, "error", toastId, 10000);
+export const popupNotification = (content, color) => {
+    popup(content, color, {showAction: false});
 };
 
-export const toastWarning = (message = "Well, that was unexpected...", toastId) => {
-    const Warning = () => (
-        <div>
-            <FaExclamation className={"mx-2"} style={{color: "#ffe008"}}/> {message}
-        </div>
-    );
-    return popupToast(<Warning/>, "warning", toastId);
+export const popupWarning = (content = "Something unexpected happened") => {
+    popup(content, "#d35400", {showAction: false, duration: 6000});
 };
 
-export const toastSuccess = (message = "Action sucessfully executed!", toastId) => {
-    const Success = () => (
-        <div>
-            <FaCheck className={"mx-2"} style={{color: "#3ec569"}}/> {message}
-        </div>
-    );
-    return popupToast(<Success/>, "success", toastId);
+export const popupError = (content = "Something unexpected happened") => {
+    popup(content, "#e43e3e", {showAction: false, duration: 8000});
 };
 
-export const toastAwait = (message = "Awaiting action...", toastId) => {
-    const Await = () => (
-        <div>
-            <UiLoadingSpinner size={"sm"} color={"#0994f6"} className={"mx-2"}/> {message}
-        </div>
-    );
-    return popupToast(<Await/>, "await", toastId);
+const popup = (content, backgroundColor, data) => {
+    Snackbar.show({
+        text: content,
+        backgroundColor: backgroundColor,
+        pos: "bottom-center",
+        ...data
+    });
 };
 
 export const truncateText = (text, maxLength) => {
@@ -122,13 +84,13 @@ export const validateImageWithWarning = (e, elementInputId, size) => {
     let mimeTypes = ['image/jpeg', 'image/png'];
 
     if (mimeTypes.indexOf(file.type) === -1) {
-        toastWarning("Only JPEG and PNG files are allowed.");
+        popupWarning("Only JPEG and PNG files are allowed");
         input.value = "";
         return false;
     }
 
     if (file.size > (size / 1000) * 1024 * 1024) {
-        toastWarning("Maximum file size is " + size + " kb.");
+        popupWarning("Maximum file size is " + size + " kb");
         input.value = "";
         return false;
     }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import {Step} from "rc-steps";
@@ -10,9 +11,10 @@ import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
 import {UiButton, UiCancelButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
-import {toastAwait, toastSuccess, toastWarning} from "utils/basic-utils";
+import {popupNotification, popupWarning} from "utils/basic-utils";
 
 const CreateSocialLinkSubroute = () => {
+    const {getTheme} = useContext(AppContext);
     const {updateState, data: boardData} = useContext(BoardContext);
     const history = useHistory();
     const [settings, setSettings] = useState({step: 1, iconData: "", url: "", chosen: -1, customIcon: false});
@@ -27,15 +29,14 @@ const CreateSocialLinkSubroute = () => {
             case 2:
                 return <StepSecondRoute updateSettings={updateSettings} settings={settings}/>;
             case 3:
-                let toastId = toastAwait("Adding new social link...");
                 axios.post("/boards/" + boardData.discriminator + "/socialLinks", {
                     iconData: settings.iconData, url: settings.url
                 }).then(res => {
                     if (res.status !== 201) {
-                        toastWarning("Couldn't add social link due to unknown error!", toastId);
+                        popupWarning("Couldn't add social link due to unknown error");
                         return;
                     }
-                    toastSuccess("Added new social link.", toastId);
+                    popupNotification("Added social link", getTheme().toHexString());
                     history.push({
                         pathname: "/ba/" + boardData.discriminator + "/social",
                         state: null
@@ -45,7 +46,7 @@ const CreateSocialLinkSubroute = () => {
                 }).catch(() => setSettings({...settings, step: 2}));
                 return <StepSecondRoute updateSettings={updateSettings} settings={settings}/>;
             default:
-                toastWarning("Setup encountered unexpected issue.");
+                popupWarning("Encountered unexpected issue");
                 setSettings({...settings, step: 1});
                 return <StepFirstRoute updateSettings={updateSettings} settings={settings}/>;
         }
@@ -67,10 +68,10 @@ const CreateSocialLinkSubroute = () => {
     };
     const nextStep = () => {
         if (settings.step === 1 && settings.iconData === "") {
-            toastWarning("Icon must be chosen.");
+            popupWarning("Icon must be chosen");
             return;
         } else if (settings.step === 2 && settings.url === "") {
-            toastWarning("URL must be typed.");
+            popupWarning("URL must be typed");
             return;
         }
         setSettings({...settings, step: settings.step + 1});

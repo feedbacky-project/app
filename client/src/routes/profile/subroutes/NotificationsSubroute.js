@@ -6,7 +6,7 @@ import tinycolor from "tinycolor2";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import {toastAwait, toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification} from "utils/basic-utils";
 
 const NotificationsSubroute = () => {
     const {user, getTheme} = useContext(AppContext);
@@ -14,16 +14,15 @@ const NotificationsSubroute = () => {
     const [notificationsEnabled, setNotificationsEnabled] = useState(user.loggedIn ? user.data.mailPreferences.notificationsEnabled : false);
     useEffect(() => setCurrentNode("notifications"), [setCurrentNode]);
     const onChangesSave = () => {
-        let toastId = toastAwait("Saving changes...");
         return axios.patch("/users/@me/mailPreferences", {
             notificationsEnabled: notificationsEnabled,
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             user.data.mailPreferences.setNotificationsEnabled = setNotificationsEnabled;
-            toastSuccess("Settings successfully updated.", toastId);
+            popupNotification("Settings updated", getTheme().toHexString());
         });
     };
     if (!user.loggedIn) {

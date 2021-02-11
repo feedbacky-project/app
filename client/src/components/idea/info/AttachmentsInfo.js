@@ -8,7 +8,7 @@ import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from "react";
 import {UiElementDeleteButton} from "ui/button";
 import {UiImage} from "ui/image";
-import {toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification} from "utils/basic-utils";
 
 const Attachment = styled(UiImage)`
   .dark & {
@@ -17,7 +17,7 @@ const Attachment = styled(UiImage)`
 `;
 
 const AttachmentsInfo = () => {
-    const {user} = useContext(AppContext);
+    const {user, getTheme} = useContext(AppContext);
     const {moderators} = useContext(BoardContext).data;
     const {ideaData, updateState} = useContext(IdeaContext);
     const [modal, setModal] = useState({open: false, data: -1, dataUrl: ""});
@@ -27,11 +27,11 @@ const AttachmentsInfo = () => {
     const onAttachmentDelete = () => {
         return axios.delete("/attachments/" + modal.data).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             updateState({...ideaData, attachments: ideaData.attachments.filter(data => data.url !== modal.dataUrl)});
-            toastSuccess("Attachment removed.");
+            popupNotification("Attachment removed", getTheme().toHexString());
         });
     };
     //todo lightbox for attachments

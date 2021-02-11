@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import axios from "axios";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
@@ -11,7 +12,7 @@ import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/butto
 import {UiFormControl, UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
-import {formatRemainingCharacters, getBase64FromFile, toastAwait, toastError, toastSuccess, toastWarning, validateImageWithWarning} from "utils/basic-utils";
+import {formatRemainingCharacters, getBase64FromFile, popupError, popupNotification, popupWarning, validateImageWithWarning} from "utils/basic-utils";
 
 const AttachmentButton = styled(UiClassicButton)`
   max-height: 38px;
@@ -24,6 +25,7 @@ const AttachmentButton = styled(UiClassicButton)`
 `;
 
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
+    const {getTheme} = useContext(AppContext);
     const {discriminator, tags} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
     const [attachment, setAttachment] = useState(null);
@@ -33,14 +35,13 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
     const handleSubmit = () => {
         const description = document.getElementById("descriptionTextarea").value;
         if (title.length < 10) {
-            toastWarning("Title should be at least 10 characters long.");
+            popupWarning("Title should be at least 10 characters long");
             return Promise.resolve();
         }
         if (description.length < 20) {
-            toastWarning("Description should be at least 20 characters long.");
+            popupWarning("Description should be at least 20 characters long");
             return Promise.resolve();
         }
-        let toastId = toastAwait("Posting idea...");
         const tags = [];
         if (applicableTags.length !== 0) {
             const applicable = document.querySelectorAll('[id^="applicableTag_"');
@@ -54,10 +55,10 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             discriminator, title, description, attachment, tags
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
-                toastError();
+                popupError();
                 return;
             }
-            toastSuccess("Successfully posted new idea!", toastId);
+            popupNotification("Idea posted", getTheme().toHexString());
             setTitle("");
             onHide();
             onIdeaCreation(res.data);

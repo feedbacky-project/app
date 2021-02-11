@@ -13,7 +13,7 @@ import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
-import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const SettingsSubroute = () => {
     const {user, getTheme} = useContext(AppContext);
@@ -26,32 +26,30 @@ const SettingsSubroute = () => {
     useEffect(() => setCurrentNode("settings"), [setCurrentNode]);
     const onChangesSave = () => {
         if (username.length < 3) {
-            toastWarning("Username length should be longer than 3 characters.");
+            popupWarning("Username length should be longer than 3 characters");
             return Promise.resolve();
         }
-        let toastId = toastAwait("Saving changes...");
         return axios.patch("/users/@me", {
             username, avatar
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             user.data.username = username;
             user.data.avatar = avatar;
-            toastSuccess("Settings successfully updated.", toastId);
+            popupNotification("Settings updated", getTheme().toHexString());
         });
     };
     const onAccountDeactivation = () => {
-        let toastId = toastAwait("Deactivating account, you're getting logged out...");
         return axios.delete("/users/@me").then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             user.onLogOut();
             history.push("/me");
-            toastSuccess("Account permanently deactivated.", toastId);
+            popupNotification("Account deactivated and logged out", getTheme().toHexString());
         });
     };
 

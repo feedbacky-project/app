@@ -6,10 +6,10 @@ import React, {useContext} from "react";
 import {FaRegBell, FaRegBellSlash} from "react-icons/all";
 import {UiClickableTip} from "ui";
 import {UiLoadableButton} from "ui/button";
-import {toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification} from "utils/basic-utils";
 
 const NotificationsInfo = () => {
-    const {user} = useContext(AppContext);
+    const {user, getTheme} = useContext(AppContext);
     const {onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const onSubscribeToggle = () => {
@@ -23,11 +23,11 @@ const NotificationsInfo = () => {
             url: "/ideas/" + ideaData.id + "/subscribe"
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             updateState({...ideaData, subscribed: !ideaData.subscribed});
-            toastSuccess("Toggled mail notifications for this idea.");
+            popupNotification("Notifications toggled", getTheme().toHexString());
         });
     };
     const renderButton = () => {
@@ -39,8 +39,8 @@ const NotificationsInfo = () => {
     };
     return <React.Fragment>
         <div className={"my-1 text-black-75"}>
-            Mail Subscription
-            <UiClickableTip id={"subTip"} title={"Mail Subscriptions"} description={"Subscribe idea to receive mail notifications, configure settings at profile page."}/>
+            Subscribe
+            <UiClickableTip id={"subTip"} title={"Subscribe"} description={"Subscribe idea to receive mail notifications, configure settings at profile page."}/>
         </div>
         {renderButton()}
     </React.Fragment>

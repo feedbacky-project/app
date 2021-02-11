@@ -5,6 +5,7 @@ import DangerousActionModal from "components/commons/DangerousActionModal";
 import SafeAnchor from "components/commons/SafeAnchor";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';
@@ -16,7 +17,7 @@ import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
-import {toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification} from "utils/basic-utils";
 
 const SocialIcon = styled(UiImage)`
   padding: .5rem;
@@ -24,6 +25,7 @@ const SocialIcon = styled(UiImage)`
 `;
 
 const SocialLinksSubroute = () => {
+    const {getTheme} = useContext(AppContext);
     const {updateState, data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
@@ -96,13 +98,13 @@ const SocialLinksSubroute = () => {
     const onSocialLinkDelete = () => {
         return axios.delete("/socialLinks/" + modal.data).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             const data = socialLinks.data.filter(item => item.id !== modal.data);
             setSocialLinks({...socialLinks, data});
             updateState({...boardData, socialLinks: data});
-            toastSuccess("Social link deleted.");
+            popupNotification("Social link deleted", getTheme().toHexString());
         });
     };
     return <UiCol xs={12} md={9}>

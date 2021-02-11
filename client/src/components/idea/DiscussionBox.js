@@ -17,10 +17,10 @@ import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
-import {prepareFilterAndSortRequests, toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
 
 const DiscussionBox = () => {
-    const {user, serviceData, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {user, serviceData, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
@@ -131,7 +131,7 @@ const DiscussionBox = () => {
         const message = textarea.value;
         const type = internal ? "INTERNAL" : "PUBLIC";
         if (message.length < 10 || message.length > 500) {
-            toastWarning("Message must be longer than 10 and shorter than 500 characters!");
+            popupWarning("Message must be longer than 10 and shorter than 500 characters");
             return Promise.resolve();
         }
         return axios.post("/comments/", {
@@ -140,7 +140,7 @@ const DiscussionBox = () => {
             type,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
-                toastError();
+                popupError();
                 return;
             }
             if (user.localPreferences.comments.sort === "newest") {
@@ -168,29 +168,28 @@ const DiscussionBox = () => {
     const onSuspend = () => {
         //todo finite suspension dates
         const date = new Date();
-        const id = toastAwait("Pending suspension...");
         return axios.post("/boards/" + data.discriminator + "/suspendedUsers", {
             userId: modal.data,
             suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
         }).then(res => {
             if (res.status !== 201) {
-                toastError("Failed to suspend the user.", id);
+                popupError("Failed to suspend the user");
                 return;
             }
-            toastSuccess("User suspended.", id);
+            popupNotification("User suspended", getTheme().toHexString());
             updateBoardState({...data, suspendedUsers: data.suspendedUsers.concat(res.data)});
-        }).catch(err => toastError(err.response.data.errors[0]));
+        }).catch(err => popupError(err.response.data.errors[0]));
     };
     const onCommentPreDelete = id => setModal({open: true, type: "delete", data: id});
     const onCommentDelete = () => {
         return axios.delete("/comments/" + modal.data).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             setComments({...comments, data: comments.data.filter(item => item.id !== modal.data)});
             updateState({...ideaData, commentsAmount: ideaData.commentsAmount - 1});
-            toastSuccess("Comment permanently deleted.");
+            popupNotification("Comment deleted", getTheme().toHexString());
         });
     };
     const onCommentLike = (data) => {
@@ -200,7 +199,7 @@ const DiscussionBox = () => {
         }
         axios.post("/comments/" + data.id + "/likers", {}).then(res => {
             if (res.status !== 200) {
-                toastWarning("Failed to like comment.");
+                popupWarning("Failed to like comment");
                 return;
             }
             setComments({
@@ -222,7 +221,7 @@ const DiscussionBox = () => {
         }
         axios.delete("/comments/" + data.id + "/likers").then(res => {
             if (res.status !== 204) {
-                toastWarning("Failed to unlike comment.");
+                popupWarning("Failed to unlike comment");
                 return;
             }
             setComments({

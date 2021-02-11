@@ -4,6 +4,7 @@ import TagCreateModal from "components/board/admin/TagCreateModal";
 import TagEditModal from "components/board/admin/TagEditModal";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';
@@ -15,9 +16,10 @@ import {UiButton, UiLoadableButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import {toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification} from "utils/basic-utils";
 
 const TagsSubroute = () => {
+    const {getTheme} = useContext(AppContext);
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, type: "", data: {name: ""}});
@@ -83,11 +85,11 @@ const TagsSubroute = () => {
     const onTagDelete = () => {
         return axios.delete("/boards/" + boardData.discriminator + "/tags/" + modal.data.name).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             updateState({...boardData, tags: boardData.tags.filter(item => item.name !== modal.data.name)});
-            toastSuccess("Tag permanently deleted.");
+            popupNotification("Tag deleted", getTheme().toHexString());
         });
     };
     return <UiCol xs={12} md={9}>

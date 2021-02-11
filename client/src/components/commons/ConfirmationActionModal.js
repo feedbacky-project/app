@@ -6,14 +6,14 @@ import {UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
-import {toastWarning} from "utils/basic-utils";
+import {popupWarning} from "utils/basic-utils";
 
 const ConfirmationActionModal = ({id, isOpen, onHide, onAction, actionButtonName = "Delete", actionDescription, confirmText, confirmFailMessage}) => {
     const [text, setText] = useState("");
     return <UiDismissibleModal id={id} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
                                applyButton={<UiLoadableButton label={actionButtonName} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => {
                                    if (text !== confirmText) {
-                                       toastWarning(confirmFailMessage);
+                                       popupWarning(confirmFailMessage);
                                        return Promise.resolve();
                                    }
                                    return onAction().then(onHide);

@@ -2,6 +2,7 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from "react";
@@ -11,9 +12,10 @@ import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
-import {toastAwait, toastError, toastSuccess, toastWarning} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const SuspensionSettings = () => {
+    const {getTheme} = useContext(AppContext);
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
@@ -25,7 +27,7 @@ const SuspensionSettings = () => {
                  {renderSuspensions()}
             </div>
             <div>
-                <UiButton label={"Add New"} className={"m-0 mt-3 float-right"} onClick={() => toastWarning("Suspend users manually through moderator tools.")}>Add New</UiButton>
+                <UiButton label={"Add New"} className={"m-0 mt-3 float-right"} onClick={() => popupWarning("Suspend users manually through moderator tools")}>Add New</UiButton>
             </div>
         </UiCol>
     };
@@ -46,14 +48,13 @@ const SuspensionSettings = () => {
         });
     };
     const onUnsuspension = () => {
-        const id = toastAwait("Pending unsuspension...");
         return axios.delete("/suspendedUsers/" + modal.data).then(res => {
             if (res.status !== 204) {
-                toastError("Failed to unsuspend the user", id);
+                popupError("Failed to unsuspend the user");
                 return;
             }
             const suspendedUsers = boardData.suspendedUsers.filter(item => item.id !== modal.data);
-            toastSuccess("User unsuspended.", id);
+            popupNotification("User suspended", getTheme().toHexString());
             updateState({...boardData, suspendedUsers: suspendedUsers});
         });
     };

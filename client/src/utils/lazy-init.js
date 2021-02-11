@@ -1,4 +1,4 @@
-import {toastError} from "utils/basic-utils";
+import {popupError} from "utils/basic-utils";
 
 export const retry = (fn, retriesLeft = 5, interval = 500) => {
     return new Promise((resolve, reject) => {
@@ -8,7 +8,7 @@ export const retry = (fn, retriesLeft = 5, interval = 500) => {
                 setTimeout(() => {
                     if (retriesLeft === 1) {
                         reject(error);
-                        toastError("Network error occurred, couldn't load data!");
+                        popupError("Network error occurred, couldn't load data!");
                         return;
                     }
 

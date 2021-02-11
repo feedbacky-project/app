@@ -1,23 +1,25 @@
 import axios from "axios";
-import React, {useEffect} from 'react';
+import AppContext from "context/AppContext";
+import React, {useContext, useEffect} from 'react';
 import {useHistory, useParams} from "react-router-dom";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import {toastSuccess, toastWarning} from "utils/basic-utils";
+import {popupNotification, popupWarning} from "utils/basic-utils";
 
 const NotificationUnsubscribeRoute = () => {
+    const {getTheme} = useContext(AppContext);
     const {id, code} = useParams();
     const history = useHistory();
     const unsubscribe = () => {
         axios.delete("/users/" + id + "/unsubscribe/" + code).then(res => {
             history.push("/");
             if (res.status !== 204) {
-                toastWarning("Failed to unsubscribe, probably invalid unsubscribe token.");
+                popupWarning("Invalid unsubscribe token");
                 return;
             }
-            toastSuccess("Successfully unsubscribed from future notifications.");
+            popupNotification("Unsubscribed from future notifications", getTheme().toHexString());
         }).catch(() => {
             history.push("/");
-            toastWarning("Failed to unsubscribe, probably invalid unsubscribe token.");
+            popupWarning("Invalid unsubscribe token");
         });
     };
     useEffect(() => {

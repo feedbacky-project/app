@@ -11,7 +11,7 @@ import {FaCog, FaUserLock} from "react-icons/all";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
-import {toastAwait, toastError, toastSuccess} from "utils/basic-utils";
+import {popupError, popupNotification, popupRevertableNotification, popupWarning} from "utils/basic-utils";
 
 const IconToggle = styled(FaCog)`
   transition: all 0.7s ease-in-out 0s;
@@ -45,30 +45,30 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     const onIdeaOpen = () => {
         return axios.patch("/ideas/" + ideaData.id, {"open": true}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             updateState({...ideaData, open: true});
-            toastSuccess("Idea opened.");
+            popupRevertableNotification("Idea opened", getTheme().toHexString(), onIdeaClose);
         });
     };
     const onIdeaClose = () => {
         return axios.patch("/ideas/" + ideaData.id, {"open": false}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             updateState({...ideaData, open: false});
-            toastSuccess("Idea closed.");
+            popupRevertableNotification("Idea closed", getTheme().toHexString(), onIdeaOpen);
         });
     };
     const doIdeaDelete = () => {
         return axios.delete("/ideas/" + ideaData.id).then(res => {
             if (res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
-            toastSuccess("Idea permanently deleted.");
+            popupNotification("Idea deleted", getTheme().toHexString());
             history.push("/b/" + ideaData.boardDiscriminator);
             onIdeaDelete();
         });
@@ -76,16 +76,15 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     const doSuspendUser = () => {
         //todo finite suspension dates
         const date = new Date();
-        const id = toastAwait("Pending suspension...");
         return axios.post("/boards/" + boardData.discriminator + "/suspendedUsers", {
             userId: ideaData.user.id,
             suspensionEndDate: (date.getFullYear() + 10) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2)
         }).then(res => {
             if (res.status !== 201) {
-                toastError("Failed to suspend the user.", id);
+                popupWarning("Failed to suspend the user");
                 return;
             }
-            toastSuccess("User suspended.", id);
+            popupNotification("User suspended", getTheme().toHexString());
             updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
         });
     };
@@ -96,11 +95,11 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
         });
         return axios.patch("/ideas/" + ideaData.id + "/tags", data).then(res => {
             if (res.status !== 200 && res.status !== 204) {
-                toastError();
+                popupError();
                 return;
             }
             updateState({...ideaData, tags: res.data});
-            toastSuccess("Tags updated!");
+            popupNotification("Tags updated", getTheme().toHexString());
         });
     };
     const isSuspendable = () => {
