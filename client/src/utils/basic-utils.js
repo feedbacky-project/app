@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 import Snackbar from "node-snackbar";
-import React from "react";
 
 export const getDefaultAvatar = (username) => {
     const avatar = process.env.REACT_APP_DEFAULT_USER_AVATAR;

@@ -10,7 +10,7 @@ import StepSecondSubroute from "routes/board/admin/subroutes/webhooks/creator/St
 import StepThirdSubroute from "routes/board/admin/subroutes/webhooks/creator/StepThirdSubroute";
 import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
-import {UiButton, UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
+import {UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {popupNotification, popupWarning} from "utils/basic-utils";
 
@@ -46,7 +46,7 @@ const CreateWebhookSubroute = () => {
     const renderNextButton = () => {
         if (settings.step >= 3) {
             const onFinish = () => {
-                if(settings.url === "") {
+                if (settings.url === "") {
                     popupWarning("URL must be typed");
                     return Promise.resolve();
                 }

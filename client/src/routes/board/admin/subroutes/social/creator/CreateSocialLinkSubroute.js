@@ -9,7 +9,7 @@ import StepFirstRoute from "routes/board/admin/subroutes/social/creator/StepFirs
 import StepSecondRoute from "routes/board/admin/subroutes/social/creator/StepSecondRoute";
 import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
-import {UiButton, UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
+import {UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {popupNotification, popupWarning} from "utils/basic-utils";
 
@@ -43,7 +43,7 @@ const CreateSocialLinkSubroute = () => {
     const renderNextButton = () => {
         if (settings.step >= 2) {
             const onFinish = () => {
-                if(settings.url === "") {
+                if (settings.url === "") {
                     popupWarning("URL must be typed");
                     return Promise.resolve();
                 }

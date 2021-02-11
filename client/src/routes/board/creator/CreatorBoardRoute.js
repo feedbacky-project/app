@@ -9,7 +9,7 @@ import StepSecondSubroute from "routes/board/creator/StepSecondSubroute";
 import StepThirdSubroute from "routes/board/creator/StepThirdSubroute";
 import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
-import {UiButton, UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
+import {UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {isServiceAdmin, popupNotification, popupWarning} from "utils/basic-utils";
 
