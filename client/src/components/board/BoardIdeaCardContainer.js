@@ -31,7 +31,7 @@ const BoardIdeaCardContainer = ({id, searchQuery}) => {
             return <SvgNotice Component={UndrawNoIdeas} title={"No ideas yet."} description={"How about creating one?"}/>
         }
         return <InfiniteScroll
-            style={{overflow: "hidden"}}
+            style={{overflow: "initial"}}
             next={onLoadRequest}
             hasMore={ideas.moreToLoad}
             dataLength={ideas.data.length}

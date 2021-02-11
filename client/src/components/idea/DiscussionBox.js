@@ -53,7 +53,7 @@ const DiscussionBox = () => {
             return <div className={"text-red mt-2 mb-3"}><FaFrown/> Failed to load comments</div>
         }
         return <InfiniteScroll
-            style={{overflow: "hidden"}}
+            style={{overflow: "initial"}}
             next={onLoadRequest}
             hasMore={comments.moreToLoad}
             dataLength={comments.data.length}
