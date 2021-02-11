@@ -10,7 +10,7 @@ import StepSecondSubroute from "routes/board/admin/subroutes/webhooks/creator/St
 import StepThirdSubroute from "routes/board/admin/subroutes/webhooks/creator/StepThirdSubroute";
 import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
-import {UiButton, UiCancelButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
+import {UiButton, UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {popupNotification, popupWarning} from "utils/basic-utils";
 
@@ -31,18 +31,6 @@ const CreateWebhookSubroute = () => {
                 return <StepSecondSubroute updateSettings={updateSettings} settings={settings}/>;
             case 3:
                 return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
-            case 4:
-                axios.post("/boards/" + boardData.discriminator + "/webhooks", {
-                    url: settings.url, type: settings.type, events: settings.listenedEvents,
-                }).then(res => {
-                    if (res.status !== 201) {
-                        popupWarning("Couldn't add webhook due to unknown error");
-                        return;
-                    }
-                    popupNotification("Webhook added and sent sample response", getTheme().toHexString());
-                    history.push("/ba/" + boardData.discriminator + "/webhooks");
-                }).catch(() => setSettings({...settings, step: 3}));
-                return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
             default:
                 popupWarning("Encountered unexpected issue");
                 setSettings({...settings, step: 1});
@@ -57,7 +45,23 @@ const CreateWebhookSubroute = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 3) {
-            return <UiButton label={"Finish"} color={tinycolor("#00c851")} className={"ml-2"} onClick={nextStep}>Finish</UiButton>
+            const onFinish = () => {
+                if(settings.url === "") {
+                    popupWarning("URL must be typed");
+                    return Promise.resolve();
+                }
+                return axios.post("/boards/" + boardData.discriminator + "/webhooks", {
+                    url: settings.url, type: settings.type, events: settings.listenedEvents,
+                }).then(res => {
+                    if (res.status !== 201) {
+                        popupWarning("Couldn't add webhook due to unknown error");
+                        return;
+                    }
+                    popupNotification("Webhook added and sent sample response", getTheme().toHexString());
+                    history.push("/ba/" + boardData.discriminator + "/webhooks");
+                }).catch(() => setSettings({...settings, step: 3}));
+            };
+            return <UiLoadableButton label={"Finish"} color={tinycolor("#00c851")} className={"ml-2"} onClick={onFinish}>Finish</UiLoadableButton>
         }
         return <UiNextStepButton nextStep={nextStep}/>
     };
@@ -70,9 +74,6 @@ const CreateWebhookSubroute = () => {
             return;
         } else if (settings.step === 2 && settings.listenedEvents.length === 0) {
             popupWarning("Events must be chosen");
-            return;
-        } else if (settings.step === 3 && settings.url === "") {
-            popupWarning("URL must be typed");
             return;
         }
         setSettings({...settings, step: settings.step + 1});

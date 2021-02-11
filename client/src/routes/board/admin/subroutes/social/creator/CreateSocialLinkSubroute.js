@@ -9,7 +9,7 @@ import StepFirstRoute from "routes/board/admin/subroutes/social/creator/StepFirs
 import StepSecondRoute from "routes/board/admin/subroutes/social/creator/StepSecondRoute";
 import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
-import {UiButton, UiCancelButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
+import {UiButton, UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {popupNotification, popupWarning} from "utils/basic-utils";
 
@@ -28,23 +28,6 @@ const CreateSocialLinkSubroute = () => {
                 return <StepFirstRoute updateSettings={updateSettings} settings={settings}/>;
             case 2:
                 return <StepSecondRoute updateSettings={updateSettings} settings={settings}/>;
-            case 3:
-                axios.post("/boards/" + boardData.discriminator + "/socialLinks", {
-                    iconData: settings.iconData, url: settings.url
-                }).then(res => {
-                    if (res.status !== 201) {
-                        popupWarning("Couldn't add social link due to unknown error");
-                        return;
-                    }
-                    popupNotification("Added social link", getTheme().toHexString());
-                    history.push({
-                        pathname: "/ba/" + boardData.discriminator + "/social",
-                        state: null
-                    });
-                    const socialLinks = boardData.socialLinks.concat(res.data);
-                    updateState({...boardData, socialLinks});
-                }).catch(() => setSettings({...settings, step: 2}));
-                return <StepSecondRoute updateSettings={updateSettings} settings={settings}/>;
             default:
                 popupWarning("Encountered unexpected issue");
                 setSettings({...settings, step: 1});
@@ -59,7 +42,28 @@ const CreateSocialLinkSubroute = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 2) {
-            return <UiButton label={"Finish"} color={tinycolor("#00c851")} className={"ml-2"} onClick={nextStep}>Finish</UiButton>
+            const onFinish = () => {
+                if(settings.url === "") {
+                    popupWarning("URL must be typed");
+                    return Promise.resolve();
+                }
+                return axios.post("/boards/" + boardData.discriminator + "/socialLinks", {
+                    iconData: settings.iconData, url: settings.url
+                }).then(res => {
+                    if (res.status !== 201) {
+                        popupWarning("Couldn't add social link due to unknown error");
+                        return;
+                    }
+                    popupNotification("Social link added", getTheme().toHexString());
+                    history.push({
+                        pathname: "/ba/" + boardData.discriminator + "/social",
+                        state: null
+                    });
+                    const socialLinks = boardData.socialLinks.concat(res.data);
+                    updateState({...boardData, socialLinks});
+                }).catch(() => setSettings({...settings, step: 2}));
+            };
+            return <UiLoadableButton label={"Finish"} color={tinycolor("#00c851")} className={"ml-2"} onClick={onFinish}>Finish</UiLoadableButton>
         }
         return <UiNextStepButton nextStep={nextStep}/>
     };
@@ -69,9 +73,6 @@ const CreateSocialLinkSubroute = () => {
     const nextStep = () => {
         if (settings.step === 1 && settings.iconData === "") {
             popupWarning("Icon must be chosen");
-            return;
-        } else if (settings.step === 2 && settings.url === "") {
-            popupWarning("URL must be typed");
             return;
         }
         setSettings({...settings, step: settings.step + 1});

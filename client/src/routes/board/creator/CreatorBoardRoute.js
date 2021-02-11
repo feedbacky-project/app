@@ -9,7 +9,7 @@ import StepSecondSubroute from "routes/board/creator/StepSecondSubroute";
 import StepThirdSubroute from "routes/board/creator/StepThirdSubroute";
 import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
-import {UiButton, UiCancelButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
+import {UiButton, UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {isServiceAdmin, popupNotification, popupWarning} from "utils/basic-utils";
 
@@ -35,26 +35,6 @@ const CreatorBoardRoute = () => {
                 return <StepSecondSubroute updateSettings={updateSettings} settings={settings}/>;
             case 3:
                 return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
-            case 4:
-                axios.post("/boards/", {
-                    discriminator: settings.discriminator,
-                    name: settings.name,
-                    shortDescription: settings.name + " feedback",
-                    fullDescription: "Feedback for **" + settings.name + "** project." +
-                        " " +
-                        "Edit this description in admin panel.",
-                    themeColor: settings.themeColor,
-                    banner: settings.banner,
-                    logo: settings.logo,
-                }).then(res => {
-                    if (res.status !== 201) {
-                        popupWarning("Couldn't create new board due to unknown error!");
-                        return;
-                    }
-                    popupNotification("Board created", getTheme().toHexString());
-                    history.push("/b/" + settings.discriminator);
-                });
-                return <StepThirdSubroute updateSettings={updateSettings} settings={settings}/>;
             default:
                 popupWarning("Encountered unexpected issue");
                 return <StepFirstSubroute updateSettings={updateSettings} settings={settings}/>;
@@ -68,7 +48,25 @@ const CreatorBoardRoute = () => {
     };
     const renderNextButton = () => {
         if (settings.step >= 3) {
-            return <UiButton label={"Create Board"} color={tinycolor("#00c851")} className={"ml-2"} onClick={nextStep}>Create Board</UiButton>
+            const onFinish = () => axios.post("/boards/", {
+                discriminator: settings.discriminator,
+                name: settings.name,
+                shortDescription: settings.name + " feedback",
+                fullDescription: "Feedback for **" + settings.name + "** project." +
+                    " " +
+                    "Edit this description in admin panel.",
+                themeColor: settings.themeColor,
+                banner: settings.banner,
+                logo: settings.logo,
+            }).then(res => {
+                if (res.status !== 201) {
+                    popupWarning("Couldn't create new board due to unknown error!");
+                    return;
+                }
+                popupNotification("Board created", getTheme().toHexString());
+                history.push("/b/" + settings.discriminator);
+            });
+            return <UiLoadableButton label={"Create Board"} color={tinycolor("#00c851")} className={"ml-2"} onClick={onFinish}>Create Board</UiLoadableButton>
         }
         return <UiNextStepButton nextStep={nextStep}/>
     };
