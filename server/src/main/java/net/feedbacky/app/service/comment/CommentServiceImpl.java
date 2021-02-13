@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Idea idea = ideaRepository.findById(ideaId)
-            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + ideaId + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", ideaId)));
     Page<Comment> pageData = commentRepository.findByIdea(idea, PageRequest.of(page, pageSize, SortFilterResolver.resolveCommentsSorting(sortType)));
     List<Comment> comments = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
@@ -92,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Comment comment = commentRepository.findById(id, EntityGraphs.named("Comments.fetch"))
-            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     final User finalUser = user;
     boolean isModerator = comment.getIdea().getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
     if(comment.getViewType() == Comment.ViewType.INTERNAL && !isModerator) {
@@ -105,16 +106,16 @@ public class CommentServiceImpl implements CommentService {
   public ResponseEntity<FetchCommentDto> post(PostCommentDto dto) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(dto.getIdeaId())
-            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + dto.getIdeaId() + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", dto.getIdeaId())));
     boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(user));
     //internal type is for moderators only
     if(Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL && !isModerator) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to post comment with internal view type.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Insufficient permissions.");
     }
     if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !closedIdeasCommenting) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Cannot comment closed ideas.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea already closed.");
     }
     Comment comment = new ModelMapper().map(this, Comment.class);
     comment.setId(null);
@@ -127,7 +128,7 @@ public class CommentServiceImpl implements CommentService {
     comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Message with the same content posted by you already exist in this idea.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't post duplicated comments.");
     }
     commentRepository.save(comment);
 
@@ -149,14 +150,14 @@ public class CommentServiceImpl implements CommentService {
   public FetchUserDto postLike(long id) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Comment comment = commentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(comment.isSpecial()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Cannot like special comments.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't like this comment.");
     }
     if(comment.getLikers().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Comment with id " + id + " is already liked by you.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already liked.");
     }
     comment.getLikers().add(user);
     commentRepository.save(comment);
@@ -167,12 +168,12 @@ public class CommentServiceImpl implements CommentService {
   public FetchCommentDto patch(long id, PatchCommentDto dto) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
-    Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
+    Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(!comment.getCreator().getId().equals(user.getId()) && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
-      throw new InvalidAuthenticationException("No permission to patch comment with id " + id + ".");
+      throw new InvalidAuthenticationException("Insufficient permissions.");
     }
 
     ModelMapper mapper = new ModelMapper();
@@ -188,11 +189,11 @@ public class CommentServiceImpl implements CommentService {
   public ResponseEntity delete(long id) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Comment comment = commentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(!comment.getCreator().equals(user) && !hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
-      throw new InvalidAuthenticationException("No permission to delete comment with id " + id + ".");
+      throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     comment.getIdea().getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
@@ -204,14 +205,14 @@ public class CommentServiceImpl implements CommentService {
   public ResponseEntity deleteLike(long id) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Comment comment = commentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(comment.isSpecial()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Cannot unlike special comments.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't unlike this comment.");
     }
     if(!comment.getLikers().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Comment with id " + id + " is not liked by you.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet liked.");
     }
     comment.getLikers().remove(user);
     commentRepository.save(comment);

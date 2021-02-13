@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
   public FetchUserDto getSelf() {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphs.named("User.fetch"))
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     return new FetchUserDto().from(user).withConfidentialData(user);
   }
 
@@ -60,14 +61,14 @@ public class UserServiceImpl implements UserService {
   public List<FetchConnectedAccount> getSelfConnectedAccounts() {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphs.named("User.fetchConnections"))
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     return user.getConnectedAccounts().stream().map(acc -> new FetchConnectedAccount().from(acc)).collect(Collectors.toList());
   }
 
   @Override
   public FetchUserDto get(long id) {
     User user = userRepository.findById(id, EntityGraphs.named("User.fetch"))
-            .orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("User with id {0} not found.", id)));
     return new FetchUserDto().from(user);
   }
 
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
   public FetchUserDto patchSelf(PatchUserDto dto) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
 
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
   public FetchUserDto patchSelfMailPreferences(PatchMailPreferences dto) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
 
     MailPreferences preferences = user.getMailPreferences();
     ModelMapper mapper = new ModelMapper();
@@ -101,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public ResponseEntity unsubscribe(long id, String code) {
-    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User does not exist of id " + id));
+    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("User with id {0} not found.", id)));
     MailPreferences preferences = user.getMailPreferences();
     if(!preferences.getUnsubscribeToken().equals(code)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid unsubscribe token.");
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity deactivateSelf() {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     //better to run sync now
     new MailBuilder()
             .withRecipient(user)

@@ -4,6 +4,7 @@
 * **[CHANGE]** Appearance profile route can be viewed while not logged in
 * **[CHANGE]** Replaced toast notifications with snackbar notifications
 * **[CHANGE]** Idea closed comment icon is now Lock icon not Circle X
+* **[CHANGE]** Made server-side API error messages more user friendly
 !! TODO UI CARD INNER REF https://github.com/reactjs/reactjs.org/issues/2120
 !! hover transform scale small/big
 

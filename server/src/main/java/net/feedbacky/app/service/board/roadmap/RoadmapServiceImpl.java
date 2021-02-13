@@ -24,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +58,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     }
     final User finalUser = user;
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("tags"))
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     List<FetchRoadmapElement> elements = new ArrayList<>();
     for(Tag tag : board.getTags()) {
       if(tag.isRoadmapIgnored()) {

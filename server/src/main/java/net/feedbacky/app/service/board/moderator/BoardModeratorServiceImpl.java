@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,11 +61,11 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   public List<FetchInviteDto> getAllInvited(String discriminator) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphUtils.fromAttributePaths("permissions"))
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("invitedModerators"))
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to view invited moderators of this board.");
+      throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     return board.getInvitedModerators().stream().map(invite -> new FetchInviteDto().from(invite)).collect(Collectors.toList());
   }
@@ -73,11 +74,11 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   public FetchBoardDto postAccept(String code) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Invitation invitation = invitationRepository.findByCode(code)
             .orElseThrow(() -> new ResourceNotFoundException("Invalid invitation link."));
     if(!invitation.getUser().equals(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invitation link belongs to someone else.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid invitation link.");
     }
     Board board = invitation.getBoard();
     Moderator moderator = new Moderator();
@@ -94,19 +95,19 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   public ResponseEntity<FetchInviteDto> post(String discriminator, PostInviteDto dto) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to post moderators to this board.");
+      throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     User eventUser = userRepository.findByEmail(dto.getUserEmail())
-            .orElseThrow(() -> new ResourceNotFoundException("User with email " + dto.getUserEmail() + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("User with email {0} not found.", dto.getUserEmail())));
     if(user.equals(eventUser)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Inviting yourself huh?");
     }
     if(eventUser.isServiceStaff() || board.getModerators().stream().anyMatch(mod -> mod.getUser().equals(eventUser))) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is moderator already.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is already a moderator.");
     }
     if(board.getInvitedModerators().stream().anyMatch(invite -> invite.getUser().equals(eventUser))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is already invited.");
@@ -127,11 +128,11 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   public ResponseEntity deleteInvitation(long id) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Invitation invitation = invitationRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Invitation with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Invitation with id {0} not found.", id)));
     if(!hasPermission(invitation.getBoard(), Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to delete moderator invitations from this board.");
+      throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     Board board = invitation.getBoard();
     if(!board.getInvitedModerators().contains(invitation)) {
@@ -147,20 +148,20 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   public ResponseEntity delete(String discriminator, long id) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to revoke moderator permissions from this board.");
+      throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     User eventUser = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("User with id {0} not found.", id)));
     Optional<Moderator> optional = board.getModerators().stream().filter(mod -> mod.getUser().equals(eventUser)).findFirst();
     if(!optional.isPresent()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "User with id " + id + " is not a moderator in this board.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is not a moderator.");
     }
     if(board.getCreator().equals(eventUser)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "User with id " + id + " cannot be removed from this board.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user's permissions can't be revoked.");
     }
     Moderator moderator = optional.get();
     board.getModerators().remove(moderator);
