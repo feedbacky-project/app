@@ -301,7 +301,7 @@ public class IdeaServiceImpl implements IdeaService {
   @Override
   public List<FetchSimpleUserDto> getAllVoters(long id) {
     Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("voters"))
-            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     return idea.getVoters().stream().map(usr -> new FetchSimpleUserDto().from(usr)).collect(Collectors.toList());
   }
 
