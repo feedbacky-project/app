@@ -19,7 +19,7 @@ const BoardIdeaCardContainer = ({id, searchQuery}) => {
     useEffect(() => {
         onLoadRequest(true);
         // eslint-disable-next-line
-    }, [id, searchQuery, user.localPreferences.ideas]);
+    }, [id, searchQuery, user.session, user.localPreferences.ideas]);
     const loadIdeas = () => {
         if (ideas.error) {
             return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className={"mr-1"}/> Failed to load ideas</React.Fragment>}/>

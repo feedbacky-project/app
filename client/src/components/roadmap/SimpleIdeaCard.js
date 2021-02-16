@@ -3,7 +3,7 @@ import {CardLinkStyle, IdeaCardDescription, InfoContainer} from "components/boar
 import VoteButton from "components/commons/VoteButton";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import {UiClassicIcon} from "ui";
@@ -12,10 +12,11 @@ import {convertIdeaToSlug, popupError, truncateText} from "utils/basic-utils";
 
 export const SimpleIdeaCard = ({ideaData}) => {
     const cardRef = React.createRef();
-    const [idea, setIdea] = useState(ideaData);
     const history = useHistory();
     const location = useLocation();
     const {data} = useContext(BoardContext);
+    const [idea, setIdea] = useState(ideaData);
+    useEffect(() => setIdea(ideaData), [ideaData]);
     const renderLockState = () => {
         if (idea.open) {
             return;

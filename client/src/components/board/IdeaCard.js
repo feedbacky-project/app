@@ -4,7 +4,7 @@ import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {FaLock, FaRegComment} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import tinycolor from "tinycolor2";
@@ -71,10 +71,11 @@ export const InfoContainer = styled.small`
 
 const IdeaCard = ({ideaData, onIdeaDelete}) => {
     const cardRef = React.createRef();
-    const {data,} = useContext(BoardContext);
+    const {data} = useContext(BoardContext);
     const history = useHistory();
     const location = useLocation();
     const [idea, setIdea] = useState(ideaData);
+    useEffect(() => setIdea(ideaData), [ideaData]);
     const renderComments = () => {
         if (idea.commentsAmount > 0) {
             return <InfoContainer>

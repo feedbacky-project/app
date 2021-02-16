@@ -44,17 +44,22 @@ axios.interceptors.response.use(undefined, error => {
 const App = ({appearanceSettings}) => {
     const {appearance, setAppearance, theme, setTheme, getTheme, onAppearanceToggle} = appearanceSettings;
     const [session, setSession] = useState(Cookies.get("FSID"));
-    const [anomymousSession, setAnonymousSession] = useState(null);
     const [localPrefs, setLocalPrefs] = useState({
         ideas: {filter: getCookieOrDefault("prefs_searchFilter", ""), sort: getCookieOrDefault("prefs_searchSort", "")},
         comments: {sort: getCookieOrDefault("prefs_comments_sort", "")}
     });
     const [serviceData, setServiceData] = useState({loaded: false, data: [], error: false});
     const [userData, setUserData] = useState({loaded: false, data: [], error: false});
+    const startAnonymousSession = () => {
+        new FingerprintJS.load().then(fp => fp.get().then(res => {
+            console.info("Anonymous session started. User identificator: " + res.visitorId);
+            axios.defaults.headers.common["X-Feedbacky-Anonymous-Id"] = res.visitorId;
+        }));
+    };
     useEffect(() => {
         axios.defaults.baseURL = API_ROUTE;
         axios.defaults.headers.common["Authorization"] = "Bearer " + session;
-    });
+    }, []);
     useEffect(() => {
         if (serviceData.loaded) {
             return;
@@ -69,11 +74,7 @@ const App = ({appearanceSettings}) => {
             return;
         }
         if (session == null && !userData.loaded) {
-            new FingerprintJS.load().then(fp => fp.get().then(res => {
-                console.info("Anonymous session started. User identificator: " + res.visitorId);
-                axios.defaults.headers.common["X-Feedbacky-Anonymous-Id"] = res.visitorId;
-                setAnonymousSession(res.visitorId);
-            }));
+            startAnonymousSession();
             setUserData({...userData, loaded: true, loggedIn: false});
             return;
         }
@@ -82,11 +83,7 @@ const App = ({appearanceSettings}) => {
                 setUserData({...userData, data: res.data, loaded: true, loggedIn: true});
             }).catch(err => {
                 if (err.response === undefined || err.response.status === 401 || err.response.status === 403 || (err.response.status >= 500 && err.response.status <= 599)) {
-                    new FingerprintJS.load().then(fp => fp.get().then(res => {
-                        console.info("Anonymous session started. User identificator: " + res.visitorId);
-                        axios.defaults.headers.common["X-Feedbacky-Anonymous-Id"] = res.visitorId;
-                        setAnonymousSession(res.visitorId);
-                    }));
+                    startAnonymousSession();
                     setUserData({...userData, loaded: true, loggedIn: false});
                     return;
                 }
@@ -110,6 +107,8 @@ const App = ({appearanceSettings}) => {
         setUserData({...userData, loaded: false});
     };
     const onLogOut = () => {
+        startAnonymousSession();
+        delete axios.defaults.headers.common["Authorization"];
         Cookies.remove("FSID");
         setSession(null);
         setUserData({...userData, data: [], loaded: true, loggedIn: false});
@@ -135,7 +134,6 @@ const App = ({appearanceSettings}) => {
                 data: userData.data,
                 loggedIn: userData.loggedIn,
                 session: session,
-                anonmymousSession: anomymousSession,
                 localPreferences: localPrefs,
                 darkMode: appearance.mode === "dark",
                 onLogOut: onLogOut,
