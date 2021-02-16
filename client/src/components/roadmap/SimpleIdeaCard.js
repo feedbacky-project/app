@@ -58,7 +58,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
                 cardRef.current.classList.remove("upvote-animation");
             }
             setIdea({...idea, upvoted, votersAmount});
-        }).catch(() => popupError());
+        });
     };
     return <IdeaContext.Provider value={{
         ideaData: idea, loaded: true, error: false,

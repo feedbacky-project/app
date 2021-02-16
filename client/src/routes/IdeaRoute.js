@@ -25,9 +25,10 @@ const IdeaRoute = () => {
         return id;
     };
     const context = useContext(AppContext);
+    const {user} = context;
     const id = extractIdeaId(useParams().id);
     const location = useLocation();
-    const [idea, setIdea] = useState({data: [], loaded: false, error: false});
+    const [idea, setIdea] = useState({data: {}, loaded: false, error: false});
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const loadBoardDataCascade = (ideaData) => {
@@ -63,7 +64,7 @@ const IdeaRoute = () => {
             setBoard({...board, data: location.state._boardData, loaded: true});
         }
         // eslint-disable-next-line
-    }, []);
+    }, [user.session]);
     if (idea.error) {
         return <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>
     }

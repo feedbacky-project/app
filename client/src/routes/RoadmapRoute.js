@@ -14,7 +14,7 @@ import {UiLoadingSpinner} from "ui";
 import {UiContainer, UiRow} from "ui/grid";
 
 const RoadmapRoute = () => {
-    const {onThemeChange, defaultTheme} = useContext(AppContext);
+    const {onThemeChange, defaultTheme, user} = useContext(AppContext);
     const location = useLocation();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
@@ -57,7 +57,7 @@ const RoadmapRoute = () => {
         }).catch(() => setBoard({...board, error: true}));
         loadRoadmapData();
         // eslint-disable-next-line
-    }, []);
+    }, [user.session]);
     if (roadmap.error) {
         return <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>
     }
