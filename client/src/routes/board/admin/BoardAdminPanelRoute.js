@@ -59,7 +59,7 @@ const BoardAdminPanelRoute = () => {
       if(!board.loaded) {
           return true;
       }
-      if(board.data.creatorId !== user.data.id || board.data.moderators.find(mod => mod.userId === user.data.id && mod.role === "ADMINISTRATOR")) {
+      if(board.data.creatorId === user.data.id || board.data.moderators.find(mod => mod.userId === user.data.id && mod.role === "ADMINISTRATOR")) {
           return true;
       }
       return false;
