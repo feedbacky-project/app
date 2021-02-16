@@ -23,6 +23,7 @@ public class FetchUserDto implements FetchResponseDto<FetchUserDto, User> {
   private String email;
   private FetchMailPreferences mailPreferences;
   private List<FetchUserPermissionDto> permissions;
+  private boolean fake;
   private Date creationDate;
 
   private String connectedAccountsUrl = "/v1/users/@me/connectedAccounts";
@@ -35,6 +36,7 @@ public class FetchUserDto implements FetchResponseDto<FetchUserDto, User> {
     this.email = null;
     this.mailPreferences = new FetchMailPreferences().from(entity.getMailPreferences());
     this.permissions = entity.getPermissions().stream().map(permission -> new FetchUserPermissionDto().from(permission)).collect(Collectors.toList());
+    this.fake = entity.isFake();
     this.creationDate = entity.getCreationDate();
     return this;
   }

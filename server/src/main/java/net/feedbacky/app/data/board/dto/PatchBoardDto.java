@@ -35,4 +35,6 @@ public class PatchBoardDto {
   @Base64(maximumKbSize = 650, mimeType = {"image/png", "image/jpeg"}, message = "Banner must be a valid image with maximum size of 650kb.", allowEmpty = true)
   private String banner;
 
+  private boolean anonymousAllowed;
+
 }

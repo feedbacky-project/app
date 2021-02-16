@@ -15,6 +15,7 @@ public class FetchSimpleUserDto implements FetchResponseDto<FetchSimpleUserDto, 
   private long id;
   private String username;
   private String avatar;
+  private boolean fake;
 
   private String userUrl = "/v1/users/:id";
 
@@ -23,6 +24,7 @@ public class FetchSimpleUserDto implements FetchResponseDto<FetchSimpleUserDto, 
     this.id = entity.getId();
     this.username = entity.getUsername();
     this.avatar = entity.getAvatar();
+    this.fake = entity.isFake();
     return this;
   }
 

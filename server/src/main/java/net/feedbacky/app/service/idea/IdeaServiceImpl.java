@@ -16,6 +16,7 @@ import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
+import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
@@ -47,6 +48,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -306,17 +309,24 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
-  public FetchUserDto postUpvote(long id) {
-    //todo X-User-Id vote on behalf
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+  public FetchUserDto postUpvote(long id, String anonymousId) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    User user;
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
+    if(auth instanceof AnonymousAuthenticationToken) {
+      if(anonymousId == null || !idea.getBoard().isAnonymousAllowed()) {
+        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Please log-in to vote.");
+      }
+      user = userRepository.findByEmail(anonymousId).orElseGet(() -> createAnonymousUser(anonymousId));
+    } else {
+      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+              .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    }
     if(idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already upvoted.");
     }
-    if(idea.getBoard().getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
+    if(!user.isFake() && idea.getBoard().getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You've been suspended, please contact board owner for more information.");
     }
     Set<User> voters = idea.getVoters();
@@ -327,12 +337,22 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
-  public ResponseEntity deleteUpvote(long id) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+  public ResponseEntity deleteUpvote(long id, String anonymousId) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    User user;
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
+    if(auth instanceof AnonymousAuthenticationToken) {
+      if(anonymousId == null || !idea.getBoard().isAnonymousAllowed()) {
+        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Please log-in to vote.");
+      }
+      //if not found and vote deleted then don't create new user
+      user = userRepository.findByEmail(anonymousId)
+              .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet upvoted."));
+    } else {
+      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+              .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    }
     if(!idea.getVoters().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet upvoted.");
     }
@@ -344,6 +364,20 @@ public class IdeaServiceImpl implements IdeaService {
     idea.setVoters(voters);
     ideaRepository.save(idea);
     return ResponseEntity.noContent().build();
+  }
+
+  private User createAnonymousUser(String anonymousId) {
+    User user = new User();
+    user.setEmail(anonymousId);
+    MailPreferences preferences = new MailPreferences();
+    preferences.setNotificationsEnabled(false);
+    preferences.setUnsubscribeToken("");
+    preferences.setUser(user);
+    user.setMailPreferences(preferences);
+    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", "Anonymous"));
+    user.setUsername("Anonymous");
+    user.setFake(true);
+    return userRepository.save(user);
   }
 
   @Override

@@ -63,6 +63,7 @@ public class User implements Serializable {
   @CreationTimestamp
   private Date creationDate;
   private boolean serviceStaff = false;
+  private boolean fake = false;
 
   public String convertToSpecialCommentMention() {
     return "{data_user;" + id + ";" + username + "}";

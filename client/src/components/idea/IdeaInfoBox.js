@@ -25,7 +25,7 @@ import {htmlDecode, popupError, popupNotification} from "utils/basic-utils";
 
 const IdeaInfoBox = () => {
     const {user, getTheme} = useContext(AppContext);
-    const {data, onNotLoggedClick} = useContext(BoardContext);
+    const {data} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
     const history = useHistory();
@@ -74,10 +74,6 @@ const IdeaInfoBox = () => {
         });
     };
     const onUpvote = () => {
-        if (!user.loggedIn) {
-            onNotLoggedClick();
-            return;
-        }
         let request;
         let upvoted;
         let votersAmount;

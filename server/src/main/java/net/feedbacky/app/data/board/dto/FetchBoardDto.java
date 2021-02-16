@@ -27,6 +27,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   private String shortDescription;
   private String fullDescription;
   private long creatorId;
+  private boolean anonymousAllowed;
   private Date creationDate;
 
   private List<FetchSocialLinkDto> socialLinks;
@@ -56,6 +57,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.shortDescription = entity.getShortDescription();
     this.fullDescription = entity.getFullDescription();
     this.creatorId = entity.getCreator().getId();
+    this.anonymousAllowed = entity.isAnonymousAllowed();
     this.creationDate = entity.getCreationDate();
     this.socialLinks = entity.getSocialLinks().stream().map(link -> new FetchSocialLinkDto().from(link)).collect(Collectors.toList());
     this.tags = entity.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());

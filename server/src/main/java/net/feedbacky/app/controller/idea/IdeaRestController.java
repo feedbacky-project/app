@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -107,13 +108,13 @@ public class IdeaRestController {
   }
 
   @PostMapping("v1/ideas/{id}/voters")
-  public FetchUserDto postUpvote(@PathVariable long id) {
-    return ideaService.postUpvote(id);
+  public FetchUserDto postUpvote(@PathVariable long id, @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
+    return ideaService.postUpvote(id, anonymousId);
   }
 
   @DeleteMapping("v1/ideas/{id}/voters")
-  public ResponseEntity deleteUpvote(@PathVariable long id) {
-    return ideaService.deleteUpvote(id);
+  public ResponseEntity deleteUpvote(@PathVariable long id, @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
+    return ideaService.deleteUpvote(id, anonymousId);
   }
 
   @PatchMapping("v1/ideas/{id}/tags")

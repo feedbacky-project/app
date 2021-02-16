@@ -1,7 +1,6 @@
 import axios from "axios";
 import {CardLinkStyle, IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
 import VoteButton from "components/commons/VoteButton";
-import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from "react";
@@ -16,8 +15,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
     const [idea, setIdea] = useState(ideaData);
     const history = useHistory();
     const location = useLocation();
-    const {data, onNotLoggedClick} = useContext(BoardContext);
-    const {user} = useContext(AppContext);
+    const {data} = useContext(BoardContext);
     const renderLockState = () => {
         if (idea.open) {
             return;
@@ -33,10 +31,6 @@ export const SimpleIdeaCard = ({ideaData}) => {
         }
     };
     const onVote = () => {
-        if (!user.loggedIn) {
-            onNotLoggedClick();
-            return;
-        }
         let request;
         let upvoted;
         let votersAmount;

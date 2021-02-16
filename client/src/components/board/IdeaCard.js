@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
-import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from 'react';
@@ -72,8 +71,7 @@ export const InfoContainer = styled.small`
 
 const IdeaCard = ({ideaData, onIdeaDelete}) => {
     const cardRef = React.createRef();
-    const {user} = useContext(AppContext);
-    const {data, onNotLoggedClick} = useContext(BoardContext);
+    const {data,} = useContext(BoardContext);
     const history = useHistory();
     const location = useLocation();
     const [idea, setIdea] = useState(ideaData);
@@ -104,10 +102,6 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
         </InfoContainer>
     };
     const onUpvote = () => {
-        if (!user.loggedIn) {
-            onNotLoggedClick();
-            return;
-        }
         let request;
         let upvoted;
         let votersAmount;
@@ -120,9 +114,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             upvoted = true;
             votersAmount = idea.votersAmount + 1;
         }
-        let source = axios.CancelToken.source();
         axios({
-            cancelToken: source.token,
             method: request,
             url: "/ideas/" + idea.id + "/voters"
         }).then(res => {

@@ -35,9 +35,9 @@ public interface IdeaService extends FeedbackyService {
 
   List<FetchSimpleUserDto> getAllVoters(long id);
 
-  FetchUserDto postUpvote(long id);
+  FetchUserDto postUpvote(long id, String anonymousId);
 
-  ResponseEntity deleteUpvote(long id);
+  ResponseEntity deleteUpvote(long id, String anonymousId);
 
   List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags);
 

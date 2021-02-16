@@ -1,3 +1,6 @@
+### 1.0.0.alpha.3
+* **[FEATURE]** Added anonymous voting feature, toggleable in board admin panel
+
 ### 1.0.0.alpha.2
 * **[IMPROVEMENT]** Added clearly visible Log In text in the log-in button
 * **[IMPROVEMENT]** Creators Finish button do show loading spinners now

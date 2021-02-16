@@ -21,7 +21,7 @@ const LoginRoute = ({onLogin}) => {
         }
         axios.get("/service/" + provider + "?code=" + qsData.code).then(res => {
             if (res.status !== 200) {
-                console.log("Failed to connect " + res.error.message);
+                console.warn("Failed to connect " + res.error.message);
                 setData({...data, loaded: true, error: true, status: res.status});
                 return;
             }
