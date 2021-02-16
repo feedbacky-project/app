@@ -52,7 +52,19 @@ const BoardAdminPanelRoute = () => {
     if (location.state != null && !board.loaded) {
         return <LoadingRouteUtil/>
     }
-    if(!user.loggedIn || (board.loaded && board.data.creatorId !== user.data.id)) {
+    const canView = () => {
+      if(!user.loggedIn) {
+          return false;
+      }
+      if(!board.loaded) {
+          return true;
+      }
+      if(board.data.creatorId !== user.data.id || board.moderators.find(mod => mod.userId === user.data.id && mod.role === "ADMINISTRATOR")) {
+          return true;
+      }
+      return false;
+    };
+    if(!canView()) {
         history.push("/b/" + id);
         return <React.Fragment/>
     }

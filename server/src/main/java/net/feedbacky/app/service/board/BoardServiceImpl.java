@@ -138,7 +138,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
 
@@ -225,7 +225,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     if(board.getTags().size() >= 10) {
@@ -246,7 +246,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     Tag tag = tagRepository.findByBoardAndName(board, name)
@@ -267,7 +267,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     Tag tag = tagRepository.findByBoardAndName(board, name)

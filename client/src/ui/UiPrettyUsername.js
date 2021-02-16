@@ -42,7 +42,7 @@ const UiPrettyUsername = (props) => {
     }
     switch (moderator.role.toLowerCase()) {
         case "owner":
-        case "admin":
+        case "administrator":
             return <AdminRole>{username}</AdminRole>;
         case "moderator":
             return <ModeratorRole>{username}</ModeratorRole>;

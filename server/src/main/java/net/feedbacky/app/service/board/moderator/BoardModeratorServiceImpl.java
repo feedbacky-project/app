@@ -5,6 +5,8 @@ import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
+import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
+import net.feedbacky.app.data.board.dto.moderator.PatchModeratorDto;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.user.User;
@@ -23,6 +25,8 @@ import net.feedbacky.app.util.mailservice.MailService;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +68,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("invitedModerators"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     return board.getInvitedModerators().stream().map(invite -> new FetchInviteDto().from(invite)).collect(Collectors.toList());
@@ -98,7 +102,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     User eventUser = userRepository.findByEmail(dto.getUserEmail())
@@ -125,13 +129,36 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   }
 
   @Override
+  public FetchModeratorDto patch(String discriminator, PatchModeratorDto dto) {
+    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    Board board = boardRepository.findByDiscriminator(discriminator)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+      throw new InvalidAuthenticationException("Insufficient permissions.");
+    }
+    List<Moderator> moderators = moderatorRepository.findByBoard(board);
+    Optional<Moderator> optional = moderators.stream().filter(mod -> mod.getUser().getId() == dto.getUserId()).findFirst();
+    if(!optional.isPresent()) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Moderator with id {0} not found.", dto.getUserId()));
+    }
+    Moderator moderator = optional.get();
+    ModelMapper mapper = new ModelMapper();
+    mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+    mapper.map(dto, moderator);
+    moderatorRepository.save(moderator);
+    return new FetchModeratorDto().from(moderator);
+  }
+
+  @Override
   public ResponseEntity deleteInvitation(long id) {
     UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Invitation invitation = invitationRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Invitation with id {0} not found.", id)));
-    if(!hasPermission(invitation.getBoard(), Moderator.Role.OWNER, user)) {
+    if(!hasPermission(invitation.getBoard(), Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     Board board = invitation.getBoard();
@@ -151,7 +178,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     User eventUser = userRepository.findById(id)

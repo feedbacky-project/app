@@ -3,6 +3,8 @@ package net.feedbacky.app.controller.board;
 import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
+import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
+import net.feedbacky.app.data.board.dto.moderator.PatchModeratorDto;
 import net.feedbacky.app.service.board.moderator.BoardModeratorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +51,11 @@ public class BoardModeratorInviteRestController {
   @PostMapping("v1/boards/{discriminator}/moderators")
   public ResponseEntity<FetchInviteDto> post(@PathVariable String discriminator, @RequestBody @Valid PostInviteDto dto) {
     return boardModeratorService.post(discriminator, dto);
+  }
+
+  @PatchMapping("v1/boards/{discriminator}/moderators")
+  public FetchModeratorDto patch(@PathVariable String discriminator, @RequestBody @Valid PatchModeratorDto dto) {
+    return boardModeratorService.patch(discriminator, dto);
   }
 
   @DeleteMapping("v1/boards/{discriminator}/moderators/{id}")

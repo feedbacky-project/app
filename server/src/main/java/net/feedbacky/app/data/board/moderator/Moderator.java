@@ -46,9 +46,7 @@ public class Moderator implements Serializable {
 
 
   public enum Role {
-    USER(3), MODERATOR(2),
-    @Deprecated //shouldn't be used anymore
-    ADMINISTRATOR(1), OWNER(0);
+    USER(3), MODERATOR(2), ADMINISTRATOR(1), OWNER(0);
 
     private final int id;
 

@@ -16,7 +16,7 @@ import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification, prettifyEnum} from "utils/basic-utils";
 
-const InviteCopyButton = styled.div`
+const ClickableButton = styled.div`
   cursor: pointer;
   transition: var(--hover-transition);
   
@@ -27,12 +27,13 @@ const InviteCopyButton = styled.div`
 
 const ModeratorsSubroute = () => {
     const {getTheme} = useContext(AppContext);
-    const {data: boardData} = useContext(BoardContext);
+    const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [moderators, setModerators] = useState(boardData.moderators);
     const [invited, setInvited] = useState({data: [], loaded: false, error: false});
     const [modal, setModal] = useState({open: false, type: "", data: ""});
     const getQuota = () => 10 - (boardData.moderators.length + invited.data.length);
+    useEffect(() => setModerators(boardData.moderators), [boardData.moderators]);
     useEffect(() => {
         setCurrentNode("moderators");
         axios.get("/boards/" + boardData.discriminator + "/invitedModerators").then(res => {
@@ -48,10 +49,13 @@ const ModeratorsSubroute = () => {
         return <React.Fragment>
             <UiCol xs={12} className={"text-black-60"}>Permissions Overview</UiCol>
             <UiCol xs={12} sm={6} className={"mb-sm-2 mb-3"}>
-                <UiKeyboardInput>Owner Permissions</UiKeyboardInput>
+                <UiKeyboardInput>Owner & Administrator  Permissions</UiKeyboardInput>
                 <ul className={"mb-0 pl-3"}>
+                    <li>Delete board <UiKeyboardInput>Owner only</UiKeyboardInput></li>
+                    <li>Promote and demote moderators <UiKeyboardInput>Owner only</UiKeyboardInput></li>
                     <li>Admin panel access</li>
                     <li>Remove moderators from board</li>
+                    <li>Remove suspended users</li>
                     <li>All moderator permissions</li>
                 </ul>
             </UiCol>
@@ -60,7 +64,9 @@ const ModeratorsSubroute = () => {
                 <ul className={"mb-0 pl-3"}>
                     <li>Close and Delete Ideas</li>
                     <li>Add and Remove Tags from Ideas</li>
-                    <li>Post Internal Comments, Delete Comments</li>
+                    <li>Post Internal Comments</li>
+                    <li>Delete Comments</li>
+                    <li>Suspend users</li>
                 </ul>
             </UiCol>
         </React.Fragment>
@@ -80,6 +86,7 @@ const ModeratorsSubroute = () => {
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{mod.user.username}</small>
                             <UiBadge className={"d-block"}>{prettifyEnum(mod.role)}</UiBadge>
+                            {renderPromoteBadge(mod)}
                         </div>
                     </div>
                 })}
@@ -96,10 +103,10 @@ const ModeratorsSubroute = () => {
                             <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={() => setModal({open: true, type: "inviteDelete", data: invited.id})}/>
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
-                            <InviteCopyButton onClick={() => {
+                            <ClickableButton onClick={() => {
                                 copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
                                 popupNotification("Copied", getTheme().toHexString());
-                            }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></InviteCopyButton>
+                            }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></ClickableButton>
                         </div>
                     </div>
                 })}
@@ -117,6 +124,18 @@ const ModeratorsSubroute = () => {
             return;
         }
         return <UiElementDeleteButton id={"mod_del_" + i} tooltipName={"Revoke Permissions"} onClick={() => setModal({open: true, type: "revoke", data: mod.userId})}/>;
+    };
+    const renderPromoteBadge = (mod) => {
+        if (mod.role.toLowerCase() === "owner") {
+            return;
+        }
+        if (mod.role.toLowerCase() === "moderator") {
+            return <ClickableButton as={UiBadge} color={tinycolor("#00c851")} className={"d-block my-1"}
+                                         onClick={() => setModal({open: true, type: "promote", data: mod.userId})}>Promote</ClickableButton>
+        } else {
+            return <ClickableButton as={UiBadge} color={tinycolor("#ff3547")} className={"d-block my-1"}
+                                         onClick={() => setModal({open: true, type: "demote", data: mod.userId})}>Demote</ClickableButton>
+        }
     };
     const onPermissionsRevoke = () => {
         return axios.delete("/boards/" + boardData.discriminator + "/moderators/" + modal.data).then(res => {
@@ -140,12 +159,36 @@ const ModeratorsSubroute = () => {
             popupNotification("Invitation removed", getTheme().toHexString());
         });
     };
+    const onPromotion = () => {
+        return axios.patch("/boards/" + boardData.discriminator + "/moderators", {
+            userId: modal.data,
+            role: "administrator"
+        }).then(res => {
+            const updated = moderators.map(mod => mod.userId === modal.data ? {...mod, role: res.data.role} : mod);
+            updateState({...boardData, moderators: updated});
+            popupNotification("Promoted to administrator.", getTheme().toHexString());
+        });
+    };
+    const onDemotion = () => {
+        return axios.patch("/boards/" + boardData.discriminator + "/moderators", {
+            userId: modal.data,
+            role: "moderator"
+        }).then(res => {
+            const updated = moderators.map(mod => mod.userId === modal.data ? {...mod, role: res.data.role} : mod);
+            updateState({...boardData, moderators: updated});
+            popupNotification("Demoted to moderator.", getTheme().toHexString());
+        });
+    };
     return <UiCol xs={12} md={9}>
         <ModeratorInviteModal onModInvitationSend={onModInvitationSend} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "invite"}/>
         <DangerousActionModal id={"inviteDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "inviteDelete"} onAction={onInvalidation}
                               actionDescription={<div>User won't be able to accept this invitation anymore.</div>}/>
         <DangerousActionModal id={"revokeMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "revoke"} onAction={onPermissionsRevoke}
                               actionDescription={<div>User permissions to moderate the board will be <u>revoked</u>.</div>} actionButtonName={"Revoke"}/>
+        <DangerousActionModal id={"promoteMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "promote"} onAction={onPromotion}
+                              actionDescription={<div>Moderator will be promoted to administrator and will gain additional privileges.</div>}/>
+        <DangerousActionModal id={"demoteAdm"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "demote"} onAction={onDemotion}
+                              actionDescription={<div>Administrator will be demoted to moderator and will lose additional privileges.</div>} actionButtonName={"Demote"}/>
         <UiViewBox title={"Moderators Management"} description={"Manage your board moderators here."}>
             <React.Fragment>
                 {renderOverview()}

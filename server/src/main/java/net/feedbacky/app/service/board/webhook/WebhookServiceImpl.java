@@ -57,7 +57,7 @@ public class WebhookServiceImpl implements WebhookService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     return webhookRepository.findByBoard(board).stream().map(webhook -> new FetchWebhookDto().from(webhook)).collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class WebhookServiceImpl implements WebhookService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     if(board.getWebhooks().size() >= 5) {
@@ -96,7 +96,7 @@ public class WebhookServiceImpl implements WebhookService {
     Webhook webhook = webhookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Webhook with id {0} not found.", id)));
     Board board = webhook.getBoard();
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     ModelMapper mapper = new ModelMapper();
@@ -112,7 +112,7 @@ public class WebhookServiceImpl implements WebhookService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Webhook webhook = webhookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Webhook with id {0} not found.", id)));
-    if(!hasPermission(webhook.getBoard(), Moderator.Role.OWNER, user)) {
+    if(!hasPermission(webhook.getBoard(), Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     Board board = webhook.getBoard();

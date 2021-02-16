@@ -3,6 +3,8 @@ package net.feedbacky.app.service.board.moderator;
 import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
+import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
+import net.feedbacky.app.data.board.dto.moderator.PatchModeratorDto;
 import net.feedbacky.app.service.FeedbackyService;
 
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ public interface BoardModeratorService extends FeedbackyService {
   FetchBoardDto postAccept(String code);
 
   ResponseEntity<FetchInviteDto> post(String discriminator, PostInviteDto dto);
+
+  FetchModeratorDto patch(String discriminator, PatchModeratorDto dto);
 
   ResponseEntity deleteInvitation(long id);
 

@@ -50,7 +50,7 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     Optional<Boolean> isSuspended = board.getSuspensedList().stream().map(suspended -> suspended.getUser().getId() == dto.getUserId()).findAny();
@@ -77,7 +77,7 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
     SuspendedUser suspendedUser = suspendedUserRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Suspended user with id {0} not found.", id)));
     Board board = suspendedUser.getBoard();
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     board.getSuspensedList().remove(suspendedUser);

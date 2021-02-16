@@ -22,7 +22,7 @@ const BoardInfoCard = ({onIdeaCreation}) => {
         setOpen(true);
     };
     const renderEditButton = () => {
-        const contains = data.moderators.find(mod => mod.userId === user.data.id && mod.role === "OWNER");
+        const contains = data.moderators.find(mod => mod.userId === user.data.id && (mod.role === "ADMINISTRATOR" || mod.role === "OWNER"));
         if (!contains) {
             return;
         }

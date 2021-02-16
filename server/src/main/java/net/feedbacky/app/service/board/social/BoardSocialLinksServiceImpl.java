@@ -65,7 +65,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     if(board.getSocialLinks().size() >= 4) {
@@ -95,7 +95,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     SocialLink socialLink = socialLinksRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Social link with id {0} not found.", id)));
     Board board = socialLink.getBoard();
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
+    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
     objectStorage.deleteImage(socialLink.getLogoUrl());
