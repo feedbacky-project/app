@@ -1,5 +1,5 @@
 ### 1.0.0.alpha.3
-* **[FEATURE]** Added anonymous voting feature, toggleable in board admin panel
+* **[FEATURE]** Added anonymous voting feature, toggleable in board admin panel (requested at [Feedbacky](https://app.feedbacky.net/i/anonymous-voting.730))
 
 ### 1.0.0.alpha.2
 * **[IMPROVEMENT]** Added clearly visible Log In text in the log-in button
