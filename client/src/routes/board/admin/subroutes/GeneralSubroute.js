@@ -145,10 +145,10 @@ const GeneralSubroute = ({updateState}) => {
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
                     {conditionalButton(anonymousVoting, () => {
                         setAnonymousVoting(true);
-                        return onChangesSave();
+                        return onChangesSave(true);
                     }, () => {
                         setAnonymousVoting(false);
-                        return onChangesSave();
+                        return onChangesSave(false);
                     })}
                 </UiCol>
             </UiRow>
@@ -179,14 +179,13 @@ const GeneralSubroute = ({updateState}) => {
             popupNotification("Board deleted", getTheme().toHexString());
         });
     };
-    const onChangesSave = () => {
+    const onChangesSave = (anonymousAllowed = boardData.anonymousAllowed) => {
         const banner = bannerInput;
         const logo = logoInput;
         const name = document.getElementById("boardTextarea").value;
         const shortDescription = document.getElementById("shortDescrTextarea").value;
         const fullDescription = document.getElementById("fullDescrTextarea").value;
         const themeColor = getTheme(false).toHexString();
-        const anonymousAllowed = anonymousVoting;
         return axios.patch("/boards/" + boardData.discriminator, {
             name, shortDescription, fullDescription, themeColor, banner, logo, anonymousAllowed
         }).then(res => {
