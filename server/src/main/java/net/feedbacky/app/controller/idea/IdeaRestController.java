@@ -46,7 +46,8 @@ public class IdeaRestController {
   }
 
   @GetMapping("v1/boards/{discriminator}/ideas")
-  public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
+  public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
+                                                          @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
     //todo can it be shorter
     int page = 0;
     if(requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
@@ -63,7 +64,7 @@ public class IdeaRestController {
       }
     }
     if(requestParams.containsKey("query")) {
-      return ideaService.getAllIdeasContaining(discriminator, page, pageSize, requestParams.get("query"));
+      return ideaService.getAllIdeasContaining(discriminator, page, pageSize, requestParams.get("query"), anonymousId);
     }
     IdeaService.FilterType filterType = IdeaService.FilterType.OPENED;
     if(requestParams.containsKey("filter")) {
@@ -79,12 +80,12 @@ public class IdeaRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    return ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType);
+    return ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType, anonymousId);
   }
 
   @GetMapping("v1/ideas/{id}")
-  public FetchIdeaDto getOne(@PathVariable long id) {
-    return ideaService.getOne(id);
+  public FetchIdeaDto getOne(@PathVariable long id, @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
+    return ideaService.getOne(id, anonymousId);
   }
 
   @PostMapping("v1/ideas/")

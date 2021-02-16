@@ -21,11 +21,11 @@ import java.util.List;
  */
 public interface IdeaService extends FeedbackyService {
 
-  PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort);
+  PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort, String anonymousId);
 
-  PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(String discriminator, int page, int pageSize, String query);
+  PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(String discriminator, int page, int pageSize, String query, String anonymousId);
 
-  FetchIdeaDto getOne(long id);
+  FetchIdeaDto getOne(long id, String anonymousId);
 
   ResponseEntity<FetchIdeaDto> post(PostIdeaDto dto);
 

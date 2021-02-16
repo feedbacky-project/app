@@ -95,10 +95,12 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
-  public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort) {
+  public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort, String anonymousId) {
     User user = null;
-    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
-      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if(auth instanceof AnonymousAuthenticationToken && anonymousId != null) {
+      user = userRepository.findByEmail(anonymousId).orElse(null);
+    } else if(auth instanceof UserAuthenticationToken) {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -126,10 +128,12 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
-  public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(String discriminator, int page, int pageSize, String query) {
+  public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(String discriminator, int page, int pageSize, String query, String anonymousId) {
     User user = null;
-    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
-      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if(auth instanceof AnonymousAuthenticationToken && anonymousId != null) {
+      user = userRepository.findByEmail(anonymousId).orElse(null);
+    } else if(auth instanceof UserAuthenticationToken) {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -143,10 +147,12 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
-  public FetchIdeaDto getOne(long id) {
+  public FetchIdeaDto getOne(long id, String anonymousId) {
     User user = null;
-    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
-      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if(auth instanceof AnonymousAuthenticationToken && anonymousId != null) {
+      user = userRepository.findByEmail(anonymousId).orElse(null);
+    } else if(auth instanceof UserAuthenticationToken) {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
