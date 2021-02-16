@@ -186,7 +186,7 @@ const ModeratorsSubroute = () => {
         <DangerousActionModal id={"revokeMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "revoke"} onAction={onPermissionsRevoke}
                               actionDescription={<div>User permissions to moderate the board will be <u>revoked</u>.</div>} actionButtonName={"Revoke"}/>
         <DangerousActionModal id={"promoteMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "promote"} onAction={onPromotion}
-                              actionDescription={<div>Moderator will be promoted to administrator and will gain additional privileges.</div>}/>
+                              actionDescription={<div>Moderator will be promoted to administrator and will gain additional privileges.</div>} actionButtonName={"Promote"}/>
         <DangerousActionModal id={"demoteAdm"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "demote"} onAction={onDemotion}
                               actionDescription={<div>Administrator will be demoted to moderator and will lose additional privileges.</div>} actionButtonName={"Demote"}/>
         <UiViewBox title={"Moderators Management"} description={"Manage your board moderators here."}>

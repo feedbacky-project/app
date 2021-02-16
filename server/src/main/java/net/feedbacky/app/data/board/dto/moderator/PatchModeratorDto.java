@@ -25,6 +25,6 @@ public class PatchModeratorDto {
   private long userId;
   @NotNull(message = "Role cannot be empty.")
   @EnumValue(enumClazz = Moderator.Role.class, message = "Role must be valid role type.")
-  private Moderator.Role role;
+  private String role;
 
 }

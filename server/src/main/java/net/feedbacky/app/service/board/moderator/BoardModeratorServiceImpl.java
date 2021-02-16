@@ -144,9 +144,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Moderator with id {0} not found.", dto.getUserId()));
     }
     Moderator moderator = optional.get();
-    ModelMapper mapper = new ModelMapper();
-    mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-    mapper.map(dto, moderator);
+    moderator.setRole(dto.getRole());
     moderatorRepository.save(moderator);
     return new FetchModeratorDto().from(moderator);
   }
@@ -189,6 +187,9 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     }
     if(board.getCreator().equals(eventUser)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user's permissions can't be revoked.");
+    }
+    if(hasPermission(board, Moderator.Role.ADMINISTRATOR, user) && hasPermission(board, Moderator.Role.ADMINISTRATOR, eventUser)) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Insufficient permissions, same permission type.");
     }
     Moderator moderator = optional.get();
     board.getModerators().remove(moderator);
