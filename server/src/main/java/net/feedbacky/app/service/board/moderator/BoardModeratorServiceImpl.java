@@ -144,7 +144,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Moderator with id {0} not found.", dto.getUserId()));
     }
     Moderator moderator = optional.get();
-    moderator.setRole(dto.getRole());
+    moderator.setRole(Moderator.Role.valueOf(dto.getRole().toUpperCase()));
     moderatorRepository.save(moderator);
     return new FetchModeratorDto().from(moderator);
   }
