@@ -47,7 +47,7 @@ public class IdeaRestController {
 
   @GetMapping("v1/boards/{discriminator}/ideas")
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
-                                                          @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
+                                                          @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
     //todo can it be shorter
     int page = 0;
     if(requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
@@ -84,7 +84,7 @@ public class IdeaRestController {
   }
 
   @GetMapping("v1/ideas/{id}")
-  public FetchIdeaDto getOne(@PathVariable long id, @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
+  public FetchIdeaDto getOne(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
     return ideaService.getOne(id, anonymousId);
   }
 
@@ -109,12 +109,12 @@ public class IdeaRestController {
   }
 
   @PostMapping("v1/ideas/{id}/voters")
-  public FetchUserDto postUpvote(@PathVariable long id, @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
+  public FetchUserDto postUpvote(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
     return ideaService.postUpvote(id, anonymousId);
   }
 
   @DeleteMapping("v1/ideas/{id}/voters")
-  public ResponseEntity deleteUpvote(@PathVariable long id, @RequestHeader("X-Feedbacky-Anonymous-Id") String anonymousId) {
+  public ResponseEntity deleteUpvote(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
     return ideaService.deleteUpvote(id, anonymousId);
   }
 
