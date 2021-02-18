@@ -4,8 +4,6 @@ import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.user.ConnectedAccount;
 
-import java.math.BigInteger;
-
 /**
  * @author Plajer
  * <p>

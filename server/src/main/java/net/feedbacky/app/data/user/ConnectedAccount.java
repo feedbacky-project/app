@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 
 /**
  * @author Plajer
