@@ -14,7 +14,7 @@ import {FaEllipsisH} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner} from "ui";
-import {UiButton, UiLoadableButton} from "ui/button";
+import {UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
