@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,7 +30,7 @@ public class RandomNicknameUtils {
   @SneakyThrows
   @PostConstruct
   private void loadNicknames() {
-    BufferedReader reader = new BufferedReader(new FileReader(file.getFile()));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
     String line;
     while((line = reader.readLine()) != null) {
       nicknames.add(line);
