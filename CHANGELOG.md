@@ -2,6 +2,8 @@
 * **[FEATURE]** Added anonymous voting feature, toggleable in board admin panel (requested at [Feedbacky](https://app.feedbacky.net/i/anonymous-voting.730))
 * **[FEATURE]** Added administrator role that can do everything that owner can without ability to delete board
 (Partially implements request by [Matou0014](https://app.feedbacky.net/i/add-the-possibility-to-promote-users.2296))
+* **[FEATURE]** Anonymous users (both by disabled accounts or anonymous voting) will use anonymous nicknames provided via custom nicknames file,
+better to see random nicknames than Anonymous multiple times
 
 ### 1.0.0.alpha.2
 * **[IMPROVEMENT]** Added clearly visible Log In text in the log-in button

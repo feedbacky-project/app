@@ -12,6 +12,7 @@ import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.service.ServiceUser;
+import net.feedbacky.app.util.RandomNicknameUtils;
 import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
@@ -42,11 +43,13 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final MailHandler mailHandler;
+  private final RandomNicknameUtils randomNicknameUtils;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, MailHandler mailHandler) {
+  public UserServiceImpl(UserRepository userRepository, MailHandler mailHandler, RandomNicknameUtils randomNicknameUtils) {
     this.userRepository = userRepository;
     this.mailHandler = mailHandler;
+    this.randomNicknameUtils = randomNicknameUtils;
   }
 
   @Override
@@ -124,8 +127,9 @@ public class UserServiceImpl implements UserService {
             .withTemplate(MailService.EmailTemplate.ACCOUNT_DEACTIVATED)
             .sendMail(mailHandler.getMailService()).sync();
     user.setEmail("deactivated-" + RandomStringUtils.randomAlphanumeric(6) + "@feedbacky.net");
-    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", "Anonymous"));
-    user.setUsername("Anonymous");
+    String nick = randomNicknameUtils.getRandomNickname();
+    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", nick));
+    user.setUsername(nick);
     user.setConnectedAccounts(new HashSet<>());
     MailPreferences mailPreferences = user.getMailPreferences();
     mailPreferences.setNotificationsEnabled(false);

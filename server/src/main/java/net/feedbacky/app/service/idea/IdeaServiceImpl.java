@@ -33,6 +33,7 @@ import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.CommentBuilder;
 import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RandomNicknameUtils;
 import net.feedbacky.app.util.RequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
@@ -79,11 +80,13 @@ public class IdeaServiceImpl implements IdeaService {
   private final AttachmentRepository attachmentRepository;
   private final ObjectStorage objectStorage;
   private final SubscriptionExecutor subscriptionExecutor;
+  private final RandomNicknameUtils randomNicknameUtils;
 
   @Autowired
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
-                         CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage, SubscriptionExecutor subscriptionExecutor) {
+                         CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
+                         SubscriptionExecutor subscriptionExecutor, RandomNicknameUtils randomNicknameUtils) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -92,6 +95,7 @@ public class IdeaServiceImpl implements IdeaService {
     this.attachmentRepository = attachmentRepository;
     this.objectStorage = objectStorage;
     this.subscriptionExecutor = subscriptionExecutor;
+    this.randomNicknameUtils = randomNicknameUtils;
   }
 
   @Override
@@ -380,8 +384,9 @@ public class IdeaServiceImpl implements IdeaService {
     preferences.setUnsubscribeToken("");
     preferences.setUser(user);
     user.setMailPreferences(preferences);
-    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", "Anonymous"));
-    user.setUsername("Anonymous");
+    String nick = randomNicknameUtils.getRandomNickname();
+    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", nick));
+    user.setUsername(nick);
     user.setFake(true);
     return userRepository.save(user);
   }
