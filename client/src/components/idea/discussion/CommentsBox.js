@@ -10,7 +10,7 @@ import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
 
-const CommentInternal = styled.span`
+export const CommentInternal = styled.span`
   color: hsl(210, 100%, 50%);
   
   .dark & {

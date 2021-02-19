@@ -64,6 +64,7 @@ public class User implements Serializable {
   private Date creationDate;
   private boolean serviceStaff = false;
   private boolean fake = false;
+  private String token = "";
 
   public String convertToSpecialCommentMention() {
     return "{data_user;" + id + ";" + username + "}";

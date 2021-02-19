@@ -78,6 +78,7 @@ public class Board implements Serializable {
   private String themeColor;
   private String logo;
   private String banner;
+  private String apiKey = "";
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Idea> ideas = new LinkedHashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board", orphanRemoval = true)

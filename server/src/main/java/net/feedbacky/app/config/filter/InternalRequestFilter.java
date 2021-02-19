@@ -1,6 +1,7 @@
-package net.feedbacky.app.config;
+package net.feedbacky.app.config.filter;
 
 import io.jsonwebtoken.JwtException;
+import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.service.FeedbackyUserDetailsService;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.JwtTokenUtil;
@@ -25,12 +26,12 @@ import java.io.IOException;
  * Created at 01.10.2019
  */
 @Component
-public class RequestFilter extends OncePerRequestFilter {
+public class InternalRequestFilter extends OncePerRequestFilter {
 
   private final FeedbackyUserDetailsService userDetailsService;
 
   @Autowired
-  public RequestFilter(FeedbackyUserDetailsService userDetailsService) {
+  public InternalRequestFilter(FeedbackyUserDetailsService userDetailsService) {
     this.userDetailsService = userDetailsService;
   }
 

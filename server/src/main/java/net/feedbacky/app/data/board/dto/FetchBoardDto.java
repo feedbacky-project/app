@@ -43,6 +43,8 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   private String logo;
   private String banner;
 
+  private String apiKey;
+
   private String ideasUrl = "/v1/boards/:id/ideas";
   private String webhooksUrl = "/v1/boards/:id/webhooks";
   private String invitedUsersUrl = "/v1/boards/:id/invitedUsers";
@@ -69,6 +71,14 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.themeColor = entity.getThemeColor();
     this.logo = entity.getLogo();
     this.banner = entity.getBanner();
+    this.apiKey = "";
+    return this;
+  }
+
+  public FetchBoardDto withConfidentialData(Board entity, boolean apply) {
+    if(apply) {
+      this.apiKey = entity.getApiKey();
+    }
     return this;
   }
 

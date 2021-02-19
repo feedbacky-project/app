@@ -24,6 +24,8 @@ public interface UserRepository extends EntityGraphJpaRepository<User, Long> {
 
   Optional<User> findByEmail(String email, EntityGraph entityGraph);
 
+  Optional<User> findByToken(String token);
+
   List<User> findByServiceStaffTrue();
 
 }

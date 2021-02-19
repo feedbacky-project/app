@@ -4,6 +4,7 @@
 (Partially implements request by [Matou0014](https://app.feedbacky.net/i/add-the-possibility-to-promote-users.2296))
 * **[FEATURE]** Anonymous users (both by disabled accounts or anonymous voting) will use anonymous nicknames provided via custom nicknames file,
 better to see random nicknames than Anonymous multiple times
+* **[FEATURE]** Added API keys and Public API (backported from Cloud Service fork)
 
 ### 1.0.0.alpha.2
 * **[IMPROVEMENT]** Added clearly visible Log In text in the log-in button

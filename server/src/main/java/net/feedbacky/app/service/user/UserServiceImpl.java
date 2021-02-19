@@ -13,7 +13,7 @@ import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.RandomNicknameUtils;
-import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
 import net.feedbacky.app.util.mailservice.MailService;
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public FetchUserDto getSelf() {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphs.named("User.fetch"))
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     return new FetchUserDto().from(user).withConfidentialData(user);
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<FetchConnectedAccount> getSelfConnectedAccounts() {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphs.named("User.fetchConnections"))
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     return user.getConnectedAccounts().stream().map(acc -> new FetchConnectedAccount().from(acc)).collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public FetchUserDto patchSelf(PatchUserDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
 
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public FetchUserDto patchSelfMailPreferences(PatchMailPreferences dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
 
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public ResponseEntity deactivateSelf() {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     //better to run sync now

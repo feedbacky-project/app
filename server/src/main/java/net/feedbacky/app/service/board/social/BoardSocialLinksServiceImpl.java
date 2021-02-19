@@ -16,7 +16,7 @@ import net.feedbacky.app.repository.board.SocialLinksRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.Constants;
-import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
@@ -60,7 +60,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
   @Override
   public ResponseEntity<FetchSocialLinkDto> post(String discriminator, PostSocialLinkDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
@@ -89,7 +89,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     SocialLink socialLink = socialLinksRepository.findById(id)

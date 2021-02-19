@@ -34,7 +34,7 @@ import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.CommentBuilder;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RandomNicknameUtils;
-import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
@@ -80,13 +80,14 @@ public class IdeaServiceImpl implements IdeaService {
   private final AttachmentRepository attachmentRepository;
   private final ObjectStorage objectStorage;
   private final SubscriptionExecutor subscriptionExecutor;
+  private final IdeaServiceCommons ideaServiceCommons;
   private final RandomNicknameUtils randomNicknameUtils;
 
   @Autowired
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
                          CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
-                         SubscriptionExecutor subscriptionExecutor, RandomNicknameUtils randomNicknameUtils) {
+                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -95,6 +96,7 @@ public class IdeaServiceImpl implements IdeaService {
     this.attachmentRepository = attachmentRepository;
     this.objectStorage = objectStorage;
     this.subscriptionExecutor = subscriptionExecutor;
+    this.ideaServiceCommons = ideaServiceCommons;
     this.randomNicknameUtils = randomNicknameUtils;
   }
 
@@ -109,26 +111,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    //not using board.getIdeas() because it would load all, we need paged limited list
-    Page<Idea> pageData;
-    switch(filter) {
-      case OPENED:
-        pageData = ideaRepository.findByBoardAndStatus(board, Idea.IdeaStatus.OPENED, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
-        break;
-      case CLOSED:
-        pageData = ideaRepository.findByBoardAndStatus(board, Idea.IdeaStatus.CLOSED, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
-        break;
-      case ALL:
-        pageData = ideaRepository.findByBoard(board, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
-        break;
-      default:
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid filter type.");
-    }
-    List<Idea> ideas = pageData.getContent();
-    final User finalUser = user;
-    int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
-    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
-            .map(idea -> new FetchIdeaDto().from(idea).withUser(idea, finalUser)).collect(Collectors.toList()));
+    return ideaServiceCommons.getAllIdeas(board, user, page, pageSize, filter, sort);
   }
 
   @Override
@@ -142,12 +125,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    final User finalUser = user;
-    Page<Idea> pageData = ideaRepository.findByBoardAndTitleIgnoreCaseContaining(board, query, PageRequest.of(page, pageSize));
-    List<Idea> ideas = pageData.getContent();
-    int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
-    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
-            .map(idea -> new FetchIdeaDto().from(idea).withUser(idea, finalUser)).collect(Collectors.toList()));
+    return ideaServiceCommons.getAllIdeasContaining(board, user, page, pageSize, query);
   }
 
   @Override
@@ -159,73 +137,22 @@ public class IdeaServiceImpl implements IdeaService {
     } else if(auth instanceof UserAuthenticationToken) {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    return new FetchIdeaDto().from(idea).withUser(idea, user);
+    return ideaServiceCommons.getOne(user, id);
   }
 
   @Override
   public ResponseEntity<FetchIdeaDto> post(PostIdeaDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(dto.getDiscriminator())
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", dto.getDiscriminator())));
-    Optional<Idea> optional = ideaRepository.findByTitleAndBoard(dto.getTitle(), board);
-    if(optional.isPresent() && optional.get().getBoard().getId().equals(board.getId())) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with that title already exists.");
-    }
-    if(board.getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You've been suspended, please contact board owner for more information.");
-    }
-    Set<Tag> tags = new HashSet<>();
-    for(long tagId : dto.getTags()) {
-      Tag tag = tagRepository.getOne(tagId);
-      if(!tag.getBoard().equals(board)) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Tag {0} not found.", tag.getName()));
-      }
-      if(!tag.isPublicUse()) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Tag {0} is private.", tag.getName()));
-      }
-      tags.add(tag);
-    }
-    ModelMapper mapper = new ModelMapper();
-    Idea idea = mapper.map(dto, Idea.class);
-    idea.setId(null);
-    idea.setBoard(board);
-    idea.setCreator(user);
-    idea.setCreationDate(Calendar.getInstance().getTime());
-    Set<User> set = new HashSet<>();
-    set.add(user);
-    idea.setVoters(set);
-    idea.setTags(tags);
-    idea.setStatus(Idea.IdeaStatus.OPENED);
-    idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
-    idea.setSubscribers(set);
-    idea = ideaRepository.save(idea);
-
-    //must save idea first in order to apply and save attachment
-    Set<Attachment> attachments = new HashSet<>();
-    if(dto.getAttachment() != null) {
-      String link = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getAttachment()), ObjectStorage.ImageType.ATTACHMENT);
-      Attachment attachment = new Attachment();
-      attachment.setIdea(idea);
-      attachment.setUrl(link);
-      attachment = attachmentRepository.save(attachment);
-      attachments.add(attachment);
-    }
-    idea.setAttachments(attachments);
-    ideaRepository.save(idea);
-
-    FetchIdeaDto fetchDto = new FetchIdeaDto().from(idea).withUser(idea, user);
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_CREATE, builder.build());
-    return ResponseEntity.status(HttpStatus.CREATED).body(fetchDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(ideaServiceCommons.post(dto, board, user));
   }
 
   @Override
   public FetchIdeaDto patch(long id, PatchIdeaDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
@@ -296,7 +223,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
@@ -333,17 +260,7 @@ public class IdeaServiceImpl implements IdeaService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
               .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     }
-    if(idea.getVoters().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already upvoted.");
-    }
-    if(!user.isFake() && idea.getBoard().getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You've been suspended, please contact board owner for more information.");
-    }
-    Set<User> voters = idea.getVoters();
-    voters.add(user);
-    idea.setVoters(voters);
-    ideaRepository.save(idea);
-    return new FetchUserDto().from(user);
+    return ideaServiceCommons.postUpvote(user, idea);
   }
 
   @Override
@@ -363,17 +280,7 @@ public class IdeaServiceImpl implements IdeaService {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
               .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     }
-    if(!idea.getVoters().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet upvoted.");
-    }
-    if(idea.getBoard().getSuspensedList().stream().anyMatch(suspended -> suspended.getUser().equals(user))) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You've been suspended, please contact board owner for more information.");
-    }
-    Set<User> voters = idea.getVoters();
-    voters.remove(user);
-    idea.setVoters(voters);
-    ideaRepository.save(idea);
-    return ResponseEntity.noContent().build();
+    return ideaServiceCommons.deleteUpvote(user, idea);
   }
 
   private User createAnonymousUser(String anonymousId) {
@@ -393,7 +300,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))

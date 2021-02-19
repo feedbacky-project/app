@@ -4,17 +4,19 @@ import ThemeSelectionModal from "components/board/admin/ThemeSelectionModal";
 import {Banner} from "components/board/BoardBanner";
 import ColorPickerContainer from "components/commons/ColorPickerContainer";
 import ConfirmationActionModal from "components/commons/ConfirmationActionModal";
+import DangerousActionModal from "components/commons/DangerousActionModal";
 import UploadIconBox from "components/commons/UploadIconBox";
+import {CommentInternal} from "components/idea/discussion/CommentsBox";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import {FaEllipsisH} from "react-icons/all";
+import {FaEllipsisH, FaEyeSlash} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner} from "ui";
-import {UiLoadableButton} from "ui/button";
+import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
@@ -38,6 +40,7 @@ const GeneralSubroute = ({updateState}) => {
     const {onThemeChange, getTheme, user} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [anonymousVoting, setAnonymousVoting] = useState(boardData.anonymousAllowed);
+    const [apiKeyBlurred, setApiKeyBlurred] = useState(true);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, type: ""});
     const [bannerInput, setBannerInput] = useState(null);
@@ -152,6 +155,7 @@ const GeneralSubroute = ({updateState}) => {
                     })}
                 </UiCol>
             </UiRow>
+            {renderApiKeyContent()}
             <UiRow noGutters className={"m-0 p-0 px-4 my-2"}>
                 <UiCol sm={9} xs={12}>
                     <h4 className={"mb-1 text-red"}>Delete Board</h4>
@@ -167,6 +171,39 @@ const GeneralSubroute = ({updateState}) => {
             </UiRow>
         </UiViewBoxBackground>
     };
+    const renderApiKeyContent = () => {
+        if (boardData.apiKey == null || boardData.apiKey === "") {
+            return <UiRow noGutters className="m-0 p-0 pb-2 px-4 my-2">
+                <UiCol sm={9} xs={12}>
+                    <h4 className="mb-1 text-red">API Key</h4>
+                    <span className="text-black-60" style={{fontSize: ".9em"}}>
+                        Generate access key to utilise Feedbacky API for anonymous ideas posting.<br/>
+                    </span>
+                </UiCol>
+                <UiCol sm={3} xs={6} className="text-sm-right text-left my-auto">
+                    <UiButton label={"Enable"} className={"mt-sm-0 mt-2"} onClick={() => setModal({open: true, type: "apiEnable"})} color={tinycolor("#00c851")}>Enable</UiButton>
+                </UiCol>
+            </UiRow>
+        } else {
+            return <UiRow noGutters className="m-0 p-0 pb-2 px-4 my-2">
+                <UiCol sm={9} xs={12}>
+                    <h4 className="mb-1 text-red">API Key</h4>
+                    <span className="text-black-60" style={{fontSize: ".9em"}}>
+                        Generate access key to utilise Feedbacky API for anonymous ideas posting.<br/>
+                        Your API key <span className={apiKeyBlurred ? "text-blurred": "text-red"}>{boardData.apiKey}</span>
+                        {/* todo hoverable */}
+                        <CommentInternal as={FaEyeSlash} className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
+                        Remember to keep it safe!<br/>
+                        {/* todo hoverable */}
+                        <span><strong className="text-red" style={{cursor: "pointer"}} onClick={() => setModal({open: true, type: "apiReset"})}>Click here</strong> to regenerate API key if it got compromised.</span>
+                    </span>
+                </UiCol>
+                <UiCol sm={3} xs={6} className="text-sm-right text-left my-auto">
+                    <UiButton label={"Disable"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={() => setModal({open: true, type: "apiDisable"})}>Disable</UiButton>
+                </UiCol>
+            </UiRow>
+        }
+    };
     const onBoardDelete = () => {
         return axios.delete("/boards/" + boardData.discriminator).then(res => {
             if (res.status !== 200 && res.status !== 204) {
@@ -177,6 +214,37 @@ const GeneralSubroute = ({updateState}) => {
             user.data.permissions = user.data.permissions.filter(board => board.boardDiscriminator !== boardData.discriminator);
             history.push("/me");
             popupNotification("Board deleted", getTheme().toHexString());
+        });
+    };
+    const onApiKeyEnable = () => {
+        axios.patch("/boards/" + boardData.discriminator + "/apiKey").then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                popupError();
+                return;
+            }
+            updateState({...boardData, apiKey: res.data.apiKey});
+            popupNotification("API key generated and enabled.");
+        });
+    };
+    const onApiKeyDisable = () => {
+        axios.delete("/boards/" + boardData.discriminator + "/apiKey").then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                popupError();
+                return;
+            }
+            updateState({...boardData, apiKey: ""});
+            popupNotification("API key disabled.");
+        });
+    };
+    const onApiKeyRegenerate = () => {
+        axios.patch("/boards/" + boardData.discriminator + "/apiKey").then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                popupError();
+                return;
+            }
+            setApiKeyBlurred(true);
+            updateState({...boardData, apiKey: res.data.apiKey});
+            popupNotification("API key regenerated.");
         });
     };
     const onChangesSave = (anonymousAllowed = boardData.anonymousAllowed) => {
@@ -222,6 +290,12 @@ const GeneralSubroute = ({updateState}) => {
         });
     };
     return <UiCol xs={12} md={9}>
+        <DangerousActionModal id={"apiReset"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "apiReset"} onAction={onApiKeyRegenerate}
+                              actionDescription={<div>API key will be regenerated and you must update it anywhere you use it.</div>} actionButtonName={"Regenerate"}/>
+        <DangerousActionModal id={"apiDisable"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "apiDisable"} onAction={onApiKeyDisable}
+                              actionDescription={<div>You won't be able to use Public Feedbacky API anymore.</div>} actionButtonName={"Disable"}/>
+        <DangerousActionModal id={"apiEnable"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "apiEnable"} onAction={onApiKeyEnable}
+                              actionDescription={<div>Once you activate API key you can disable or regenerate it later. You'll get access to Public Feedbacky API with it.</div>} actionButtonName={"Enable"}/>
         <ConfirmationActionModal id={"boardDel"} actionButtonName={"Delete Now"} isOpen={modal.open && modal.type === "delete"} onAction={onBoardDelete} onHide={() => setModal({...modal, open: false})}
                                  actionDescription={<div>
                                      <strong>This is one-way road</strong> and your board and all the data <strong>will be permanently deleted.</strong>

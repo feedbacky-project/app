@@ -1,4 +1,4 @@
-package net.feedbacky.app.util;
+package net.feedbacky.app.util.request;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.exception.FeedbackyRestException;
@@ -13,9 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * <p>
  * Created at 24.11.2019
  */
-public class RequestValidator {
+public class InternalRequestValidator {
 
-  private RequestValidator() {
+  private InternalRequestValidator() {
   }
 
   public static UserAuthenticationToken getContextAuthentication() {
