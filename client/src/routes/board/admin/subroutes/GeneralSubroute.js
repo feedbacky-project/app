@@ -217,7 +217,7 @@ const GeneralSubroute = ({updateState}) => {
         });
     };
     const onApiKeyEnable = () => {
-        axios.patch("/boards/" + boardData.discriminator + "/apiKey").then(res => {
+        return axios.patch("/boards/" + boardData.discriminator + "/apiKey").then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
                 return;
@@ -227,7 +227,7 @@ const GeneralSubroute = ({updateState}) => {
         });
     };
     const onApiKeyDisable = () => {
-        axios.delete("/boards/" + boardData.discriminator + "/apiKey").then(res => {
+        return axios.delete("/boards/" + boardData.discriminator + "/apiKey").then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
                 return;
@@ -237,7 +237,7 @@ const GeneralSubroute = ({updateState}) => {
         });
     };
     const onApiKeyRegenerate = () => {
-        axios.patch("/boards/" + boardData.discriminator + "/apiKey").then(res => {
+        return axios.patch("/boards/" + boardData.discriminator + "/apiKey").then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
                 return;
