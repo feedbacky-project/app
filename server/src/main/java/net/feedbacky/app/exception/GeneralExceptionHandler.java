@@ -5,14 +5,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,19 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RestApiError(HttpStatus.BAD_REQUEST, "Malformed Request. " + ex.getMessage()));
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("status", status.value());
+    body.put("errors", Collections.singletonList(ex.getMessage()));
+    return new ResponseEntity<>(body, headers, status);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RestApiError(HttpStatus.BAD_REQUEST, "Only application/json content type suppported."));
   }
 
   @Override
