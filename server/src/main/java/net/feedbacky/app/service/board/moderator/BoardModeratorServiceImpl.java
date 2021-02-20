@@ -190,8 +190,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Insufficient permissions, same permission type.");
     }
     Moderator moderator = optional.get();
-    board.getModerators().remove(moderator);
-    boardRepository.save(board);
+    moderatorRepository.delete(moderator);
     new MailBuilder()
             .withRecipient(eventUser)
             .withEventBoard(board)
