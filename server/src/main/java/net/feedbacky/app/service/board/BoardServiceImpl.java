@@ -38,6 +38,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -76,15 +77,23 @@ public class BoardServiceImpl implements BoardService {
     Page<Board> pageData = boardRepository.findAll(PageRequest.of(page, pageSize), EntityGraphs.named("Board.fetch"));
     List<Board> boards = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
+    //no confidential data for paginated requests
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
             boards.stream().map(board -> new FetchBoardDto().from(board)).collect(Collectors.toList()));
   }
 
   @Override
   public FetchBoardDto getOne(String discriminator) {
+    User user = null;
+    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
+      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
+    }
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.named("Board.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    return new FetchBoardDto().from(board);
+    final User finalUser = user;
+    boolean allowConfidential = board.getCreator().equals(user) || board.getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
+    return new FetchBoardDto().from(board).withConfidentialData(board, allowConfidential);
   }
 
   @Override
@@ -128,7 +137,7 @@ public class BoardServiceImpl implements BoardService {
     node.setUser(user);
     user.getPermissions().add(node);
     userRepository.save(user);
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchBoardDto().from(board));
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchBoardDto().from(board).withConfidentialData(board, true));
   }
 
   @Override
@@ -170,7 +179,7 @@ public class BoardServiceImpl implements BoardService {
     board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
 
     boardRepository.save(board);
-    return new FetchBoardDto().from(board);
+    return new FetchBoardDto().from(board).withConfidentialData(board, true);
   }
 
   @Override
