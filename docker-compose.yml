@@ -3,9 +3,6 @@ version: '3.3'
 services:
   feedbacky-client:
     container_name: feedbacky-client
-    build:
-      context: proxy
-      dockerfile: ./Dockerfile
     environment:
       - REACT_APP_SERVER_IP_ADDRESS=${REACT_APP_SERVER_IP_ADDRESS}
       - REACT_APP_SERVICE_NAME=${REACT_APP_SERVICE_NAME}
@@ -16,6 +13,7 @@ services:
       - feedbacky-server
     volumes:
       - feedbacky-data:/storage-data
+    image: plajer/feedbacky-proxy
     restart: always
   feedbacky-server:
     container_name: feedbacky-server
