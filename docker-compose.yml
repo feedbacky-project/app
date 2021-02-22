@@ -19,9 +19,6 @@ services:
     restart: always
   feedbacky-server:
     container_name: feedbacky-server
-    build:
-      context: server
-      dockerfile: ./Dockerfile
     ports:
       - '${SERVER_APP_PORT}:8080'
     volumes:
