@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 import Snackbar from "node-snackbar";
 
 export const getDefaultAvatar = (username) => {
-    const avatar = process.env.REACT_APP_DEFAULT_USER_AVATAR;
+    const avatar = window._env_.REACT_APP_DEFAULT_USER_AVATAR;
     return avatar.replace("%nick%", username);
 };
 

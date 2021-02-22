@@ -23,7 +23,7 @@ const ProfileRoute = () => {
 
     return <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
         <LoginModal isOpen={loginModalOpen} onHide={() => setLoginModalOpen(false)}
-                    image={ServiceLogo} boardName={process.env.REACT_APP_SERVICE_NAME} redirectUrl={"me"}/>
+                    image={ServiceLogo} boardName={window._env_.REACT_APP_SERVICE_NAME} redirectUrl={"me"}/>
         <ProfileNavbar onNotLoggedClick={() => setLoginModalOpen(true)}/>
         <UiContainer>
             <UiRow centered className={"pb-4"}>

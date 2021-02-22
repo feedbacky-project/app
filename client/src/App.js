@@ -25,7 +25,7 @@ const NotificationUnsubscribeRoute = lazy(() => retry(() => import("routes/Notif
 const UiTestRoute = lazy(() => retry(() => import("routes/UiTestRoute")));
 
 const CLIENT_VERSION = "1.0.0.alpha.3";
-const API_ROUTE = (process.env.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
+const API_ROUTE = (window._env_.REACT_APP_SERVER_IP_ADDRESS || "https://app.feedbacky.net") + "/api/v1";
 
 axios.interceptors.response.use(undefined, error => {
     if (error.response === undefined) {

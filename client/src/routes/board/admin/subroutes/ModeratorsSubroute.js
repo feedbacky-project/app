@@ -104,7 +104,7 @@ const ModeratorsSubroute = () => {
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
                             <ClickableButton onClick={() => {
-                                copy(process.env.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
+                                copy(window._env_.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
                                 popupNotification("Copied", getTheme().toHexString());
                             }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></ClickableButton>
                         </div>
