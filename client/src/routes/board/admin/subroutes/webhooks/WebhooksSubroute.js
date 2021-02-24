@@ -9,7 +9,7 @@ import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
 import React, {useContext, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import {UiBadge, UiClickableTip, UiLoadingSpinner} from "ui";
+import {UiBadge, UiLoadingSpinner} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -40,7 +40,6 @@ const WebhooksSubroute = () => {
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("webhooks"), [setCurrentNode]);
-    const getQuota = () => 5 - webhooks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/webhooks").then(res => {
             if (res.status !== 200) {
@@ -76,8 +75,7 @@ const WebhooksSubroute = () => {
         return <ComponentLoader loaded={webhooks.loaded} component={
             <UiCol xs={12} className={"mb-sm-0 mb-3"}>
                 <div>
-                    <UiFormLabel>Webhooks Quota ({getQuota()} left)</UiFormLabel>
-                    <UiClickableTip id={"moderatorsQuota"} title={"Webhooks Quota"} description={"Amount of webhooks your board can have."}/>
+                    <UiFormLabel>Created Webhooks</UiFormLabel>
                 </div>
                 {renderWebhooks()}
                 <div>

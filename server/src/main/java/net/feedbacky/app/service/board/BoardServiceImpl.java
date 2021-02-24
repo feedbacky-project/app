@@ -237,9 +237,6 @@ public class BoardServiceImpl implements BoardService {
     if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("Insufficient permissions.");
     }
-    if(board.getTags().size() >= 10) {
-      throw new FeedbackyRestException(HttpStatus.FORBIDDEN, "Can't create more than 10 tags.");
-    }
     if(tagRepository.findByBoardAndName(board, dto.getName()).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Tag with this name already exists.");
     }
