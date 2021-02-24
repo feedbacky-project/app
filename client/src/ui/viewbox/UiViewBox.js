@@ -35,6 +35,15 @@ export const UiViewBoxBackground = styled(UiCol)`
   }
 `;
 
+export const UiViewBoxDangerBackground = styled(UiViewBoxBackground)`
+  box-shadow: 0 3px 5px 0 hsla(15, 100%, 40%, .5) !important;
+  
+  .dark & {
+    box-shadow: none;
+    border: hsla(2, 100%, 60%, .3) 1px solid;
+  }
+`;
+
 const UiViewBox = (props) => {
     const {getTheme} = useContext(AppContext);
     const {theme = getTheme(), title, description, children} = props;

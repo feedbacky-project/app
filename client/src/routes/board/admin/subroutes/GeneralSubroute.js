@@ -20,7 +20,7 @@ import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
+import {UiViewBoxDangerBackground} from "ui/viewbox/UiViewBox";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, popupError, popupNotification, validateImageWithWarning} from "utils/basic-utils";
 
 const ThemeSelector = styled.div`
@@ -31,7 +31,7 @@ const ThemeSelector = styled.div`
   transition: var(--hover-transition);
   
   &:hover {
-    transform: scale(1.2);
+    transform: var(--hover-transform-scale-lg);
   }
 `;
 
@@ -137,7 +137,7 @@ const GeneralSubroute = ({updateState}) => {
         return <UiLoadableButton label={"Enable"} color={tinycolor("#00c851")} onClick={funcEnable}>Enable</UiLoadableButton>
     };
     const renderDangerContent = () => {
-        return <UiViewBoxBackground className={"mb-3 px-1 py-3 rounded mt-2 danger-shadow rounded-bottom"}>
+        return <UiViewBoxDangerBackground className={"mb-3 px-1 py-3 rounded mt-2 rounded-bottom"}>
             <UiRow noGutters className={"m-0 p-0 px-4 my-2 mb-4"}>
                 <UiCol sm={9} xs={12}>
                     <h4 className={"mb-1"}>Anonymous Voting</h4>
@@ -169,7 +169,7 @@ const GeneralSubroute = ({updateState}) => {
                     </UiLoadableButton>
                 </UiCol>
             </UiRow>
-        </UiViewBoxBackground>
+        </UiViewBoxDangerBackground>
     };
     const renderApiKeyContent = () => {
         if (boardData.apiKey == null || boardData.apiKey === "") {
@@ -190,7 +190,7 @@ const GeneralSubroute = ({updateState}) => {
                     <h4 className="mb-1 text-red">API Key</h4>
                     <span className="text-black-60" style={{fontSize: ".9em"}}>
                         Generate access key to utilise Feedbacky API for anonymous ideas posting.<br/>
-                        Your API key <span className={apiKeyBlurred ? "text-blurred": "text-red"}>{boardData.apiKey}</span>
+                        Your API key <span className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</span>
                         {/* todo hoverable */}
                         <CommentInternal as={FaEyeSlash} className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
                         Remember to keep it safe!<br/>

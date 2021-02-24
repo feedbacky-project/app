@@ -2,25 +2,21 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
+import CommentWriteBox from "components/idea/discussion/CommentWriteBox";
 import CommentsBox from "components/idea/discussion/CommentsBox";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext, useEffect, useState} from 'react';
-import TextareaAutosize from 'react-autosize-textarea';
 import {FaFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
-import tinycolor from "tinycolor2";
-import {UiClickableTip, UiLoadingSpinner, UiPrettyUsername} from "ui";
-import {UiLoadableButton} from "ui/button";
+import {UiLoadingSpinner} from "ui";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
-import {UiFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
-import {UiAvatar} from "ui/image";
 import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
 
 const DiscussionBox = () => {
-    const {user, serviceData, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
+    const {user, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
@@ -72,59 +68,6 @@ const DiscussionBox = () => {
             return <SvgNotice Component={UndrawNoData} title={"No comments here."} description={"Maybe it's time to write one?"}/>
         }
         return <React.Fragment/>
-    };
-    const renderCommentBox = () => {
-        if (!ideaData.open && !serviceData.closedIdeasCommenting) {
-            return;
-        }
-        if (user.loggedIn) {
-            return <UiCol xs={10} className={"d-inline-flex mb-2 px-0"} style={{wordBreak: "break-word"}}>
-                <div className={"text-center mr-3 pt-2"}>
-                    <UiAvatar roundedCircle size={30} user={user.data}/>
-                    <br/>
-                </div>
-                <UiCol xs={12} className={"px-0"}>
-                    <small style={{fontWeight: "bold"}}><UiPrettyUsername user={user.data}/></small>
-                    <br/>
-                    <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                   style={{resize: "none", overflow: "hidden"}} onChange={onCommentBoxKeyUp} label={"Write a comment"}/>
-                    {renderSubmitButton()}
-                </UiCol>
-            </UiCol>
-        }
-        return <UiCol xs={10} className={"d-inline-flex mb-2 px-0"} style={{wordBreak: "break-word"}}>
-            <div className={"text-center mr-3 pt-2"}>
-                <UiAvatar roundedCircle size={30} user={null}/>
-                <br/>
-            </div>
-            <UiCol xs={12} className={"px-0"}>
-                <small style={{fontWeight: "bold"}}>Anonymous</small>
-                <br/>
-                <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                               style={{overflow: "hidden"}} onChange={onNotLoggedClick} label={"Write a comment"} onClick={e => {
-                    e.target.blur();
-                    onNotLoggedClick();
-                }}/>
-            </UiCol>
-        </UiCol>
-    };
-    const renderSubmitButton = () => {
-        if (!submitOpen) {
-            return <React.Fragment/>
-        }
-        const moderator = data.moderators.find(mod => mod.userId === user.data.id);
-        return <div className={"mt-2"}>
-            <UiLoadableButton label={"Submit"} size={"sm"} onClick={() => onCommentSubmit(false)}>
-                Submit
-            </UiLoadableButton>
-
-            {moderator && <React.Fragment>
-                <UiLoadableButton label={"Submit Internal"} color={tinycolor("#0080FF")} size={"sm"} className={"mx-1"} onClick={() => onCommentSubmit(true)}>
-                    Submit Internal
-                </UiLoadableButton>
-                <div className="d-inline-flex align-top"><UiClickableTip id={"internalTip"} title={"Internal Comments"} description={"Comments visible only for moderators of the project, hidden from public view."}/></div>
-            </React.Fragment>}
-        </div>
     };
     const onCommentSubmit = (internal) => {
         const textarea = document.getElementById("commentMessage");
@@ -253,7 +196,7 @@ const DiscussionBox = () => {
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>
-            {renderCommentBox()}
+            <CommentWriteBox submitOpen={submitOpen} onCommentSubmit={onCommentSubmit} onCommentBoxKeyUp={onCommentBoxKeyUp}/>
             {renderNoDataImage()}
         </UiCol>
         <UiCol xs={11} md={10} className={"px-0"}>

@@ -21,7 +21,7 @@ const LoginButton = styled(UiClassicButton)`
     color: white;
     box-shadow: none;
     background-color: transparent !important;
-    transform: scale(1.2);
+    transform: var(--hover-transform-scale-lg);
   }
 `;
 

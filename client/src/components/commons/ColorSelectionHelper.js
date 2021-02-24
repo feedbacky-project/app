@@ -1,9 +1,30 @@
+import styled from "@emotion/styled";
 import React, {Suspense} from "react";
 import {ChromePicker} from "react-color";
 import {FaExclamationCircle} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiHoverableIcon, UiLoadingSpinner} from "ui";
 import {UiFormLabel} from "ui/form";
+
+const ColorPicker = styled(ChromePicker)`
+  .dark & {
+    box-shadow: var(--dark-box-shadow) !important;
+
+    & > div {
+      background-color: var(--dark-secondary);
+    }
+
+    & svg {
+      fill: var(--dark-font-color) !important;
+    }
+
+    input {
+      background-color: var(--dark-quaternary);
+      box-shadow: var(--dark-box-shadow) !important;
+      color: var(--dark-font-color) !important;
+    }
+  }
+`;
 
 const ColorSelectionHelper = ({title, color, setColor, colorWarning}) => {
     const warn = colorWarning === true ? tinycolor.readability(color, "#fff") < 2.0 || tinycolor.readability(tinycolor(color).lighten(10), "#292c30") < 2.0 : false;
@@ -14,9 +35,7 @@ const ColorSelectionHelper = ({title, color, setColor, colorWarning}) => {
         {!warn || <UiClickableTip id={"colorWarn"} title={"Color Warning"} description={"This color is considered either too dark or too bright and might look bad on Light or Dark Mode."}
                                   icon={<UiHoverableIcon as={FaExclamationCircle} className={"text-red align-top ml-1"}/>}/>}
         <br/>
-        <Suspense fallback={<UiLoadingSpinner/>}>
-            <ChromePicker disableAlpha color={color} onChangeComplete={changedColor => setColor(changedColor.hex)}/>
-        </Suspense>
+        <Suspense fallback={<UiLoadingSpinner/>}><ColorPicker disableAlpha color={color} onChangeComplete={changedColor => setColor(changedColor.hex)}/></Suspense>
     </React.Fragment>
 };
 

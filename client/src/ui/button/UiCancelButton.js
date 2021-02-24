@@ -16,7 +16,7 @@ const CancelButton = styled(Button)`
 
   &:hover {
     color: hsla(0, 0%, 0%, .6);
-    transform: var(--hover-transform-scale);
+    transform: var(--hover-transform-scale-sm);
   }
 `;
 

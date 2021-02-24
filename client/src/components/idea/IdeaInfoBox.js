@@ -1,31 +1,24 @@
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
-import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import AttachmentsInfo from "components/idea/info/AttachmentsInfo";
 import NotificationsInfo from "components/idea/info/NotificationsInfo";
 import TagsInfo from "components/idea/info/TagsInfo";
+import TitleInfo from "components/idea/info/TitleInfo";
 import VotersInfo from "components/idea/info/VotersInfo";
 import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext, useEffect, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import {FaPen} from "react-icons/all";
-import {FaLock, FaTrash} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
-import TimeAgo from "timeago-react";
-import {UiHoverableIcon, UiPrettyUsername} from "ui";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
-import {UiAvatar} from "ui/image";
 import {htmlDecode, popupError, popupNotification} from "utils/basic-utils";
 
 const IdeaInfoBox = () => {
-    const {user, getTheme} = useContext(AppContext);
-    const {data} = useContext(BoardContext);
+    const {getTheme} = useContext(AppContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
     const history = useHistory();
@@ -73,40 +66,6 @@ const IdeaInfoBox = () => {
             popupNotification("Idea deleted", getTheme().toHexString());
         });
     };
-    const onUpvote = () => {
-        let request;
-        let upvoted;
-        let votersAmount;
-        if (ideaData.upvoted) {
-            request = "DELETE";
-            upvoted = false;
-            votersAmount = ideaData.votersAmount - 1;
-        } else {
-            request = "POST";
-            upvoted = true;
-            votersAmount = ideaData.votersAmount + 1;
-        }
-        axios({
-            method: request,
-            url: "/ideas/" + ideaData.id + "/voters",
-            headers: {
-                "Authorization": "Bearer " + user.session
-            }
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 204) {
-                popupError();
-                return;
-            }
-            if (upvoted) {
-                voteRef.current.classList.add("upvote-animation");
-                setVoters({...voters, data: voters.data.concat(user.data)});
-            } else {
-                voteRef.current.classList.remove("upvote-animation");
-                setVoters({...voters, data: voters.data.filter(item => item.id !== user.data.id)});
-            }
-            updateState({...ideaData, upvoted, votersAmount});
-        });
-    };
     const renderDescription = () => {
         if (editor.enabled) {
             return renderEditorMode();
@@ -116,32 +75,12 @@ const IdeaInfoBox = () => {
     const renderEditorMode = () => {
         return <React.Fragment>
             <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
-                              placeholder={"Write a description..."} required label={"Write a description"}
-                              style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
+                           placeholder={"Write a description..."} required label={"Write a description"}
+                           style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} size={"sm"} onClick={onEditApply}>Save</UiLoadableButton>
                 <UiCancelButton size={"sm"} onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
             </div>
-        </React.Fragment>
-    };
-    const renderDeletionButton = () => {
-        //if moderator, then moderator actions component can handle that
-        if (ideaData.user.id !== user.data.id || data.moderators.find(mod => mod.userId === user.data.id)) {
-            return;
-        }
-        return <UiHoverableIcon as={FaTrash} className={"move-top-2px text-black-60 ml-1"} onClick={() => setModal({open: true})}/>
-    };
-    const renderDetails = () => {
-        return <React.Fragment>
-            <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
-            <ModeratorActionsButton/>
-            {renderDeletionButton()}
-            {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60 ml-1"} onClick={() => setEditor({...editor, enabled: true})}/>}
-            <br/>
-            <UiAvatar roundedCircle className={"mr-1"} user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
-            <small><UiPrettyUsername user={ideaData.user}/> ·{" "}</small>
-            <small className={"text-black-60"}><TimeAgo datetime={ideaData.creationDate}/></small>
-            {!ideaData.edited || <small className={"text-black-60"}> · edited</small>}
         </React.Fragment>
     };
     return <React.Fragment>
@@ -150,12 +89,9 @@ const IdeaInfoBox = () => {
         <UiCol sm={12} md={10}>
             <UiCol xs={12} className={"d-inline-flex mb-2 p-0"}>
                 <div className={"my-auto mr-2"} ref={voteRef}>
-                    <VoteButton onVote={onUpvote}/>
+                    <VoteButton idea={ideaData} animationRef={voteRef} onVote={(upvoted, votersAmount) => updateState({...ideaData, upvoted, votersAmount})}/>
                 </div>
-                <div>
-                    {ideaData.open || <FaLock className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
-                    {renderDetails()}
-                </div>
+                <TitleInfo editor={editor} setEditor={setEditor} setModal={setModal}/>
             </UiCol>
             <UiCol xs={12} className={"p-0 mb-3"}>
                 {renderDescription()}

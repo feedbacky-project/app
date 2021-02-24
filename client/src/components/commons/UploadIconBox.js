@@ -19,7 +19,7 @@ const UploadButton = styled.div`
   color: white;
   
   &:hover {
-    transform: scale(1.2);
+    transform: var(--hover-transform-scale-lg);
   }
 `;
 

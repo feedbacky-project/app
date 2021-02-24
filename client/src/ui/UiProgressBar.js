@@ -17,6 +17,15 @@ const ProgressSteps = styled(Steps)`
   .rc-steps-item-finish .rc-steps-item-tail:after {
     background-color: ${props => props.theme.toHexString()};
   }
+  
+  .dark & {
+    .rc-steps-item-title {
+      color: var(--dark-font-color) !important;
+    }
+    .rc-steps-item-wait .rc-steps-item-icon > .rc-steps-icon .rc-steps-icon-dot {
+      background-color: var(--dark-font-color) !important;
+    }
+  }
 `;
 
 const PageProgressBar = styled(ProgressBar)`

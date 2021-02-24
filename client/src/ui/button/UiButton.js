@@ -19,7 +19,7 @@ export const PageButton = styled(Button)`
   &:hover, &:active {
     color: white;
     box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, .3);
-    transform: var(--hover-transform-scale);
+    transform: var(--hover-transform-scale-sm);
   }
   
   .dark & {

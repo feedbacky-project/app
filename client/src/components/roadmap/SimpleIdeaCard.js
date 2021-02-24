@@ -1,4 +1,3 @@
-import axios from "axios";
 import {CardLinkStyle, IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
 import VoteButton from "components/commons/VoteButton";
 import BoardContext from "context/BoardContext";
@@ -8,7 +7,7 @@ import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import {UiClassicIcon} from "ui";
 import {UiRow} from "ui/grid";
-import {convertIdeaToSlug, popupError, truncateText} from "utils/basic-utils";
+import {convertIdeaToSlug, truncateText} from "utils/basic-utils";
 
 export const SimpleIdeaCard = ({ideaData}) => {
     const cardRef = React.createRef();
@@ -31,35 +30,6 @@ export const SimpleIdeaCard = ({ideaData}) => {
             </InfoContainer>
         }
     };
-    const onVote = () => {
-        let request;
-        let upvoted;
-        let votersAmount;
-        if (idea.upvoted) {
-            request = "DELETE";
-            upvoted = false;
-            votersAmount = idea.votersAmount - 1;
-        } else {
-            request = "POST";
-            upvoted = true;
-            votersAmount = idea.votersAmount + 1;
-        }
-        axios({
-            method: request,
-            url: "/ideas/" + idea.id + "/voters"
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 204) {
-                popupError();
-                return;
-            }
-            if (upvoted) {
-                cardRef.current.classList.add("upvote-animation");
-            } else {
-                cardRef.current.classList.remove("upvote-animation");
-            }
-            setIdea({...idea, upvoted, votersAmount});
-        });
-    };
     return <IdeaContext.Provider value={{
         ideaData: idea, loaded: true, error: false,
         updateState: data => {
@@ -70,7 +40,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
         <div ref={cardRef} id={"ideac_" + idea.id} className={"m-3"}>
             <UiRow>
                 <span className={"my-auto mr-2"}>
-                    <VoteButton onVote={onVote}/>
+                    <VoteButton idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>
                 </span>
                 <CardLinkStyle as={Link} className={"d-inline text-left"} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                     <div>

@@ -12,7 +12,7 @@ import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
-import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
+import {UiViewBoxDangerBackground} from "ui/viewbox/UiViewBox";
 import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const SettingsSubroute = () => {
@@ -54,7 +54,7 @@ const SettingsSubroute = () => {
     };
 
     useEffect(() => {
-        if(!user.loggedIn) {
+        if (!user.loggedIn) {
             return;
         }
         axios.get("/users/@me/connectedAccounts").then(res => {
@@ -123,13 +123,13 @@ const SettingsSubroute = () => {
         <UiViewBox theme={getTheme(false)} title={"User Settings"} description={"Edit your account here."}>
             {renderContent()}
         </UiViewBox>
-        <UiViewBoxBackground xs={12} className={"mb-3 mt-2 py-2 danger-shadow"}>
+        <UiViewBoxDangerBackground xs={12} className={"mb-3 mt-2 py-2"}>
             <UiRow noGutters className={"p-3"}>
                 <UiCol sm={9} xs={12}>
                     <h4 className={"mb-1 text-red"}>Deactivate Account</h4>
                     <span className={"text-black-60"} style={{fontSize: ".9em"}}>
-                            Personal information will be <strong>permanently removed</strong> but all your content will be anonymized. <strong>Irreversible action.</strong>
-                        </span>
+                        Personal information will be <strong>permanently removed</strong> but all your content will be anonymized. <strong>Irreversible action.</strong>
+                    </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
                     <UiLoadableButton label={"Deactivate Account"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")}
@@ -138,7 +138,7 @@ const SettingsSubroute = () => {
                     </UiLoadableButton>
                 </UiCol>
             </UiRow>
-        </UiViewBoxBackground>
+        </UiViewBoxDangerBackground>
     </UiCol>
 };
 

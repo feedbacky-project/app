@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import axios from "axios";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import BoardContext from "context/BoardContext";
@@ -11,7 +10,7 @@ import tinycolor from "tinycolor2";
 import {UiBadge, UiCard, UiClassicIcon, UiPrettyUsername} from "ui";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
-import {convertIdeaToSlug, popupError, truncateText} from "utils/basic-utils";
+import {convertIdeaToSlug, truncateText} from "utils/basic-utils";
 
 const CardStyle = styled(UiCard)`
   padding: 0 1rem;
@@ -30,7 +29,7 @@ export const CardLinkStyle = styled(UiCol)`
 `;
 
 export const IdeaCardDescription = styled.small`
-  color: hsla(0, 0%, 0%, .6);;
+  color: hsla(0, 0%, 0%, .6);
   letter-spacing: -.1pt;
   word-break: break-word;
    
@@ -102,35 +101,6 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             <UiAvatar className={"align-top"} roundedCircle user={idea.user} size={16}/>
         </InfoContainer>
     };
-    const onUpvote = () => {
-        let request;
-        let upvoted;
-        let votersAmount;
-        if (idea.upvoted) {
-            request = "DELETE";
-            upvoted = false;
-            votersAmount = idea.votersAmount - 1;
-        } else {
-            request = "POST";
-            upvoted = true;
-            votersAmount = idea.votersAmount + 1;
-        }
-        axios({
-            method: request,
-            url: "/ideas/" + idea.id + "/voters"
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 204) {
-                popupError();
-                return;
-            }
-            if (upvoted) {
-                cardRef.current.classList.add("upvote-animation");
-            } else {
-                cardRef.current.classList.remove("upvote-animation");
-            }
-            setIdea({...idea, upvoted, votersAmount});
-        });
-    };
     return <IdeaContext.Provider value={{
         ideaData: idea, loaded: true, error: false,
         updateState: data => {
@@ -140,7 +110,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
     }}>
         <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"}>
             <span className={"my-auto mr-3"}>
-                <VoteButton onVote={onUpvote}/>
+                <VoteButton idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>
             </span>
             <CardLinkStyle as={Link} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                 <div>

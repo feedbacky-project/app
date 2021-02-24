@@ -4,38 +4,7 @@
   background-color: var(--dark-background);
   color: var(--dark-font-color);
 
-  .chrome-picker {
-    box-shadow: var(--dark-box-shadow) !important;
-
-    & > div {
-      background-color: var(--dark-secondary);
-    }
-
-    & svg {
-      fill: var(--dark-font-color) !important;
-    }
-
-    input {
-      background-color: var(--dark-quaternary);
-      box-shadow: var(--dark-box-shadow) !important;
-      color: var(--dark-font-color) !important;
-    }
-  }
-
   small {
     color: var(--dark-font-color) !important;
-  }
-
-  .rc-steps-item-title {
-    color: var(--dark-font-color) !important;
-  }
-
-  .rc-steps-item-wait .rc-steps-item-icon > .rc-steps-icon .rc-steps-icon-dot {
-    background-color: var(--dark-font-color) !important;
-  }
-
-  //simulate border on shadowless dark mode
-  .danger-shadow {
-    border: hsla(2, 100%, 60%, .3) 1px solid;
   }
 }

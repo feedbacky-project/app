@@ -15,13 +15,14 @@ import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification, prettifyEnum} from "utils/basic-utils";
+import {getEnvVar} from "utils/env-vars";
 
 const ClickableButton = styled.div`
   cursor: pointer;
   transition: var(--hover-transition);
   
   &:hover {
-    transform: var(--hover-transform-scale);
+    transform: var(--hover-transform-scale-sm);
   }
 `;
 
@@ -104,7 +105,7 @@ const ModeratorsSubroute = () => {
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
                             <ClickableButton onClick={() => {
-                                copy(window._env_.REACT_APP_SERVER_IP_ADDRESS + "/moderator_invitation/" + invited.code);
+                                copy(getEnvVar("REACT_APP_SERVER_IP_ADDRESS") + "/moderator_invitation/" + invited.code);
                                 popupNotification("Copied", getTheme().toHexString());
                             }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></ClickableButton>
                         </div>

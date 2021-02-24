@@ -14,7 +14,7 @@ const SelectableAvatar = styled(UiImage)`
   height: auto;
   cursor: pointer;
   &:hover {
-    transform: scale(1.2);
+    transform: var(--hover-transform-scale-lg);
   }
   .dark & {
     background-color: var(--dark-tertiary);

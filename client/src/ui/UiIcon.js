@@ -14,6 +14,6 @@ export const HoverableIcon = styled(Icon)`
   transition: var(--hover-transition);
   
   &:hover {
-    transform: scale(1.2);
+    transform: var(--hover-transform-scale-lg);
   }
 `;

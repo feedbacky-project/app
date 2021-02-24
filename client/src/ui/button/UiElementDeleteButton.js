@@ -14,7 +14,7 @@ const DeleteButton = styled(FaTimes)`
   transform: translate(-6px, -6px);
   
   &:hover {
-    transform: translate(-6px, -6px) scale(1.2);
+    transform: translate(-6px, -6px) var(--hover-transform-scale-lg);
   }
 `;
 

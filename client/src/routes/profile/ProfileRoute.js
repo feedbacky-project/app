@@ -8,6 +8,7 @@ import React, {lazy, Suspense, useContext, useEffect, useState} from "react";
 import {Route, Switch, useHistory} from "react-router-dom";
 import {UiLoadingSpinner} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
+import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
 
 const SettingsSubroute = lazy(() => retry(() => import("routes/profile/subroutes/SettingsSubroute")));
@@ -23,7 +24,7 @@ const ProfileRoute = () => {
 
     return <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
         <LoginModal isOpen={loginModalOpen} onHide={() => setLoginModalOpen(false)}
-                    image={ServiceLogo} boardName={window._env_.REACT_APP_SERVICE_NAME} redirectUrl={"me"}/>
+                    image={ServiceLogo} boardName={getEnvVar("REACT_APP_SERVICE_NAME")} redirectUrl={"me"}/>
         <ProfileNavbar onNotLoggedClick={() => setLoginModalOpen(true)}/>
         <UiContainer>
             <UiRow centered className={"pb-4"}>

@@ -42,7 +42,7 @@ const BoardIdeaCardContainer = ({id, searchQuery}) => {
         </InfiniteScroll>
     };
     const onIdeaCreation = (data) => {
-        setIdeas({...ideas, data: ideas.data.concat(data)});
+        setIdeas({...ideas, data: [data, ...ideas.data]});
         setScrollTo(data.id);
     };
     const onIdeaDelete = (id) => {
@@ -67,12 +67,13 @@ const BoardIdeaCardContainer = ({id, searchQuery}) => {
             return;
         }
         setTimeout(function () {
+            const element = document.getElementById("ideac_" + scrollTo);
             window.scrollTo({
-                top: document.body.scrollHeight,
+                top: element.scrollHeight,
                 behavior: "smooth",
             });
             setTimeout(function () {
-                document.getElementById("ideac_" + scrollTo).classList.add("upvote-animation");
+                element.classList.add("upvote-animation");
                 setScrollTo(null);
             }, 200);
         }, 500);

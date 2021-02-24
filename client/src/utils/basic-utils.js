@@ -1,8 +1,9 @@
 import Cookies from "js-cookie";
 import Snackbar from "node-snackbar";
+import {getEnvVar} from "utils/env-vars";
 
 export const getDefaultAvatar = (username) => {
-    const avatar = window._env_.REACT_APP_DEFAULT_USER_AVATAR;
+    const avatar = getEnvVar("REACT_APP_DEFAULT_USER_AVATAR");
     return avatar.replace("%nick%", username);
 };
 
@@ -27,6 +28,10 @@ export const convertIdeaToSlug = (ideaData) => {
 
 export const popupRevertableNotification = (content, color, onUndo) => {
     popup(content, color, {showAction: true, actionText: "Undo", onActionClick: onUndo, actionTextColor: "#fff"});
+};
+
+export const hideNotifications = () => {
+  popup("", "", {duration: 1});
 };
 
 export const popupNotification = (content, color) => {
