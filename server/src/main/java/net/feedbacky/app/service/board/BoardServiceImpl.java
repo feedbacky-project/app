@@ -12,6 +12,7 @@ import net.feedbacky.app.data.tag.dto.PatchTagDto;
 import net.feedbacky.app.data.tag.dto.PostTagDto;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InsufficientPermissionsException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -26,6 +27,7 @@ import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
 import net.feedbacky.app.util.mailservice.MailService;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
+import net.feedbacky.app.util.request.ServiceValidator;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
@@ -102,7 +104,7 @@ public class BoardServiceImpl implements BoardService {
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     if(!user.isServiceStaff()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Insufficient permissions.");
+      throw new InsufficientPermissionsException();
     }
     if(boardRepository.findByDiscriminator(dto.getDiscriminator()).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Board with that discriminator already exists.");
@@ -147,9 +149,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
 
     //convert and update base64 images
     if(dto.getBanner() != null) {
@@ -189,9 +189,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.OWNER, user);
     new MailBuilder()
             .withRecipient(board.getCreator())
             .withEventBoard(board)
@@ -234,9 +232,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     if(tagRepository.findByBoardAndName(board, dto.getName()).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Tag with this name already exists.");
     }
@@ -252,9 +248,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     Tag tag = tagRepository.findByBoardAndName(board, name)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with name {0} not found.", name)));
 
@@ -273,9 +267,7 @@ public class BoardServiceImpl implements BoardService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     Tag tag = tagRepository.findByBoardAndName(board, name)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with name {0} not found.", name)));
     board.getIdeas().forEach(idea -> {

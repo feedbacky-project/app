@@ -8,6 +8,7 @@ import net.feedbacky.app.data.tag.dto.PatchTagDto;
 import net.feedbacky.app.data.tag.dto.PostTagDto;
 import net.feedbacky.app.service.board.BoardService;
 import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RequestParamsParser;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,22 +46,8 @@ public class BoardRestController {
 
   @GetMapping("v1/boards/")
   public PaginableRequest<List<FetchBoardDto>> getAll(@RequestParam Map<String, String> requestParams) {
-    //todo can it be shorter
-    int page = 0;
-    if(requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
-      page = Integer.parseInt(requestParams.get("page"));
-      if(page < 0) {
-        page = 0;
-      }
-    }
-    int pageSize = 20;
-    if(requestParams.containsKey("pageSize") && NumberUtils.isDigits(requestParams.get("pageSize"))) {
-      pageSize = Integer.parseInt(requestParams.get("pageSize"));
-      if(pageSize < 1) {
-        pageSize = 1;
-      }
-    }
-    return boardService.getAll(page, pageSize);
+    RequestParamsParser parser = new RequestParamsParser(requestParams);
+    return boardService.getAll(parser.getPage(), parser.getPageSize());
   }
 
   @PostMapping("v1/boards/")

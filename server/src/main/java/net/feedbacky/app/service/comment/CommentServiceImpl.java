@@ -14,6 +14,7 @@ import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InsufficientPermissionsException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -23,6 +24,7 @@ import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
+import net.feedbacky.app.util.request.ServiceValidator;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
@@ -112,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
     boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(user));
     //internal type is for moderators only
     if(Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL && !isModerator) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Insufficient permissions.");
+      throw new InsufficientPermissionsException();
     }
     if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !closedIdeasCommenting) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea already closed.");
@@ -172,8 +174,8 @@ public class CommentServiceImpl implements CommentService {
     Idea idea = ideaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
-    if(!comment.getCreator().getId().equals(user.getId()) && !hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
+    if(!comment.getCreator().getId().equals(user.getId()) && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+      throw new InsufficientPermissionsException();
     }
 
     ModelMapper mapper = new ModelMapper();
@@ -192,8 +194,8 @@ public class CommentServiceImpl implements CommentService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Comment comment = commentRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
-    if(!comment.getCreator().equals(user) && !hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
+    if(!comment.getCreator().equals(user) && !ServiceValidator.hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
+      throw new InsufficientPermissionsException();
     }
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     comment.getIdea().getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT_DELETE, builder.build());

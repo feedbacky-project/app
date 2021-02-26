@@ -15,8 +15,8 @@ const ClassicButton = styled(PageButton)`
 `;
 
 const UiClassicButton = (props) => {
-    const {children, label, ...otherProps} = props;
-    return <ClassicButton aria-label={label} {...otherProps}>{children}</ClassicButton>
+    const {children, label, innerRef, ...otherProps} = props;
+    return <ClassicButton aria-label={label} ref={innerRef} {...otherProps}>{children}</ClassicButton>
 };
 
 UiClassicButton.propTypes = {

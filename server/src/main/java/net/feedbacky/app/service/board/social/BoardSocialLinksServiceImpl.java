@@ -8,6 +8,7 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InsufficientPermissionsException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -18,6 +19,7 @@ import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.Constants;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
+import net.feedbacky.app.util.request.ServiceValidator;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 
@@ -65,9 +67,8 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
+
     if(board.getSocialLinks().size() >= 4) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't create more than 4 social links.");
     }
@@ -95,9 +96,8 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     SocialLink socialLink = socialLinksRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Social link with id {0} not found.", id)));
     Board board = socialLink.getBoard();
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
+
     objectStorage.deleteImage(socialLink.getLogoUrl());
     board.getSocialLinks().remove(socialLink);
     socialLinksRepository.delete(socialLink);

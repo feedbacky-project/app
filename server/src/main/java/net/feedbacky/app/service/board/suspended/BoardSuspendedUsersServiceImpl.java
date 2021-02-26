@@ -15,6 +15,7 @@ import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.repository.board.SuspendedUserRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.request.InternalRequestValidator;
+import net.feedbacky.app.util.request.ServiceValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,9 +51,7 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     Optional<Boolean> isSuspended = board.getSuspensedList().stream().map(suspended -> suspended.getUser().getId() == dto.getUserId()).findAny();
     if(isSuspended.isPresent() && isSuspended.get()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This user is already suspended.");
@@ -77,9 +76,7 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
     SuspendedUser suspendedUser = suspendedUserRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Suspended user with id {0} not found.", id)));
     Board board = suspendedUser.getBoard();
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     board.getSuspensedList().remove(suspendedUser);
     suspendedUserRepository.delete(suspendedUser);
     boardRepository.save(board);

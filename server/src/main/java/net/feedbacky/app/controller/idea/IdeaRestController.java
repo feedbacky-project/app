@@ -9,6 +9,7 @@ import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RequestParamsParser;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,23 +49,9 @@ public class IdeaRestController {
   @GetMapping("v1/boards/{discriminator}/ideas")
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
                                                           @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
-    //todo can it be shorter
-    int page = 0;
-    if(requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
-      page = Integer.parseInt(requestParams.get("page"));
-      if(page < 0) {
-        page = 0;
-      }
-    }
-    int pageSize = 20;
-    if(requestParams.containsKey("pageSize") && NumberUtils.isDigits(requestParams.get("pageSize"))) {
-      pageSize = Integer.parseInt(requestParams.get("pageSize"));
-      if(pageSize < 1) {
-        pageSize = 1;
-      }
-    }
+    RequestParamsParser parser = new RequestParamsParser(requestParams);
     if(requestParams.containsKey("query")) {
-      return ideaService.getAllIdeasContaining(discriminator, page, pageSize, requestParams.get("query"), anonymousId);
+      return ideaService.getAllIdeasContaining(discriminator, parser.getPage(), parser.getPageSize(), requestParams.get("query"), anonymousId);
     }
     IdeaService.FilterType filterType = IdeaService.FilterType.OPENED;
     if(requestParams.containsKey("filter")) {
@@ -80,7 +67,7 @@ public class IdeaRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    return ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType, anonymousId);
+    return ideaService.getAllIdeas(discriminator, parser.getPage(), parser.getPageSize(), filterType, sortType, anonymousId);
   }
 
   @GetMapping("v1/ideas/{id}")

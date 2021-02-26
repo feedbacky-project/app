@@ -5,7 +5,6 @@ import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
 import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.dto.moderator.PatchModeratorDto;
-import net.feedbacky.app.service.FeedbackyService;
 
 import org.springframework.http.ResponseEntity;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * <p>
  * Created at 03.12.2019
  */
-public interface BoardModeratorService extends FeedbackyService {
+public interface BoardModeratorService {
 
   List<FetchInviteDto> getAllInvited(String discriminator);
 

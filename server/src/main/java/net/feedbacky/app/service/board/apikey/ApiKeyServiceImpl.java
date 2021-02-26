@@ -12,6 +12,7 @@ import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.request.InternalRequestValidator;
+import net.feedbacky.app.util.request.ServiceValidator;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
+    if(!ServiceValidator.hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("No permission to manage api keys for this board.");
     }
     board.setApiKey(RandomStringUtils.randomAlphanumeric(40));
@@ -58,7 +59,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
             .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
+    if(!ServiceValidator.hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
       throw new InvalidAuthenticationException("No permission to manage api keys for this board.");
     }
     if(board.getApiKey().equals("")) {

@@ -39,8 +39,8 @@ const Brand = styled(Link)`
 
 const UiNavbar = (props) => {
     const {getTheme} = useContext(AppContext);
-    const {theme = getTheme(), children, ...otherProps} = props;
-    return <StyledNavbar role={"navigation"} theme={theme.toString()} {...otherProps}>
+    const {theme = getTheme(), children, innerRef, ...otherProps} = props;
+    return <StyledNavbar role={"navigation"} theme={theme.toString()} ref={innerRef} {...otherProps}>
         {children}
     </StyledNavbar>
 };

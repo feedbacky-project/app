@@ -191,10 +191,8 @@ const GeneralSubroute = ({updateState}) => {
                     <span className="text-black-60" style={{fontSize: ".9em"}}>
                         Generate access key to utilise Feedbacky API for anonymous ideas posting.<br/>
                         Your API key <span className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</span>
-                        {/* todo hoverable */}
                         <CommentInternal as={FaEyeSlash} className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
                         Remember to keep it safe!<br/>
-                        {/* todo hoverable */}
                         <span><strong className="text-red" style={{cursor: "pointer"}} onClick={() => setModal({open: true, type: "apiReset"})}>Click here</strong> to regenerate API key if it got compromised.</span>
                     </span>
                 </UiCol>

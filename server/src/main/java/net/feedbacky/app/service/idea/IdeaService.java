@@ -7,7 +7,6 @@ import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
-import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ import java.util.List;
  * <p>
  * Created at 11.10.2019
  */
-public interface IdeaService extends FeedbackyService {
+public interface IdeaService {
 
   PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort, String anonymousId);
 

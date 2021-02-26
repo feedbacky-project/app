@@ -29,7 +29,7 @@ export const PageButton = styled(Button)`
 
 const UiButton = (props) => {
     const {getTheme, user} = useContext(AppContext);
-    const {children, label, color = getTheme(), style, ...otherProps} = props;
+    const {children, label, color = getTheme(), style, innerRef, ...otherProps} = props;
     let buttonColor = color;
     if (user.darkMode) {
         buttonColor = buttonColor.lighten(10);
@@ -37,9 +37,10 @@ const UiButton = (props) => {
         if (tinycolor.readability(color, "#282828") < 2.5) {
             buttonColor = buttonColor.lighten(25);
         }
-        return <PageButton aria-label={label} variant={""} style={{color: buttonColor, fontWeight: "bold", backgroundColor: buttonColor.clone().setAlpha(.1), style}} {...otherProps}>{children}</PageButton>
+        return <PageButton aria-label={label} variant={""} style={{color: buttonColor, fontWeight: "bold", backgroundColor: buttonColor.clone().setAlpha(.1), style}}
+                           ref={innerRef} {...otherProps}>{children}</PageButton>
     }
-    return <PageButton aria-label={label} variant={""} style={{backgroundColor: buttonColor, style}} {...otherProps}>{children}</PageButton>
+    return <PageButton aria-label={label} variant={""} style={{backgroundColor: buttonColor, style}} ref={innerRef} {...otherProps}>{children}</PageButton>
 };
 
 UiButton.propTypes = {

@@ -9,7 +9,7 @@ const Image = styled.img`
 `;
 
 const UiImage = (props) => {
-    const {roundedCircle, rounded, thumbnail, className, onError = () => void 0, ...otherProps} = props;
+    const {roundedCircle, rounded, thumbnail, className, onError = () => void 0, innerRef, ...otherProps} = props;
     let borderRadius = 0;
     if (rounded) {
         borderRadius = ".35rem";
@@ -24,7 +24,7 @@ const UiImage = (props) => {
             borderRadius = ".35rem";
         }
     }
-    return <Image className={className} borderRadius={borderRadius} padding={padding} onError={onError} {...otherProps}/>
+    return <Image className={className} borderRadius={borderRadius} padding={padding} onError={onError} ref={innerRef} {...otherProps}/>
 };
 
 UiImage.propTypes = {

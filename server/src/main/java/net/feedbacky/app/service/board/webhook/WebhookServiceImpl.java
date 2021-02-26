@@ -17,6 +17,7 @@ import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.repository.board.WebhookRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.request.InternalRequestValidator;
+import net.feedbacky.app.util.request.ServiceValidator;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 
@@ -57,9 +58,7 @@ public class WebhookServiceImpl implements WebhookService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     return webhookRepository.findByBoard(board).stream().map(webhook -> new FetchWebhookDto().from(webhook)).collect(Collectors.toList());
   }
 
@@ -70,9 +69,7 @@ public class WebhookServiceImpl implements WebhookService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     if(webhookRepository.findByUrl(dto.getUrl()).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Webhook with that URL already exists.");
     }
@@ -93,9 +90,7 @@ public class WebhookServiceImpl implements WebhookService {
     Webhook webhook = webhookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Webhook with id {0} not found.", id)));
     Board board = webhook.getBoard();
-    if(!hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, webhook);
@@ -109,9 +104,7 @@ public class WebhookServiceImpl implements WebhookService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Webhook webhook = webhookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Webhook with id {0} not found.", id)));
-    if(!hasPermission(webhook.getBoard(), Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("Insufficient permissions.");
-    }
+    ServiceValidator.isPermitted(webhook.getBoard(), Moderator.Role.ADMINISTRATOR, user);
     Board board = webhook.getBoard();
     if(!board.getWebhooks().contains(webhook)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Webhook with id {0} not found.", id));

@@ -6,6 +6,7 @@ import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.comment.CommentService;
 import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RequestParamsParser;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,21 +44,6 @@ public class CommentRestController {
 
   @GetMapping("v1/ideas/{ideaId}/comments")
   public PaginableRequest<List<FetchCommentDto>> getAllForIdea(@PathVariable long ideaId, @RequestParam Map<String, String> requestParams) {
-    //todo can it be shorter
-    int page = 0;
-    if(requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
-      page = Integer.parseInt(requestParams.get("page"));
-      if(page < 0) {
-        page = 0;
-      }
-    }
-    int pageSize = 20;
-    if(requestParams.containsKey("pageSize") && NumberUtils.isDigits(requestParams.get("pageSize"))) {
-      pageSize = Integer.parseInt(requestParams.get("pageSize"));
-      if(pageSize < 1) {
-        pageSize = 1;
-      }
-    }
     CommentService.SortType sortType = CommentService.SortType.OLDEST;
     if(requestParams.containsKey("sort")) {
       try {
@@ -65,16 +51,15 @@ public class CommentRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    return commentService.getAllForIdea(ideaId, page, pageSize, sortType);
+    RequestParamsParser parser = new RequestParamsParser(requestParams);
+    return commentService.getAllForIdea(ideaId, parser.getPage(), parser.getPageSize(), sortType);
   }
 
-  //todo needed? remove /v1/comments?
   @GetMapping("v1/comments/{id}")
   public FetchCommentDto getOne(@PathVariable long id) {
     return commentService.getOne(id);
   }
 
-  //todo ideas insert NOT separate
   @PostMapping("v1/comments/")
   public ResponseEntity<FetchCommentDto> post(@Valid @RequestBody PostCommentDto dto) {
     return commentService.post(dto);
@@ -85,13 +70,11 @@ public class CommentRestController {
     return commentService.postLike(id);
   }
 
-  //todo ideas insert also with spearate
   @PatchMapping("v1/comments/{id}")
   public FetchCommentDto patch(@PathVariable long id, @Valid @RequestBody PatchCommentDto dto) {
     return commentService.patch(id, dto);
   }
 
-  //todo ideas insert also with separate
   @DeleteMapping("v1/comments/{id}")
   public ResponseEntity delete(@PathVariable long id) {
     return commentService.delete(id);

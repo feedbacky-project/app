@@ -19,24 +19,19 @@ const Badge = styled.div`
     background-color: ${props => props.theme};
 `;
 
-// fixme sneaky workaround for missing context when inserting html directly
 const UiBadge = (props) => {
-    const {context = null} = props;
-    let appContext = useContext(AppContext);
-    if (context != null) {
-        appContext = context;
-    }
-    const {color = appContext.getTheme(), children, ...otherProps} = props;
+    const context = useContext(AppContext);
+    const {color = context.getTheme(), children, innerRef, ...otherProps} = props;
     let badgeColor = color;
-    if (appContext.user.darkMode) {
+    if (context.user.darkMode) {
         badgeColor = badgeColor.lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(badgeColor, "#282828") < 2.5) {
             badgeColor = badgeColor.lighten(25);
         }
-        return <Badge theme={badgeColor.clone().setAlpha(.1).toString()} style={{color: badgeColor, fontWeight: "bold"}} {...otherProps}>{children}</Badge>
+        return <Badge theme={badgeColor.clone().setAlpha(.1).toString()} style={{color: badgeColor, fontWeight: "bold"}} ref={innerRef} {...otherProps}>{children}</Badge>
     }
-    return <Badge theme={badgeColor.toString()} {...otherProps}>{children}</Badge>
+    return <Badge theme={badgeColor.toString()} ref={innerRef} {...otherProps}>{children}</Badge>
 };
 
 export {UiBadge};

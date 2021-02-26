@@ -54,7 +54,6 @@ public class User implements Serializable {
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<Moderator> permissions = new HashSet<>();
-  //todo migrator eager
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<ConnectedAccount> connectedAccounts = new HashSet<>();
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

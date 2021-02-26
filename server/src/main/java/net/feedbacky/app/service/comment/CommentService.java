@@ -4,7 +4,6 @@ import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
-import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ import java.util.List;
  * <p>
  * Created at 14.10.2019
  */
-public interface CommentService extends FeedbackyService {
+public interface CommentService {
 
   PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize, SortType sortType);
 
