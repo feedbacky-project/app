@@ -8,10 +8,6 @@ buildscript {
     }
 }
 
-ext {
-    springVersion = "2.3.0.RELEASE"
-}
-
 plugins {
     id 'java'
     id 'maven-publish'
@@ -45,6 +41,10 @@ hibernate {
     enhance {
         enableLazyInitialization = true
     }
+}
+
+ext {
+    springVersion = "2.3.0.RELEASE"
 }
 
 dependencies {
