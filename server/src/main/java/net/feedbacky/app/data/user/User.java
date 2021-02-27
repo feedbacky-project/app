@@ -12,6 +12,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -49,6 +50,7 @@ public class User implements Serializable {
   @EqualsAndHashCode.Include private Long id;
 
   private String username;
+  @Column(length = 355) /* increase default length for google avatars */
   private String avatar;
   private String email;
 
