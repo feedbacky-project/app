@@ -11,6 +11,7 @@ const StyledCard = styled.div`
   background-clip: border-box;
   box-shadow: var(--box-shadow);
   border-radius: .35rem !important;
+  background-color: var(--secondary);
   
   .dark & {
     box-shadow: var(--dark-box-shadow) !important;

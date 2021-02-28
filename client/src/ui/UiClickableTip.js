@@ -6,6 +6,7 @@ import {FaQuestionCircle} from "react-icons/all";
 import {UiHoverableIcon} from "ui/index";
 
 const PopoverBox = styled(Popover)`
+  box-shadow: var(--box-shadow);
   .dark & {
     background-color: var(--dark-quaternary) !important;
     color: var(--dark-font-color) !important;

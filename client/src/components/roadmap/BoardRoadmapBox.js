@@ -3,6 +3,8 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {SimpleIdeaCard} from "components/roadmap/SimpleIdeaCard";
 import React from "react";
+import tinycolor from "tinycolor2";
+import {UiBadge} from "ui";
 import {UiCol} from "ui/grid";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 
@@ -43,6 +45,9 @@ export const BoardRoadmapBox = ({roadmapData}) => {
         return <UiCol xs={12} md={6} lg={4} className={"mt-4"} key={element.tag.name}>
             <h3>
                 <strong style={{color: element.tag.color}}>{element.tag.name}</strong>
+                <div className={"float-right"}>
+                    <UiBadge style={{fontSize: ".8rem"}} className={"align-middle move-top-2px"} color={tinycolor(element.tag.color)}>{element.ideas.data.length}</UiBadge>
+                </div>
             </h3>
             <UiViewBoxBackground as={RoadmapContainer}>
                 {element.ideas.data.map(idea => {

@@ -2,11 +2,12 @@ import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
+import {UiContainer, UiRow} from "ui/grid";
 
 const StyledNavbar = styled.div`
-  background-color: ${props => props.theme};
+  background-color: white;
   font-weight: 300;
-  padding: .25rem 0;
+  padding-top: .3rem;
   z-index: 3;
   flex-flow: row nowrap;
   justify-content: flex-start;
@@ -14,35 +15,68 @@ const StyledNavbar = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  box-shadow: var(--box-shadow);
   
   .dark & {
+    background-color: var(--dark-tertiary);
     box-shadow: var(--dark-box-shadow) !important;
   }
 `;
 
 const Brand = styled(Link)`
-  color: white;
+  font-weight: 500;
+  color: ${props => props.theme};
   flex: 1 1;
   margin-right: 0;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   display: inline-block;
   padding: .25rem 0;
   &:hover {
-    color: white;
+    color: ${props => props.theme};
+  }
+`;
+
+const NavbarSelectedOption = styled(Link)`
+  &:hover {
+    color: ${props => props.theme.toString()};
+  }
+  
+  color: ${props => props.theme.toString()};
+  margin-bottom: -4px; 
+  margin-top: .5rem;
+  margin-right: .75rem;
+  border-bottom: 2px solid ${props => props.theme.setAlpha(.75).toString()};
+`;
+
+const NavbarOption = styled(Link)`
+  color: var(--font-color);
+  margin-bottom: -4px;
+  margin-top: .5rem;
+  margin-right: .75rem;
+  transition: var(--hover-transition);
+  
+  &:hover {
+    color: var(--font-color);
+    transform: var(--hover-transform-scale-sm);
+  }
+  
+  .dark & {
+    color: var(--dark-font-color);
   }
 `;
 
 const UiNavbar = (props) => {
-    const {getTheme} = useContext(AppContext);
-    const {theme = getTheme(), children, innerRef, ...otherProps} = props;
-    return <StyledNavbar role={"navigation"} theme={theme.toString()} ref={innerRef} {...otherProps}>
+    const {children, innerRef, ...otherProps} = props;
+    const context = useContext(AppContext);
+    return <StyledNavbar role={"navigation"} ref={innerRef} {...otherProps}>
         {children}
+        <UiContainer>
+            <UiRow style={{paddingTop: "0.1rem", borderBottom: "2px solid " + context.getTheme().setAlpha(.1), margin: 0}}/>
+        </UiContainer>
     </StyledNavbar>
 };
 
-export {UiNavbar, Brand};
+export {UiNavbar, Brand, NavbarSelectedOption, NavbarOption};

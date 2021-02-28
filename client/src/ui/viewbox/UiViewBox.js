@@ -21,9 +21,13 @@ const ViewBoxContent = styled(UiRow)`
 `;
 
 export const UiViewBoxBackground = styled(UiCol)`
-  background-color: white;
+  background-color: var(--secondary);
   border-radius: .35rem;
   box-shadow: var(--box-shadow);
+  
+  .form-control:not(:disabled) {
+      background-color: var(--tertiary) !important;
+    }
   
   .dark & {
     background-color: var(--dark-secondary);
@@ -36,7 +40,7 @@ export const UiViewBoxBackground = styled(UiCol)`
 `;
 
 export const UiViewBoxDangerBackground = styled(UiViewBoxBackground)`
-  box-shadow: 0 3px 5px 0 hsla(15, 100%, 40%, .5) !important;
+  border: hsla(355, 100%, 60%, .4) 1px solid;
   
   .dark & {
     box-shadow: none;

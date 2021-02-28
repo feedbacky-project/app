@@ -7,6 +7,14 @@ const FormControl = styled(Form.Control)`
   min-height: 36px;
   resize: none;
   color: hsla(0, 0%, 0%, .6);
+  background-color: var(--secondary);
+  box-shadow: var(--box-shadow);
+  &.darker {
+    background-color: var(--background);
+  }
+  &:disabled {
+    background-color: var(--disabled);
+  }
   .dark & {
     color: hsla(0, 0%, 95%, .6) !important;
     background-color: var(--dark-secondary) !important;

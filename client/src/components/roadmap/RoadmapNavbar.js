@@ -1,20 +1,13 @@
-import styled from "@emotion/styled";
 import {renderLogIn} from "components/commons/navbar-commons";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import {FaRegComment, FaRegMap} from "react-icons/all";
+import {Link} from "react-router-dom";
 import {UiContainer} from "ui/grid";
 import {UiNavbar, UiNavbarBrand, UiNavbarOption, UiNavbarSelectedOption} from "ui/navbar";
 
-const Hoverable = styled.div`
-  transition: var(--hover-transition);
-  &:hover, &:focus {
-    transform: var(--hover-transform-scale-sm);
-  }
-`;
-
-const BoardNavbar = () => {
+const RoadmapNavbar = () => {
     const context = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
 
@@ -25,22 +18,20 @@ const BoardNavbar = () => {
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
             <div className={"d-flex"} style={{fontWeight: "500"}}>
-                <UiNavbarSelectedOption to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}
-                                        theme={context.getTheme()} aria-label={"Feedback"}>
-                    <Hoverable>
-                        <FaRegComment className={"mr-2"}/>
-                        <span className={"d-sm-inline-block d-none"}>Feedback</span>
-                    </Hoverable>
-                </UiNavbarSelectedOption>
-                <UiNavbarOption to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
-                                theme={context.getTheme()} aria-label={"Roadmap"}>
+                <UiNavbarOption to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}
+                                theme={context.getTheme()} aria-label={"Feedback"}>
+                    <FaRegComment className={"mr-2"}/>
+                    <span className={"d-sm-inline-block d-none"}>Feedback</span>
+                </UiNavbarOption>
+                <UiNavbarSelectedOption to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
+                                        theme={context.getTheme()}  aria-label={"Roadmap"}>
                     <FaRegMap className={"mr-2"}/>
                     <span className={"d-sm-inline-block d-none"}>Roadmap</span>
-                </UiNavbarOption>
+                </UiNavbarSelectedOption>
             </div>
             {renderLogIn(onNotLoggedClick, context)}
         </UiContainer>
     </UiNavbar>
 };
 
-export default BoardNavbar;
+export default RoadmapNavbar;

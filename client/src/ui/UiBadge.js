@@ -21,7 +21,7 @@ const Badge = styled.div`
 
 const UiBadge = (props) => {
     const context = useContext(AppContext);
-    const {color = context.getTheme(), children, innerRef, ...otherProps} = props;
+    const {color = context.getTheme(), children, innerRef, style, ...otherProps} = props;
     let badgeColor = color;
     if (context.user.darkMode) {
         badgeColor = badgeColor.lighten(10);
@@ -29,9 +29,9 @@ const UiBadge = (props) => {
         if (tinycolor.readability(badgeColor, "#282828") < 2.5) {
             badgeColor = badgeColor.lighten(25);
         }
-        return <Badge theme={badgeColor.clone().setAlpha(.1).toString()} style={{color: badgeColor, fontWeight: "bold"}} ref={innerRef} {...otherProps}>{children}</Badge>
+        return <Badge theme={badgeColor.clone().setAlpha(.1).toString()} style={{color: badgeColor, fontWeight: "bold", ...style}} ref={innerRef} {...otherProps}>{children}</Badge>
     }
-    return <Badge theme={badgeColor.toString()} ref={innerRef} {...otherProps}>{children}</Badge>
+    return <Badge theme={badgeColor.toString()} ref={innerRef} style={style} {...otherProps}>{children}</Badge>
 };
 
 export {UiBadge};

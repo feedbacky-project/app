@@ -11,6 +11,8 @@ export const DropdownToggle = styled(Dropdown.Toggle)`
 
 export const DropdownMenu = styled(Dropdown.Menu)`
   padding: .2rem 0;
+  box-shadow: var(--box-shadow);
+  color: var(--tertiary);
   
   .dark & {
     box-shadow: var(--dark-box-shadow);

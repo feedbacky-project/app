@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import React from "react";
 
 const HorizontalRule = styled.hr`
-  border-top: 1px solid hsla(0, 0%, 0%, .1);
+  border-top: 2px solid ${props => props.theme.setAlpha(.1).toString()};
   .dark & {
     background-color: var(--dark-secondary);
   }

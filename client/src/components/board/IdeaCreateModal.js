@@ -16,6 +16,7 @@ import {formatRemainingCharacters, getBase64FromFile, popupError, popupNotificat
 
 const AttachmentButton = styled(UiClassicButton)`
   max-height: 38px;
+  background-color: var(--secondary);
   .dark & {
     background-color: var(--dark-secondary);
     & * {

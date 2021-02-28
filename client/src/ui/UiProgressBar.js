@@ -8,6 +8,9 @@ import {ProgressBar} from "react-bootstrap";
 import {UiCol} from "ui/grid";
 
 const ProgressSteps = styled(Steps)`
+  .rc-steps-item-tail:after {
+     background-color: var(--secondary);
+  }
   .rc-steps-item-finish .rc-steps-item-icon > .rc-steps-icon .rc-steps-icon-dot {
     background-color: ${props => props.theme.toHexString()};
   }

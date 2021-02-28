@@ -87,7 +87,7 @@ const IdeaRoute = () => {
             <UiContainer className={"pb-5"}>
                 <UiRow centered className={"my-4"}>
                     <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox/>}/>
-                    <UiCol xs={12}><UiHorizontalRule/></UiCol>
+                    <UiCol xs={12}><UiHorizontalRule theme={context.getTheme()}/></UiCol>
                     <ComponentLoader loaded={idea.loaded} component={<DiscussionBox/>}/>
                 </UiRow>
             </UiContainer>

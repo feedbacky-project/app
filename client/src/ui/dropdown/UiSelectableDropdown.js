@@ -10,27 +10,20 @@ import {DropdownMenu, DropdownToggle} from "ui/dropdown/UiDropdown";
 
 const SelectableDropdown = styled(UiClassicButton)`
   margin: 0;
-  padding: 0;
+  padding: 0 .5rem;
   font-weight: bold;
-  text-decoration: underline;
   color: var(--font-color);
   box-shadow: none;
-  background-color: hsl(210, 17%, 98%);
+  text-decoration: none;
 
   &:hover {
     box-shadow: none;
-    text-decoration: underline;
+    text-decoration: none;
     color: var(--font-color);
-  }
-  
-  &:focus {
-    background-color: hsl(210, 17%, 98%);;
   }
   
   .dark & {
     background-color: var(--dark-tertiary);
-    padding: 0 .5rem;
-    text-decoration: none;
     box-shadow: var(--dark-box-shadow) !important;
 
     &:hover {
@@ -56,9 +49,9 @@ const UiSelectableDropdown = (props) => {
             <FaAngleDown style={{color: getTheme()}}/>
         </SelectableDropdown>
     } else {
-        children = <SelectableDropdown label={label} as={DropdownToggle} id={id} variant={""} className={"move-top-1px"}>
-            <span>{currentValue}</span>
-            <FaAngleDown/>
+        children = <SelectableDropdown style={{backgroundColor: "var(--secondary)"}} label={label} as={DropdownToggle} id={id} variant={""} className={"move-top-1px"}>
+            <span style={{color: getTheme(), marginRight: "0.2rem"}}>{currentValue}</span>
+            <FaAngleDown style={{color: getTheme()}}/>
         </SelectableDropdown>
     }
     return <Dropdown className={className} style={{zIndex: 1}}>

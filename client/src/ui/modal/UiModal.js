@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 
 const StyledModal = styled(Modal)`
   .modal-content {
-    background-color: hsl(210, 17%, 98%);
+    background-color: var(--background);
     box-shadow: var(--box-shadow) !important;
     
     .dark & {

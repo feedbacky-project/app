@@ -13,11 +13,12 @@ const GoBackButton = styled(Link)`
   margin-left: .75rem;
   justify-content: start;
   transition: var(--hover-transition);
-  color: white;
+  color: ${props => props.theme};
+  margin-bottom: .25rem;
   
   &:hover {
     transform: var(--hover-transform-scale-lg);
-    color: white;
+    color: ${props => props.theme};
     text-decoration: none;
   }
   
@@ -31,14 +32,16 @@ const IdeaNavbar = () => {
     const {data, onNotLoggedClick} = useContext(BoardContext);
 
     return <UiNavbar>
-        <GoBackButton to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}><FaChevronLeft className={"ml-2"}/></GoBackButton>
+        <GoBackButton theme={context.getTheme().toString()} to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}>
+            <FaChevronLeft className={"ml-2"}/>
+        </GoBackButton>
         <UiContainer className={"d-flex"}>
-            <UiNavbarBrand to={{
+            <UiNavbarBrand theme={context.getTheme().toString()} to={{
                 pathname: "/b/" + data.discriminator,
                 state: {_boardData: data}
             }}>
                 <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Logo"}/>
-                <span>{data.name}</span>
+                <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
             {renderLogIn(onNotLoggedClick, context)}
         </UiContainer>

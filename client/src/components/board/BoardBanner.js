@@ -58,9 +58,8 @@ const SocialLink = styled(Link)`
 `;
 
 const BoardBanner = ({customName}) => {
-    const {getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
-    const {socialLinks, name, shortDescription, banner, discriminator} = boardData;
+    const {socialLinks, name, shortDescription, banner} = boardData;
     const renderSocialLinks = () => {
         return <SocialLinkContainer>
             {socialLinks.map(link => {
@@ -68,12 +67,9 @@ const BoardBanner = ({customName}) => {
                     <UiImage src={link.logoUrl} alt={"Social Icon"} width={18} height={18}/>
                 </SocialLink>
             })}
-            <SocialLink to={{pathname: "/b/" + discriminator + "/roadmap", state: {_boardData: boardData}}} style={{backgroundColor: getTheme().setAlpha(.5)}} aria-label={"Roadmap"}>
-                <FaMap style={{color: "white"}}/>
-            </SocialLink>
         </SocialLinkContainer>
     };
-    return <UiCol sm={12} className={"mt-3"}>
+    return <UiCol sm={12} className={"mt-2"}>
         <Banner image={banner}>
             <h3 style={{fontWeight: 500}}>{customName || name}</h3>
             <h5 style={{fontWeight: 300}} dangerouslySetInnerHTML={{__html: shortDescription}}/>

@@ -11,7 +11,7 @@ import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 
 const BoardInfoCard = ({onIdeaCreation}) => {
-    const {user} = useContext(AppContext);
+    const {user, getTheme} = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const [open, setOpen] = useState(false);
     const onCreateIdeaModalClick = () => {
@@ -35,7 +35,7 @@ const BoardInfoCard = ({onIdeaCreation}) => {
         <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation}/>
         <UiCard className={"my-2 text-left"}>
             <MarkdownContainer text={data.fullDescription}/>
-            <UiHorizontalRule className={"pb-1"}/>
+            <UiHorizontalRule theme={getTheme()} className={"pb-1"}/>
             {/* eslint-disable-next-line */}
             <UiLoadableButton label={"Create Idea"} tabIndex={1} className={"py-1"} onClick={() => {
                 onCreateIdeaModalClick();
