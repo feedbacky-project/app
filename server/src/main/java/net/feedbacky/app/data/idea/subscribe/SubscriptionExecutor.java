@@ -20,9 +20,13 @@ public class SubscriptionExecutor {
 
   private Map<User, List<NotificationEvent>> notificationBuffer = new HashMap<>();
 
-  public void notifySubscribers(Idea idea, NotificationEvent event) {
+  public void notifySubscribers(Idea idea, User notifySource, NotificationEvent event) {
     for(User user : idea.getSubscribers()) {
       if(!user.getMailPreferences().isNotificationsEnabled()) {
+        continue;
+      }
+      //do not notify creator of idea if he made any changes to the idea
+      if(user.equals(notifySource) && idea.getCreator().equals(notifySource)) {
         continue;
       }
       doNotifySubscriber(user, event);

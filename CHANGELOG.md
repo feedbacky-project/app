@@ -1,5 +1,6 @@
 ### 1.0.0.alpha.4
 * **[FEATURE]** Page routes now includes browser changeable tab titles instead of hardcoded one
+* **[IMPROVEMENT]** User will no longer receive notification emails if they made any changes to their own ideas
 * **[CHANGE/CONTROVERSIAL]** Edited light mode UI, now shadowless with improved UI elements
 * **[CHANGE]** Changed navbar UI for future categories feature implementation
 * **[FIX]** Google users couldn't log-in for the first time if their avatar URL length exceeded 255 characters

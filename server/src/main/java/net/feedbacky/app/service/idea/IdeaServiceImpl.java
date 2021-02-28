@@ -203,7 +203,7 @@ public class IdeaServiceImpl implements IdeaService {
         WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
         idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_OPEN, builder.build());
       }
-      subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_STATUS_CHANGE,
+      subscriptionExecutor.notifySubscribers(idea, user, new NotificationEvent(SubscriptionExecutor.Event.IDEA_STATUS_CHANGE,
               idea, idea.getStatus().name()));
     }
     ModelMapper mapper = new ModelMapper();
@@ -338,7 +338,7 @@ public class IdeaServiceImpl implements IdeaService {
             .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
     idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
 
-    subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE,
+    subscriptionExecutor.notifySubscribers(idea, user, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE,
             idea, prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));
     return idea.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
   }
