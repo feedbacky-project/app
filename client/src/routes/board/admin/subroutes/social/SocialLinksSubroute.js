@@ -33,7 +33,7 @@ const SocialLinksSubroute = () => {
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("social"), [setCurrentNode]);
     useTitle(boardData.name + " | Social Links");
-    const getQuota = () => 4 - socialLinks.data.length;
+    const getQuota = () => 5 - socialLinks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/socialLinks").then(res => {
             if (res.status !== 200) {

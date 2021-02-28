@@ -69,7 +69,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
 
-    if(board.getSocialLinks().size() >= 4) {
+    if(board.getSocialLinks().size() >= 5) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't create more than 4 social links.");
     }
     SocialLink socialLink = new SocialLink();

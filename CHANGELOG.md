@@ -2,6 +2,7 @@
 * **[FEATURE]** Page routes now includes browser changeable tab titles instead of hardcoded one
 * **[IMPROVEMENT]** User will no longer receive notification emails if they made any changes to their own ideas
 * **[CHANGE/CONTROVERSIAL]** Edited light mode UI, now shadowless with improved UI elements
+* **[CHANGE]** Increased social links amount by 1 (because moved Roadmap icon to navbar)
 * **[CHANGE]** Changed navbar UI for future categories feature implementation
 * **[FIX]** Google users couldn't log-in for the first time if their avatar URL length exceeded 255 characters
 
