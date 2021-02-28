@@ -26,7 +26,7 @@ const BoardNavbar = () => {
             </UiNavbarBrand>
             <div className={"d-flex"} style={{fontWeight: "500"}}>
                 <UiNavbarSelectedOption to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}
-                                        theme={context.getTheme()} aria-label={"Feedback"}>
+                                        theme={context.getTheme()} border={context.getTheme().setAlpha(.75)} aria-label={"Feedback"}>
                     <Hoverable>
                         <FaRegComment className={"mr-2"}/>
                         <span className={"d-sm-inline-block d-none align-middle"}>Feedback</span>

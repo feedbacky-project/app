@@ -10,7 +10,6 @@ import {UiLoadingSpinner} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
-import {useTitle} from "utils/use-title";
 
 const SettingsSubroute = lazy(() => retry(() => import("routes/profile/subroutes/SettingsSubroute")));
 const AppearanceSubroute = lazy(() => retry(() => import("routes/profile/subroutes/AppearanceSubroute")));

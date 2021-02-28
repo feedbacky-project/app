@@ -137,7 +137,7 @@ const UiTestRoute = () => {
                                               currentValue={"Test Dropdown"} id={"selectDropdown"}/>
                     </UiCol>
                     <UiCol xs={12} className={"my-3"}>
-                        <UiHorizontalRule theme={customTheme}/>
+                        <UiHorizontalRule theme={customTheme.clone().setAlpha(.1)}/>
                         <UiKeyboardInput>Input</UiKeyboardInput>
                     </UiCol>
                 </UiRow>

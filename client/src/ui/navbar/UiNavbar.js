@@ -48,7 +48,7 @@ const NavbarSelectedOption = styled(Link)`
   margin-bottom: -4px; 
   margin-top: .5rem;
   margin-right: .75rem;
-  border-bottom: 2px solid ${props => props.theme.setAlpha(.75).toString()};
+  border-bottom: 2px solid ${props => props.border};
 `;
 
 const NavbarOption = styled(Link)`

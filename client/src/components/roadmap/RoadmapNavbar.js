@@ -3,7 +3,6 @@ import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import {FaRegComment, FaRegMap} from "react-icons/all";
-import {Link} from "react-router-dom";
 import {UiContainer} from "ui/grid";
 import {UiNavbar, UiNavbarBrand, UiNavbarOption, UiNavbarSelectedOption} from "ui/navbar";
 
@@ -24,7 +23,7 @@ const RoadmapNavbar = () => {
                     <span className={"d-sm-inline-block d-none align-middle"}>Feedback</span>
                 </UiNavbarOption>
                 <UiNavbarSelectedOption to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
-                                        theme={context.getTheme()}  aria-label={"Roadmap"}>
+                                        theme={context.getTheme()} border={context.getTheme().setAlpha(.75)} aria-label={"Roadmap"}>
                     <FaRegMap className={"mr-2"}/>
                     <span className={"d-sm-inline-block d-none align-middle"}>Roadmap</span>
                 </UiNavbarSelectedOption>

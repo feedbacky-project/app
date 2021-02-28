@@ -1,8 +1,6 @@
 import styled from "@emotion/styled";
-import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
-import {FaMap} from "react-icons/all";
 import {Link} from "react-router-dom";
 import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";

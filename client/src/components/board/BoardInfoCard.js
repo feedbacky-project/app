@@ -35,7 +35,7 @@ const BoardInfoCard = ({onIdeaCreation}) => {
         <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation}/>
         <UiCard className={"my-2 text-left"}>
             <MarkdownContainer text={data.fullDescription}/>
-            <UiHorizontalRule theme={getTheme()} className={"pb-1"}/>
+            <UiHorizontalRule theme={getTheme().setAlpha(.1)} className={"pb-1"}/>
             {/* eslint-disable-next-line */}
             <UiLoadableButton label={"Create Idea"} tabIndex={1} className={"py-1"} onClick={() => {
                 onCreateIdeaModalClick();

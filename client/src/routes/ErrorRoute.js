@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiButton} from "ui/button";

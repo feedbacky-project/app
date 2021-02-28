@@ -1,7 +1,6 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
 import ComponentLoader from "components/ComponentLoader";
-import IdeaNavbar from "components/idea/IdeaNavbar";
 import LoginModal from "components/LoginModal";
 import {BoardRoadmapBox} from "components/roadmap/BoardRoadmapBox";
 import RoadmapNavbar from "components/roadmap/RoadmapNavbar";
