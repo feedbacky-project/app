@@ -9,7 +9,7 @@ const Icon = styled.div`
   height: 30px;
   min-width: 30px;
   transform: translateY(-3px);
-  box-shadow: 0 0 0 1px white, 0 0 0 2px currentColor;
+  box-shadow: 0 0 0 1px var(--background), 0 0 0 2px currentColor;
   margin-right: 1rem;
   
   .dark & {
