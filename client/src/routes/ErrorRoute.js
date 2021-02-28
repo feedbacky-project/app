@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
+import {useTitle} from "utils/use-title";
 
 const ErrorIcon = styled.div`
   font-size: 110px;
@@ -13,6 +14,7 @@ const ErrorIcon = styled.div`
 
 const ErrorRoute = ({Icon, message, notes = "", crash = false, onBackButtonClick = () => void 0}) => {
     const {hardResetData} = useContext(AppContext);
+    useTitle(message);
     return <UiContainer>
         <UiRow centered verticallyCentered>
             <UiCol className={"text-md-left justify-content-center text-center d-sm-flex d-block"}>

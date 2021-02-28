@@ -1,4 +1,5 @@
 ### 1.0.0.alpha.4
+* **[FEATURE]** Page routes now includes browser changeable tab titles instead of hardcoded one
 * **[FIX]** Google users couldn't log-in for the first time if their avatar URL length exceeded 255 characters
 
 ### 1.0.0.alpha.3

@@ -10,6 +10,7 @@ import {UiLoadingSpinner} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
+import {useTitle} from "utils/use-title";
 
 const SettingsSubroute = lazy(() => retry(() => import("routes/profile/subroutes/SettingsSubroute")));
 const AppearanceSubroute = lazy(() => retry(() => import("routes/profile/subroutes/AppearanceSubroute")));
@@ -21,7 +22,6 @@ const ProfileRoute = () => {
     const {onThemeChange} = useContext(AppContext);
     const history = useHistory();
     useEffect(() => onThemeChange(), [onThemeChange]);
-
     return <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
         <LoginModal isOpen={loginModalOpen} onHide={() => setLoginModalOpen(false)}
                     image={ServiceLogo} boardName={getEnvVar("REACT_APP_SERVICE_NAME")} redirectUrl={"me"}/>

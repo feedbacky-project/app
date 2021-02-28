@@ -7,12 +7,14 @@ import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification} from "utils/basic-utils";
+import {useTitle} from "utils/use-title";
 
 const NotificationsSubroute = () => {
     const {user, getTheme} = useContext(AppContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [notificationsEnabled, setNotificationsEnabled] = useState(user.loggedIn ? user.data.mailPreferences.notificationsEnabled : false);
     useEffect(() => setCurrentNode("notifications"), [setCurrentNode]);
+    useTitle("Profile | Notifications");
     const onChangesSave = () => {
         return axios.patch("/users/@me/mailPreferences", {
             notificationsEnabled: notificationsEnabled,

@@ -16,6 +16,7 @@ import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification, prettifyEnum} from "utils/basic-utils";
+import {useTitle} from "utils/use-title";
 
 const EventsContainer = styled.div`
   max-height: 80px;
@@ -40,6 +41,7 @@ const WebhooksSubroute = () => {
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("webhooks"), [setCurrentNode]);
+    useTitle(boardData.name + " | Webhooks");
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/webhooks").then(res => {
             if (res.status !== 200) {

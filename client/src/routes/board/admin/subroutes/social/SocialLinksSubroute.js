@@ -18,6 +18,7 @@ import {UiCol} from "ui/grid";
 import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification} from "utils/basic-utils";
+import {useTitle} from "utils/use-title";
 
 const SocialIcon = styled(UiImage)`
   padding: .5rem;
@@ -31,6 +32,7 @@ const SocialLinksSubroute = () => {
     const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("social"), [setCurrentNode]);
+    useTitle(boardData.name + " | Social Links");
     const getQuota = () => 4 - socialLinks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/socialLinks").then(res => {

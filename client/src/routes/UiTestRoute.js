@@ -20,6 +20,7 @@ import {UiDismissibleModal} from "ui/modal";
 import {UiNavbar} from "ui/navbar";
 import {UiViewBox} from "ui/viewbox";
 import {popupNotification} from "utils/basic-utils";
+import {useTitle} from "utils/use-title";
 
 const UiTestRoute = () => {
     const context = useContext(AppContext);
@@ -28,6 +29,7 @@ const UiTestRoute = () => {
             context.onThemeChange("#8e44ad");
         }, //eslint-disable-next-line
         []);
+    useTitle("UI Debug");
     const customTheme = tinycolor("#e74c3c");
     const themes = ["#c0392b", "#9b59b6", "#16a085", "#2980b9"];
     const [modal, setModal] = useState({open: false});

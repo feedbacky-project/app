@@ -6,6 +6,7 @@ import React, {useContext, useEffect} from "react";
 import {UiBadge} from "ui";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
+import {useTitle} from "utils/use-title";
 
 const InlineCard = styled.div`
   margin-bottom: .5rem;
@@ -16,6 +17,7 @@ const AppearanceSubroute = () => {
     const {appearance, onAppearanceToggle, getTheme} = useContext(AppContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     useEffect(() => setCurrentNode("appearance"), [setCurrentNode]);
+    useTitle("Profile | Appearance");
     const renderContent = () => {
         return <UiCol xs={12} className={"my-2 text-center"}>
             <h4 className={"mb-1"}>Application Theme</h4>

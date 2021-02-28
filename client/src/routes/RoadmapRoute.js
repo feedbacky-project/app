@@ -12,6 +12,7 @@ import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import {UiLoadingSpinner} from "ui";
 import {UiContainer, UiRow} from "ui/grid";
+import {useTitle} from "utils/use-title";
 
 const RoadmapRoute = () => {
     const {onThemeChange, defaultTheme, user} = useContext(AppContext);
@@ -20,6 +21,7 @@ const RoadmapRoute = () => {
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [roadmap, setRoadmap] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
+    useTitle(board.loaded ? board.data.name + " | Roadmap" : "Loading...");
     const resolvePassedData = () => {
         const state = location.state;
         if (state._boardData !== undefined) {

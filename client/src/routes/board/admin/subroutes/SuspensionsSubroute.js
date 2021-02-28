@@ -13,6 +13,7 @@ import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
+import {useTitle} from "utils/use-title";
 
 const SuspensionSettings = () => {
     const {getTheme} = useContext(AppContext);
@@ -20,6 +21,7 @@ const SuspensionSettings = () => {
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("suspended"), [setCurrentNode]);
+    useTitle(boardData.name + " | Suspensions");
     const renderContent = () => {
         return <UiCol xs={12}>
             <UiFormLabel>Suspended Users</UiFormLabel>

@@ -22,6 +22,7 @@ import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxDangerBackground} from "ui/viewbox/UiViewBox";
 import {formatRemainingCharacters, getBase64FromFile, htmlDecode, popupError, popupNotification, validateImageWithWarning} from "utils/basic-utils";
+import {useTitle} from "utils/use-title";
 
 const ThemeSelector = styled.div`
   width: 28px;
@@ -46,6 +47,7 @@ const GeneralSubroute = ({updateState}) => {
     const [bannerInput, setBannerInput] = useState(null);
     const [logoInput, setLogoInput] = useState(null);
     useEffect(() => setCurrentNode("general"), [setCurrentNode]);
+    useTitle(boardData.name + " | General");
     const renderContent = () => {
         return <React.Fragment>
             <ThemeSelectionModal isOpen={modal.open && modal.type === "theme"} onHide={() => setModal({...modal, open: false})} onUpdate={color => onThemeChange(color)}/>

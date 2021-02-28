@@ -10,6 +10,7 @@ import {FaExclamationCircle} from "react-icons/fa";
 import {useLocation, useParams} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import {UiContainer, UiRow} from "ui/grid";
+import {useTitle} from "utils/use-title";
 
 const BoardRoute = () => {
     const {onThemeChange, defaultTheme} = useContext(AppContext);
@@ -38,6 +39,7 @@ const BoardRoute = () => {
         }
         // eslint-disable-next-line
     }, [id]);
+    useTitle(board.loaded ? board.data.name : "Loading...");
     return <BoardContextedRouteUtil board={board} setBoard={data => setBoard(data)} onNotLoggedClick={() => setModalOpen(true)} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onHide={() => setModalOpen(false)}/>
         <BoardNavbar/>
