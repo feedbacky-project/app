@@ -25,7 +25,7 @@ const LoginRoute = lazy(() => retry(() => import("routes/LoginRoute")));
 const NotificationUnsubscribeRoute = lazy(() => retry(() => import("routes/NotificationUnsubscribeRoute")));
 const UiTestRoute = lazy(() => retry(() => import("routes/UiTestRoute")));
 
-const CLIENT_VERSION = "1.0.0.alpha.3";
+const CLIENT_VERSION = "1.0.0.alpha.4";
 const API_ROUTE = getEnvVar("REACT_APP_SERVER_IP_ADDRESS", "https://app.feedbacky.net") + "/api/v1";
 
 axios.interceptors.response.use(undefined, error => {
