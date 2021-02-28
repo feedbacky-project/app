@@ -141,7 +141,7 @@ public class CommentServiceImpl implements CommentService {
 
       //notify only if moderator
       if(isModerator) {
-        subscriptionExecutor.notifySubscribers(idea, user, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT,
+        subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, user,
                 comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
       }
     }

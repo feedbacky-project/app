@@ -2,6 +2,7 @@ package net.feedbacky.app.data.idea.subscribe;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.feedbacky.app.data.user.User;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
 public class NotificationEvent {
 
   private SubscriptionExecutor.Event eventType;
+  private User source;
   private Serializable object;
   private String content;
 
