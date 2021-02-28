@@ -1,3 +1,6 @@
+### 1.0.0.alpha.4
+* **[FIX]** Google users couldn't log-in for the first time if their avatar URL length exceeded 255 characters
+
 ### 1.0.0.alpha.3
 * **[FEATURE]** Added anonymous voting feature, toggleable in board admin panel (requested at [Feedbacky](https://app.feedbacky.net/i/anonymous-voting.730))
 * **[FEATURE]** Added administrator role that can do everything that owner can without ability to delete board
