@@ -21,7 +21,6 @@ const VoteBtn = styled(UiClassicButton)`
    background-color: transparent !important;
   }
  
-  
   &:focus {
     outline: 1px dotted black;
   }

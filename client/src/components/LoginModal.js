@@ -37,7 +37,7 @@ const CascadingModal = styled(ModalDialog)`
 `;
 
 const LoginHeader = styled(UiImage)`
-  background-color: white;
+  background-color: var(--secondary);
   
   .dark & {
     background-color: var(--dark-tertiary);

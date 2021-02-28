@@ -29,13 +29,13 @@ const BoardNavbar = () => {
                                         theme={context.getTheme()} aria-label={"Feedback"}>
                     <Hoverable>
                         <FaRegComment className={"mr-2"}/>
-                        <span className={"d-sm-inline-block d-none"}>Feedback</span>
+                        <span className={"d-sm-inline-block d-none align-middle"}>Feedback</span>
                     </Hoverable>
                 </UiNavbarSelectedOption>
                 <UiNavbarOption to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
                                 theme={context.getTheme()} aria-label={"Roadmap"}>
                     <FaRegMap className={"mr-2"}/>
-                    <span className={"d-sm-inline-block d-none"}>Roadmap</span>
+                    <span className={"d-sm-inline-block d-none align-middle"}>Roadmap</span>
                 </UiNavbarOption>
             </div>
             {renderLogIn(onNotLoggedClick, context)}

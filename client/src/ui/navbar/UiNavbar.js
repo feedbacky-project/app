@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {UiContainer, UiRow} from "ui/grid";
 
 const StyledNavbar = styled.div`
-  background-color: white;
+  background-color: var(--tertiary);
   font-weight: 300;
   padding-top: .3rem;
   z-index: 3;

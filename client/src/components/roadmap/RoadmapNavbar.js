@@ -21,12 +21,12 @@ const RoadmapNavbar = () => {
                 <UiNavbarOption to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}
                                 theme={context.getTheme()} aria-label={"Feedback"}>
                     <FaRegComment className={"mr-2"}/>
-                    <span className={"d-sm-inline-block d-none"}>Feedback</span>
+                    <span className={"d-sm-inline-block d-none align-middle"}>Feedback</span>
                 </UiNavbarOption>
                 <UiNavbarSelectedOption to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
                                         theme={context.getTheme()}  aria-label={"Roadmap"}>
                     <FaRegMap className={"mr-2"}/>
-                    <span className={"d-sm-inline-block d-none"}>Roadmap</span>
+                    <span className={"d-sm-inline-block d-none align-middle"}>Roadmap</span>
                 </UiNavbarSelectedOption>
             </div>
             {renderLogIn(onNotLoggedClick, context)}
