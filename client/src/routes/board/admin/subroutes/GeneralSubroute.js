@@ -105,25 +105,25 @@ const GeneralSubroute = ({updateState}) => {
                 <UiFormLabel>Board Banner</UiFormLabel>
                 <UiClickableTip id={"banner"} title={"Set Board Banner"} description={"Suggested size: 1120x400. Maximum size 500 kb, PNG and JPG only."}/>
                 <br/>
-                <div onClick={() => document.getElementById("bannerInput").click()}>
-                    <Banner image={boardData.banner} id={"boardBannerPreview"} className={"mb-2"}
+                <div aria-label={"Banner Upload"} onClick={() => document.getElementById("bannerInput").click()}>
+                    <Banner image={boardData.banner} aria-label={"Board Banner View"} id={"boardBannerPreview"} className={"mb-2"}
                             style={{minHeight: 200, position: "relative"}}>
                         <h3 style={{color: "transparent"}}>{boardData.name}</h3>
                         <h5 style={{color: "transparent"}}>{boardData.shortDescription}</h5>
                         <UploadIconBox/>
                     </Banner>
                 </div>
-                <input hidden accept={"image/jpeg, image/png"} id={"bannerInput"} type={"file"} name={"banner"} onChange={onBannerChange}/>
+                <input hidden accept={"image/jpeg, image/png"} id={"bannerInput"} type={"file"} name={"banner"} aria-label={"Banner Upload"} onChange={onBannerChange}/>
             </UiCol>
             <UiCol xs={12} lg={4} className={"mt-2"}>
                 <UiFormLabel>Board Logo</UiFormLabel>
                 <UiClickableTip id={"logo"} title={"Set Board Logo"}
                                 description={"Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."}/>
-                <div style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
-                    <img alt={"logo"} src={boardData.logo} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
+                <div aria-label={"Logo Upload"} style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
+                    <img alt={"Board Logo View"} src={boardData.logo} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
                     <UploadIconBox/>
                 </div>
-                <input hidden accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} onChange={onLogoChange}/>
+                <input hidden accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} aria-label={"Logo Upload"} onChange={onLogoChange}/>
             </UiCol>
             <UiCol xs={12}>
                 <UiLoadableButton label={"Save"} className={"mt-3 float-right"} onClick={onChangesSave}>

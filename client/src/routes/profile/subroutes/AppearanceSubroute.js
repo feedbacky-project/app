@@ -22,15 +22,18 @@ const AppearanceSubroute = () => {
         return <UiCol xs={12} className={"my-2 text-center"}>
             <h4 className={"mb-1"}>Application Theme</h4>
             <InlineCard>
-                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/system.png"} chosen={appearance.systemDefault} onClick={() => onAppearanceToggle("system")}/>
+                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/system.png"} chosen={appearance.systemDefault}
+                                alt={"System Default Theme"} onClick={() => onAppearanceToggle("system")}/>
                 <UiBadge>System Default</UiBadge>
             </InlineCard>
             <InlineCard>
-                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/light.png"} chosen={appearance.mode === "light" && !appearance.systemDefault} onClick={() => onAppearanceToggle("light")}/>
+                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/light.png"} chosen={appearance.mode === "light" && !appearance.systemDefault}
+                                alt={"Light Theme"} onClick={() => onAppearanceToggle("light")}/>
                 <UiBadge>Light</UiBadge>
             </InlineCard>
             <InlineCard>
-                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/dark.png"} chosen={appearance.mode === "dark" && !appearance.systemDefault} onClick={() => onAppearanceToggle("dark")}/>
+                <AppearanceCard imgSrc={"https://cdn.feedbacky.net/static/img/appearance/dark.png"} chosen={appearance.mode === "dark" && !appearance.systemDefault}
+                                alt={"Dark Theme"} onClick={() => onAppearanceToggle("dark")}/>
                 <UiBadge>Dark</UiBadge>
             </InlineCard>
         </UiCol>

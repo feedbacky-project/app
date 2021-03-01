@@ -21,7 +21,7 @@ const OptionImage = styled.img`
   width: 100%;
 `;
 
-const AppearanceCard = ({className, chosen, imgSrc, onClick}) => {
+const AppearanceCard = ({className, chosen, alt, imgSrc, onClick}) => {
     const {user} = useContext(AppContext);
     let style;
     if (chosen) {
@@ -30,7 +30,7 @@ const AppearanceCard = ({className, chosen, imgSrc, onClick}) => {
         style = {border: "2px solid transparent"};
     }
     return <OptionCard className={className} onClick={onClick} style={style} bodyClassName={"p-0"}>
-        <OptionImage src={imgSrc}/>
+        <OptionImage alt={alt} src={imgSrc}/>
     </OptionCard>
 };
 

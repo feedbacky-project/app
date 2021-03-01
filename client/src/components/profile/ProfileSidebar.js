@@ -4,7 +4,7 @@ import React, {useContext} from 'react';
 import {FaRegAddressCard, FaRegBell, FaRegKeyboard} from "react-icons/all";
 import {UiCol} from "ui/grid";
 
-export const PROFILE_LIGHT_THEME_COLOR = "#008033";
+export const PROFILE_LIGHT_THEME_COLOR = "#00732d";
 export const PROFILE_DARK_THEME_COLOR = "#00e25b";
 
 const ProfileSidebar = ({currentNode, reRouteTo}) => {

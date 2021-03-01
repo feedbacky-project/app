@@ -5,9 +5,9 @@ import React from "react";
 const MarkdownBox = styled.div`
   word-break: break-word;
   & a {
-    color: hsl(195, 100%, 40%);
+    color: hsl(195, 100%, 30%);
     &:hover {
-      color: hsl(195, 100%, 20%);
+      color: hsl(195, 100%, 15%);
     }
   }
   .dark & a {

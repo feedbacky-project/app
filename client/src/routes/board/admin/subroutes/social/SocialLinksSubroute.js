@@ -53,7 +53,7 @@ const SocialLinksSubroute = () => {
         return socialLinks.data.map(link => {
             return <div className={"d-inline-flex justify-content-center mr-2"} key={link.id}>
                 <div className={"text-center"}>
-                    <SocialIcon rounded alt={"Logo"} src={link.logoUrl} height={40} width={40}/>
+                    <SocialIcon rounded alt={"Social Link"} src={link.logoUrl} height={40} width={40}/>
                     <UiElementDeleteButton tooltipName={"Delete"} id={"social-" + link.id + "-del"}
                                            onClick={() => setModal({...modal, open: true, data: link.id, dataName: extractHostname(link.url)})}/>
                     <br/>

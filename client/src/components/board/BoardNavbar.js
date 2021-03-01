@@ -21,7 +21,7 @@ const BoardNavbar = () => {
     return <UiNavbar>
         <UiContainer className={"d-flex"}>
             <UiNavbarBrand theme={context.getTheme().toString()} to={"/me"}>
-                <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Logo"}/>
+                <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Board Logo"}/>
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
             <div className={"d-flex"} style={{fontWeight: "500"}}>

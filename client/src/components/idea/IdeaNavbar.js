@@ -32,7 +32,7 @@ const IdeaNavbar = () => {
     const {data, onNotLoggedClick} = useContext(BoardContext);
 
     return <UiNavbar>
-        <GoBackButton theme={context.getTheme().toString()} to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}>
+        <GoBackButton theme={context.getTheme().toString()} to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}} aria-label={"Go Back"}>
             <FaChevronLeft className={"ml-2"}/>
         </GoBackButton>
         <UiContainer className={"d-flex"}>
@@ -40,7 +40,7 @@ const IdeaNavbar = () => {
                 pathname: "/b/" + data.discriminator,
                 state: {_boardData: data}
             }}>
-                <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Logo"}/>
+                <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Board Logo"}/>
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
             {renderLogIn(onNotLoggedClick, context)}

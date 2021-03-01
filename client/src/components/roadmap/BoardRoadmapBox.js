@@ -37,6 +37,11 @@ const RoadmapContainer = styled.div`
   }
 `;
 
+const StyledTagName = styled(UiBadge)`
+  font-size: 1.5rem;
+  padding: .25rem .75rem;
+`;
+
 export const BoardRoadmapBox = ({roadmapData}) => {
     if (roadmapData.length === 0) {
         return <SvgNotice Component={UndrawNoData} title={"This Roadmap Is Empty"}/>
@@ -44,9 +49,9 @@ export const BoardRoadmapBox = ({roadmapData}) => {
     return roadmapData.map(element => {
         return <UiCol xs={12} md={6} lg={4} className={"mt-4"} key={element.tag.name}>
             <h3>
-                <strong style={{color: element.tag.color}}>{element.tag.name}</strong>
+                <StyledTagName color={tinycolor(element.tag.color)}>{element.tag.name}</StyledTagName>
                 <div className={"float-right"}>
-                    <UiBadge style={{fontSize: ".8rem"}} className={"align-middle move-top-2px"} color={tinycolor(element.tag.color)}>{element.ideas.data.length}</UiBadge>
+                    <UiBadge style={{fontSize: "1rem"}} className={"align-middle"} color={tinycolor(element.tag.color)}>{element.ideas.data.length}</UiBadge>
                 </div>
             </h3>
             <UiViewBoxBackground as={RoadmapContainer}>
