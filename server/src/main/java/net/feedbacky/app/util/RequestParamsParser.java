@@ -20,14 +20,14 @@ public class RequestParamsParser {
 
   public int getPage() {
     if(params.containsKey("page") && NumberUtils.isDigits(params.get("page"))) {
-      return Math.min(0, Integer.parseInt(params.get("page")));
+      return Math.max(0, Integer.parseInt(params.get("page")));
     }
     return 0;
   }
 
   public int getPageSize() {
     if(params.containsKey("pageSize") && NumberUtils.isDigits(params.get("pageSize"))) {
-      return Math.min(1, Integer.parseInt(params.get("pageSize")));
+      return Math.max(1, Integer.parseInt(params.get("pageSize")));
     }
     return 20;
   }
