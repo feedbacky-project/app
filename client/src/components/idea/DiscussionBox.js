@@ -24,8 +24,8 @@ const DiscussionBox = () => {
     const [page, setPage] = useState(0);
     const [modal, setModal] = useState({open: true, type: "", data: -1});
     const sorts = [
-        {oldest: "Oldest"},
-        {newest: "Newest"}
+        {newest: "Newest"},
+        {oldest: "Oldest"}
     ];
     useEffect(() => {
         onLoadRequest(true);
@@ -179,7 +179,7 @@ const DiscussionBox = () => {
         });
     };
     const sortCurrentValue = Object.values(sorts.find(obj => {
-        return Object.keys(obj)[0] === (user.localPreferences.comments.sort || "oldest");
+        return Object.keys(obj)[0] === (user.localPreferences.comments.sort || "newest");
     }));
     const sortValues = sorts.map(val => {
         const key = Object.keys(val)[0];

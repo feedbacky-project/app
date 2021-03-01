@@ -56,7 +56,13 @@ public class IdeaRestController {
     IdeaService.FilterType filterType = IdeaService.FilterType.OPENED;
     if(requestParams.containsKey("filter")) {
       try {
-        filterType = IdeaService.FilterType.valueOf(requestParams.get("filter").toUpperCase());
+        String filterName = requestParams.get("filter").toUpperCase();
+        String[] filterData = filterName.split(":");
+        if(filterData.length == 2 && filterData[0].equals("TAG")) {
+          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.TAG, Long.parseLong(filterData[1]));
+        } else {
+          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.valueOf(requestParams.get("filter").toUpperCase()), null);
+        }
       } catch(Exception ignoredInvalid) {
       }
     }

@@ -1,9 +1,13 @@
 ### 1.0.0.alpha.4
 * **[FEATURE]** Page routes now includes browser changeable tab titles instead of hardcoded one
+* **[FEATURE]** Ideas can be filtered by tags now
 * **[IMPROVEMENT]** User will no longer receive notification emails if they made any changes to their own ideas
 * **[CHANGE/CONTROVERSIAL]** Edited light mode UI, now shadowless with improved UI elements
 * **[CHANGE]** Increased social links amount by 1 (because moved Roadmap icon to navbar)
 * **[CHANGE]** Changed navbar UI for future categories feature implementation
+* **[CHANGE]** Unified Web Content Accessibility Guidelines color contrast checking for various UI elements
+* **[CHANGE]** Filters and sorts will be now reset after each page visit (requested by [yeah idk](https://app.feedbacky.net/i/reseting-the-filtering-and-sorting-types.2006))
+* **[CHANGE]** Default sort for comments is now Newest
 * **[FIX]** Google users couldn't log-in for the first time if their avatar URL length exceeded 255 characters
 
 ### 1.0.0.alpha.3

@@ -44,8 +44,28 @@ public interface IdeaService {
     VOTERS_ASC, VOTERS_DESC, NEWEST, OLDEST, TRENDING
   }
 
-  enum FilterType {
-    OPENED, CLOSED, ALL
+  class FilterType {
+
+    public static final FilterType OPENED = new FilterType(Type.OPENED, null);
+    private Type type;
+    private Long value;
+
+    public FilterType(Type type, Long value) {
+      this.type = type;
+      this.value = value;
+    }
+
+    public Type getType() {
+      return type;
+    }
+
+    public Long getValue() {
+      return value;
+    }
+
+    public enum Type {
+      OPENED, CLOSED, ALL, TAG
+    }
   }
 
 }

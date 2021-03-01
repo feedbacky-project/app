@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public class IdeaServiceCommons {
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(Board board, User user, int page, int pageSize, IdeaService.FilterType filter, IdeaService.SortType sort) {
     //not using board.getIdeas() because it would load all, we need paged limited list
     Page<Idea> pageData;
-    switch(filter) {
+    switch(filter.getType()) {
       case OPENED:
         pageData = ideaRepository.findByBoardAndStatus(board, Idea.IdeaStatus.OPENED, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
         break;
@@ -72,6 +73,10 @@ public class IdeaServiceCommons {
         break;
       case ALL:
         pageData = ideaRepository.findByBoard(board, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
+        break;
+      case TAG:
+        Tag tag = tagRepository.findById(filter.getValue()).orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid filter tag type."));
+        pageData = ideaRepository.findByBoardAndTagsIn(board, Collections.singletonList(tag), PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
         break;
       default:
         throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid filter type.");

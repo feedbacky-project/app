@@ -17,14 +17,13 @@ const RoadmapNavbar = () => {
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
             <div className={"d-flex"} style={{fontWeight: "500"}}>
-                <UiNavbarOption to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}
-                                theme={context.getTheme()} aria-label={"Feedback"}>
-                    <FaRegComment className={"mr-2"}/>
+                <UiNavbarOption to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}} theme={context.getTheme()} aria-label={"Feedback"}>
+                    <FaRegComment className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
                     <span className={"d-sm-inline-block d-none align-middle"}>Feedback</span>
                 </UiNavbarOption>
                 <UiNavbarSelectedOption to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
                                         theme={context.getTheme()} border={context.getTheme().setAlpha(.75)} aria-label={"Roadmap"}>
-                    <FaRegMap className={"mr-2"}/>
+                    <FaRegMap className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
                     <span className={"d-sm-inline-block d-none align-middle"}>Roadmap</span>
                 </UiNavbarSelectedOption>
             </div>

@@ -1,3 +1,4 @@
+import {CLIENT_VERSION} from "App";
 import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/sidebar-commons";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
@@ -22,7 +23,7 @@ const AdminSidebar = ({currentNode, reRouteTo}) => {
         <small className={"text-black-60"}>
             <div>
                 Running <img alt={"Logo"} src={"https://cdn.feedbacky.net/static/img/logo.png"} width={16} height={16}/> <SafeAnchor href={"https://feedbacky.net"} className={"text-black-60"}>Feedbacky</SafeAnchor>
-                <span className={"text-black-75"}>{" "}v{context.clientVersion}</span>
+                <span className={"text-black-75"}>{" "}v{CLIENT_VERSION}</span>
             </div>
             <div>Server Version <span className={"text-black-75"}>v{context.serviceData.serverVersion}</span></div>
         </small>

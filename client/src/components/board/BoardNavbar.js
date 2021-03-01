@@ -28,13 +28,13 @@ const BoardNavbar = () => {
                 <UiNavbarSelectedOption to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}
                                         theme={context.getTheme()} border={context.getTheme().setAlpha(.75)} aria-label={"Feedback"}>
                     <Hoverable>
-                        <FaRegComment className={"mr-2"}/>
+                        <FaRegComment className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
                         <span className={"d-sm-inline-block d-none align-middle"}>Feedback</span>
                     </Hoverable>
                 </UiNavbarSelectedOption>
                 <UiNavbarOption to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
                                 theme={context.getTheme()} aria-label={"Roadmap"}>
-                    <FaRegMap className={"mr-2"}/>
+                    <FaRegMap className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
                     <span className={"d-sm-inline-block d-none align-middle"}>Roadmap</span>
                 </UiNavbarOption>
             </div>

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import {WCAG_AA_CONTRAST} from "App";
 import React, {Suspense} from "react";
 import {ChromePicker} from "react-color";
 import {FaExclamationCircle} from "react-icons/all";
@@ -27,7 +28,7 @@ const ColorPicker = styled(ChromePicker)`
 `;
 
 const ColorSelectionHelper = ({title, color, setColor, colorWarning}) => {
-    const warn = colorWarning === true ? tinycolor.readability(color, "#fff") < 2.0 || tinycolor.readability(tinycolor(color).lighten(10), "#292c30") < 2.0 : false;
+    const warn = colorWarning === true ? tinycolor.readability(color, "#fff") < WCAG_AA_CONTRAST || tinycolor.readability(tinycolor(color).lighten(10), "#292c30") < WCAG_AA_CONTRAST : false;
     const textClass = warn ? "text-red" : "";
     return <React.Fragment>
         <UiFormLabel className={textClass}>{title}</UiFormLabel>

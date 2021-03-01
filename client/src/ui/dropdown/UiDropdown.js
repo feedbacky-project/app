@@ -13,11 +13,26 @@ export const DropdownMenu = styled(Dropdown.Menu)`
   padding: .2rem 0;
   box-shadow: var(--box-shadow);
   color: var(--tertiary);
+  max-height: 350px;
+  overflow-y: auto;
+  scrollbar-width: thin; /* firefox property */
+   &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+    background: hsl(0, 0%, 94%);
+  }
   
   .dark & {
     box-shadow: var(--dark-box-shadow);
     background-color: var(--dark-quaternary);
     color: var(--dark-font-color);
+    scrollbar-color: var(--dark-hover) var(--dark-tertiary); /* firefox property */
+    &::-webkit-scrollbar {
+      background: var(--dark-tertiary);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--dark-hover);
+    }
   }
 `;
 

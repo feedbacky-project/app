@@ -1,4 +1,4 @@
-import App from "App";
+import App, {WCAG_AA_CONTRAST} from "App";
 import Cookies from "js-cookie";
 import React, {useEffect, useState} from "react";
 import tinycolor from "tinycolor2";
@@ -34,7 +34,7 @@ const AppAppearance = () => {
         if (appearance.mode === "dark" && adjustColor) {
             color = color.lighten(10);
             //if still not readable, increase again
-            if (tinycolor.readability(color, "#282828") < 2.5) {
+            if (tinycolor.readability(color, "#282828") < WCAG_AA_CONTRAST) {
                 color = color.lighten(25);
             }
         }
