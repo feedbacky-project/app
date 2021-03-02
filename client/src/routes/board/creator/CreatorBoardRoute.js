@@ -11,7 +11,7 @@ import tinycolor from "tinycolor2";
 import {UiProgressBar} from "ui";
 import {UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
-import {isServiceAdmin, popupNotification, popupWarning} from "utils/basic-utils";
+import {hideNotifications, isServiceAdmin, popupNotification, popupWarning} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
 
 const CreatorBoardRoute = () => {
@@ -93,7 +93,10 @@ const CreatorBoardRoute = () => {
                 if (res.status === 200) {
                     popupWarning("This discriminator is taken");
                 }
-            }).catch(() => setSettings({...settings, step: settings.step + 1}));
+            }).catch(() => {
+                setSettings({...settings, step: settings.step + 1});
+                hideNotifications();
+            });
             return;
         } else if (settings.step === 2) {
             if (settings.banner === null || settings.logo === null) {
