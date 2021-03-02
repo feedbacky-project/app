@@ -33,6 +33,7 @@ const UiTestRoute = () => {
     const customTheme = tinycolor("#e74c3c");
     const themes = ["#c0392b", "#9b59b6", "#16a085", "#2980b9"];
     const [modal, setModal] = useState({open: false});
+    const getCustomTheme = () => customTheme.clone();
     return <BoardContextedRouteUtil board={{
         data: {
             name: "Test Board", discriminator: "test", shortDescription: "UI test Feedbacky", logo: "https://cdn.feedbacky.net/static/img/logo.png",
@@ -58,7 +59,7 @@ const UiTestRoute = () => {
                     <div style={{textAlign: "center", marginBottom: ".5rem", color: "white"}}>Debug Card</div>
                     <UiButton label={"Dark Mode"} size={"sm"} className={"my-1"} onClick={() => context.onAppearanceToggle()}>Dark Mode</UiButton>
                     <UiButton label={"Random Theme"} size={"sm"} className={"my-1"} onClick={() => context.onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
-                    <UiButton label={"Snackbar Test"} size={"sm"} className={"my-1"} onClick={() => popupNotification("Snackbar test", customTheme.toHexString())}>Snackbar Test</UiButton>
+                    <UiButton label={"Snackbar Test"} size={"sm"} className={"my-1"} onClick={() => popupNotification("Snackbar test", getCustomTheme().toHexString())}>Snackbar Test</UiButton>
                 </UiContainer>
             </div>
             <UiContainer>
@@ -66,7 +67,7 @@ const UiTestRoute = () => {
                     <BoardBanner/>
                     <UiCol xs={12} className={"my-3"}>
                         <UiButton label={"Test"} className={"mx-2"}>Test</UiButton>
-                        <UiButton label={"Test Colored"} className={"mx-2"} color={customTheme}>Colored</UiButton>
+                        <UiButton label={"Test Colored"} className={"mx-2"} color={getCustomTheme()}>Colored</UiButton>
                         <UiCancelButton className={"mx-2"}>TestCancel</UiCancelButton>
                         <UiLoadableButton label={"Test"} id={"loadable"} className={"mx-2"} onClick={() => new Promise(() => setTimeout(void 0, 1000))}>Loading</UiLoadableButton>
                         <UiClassicButton label={"Classic Test"} className={"mx-2"}>Classic</UiClassicButton>
@@ -80,7 +81,7 @@ const UiTestRoute = () => {
                     <UiCol xs={12} className={"my-3"}>
                         <UiLoadingSpinner className={"mx-2"}/>
                         <UiLoadingSpinner className={"mx-2"} customSize={25}/>
-                        <UiLoadingSpinner className={"mx-2"} color={customTheme} customSize={15}/>
+                        <UiLoadingSpinner className={"mx-2"} color={getCustomTheme()} customSize={15}/>
 
                         <UiPrettyUsername className={"mx-2"} user={context.user.data}/>
                         <UiPrettyUsername className={"mx-2"} user={context.user.data} truncate={3}/>
@@ -89,7 +90,7 @@ const UiTestRoute = () => {
                     </UiCol>
                     <UiCol xs={12} className={"my-3"}>
                         <UiBadge className={"mx-2"}>Test</UiBadge>
-                        <UiBadge className={"mx-2"} color={customTheme}>Colored</UiBadge>
+                        <UiBadge className={"mx-2"} color={getCustomTheme()}>Colored</UiBadge>
                     </UiCol>
                     <UiCol as={UiRow} xs={12}>
                         <UiCol xs={12} md={6}>
@@ -100,7 +101,7 @@ const UiTestRoute = () => {
                             </UiViewBox>
                         </UiCol>
                         <UiCol xs={12} md={6}>
-                            <UiViewBox description={"ViewDescription Colored"} title={"ViewTitle Colored"} theme={customTheme}>
+                            <UiViewBox description={"ViewDescription Colored"} title={"ViewTitle Colored"} theme={getCustomTheme()}>
                                 <UiCol>
                                     Content test content test
                                 </UiCol>
@@ -137,7 +138,7 @@ const UiTestRoute = () => {
                                               currentValue={"Test Dropdown"} id={"selectDropdown"}/>
                     </UiCol>
                     <UiCol xs={12} className={"my-3"}>
-                        <UiHorizontalRule theme={customTheme.clone().setAlpha(.1)}/>
+                        <UiHorizontalRule theme={getCustomTheme().setAlpha(.1)}/>
                         <UiKeyboardInput>Input</UiKeyboardInput>
                     </UiCol>
                 </UiRow>
