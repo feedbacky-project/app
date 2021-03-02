@@ -7,7 +7,7 @@ import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from 'react';
-import {FaCog, FaUserLock} from "react-icons/all";
+import {FaCog, FaComment, FaCommentSlash, FaUserLock} from "react-icons/all";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
@@ -60,6 +60,26 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             }
             updateState({...ideaData, open: false});
             popupRevertableNotification("Idea closed", getTheme().toHexString(), onIdeaOpen);
+        });
+    };
+    const onCommentsEnable = () => {
+        return axios.patch("/ideas/" + ideaData.id, {"commentingRestricted": false}).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                popupError();
+                return;
+            }
+            updateState({...ideaData, commentingRestricted: false});
+            popupRevertableNotification("Commenting enabled", getTheme().toHexString(), onCommentsDisable);
+        });
+    };
+    const onCommentsDisable = () => {
+        return axios.patch("/ideas/" + ideaData.id, {"commentingRestricted": true}).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                popupError();
+                return;
+            }
+            updateState({...ideaData, commentingRestricted: false});
+            popupRevertableNotification("Commenting disabled", getTheme().toHexString(), onCommentsEnable);
         });
     };
     const doIdeaDelete = () => {
@@ -125,6 +145,10 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                               actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
         <DangerousActionModal id={"suspend"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "suspend"} onAction={doSuspendUser} actionButtonName={"Suspend"}
                               actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
+        <DangerousActionModal id={"enable_comments"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "enable_comments"} onAction={onCommentsEnable}
+                              actionDescription={<div>Everyone will be able to comment this idea.</div>} actionButtonName={"Enable"}/>
+        <DangerousActionModal id={"restrict_comments"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "restrict_comments"} onAction={onCommentsDisable}
+                              actionDescription={<div>Only moderators will be able to comment this idea.</div>} actionButtonName={"Disable"}/>
         <ModeratorTagsUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "tags"} onAction={onTagsManage}/>
         <DropdownOption onClick={() => {
             setModal({open: true, type: "tags"})
@@ -134,6 +158,10 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             <DropdownOption onClick={() => setModal({open: true, type: "open"})} as={"span"}><FaUnlock className={"mr-1 move-top-2px"} style={{color}}/> Open Idea</DropdownOption>
         }
         <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Idea</DropdownOption>
+        {ideaData.commentingRestricted ?
+            <DropdownOption onClick={() => setModal({open: true, type: "enable_comments"})} as={"span"}><FaComment className={"mr-1 move-top-2px"} style={{color}}/> Enable Comments</DropdownOption> :
+            <DropdownOption onClick={() => setModal({open: true, type: "restrict_comments"})} as={"span"}><FaCommentSlash className={"mr-1 move-top-2px"} style={{color}}/> Disable Comments</DropdownOption>
+        }
         {isSuspendable() && <DropdownOption onClick={() => setModal({open: true, type: "suspend"})} className={"text-red"} as={"span"}>
             <FaUserLock className={"mr-1 move-top-2px"} style={{color: getTheme()}}/> Suspend User
         </DropdownOption>

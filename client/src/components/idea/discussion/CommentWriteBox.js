@@ -27,6 +27,7 @@ const CommentWriteBox = ({submitOpen, onCommentSubmit, onCommentBoxKeyUp}) => {
     const {serviceData, user} = useContext(AppContext);
     const {onNotLoggedClick, data} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
+    const isModerator = data.moderators.find(mod => mod.userId === user.data.id);
     if (!ideaData.open && !serviceData.closedIdeasCommenting) {
         return <React.Fragment/>;
     }
@@ -34,13 +35,12 @@ const CommentWriteBox = ({submitOpen, onCommentSubmit, onCommentBoxKeyUp}) => {
         if (!submitOpen) {
             return <React.Fragment/>
         }
-        const moderator = data.moderators.find(mod => mod.userId === user.data.id);
         return <div className={"mt-2"}>
             <UiLoadableButton label={"Submit"} size={"sm"} onClick={() => onCommentSubmit(false)}>
                 Submit
             </UiLoadableButton>
 
-            {moderator && <React.Fragment>
+            {isModerator && <React.Fragment>
                 <UiLoadableButton label={"Submit Internal"} color={tinycolor("#0080FF")} size={"sm"} className={"ml-1"} onClick={() => onCommentSubmit(true)}>
                     Submit Internal
                 </UiLoadableButton>
@@ -56,6 +56,14 @@ const CommentWriteBox = ({submitOpen, onCommentSubmit, onCommentBoxKeyUp}) => {
         onNotLoggedClick();
     };
     const submitButton = user.loggedIn ? renderSubmitButton : () => void 0;
+    const renderWriteCommentForm = () => {
+      if(ideaData.commentingRestricted && !isModerator) {
+          return <UiFormControl disabled className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Commenting restricted to moderators only."}
+                                style={{overflow: "hidden"}} label={"Commenting restricted"}/>;
+      }
+      return <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
+                            style={{overflow: "hidden"}} onChange={onChange} label={"Write a comment"} onClick={onClick}/>;
+    };
     return <WriteBox xs={10}>
         <div className={"text-center mr-3 pt-2"}>
             {avatar}
@@ -64,8 +72,7 @@ const CommentWriteBox = ({submitOpen, onCommentSubmit, onCommentBoxKeyUp}) => {
         <UiCol xs={12} className={"px-0"}>
             <UsernameBox>{username}</UsernameBox>
             <br/>
-            <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                           style={{overflow: "hidden"}} onChange={onChange} label={"Write a comment"} onClick={onClick}/>
+            {renderWriteCommentForm()}
             {submitButton()}
         </UiCol>
     </WriteBox>

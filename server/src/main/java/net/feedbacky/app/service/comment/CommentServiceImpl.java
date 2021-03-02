@@ -22,8 +22,8 @@ import net.feedbacky.app.repository.idea.CommentRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.PaginableRequest;
-import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.SortFilterResolver;
+import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.request.ServiceValidator;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
@@ -112,8 +112,9 @@ public class CommentServiceImpl implements CommentService {
     Idea idea = ideaRepository.findById(dto.getIdeaId())
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", dto.getIdeaId())));
     boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(user));
-    //internal type is for moderators only
-    if(Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL && !isModerator) {
+    //1. internal type is for moderators only
+    //2. restricted commenting is for moderators only
+    if(!isModerator && (Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL || idea.isCommentingRestricted())) {
       throw new InsufficientPermissionsException();
     }
     if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !closedIdeasCommenting) {
@@ -163,7 +164,7 @@ public class CommentServiceImpl implements CommentService {
     }
     comment.getLikers().add(user);
     commentRepository.save(comment);
-    return  new FetchUserDto().from(user);
+    return new FetchUserDto().from(user);
   }
 
   @Override

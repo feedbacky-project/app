@@ -61,9 +61,8 @@ public class Comment implements Serializable {
   @CreationTimestamp
   private Date creationDate;
 
-  //byte type to force database to use smaller data type
   public enum SpecialType {
-    LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED
+    LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED, COMMENTS_RESTRICTED, COMMENTS_ALLOWED
   }
 
   public enum ViewType {

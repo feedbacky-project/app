@@ -53,12 +53,12 @@ const ModeratorsSubroute = () => {
             <UiCol xs={12} sm={6} className={"mb-sm-2 mb-3"}>
                 <UiKeyboardInput>Owner & Administrator  Permissions</UiKeyboardInput>
                 <ul className={"mb-0 pl-3"}>
-                    <li>Delete board <UiKeyboardInput>Owner only</UiKeyboardInput></li>
-                    <li>Promote and demote moderators <UiKeyboardInput>Owner only</UiKeyboardInput></li>
-                    <li>Admin panel access</li>
-                    <li>Remove moderators from board</li>
-                    <li>Remove suspended users</li>
-                    <li>All moderator permissions</li>
+                    <li>Delete Board <UiKeyboardInput>Owner Only</UiKeyboardInput></li>
+                    <li>Promote and Demote Moderators <UiKeyboardInput>Owner Only</UiKeyboardInput></li>
+                    <li>Admin Panel Access</li>
+                    <li>Remove Moderators from Board</li>
+                    <li>Remove Suspended Users</li>
+                    <li>All Moderator Permissions</li>
                 </ul>
             </UiCol>
             <UiCol xs={12} sm={6} className={"mb-sm-2 mb-3"}>
@@ -68,7 +68,8 @@ const ModeratorsSubroute = () => {
                     <li>Add and Remove Tags from Ideas</li>
                     <li>Post Internal Comments</li>
                     <li>Delete Comments</li>
-                    <li>Suspend users</li>
+                    <li>Enable and Disable Commenting</li>
+                    <li>Suspend Users</li>
                 </ul>
             </UiCol>
         </React.Fragment>

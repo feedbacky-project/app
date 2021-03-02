@@ -1,6 +1,7 @@
 ### 1.0.0.alpha.4
 * **[FEATURE]** Page routes now includes browser changeable tab titles instead of hardcoded one
 * **[FEATURE]** Ideas can be filtered by tags now
+* **[FEATURE]** Ideas commenting can be now restricted to moderators only
 * **[IMPROVEMENT]** User will no longer receive notification emails if they made any changes to their own ideas
 * **[CHANGE/CONTROVERSIAL]** Edited light mode UI, now shadowless with improved UI elements
 * **[CHANGE]** Increased social links amount by 1 (because moved Roadmap icon to navbar)

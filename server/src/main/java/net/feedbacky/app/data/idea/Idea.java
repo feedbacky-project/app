@@ -85,7 +85,8 @@ public class Idea implements Serializable {
   private IdeaStatus status;
   @CreationTimestamp
   private Date creationDate;
-  private boolean edited;
+  private boolean edited = false;
+  private boolean commentingRestricted = false;
 
   public void setVoters(Set<User> voters) {
     this.voters = voters;
