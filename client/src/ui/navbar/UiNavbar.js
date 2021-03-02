@@ -12,7 +12,6 @@ const StyledNavbar = styled.div`
   flex-flow: row nowrap;
   justify-content: flex-start;
   position: relative;
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
   
