@@ -11,10 +11,10 @@ import {UiNavbar, UiNavbarBrand} from "ui/navbar";
 const GoBackButton = styled(Link)`
   position: absolute;
   margin-left: .75rem;
+  margin-top: .5rem;
   justify-content: start;
   transition: var(--hover-transition);
   color: ${props => props.theme};
-  margin-bottom: .25rem;
   
   &:hover {
     transform: var(--hover-transform-scale-lg);
