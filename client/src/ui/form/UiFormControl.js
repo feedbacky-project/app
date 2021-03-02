@@ -12,6 +12,9 @@ const FormControl = styled(Form.Control)`
   &.darker {
     background-color: var(--background);
   }
+  &:focus {
+    box-shadow: var(--box-shadow);
+  }
   &:disabled {
     background-color: var(--disabled);
   }
@@ -19,6 +22,9 @@ const FormControl = styled(Form.Control)`
     color: hsla(0, 0%, 95%, .6) !important;
     background-color: var(--dark-secondary) !important;
     box-shadow: var(--dark-box-shadow) !important;
+  }
+  .dark &:focus {
+    background-color: var(--dark-tertiary) !important;
   }
   
   &:-moz-focusring {
