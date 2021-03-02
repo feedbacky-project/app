@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import {PROFILE_DARK_THEME_COLOR, PROFILE_LIGHT_THEME_COLOR} from "components/profile/ProfileSidebar";
 import AppContext from "context/AppContext";
 import React, {useContext} from "react";
 import {UiCard} from "ui";
@@ -22,10 +21,10 @@ const OptionImage = styled.img`
 `;
 
 const AppearanceCard = ({className, chosen, alt, imgSrc, onClick}) => {
-    const {user} = useContext(AppContext);
+    const {defaultTheme} = useContext(AppContext);
     let style;
     if (chosen) {
-        style = {border: "2px solid " + (user.darkMode ? PROFILE_DARK_THEME_COLOR : PROFILE_LIGHT_THEME_COLOR)};
+        style = {border: "2px solid " + defaultTheme};
     } else {
         style = {border: "2px solid transparent"};
     }

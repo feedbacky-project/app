@@ -1,5 +1,5 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import {DEFAULT_THEME} from "AppAppearance";
+import {DARK_THEME_COLOR, LIGHT_THEME_COLOR} from "AppAppearance";
 import axios from "axios";
 import ComponentLoader from "components/ComponentLoader";
 import AppContext from "context/AppContext";
@@ -153,8 +153,8 @@ const App = ({appearanceSettings}) => {
             theme: theme,
             appearance: appearance,
             setAppearance: setAppearance,
-            defaultTheme: DEFAULT_THEME,
-            onThemeChange: (newTheme = DEFAULT_THEME) => setTheme(newTheme),
+            defaultTheme: appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
+            onThemeChange: (newTheme = (appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR)) => setTheme(newTheme),
             hardResetData: hardResetData,
         }}>
             <Suspense fallback={<LoadingRouteUtil/>}>

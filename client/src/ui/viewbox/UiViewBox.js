@@ -5,14 +5,34 @@ import React, {useContext} from 'react';
 import {UiCol, UiRow} from "ui/grid";
 import {UiCard} from "ui/UiCard";
 
-const ViewBox = styled.div`
-  z-index: 1;
+const ViewBox = styled(UiCard)`
+  z-index: 2;
   position: relative;
   top: 35px;
   color: white;
   padding: 1rem 1.5rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
+`;
+
+const TitleOverlayParent = styled.div`
+  position: relative;
+  top: 35px;
+
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+`;
+
+const TitleOverlayChild = styled(UiCol)`
+  z-index: 1;
+  padding: 1.25rem 0;
+  position: absolute;
+  bottom: 0;
+  background-color: var(--background);
+  
+  .dark & {
+    background-color: var(--dark-background);
+  }
 `;
 
 const ViewBoxContent = styled(UiRow)`
@@ -26,8 +46,8 @@ export const UiViewBoxBackground = styled(UiCol)`
   box-shadow: var(--box-shadow);
   
   .form-control:not(:disabled) {
-      background-color: var(--tertiary) !important;
-    }
+    background-color: var(--tertiary) !important;
+  }
   
   .dark & {
     background-color: var(--dark-secondary);
@@ -52,10 +72,11 @@ const UiViewBox = (props) => {
     const {getTheme} = useContext(AppContext);
     const {theme = getTheme(), title, description, children} = props;
     return <React.Fragment>
-        <UiCard as={ViewBox} style={{backgroundColor: theme}} bodyClassName={"p-0"}>
+        <ViewBox style={{backgroundColor: theme.clone().setAlpha(.1), color: theme}} bodyClassName={"p-0"}>
             <h3 className={"mb-0"}>{title}</h3>
             <div>{description}</div>
-        </UiCard>
+        </ViewBox>
+        <TitleOverlayParent><TitleOverlayChild as={UiCard}/></TitleOverlayParent>
         <UiViewBoxBackground>
             <ViewBoxContent>
                 {children}
