@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -182,7 +183,9 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
       throw new InsufficientPermissionsException("Insufficient permissions, same permission type.");
     }
     Moderator moderator = optional.get();
-    moderatorRepository.delete(moderator);
+    board.getModerators().remove(moderator);
+    moderator.setBoard(null);
+    moderatorRepository.deleteInBatch(Collections.singletonList(moderator));
     new MailBuilder()
             .withRecipient(eventUser)
             .withEventBoard(board)
