@@ -24,6 +24,10 @@ const LoginButton = styled(UiClassicButton)`
     background-color: transparent !important;
     transform: var(--hover-transform-scale-sm);
   }
+  
+  .dark & {
+    color: var(--dark-font-color);
+  }
 `;
 
 const OptionsButton = styled.div`
