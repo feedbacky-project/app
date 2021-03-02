@@ -40,20 +40,25 @@ const OptionsButton = styled.div`
   }
 `;
 
+const TopDropdownElement = styled(UiDropdownElement)`
+  padding-top: .4rem;
+  border-top: 2px solid ${props => props.theme};
+`;
+
 export const renderLogIn = (onNotLoggedClick, context) => {
     if (!context.user.loggedIn) {
         return <LoginButton label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
     }
-    return <UiDropdown label={"Options"} toggleClassName={"px-0"} toggle={
+    return <UiDropdown label={"Options"} toggleClassName={"px-0"} menuClassName={"pt-0 rounded-top-0"} toggle={
         <OptionsButton>
             <UiAvatar className={"mr-1"} roundedCircle user={context.user.data} size={28} style={{border: "1px solid " + context.getTheme()}}/>
             <FaAngleDown color={context.getTheme()}/>
         </OptionsButton>
     }>
-        <UiDropdownElement>
+        <TopDropdownElement theme={context.getTheme().setAlpha(.75).toString()}>
             <FaUserAlt className={"mr-2 move-top-1px"}/>
             <strong className={"d-inline-block align-middle text-truncate"} style={{maxWidth: 100}}>{context.user.data.username}</strong>
-        </UiDropdownElement>
+        </TopDropdownElement>
         <div className={"my-1"}/>
         <UiDropdownElement as={Link} to={"/me"}>
             Settings

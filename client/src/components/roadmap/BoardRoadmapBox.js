@@ -38,7 +38,7 @@ const RoadmapContainer = styled.div`
 `;
 
 const StyledTagName = styled(UiBadge)`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   padding: .25rem .75rem;
 `;
 

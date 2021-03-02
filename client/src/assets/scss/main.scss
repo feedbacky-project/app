@@ -52,4 +52,9 @@ body {
   justify-content: center !important;
 }
 
+.rounded-top-0 {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 @import "main-dark";
