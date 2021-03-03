@@ -1,11 +1,10 @@
-import Checkbox from "components/commons/Checkbox";
 import {QuestionIcon} from "components/commons/DangerousActionModal";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext, useState} from "react";
 import {FaExclamation} from "react-icons/all";
 import tinycolor from "tinycolor2";
-import {UiBadge} from "ui";
+import {UiBadge, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
@@ -14,6 +13,7 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const {data: boardData} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
     const [tags, setTags] = useState(ideaData.tags);
+    const allTags = boardData.tags;
 
     return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
                                applyButton={<UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
@@ -26,19 +26,22 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
                 <div>
                     Choose tags to add or remove and click Update to confirm.
                     <div>
-                        {boardData.tags.map((data, i) => {
+                        {allTags.map((tag, i) => {
                             const update = () => {
                                 let newTags;
-                                if (tags.includes(data)) {
-                                    newTags = tags.filter(tag => tag.name !== data.name);
+                                if (tags.some(t => t.name === tag.name)) {
+                                    newTags = tags.filter(t => t.name !== tag.name);
                                 } else {
-                                    newTags = tags.concat(data);
+                                    newTags = tags.concat(tag);
                                 }
                                 // https://stackoverflow.com/a/39225750/10156191
-                                setTimeout(() => setTags(newTags), 0);
+                                setTimeout(() => setTags(newTags), 10);
                             };
-                            return <Checkbox id={"tagManage_" + data.name} key={i} checked={tags.some(d => d.name === data.name)} onChange={update}
-                                             label={<UiBadge onClick={update} color={tinycolor(data.color)}>{data.name}</UiBadge>}/>
+                            //FIXME odd workaround for not working checkbox
+                            return <div key={i} onClick={update} className={"d-inline"}>
+                                <UiLabelledCheckbox id={"applicableTag_" + tag.id} key={i} checked={tags.some(t => t.name === tag.name)} onChange={update} className={"mr-3"}
+                                                    label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
+                            </div>
                         })}
                     </div>
                 </div>

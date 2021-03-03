@@ -4,10 +4,9 @@ import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import Form from "react-bootstrap/Form";
 import {FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip} from "ui";
+import {UiBadge, UiClickableTip, UiLabelledCheckbox} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -32,6 +31,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
     const [attachment, setAttachment] = useState(null);
     const [attachmentName, setAttachmentName] = useState("No Attachment");
     const applicableTags = tags.filter(tag => tag.publicUse);
+    const [chosenTags, setChosenTags] = useState([]);
 
     const handleSubmit = () => {
         const description = document.getElementById("descriptionTextarea").value;
@@ -45,12 +45,9 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
         }
         const tags = [];
         if (applicableTags.length !== 0) {
-            const applicable = document.querySelectorAll('[id^="applicableTag_"');
-            applicable.forEach(tagObject => {
-                if (tagObject.checked) {
-                    tags.push(tagObject.id.replace("applicableTag_", ""));
-                }
-            })
+            chosenTags.forEach(tag => {
+                tags.push(tag.id);
+            });
         }
         return axios.post("/ideas/", {
             discriminator, title, description, attachment, tags
@@ -144,8 +141,18 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                 <UiClickableTip id={"ideaTags"} title={"Choosing Tags"} description={"Choose tags you wish to be used in your idea."}/>
                 <div>
                     {applicableTags.map((tag, i) => {
-                        return <Form.Check id={"applicableTag_" + tag.id} key={i} custom inline type={"checkbox"} defaultChecked={false}
-                                           label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
+                        const update = () => {
+                            let newTags;
+                            if (chosenTags.includes(tag)) {
+                                newTags = chosenTags.filter(t => t.name !== tag.name);
+                            } else {
+                                newTags = chosenTags.concat(tag);
+                            }
+                            // https://stackoverflow.com/a/39225750/10156191
+                            setTimeout(() => setChosenTags(newTags), 0);
+                        };
+                        return <UiLabelledCheckbox id={"applicableTag_" + tag.id} key={i} checked={chosenTags.includes(tag)} onChange={update} className={"mr-3"}
+                                                   label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
                     })}
                 </div>
             </div>

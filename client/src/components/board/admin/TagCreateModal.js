@@ -9,15 +9,16 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
     const {getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     const [color, setColor] = useState("#0994f6");
+    const [tagData, setTagData] = useState({name: "", roadmapIgnored: false, publicUse: false});
 
     const handleSubmit = () => {
-        const name = document.getElementById("tagNameTextarea").value;
+        const name = tagData.name;
         if (name.length < 3 || name.length > 20) {
             popupWarning("Tag name must be between 3 and 20 characters");
             return Promise.resolve();
         }
-        const roadmapIgnored = document.getElementById("roadmapIgnored").checked;
-        const publicUse = document.getElementById("publicUse").checked;
+        const roadmapIgnored = tagData.roadmapIgnored;
+        const publicUse = tagData.publicUse;
         return axios.post("/boards/" + data.discriminator + "/tags", {
             name, color, roadmapIgnored, publicUse,
         }).then(res => {
@@ -30,7 +31,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             popupNotification("Tag created", getTheme().toHexString());
         });
     };
-    return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, {name: "", roadmapIgnored: false, publicUse: false});
+    return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, tagData, setTagData);
 };
 
 export default TagCreateModal;

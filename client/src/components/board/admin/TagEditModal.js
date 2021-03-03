@@ -9,18 +9,22 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
     const {getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     const [color, setColor] = useState(tag.color);
+    const [tagData, setTagData] = useState({name: "", roadmapIgnored: false, publicUse: false});
     useEffect(() => {
         setColor(tag.color);
+        if(tag.roadmapIgnored != null && tag.publicUse != null) {
+            setTagData({name: tag.name, roadmapIgnored: tag.roadmapIgnored, publicUse: tag.publicUse});
+        }
     }, [tag]);
 
     const handleSubmit = () => {
-        const name = document.getElementById("tagNameTextarea").value;
+        const name = tagData.name;
         if (name.length < 3 || name.length > 20) {
             popupWarning("Tag name must be between 3 and 20 characters");
             return Promise.resolve();
         }
-        const roadmapIgnored = document.getElementById("roadmapIgnored").checked;
-        const publicUse = document.getElementById("publicUse").checked;
+        const roadmapIgnored = tagData.roadmapIgnored;
+        const publicUse = tagData.publicUse;
         return axios.patch("/boards/" + data.discriminator + "/tags/" + tag.name, {
             name, color, roadmapIgnored, publicUse,
         }).then(res => {
@@ -33,7 +37,7 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
             popupNotification("Tag edited", getTheme().toHexString());
         });
     };
-    return renderModal(isOpen, onHide, "Edit Tag", handleSubmit, color, setColor, {name: tag.name, roadmapIgnored: tag.roadmapIgnored, publicUse: tag.publicUse});
+    return renderModal(isOpen, onHide, "Edit Tag", handleSubmit, color, setColor, tagData, setTagData);
 };
 
 export default TagEditModal;
