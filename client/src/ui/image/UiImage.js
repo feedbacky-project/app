@@ -11,8 +11,9 @@ const Image = styled.img`
 const UiImage = (props) => {
     const {roundedCircle, rounded, thumbnail, className, onError = () => void 0, innerRef, ...otherProps} = props;
     let borderRadius = 0;
+    const defaultRadius = getComputedStyle(document.documentElement).getPropertyValue("--border-radius");
     if (rounded) {
-        borderRadius = ".35rem";
+        borderRadius = defaultRadius;
     }
     if (roundedCircle) {
         borderRadius = "50%";
@@ -21,7 +22,7 @@ const UiImage = (props) => {
     if (thumbnail) {
         padding = ".25rem";
         if (borderRadius === 0) {
-            borderRadius = ".35rem";
+            borderRadius = defaultRadius;
         }
     }
     return <Image className={className} borderRadius={borderRadius} padding={padding} onError={onError} ref={innerRef} {...otherProps}/>

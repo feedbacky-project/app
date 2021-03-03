@@ -8,6 +8,12 @@ import {UiClickableTip, UiHoverableIcon, UiLoadingSpinner} from "ui";
 import {UiFormLabel} from "ui/form";
 
 const ColorPicker = styled(ChromePicker)`
+  box-shadow: var(--box-shadow) !important;
+  border-radius: var(--border-radius) !important;
+  
+  & > div {
+    border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+  }
   .dark & {
     box-shadow: var(--dark-box-shadow) !important;
 

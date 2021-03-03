@@ -73,7 +73,7 @@ const BoardAdminPanelRoute = () => {
         <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
             <IdeaNavbar/>
             <UiContainer>
-                <UiRow centered className={"pb-4"}>
+                <UiRow centered className={"pb-5"}>
                     <AdminSidebar currentNode={currentNode} reRouteTo={route => history.push({pathname: "/ba/" + board.data.discriminator + "/" + route, state: {_boardData: board.data}})} data={board}/>
                     <Suspense fallback={<UiCol xs={12} md={9}><UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow></UiCol>}>
                         <Switch>

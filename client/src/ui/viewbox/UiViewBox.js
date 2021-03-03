@@ -42,7 +42,7 @@ const ViewBoxContent = styled(UiRow)`
 
 export const UiViewBoxBackground = styled(UiCol)`
   background-color: var(--secondary);
-  border-radius: .35rem;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   
   .form-control:not(:disabled) {

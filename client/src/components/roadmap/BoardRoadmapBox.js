@@ -15,7 +15,7 @@ const RoadmapContainer = styled.div`
   overflow: auto;
   scrollbar-width: thin; /* firefox property */
   background-color: white;
-  border-radius: .35rem;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   &::-webkit-scrollbar {
     height: 6px;

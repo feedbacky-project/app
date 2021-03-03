@@ -5,8 +5,8 @@ import tinycolor from "tinycolor2";
 import {getCookieOrDefault} from "utils/basic-utils";
 
 export const DEFAULT_THEME = "#343a40";
-export const LIGHT_THEME_COLOR = "#00732d";
-export const DARK_THEME_COLOR = "#00e25b";
+export const LIGHT_THEME_COLOR = "#0776c4";
+export const DARK_THEME_COLOR = "#6bbef9";
 
 const AppAppearance = () => {
     const [theme, setTheme] = useState(DEFAULT_THEME);

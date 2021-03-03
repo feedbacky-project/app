@@ -36,6 +36,10 @@ const ThemeSelector = styled.div`
   }
 `;
 
+const ApiKeyElement = styled.span`
+  transition: var(--hover-transition);
+`;
+
 const GeneralSubroute = ({updateState}) => {
     const history = useHistory();
     const {onThemeChange, getTheme, user} = useContext(AppContext);
@@ -134,9 +138,9 @@ const GeneralSubroute = ({updateState}) => {
     };
     const conditionalButton = (conditionEnabled, funcEnable, funcDisable) => {
         if (conditionEnabled) {
-            return <UiLoadableButton label={"Disable"} color={tinycolor("#ff3547")} onClick={funcDisable}>Disable</UiLoadableButton>
+            return <UiLoadableButton label={"Disable"} color={tinycolor("#ff3547")} className={"mt-sm-0 mt-2"} onClick={funcDisable}>Disable</UiLoadableButton>
         }
-        return <UiLoadableButton label={"Enable"} color={tinycolor("#00c851")} onClick={funcEnable}>Enable</UiLoadableButton>
+        return <UiLoadableButton label={"Enable"} color={tinycolor("#00c851")} className={"mt-sm-0 mt-2"} onClick={funcEnable}>Enable</UiLoadableButton>
     };
     const renderDangerContent = () => {
         return <UiViewBoxDangerBackground className={"mb-3 px-1 py-3 rounded mt-2 rounded-bottom"}>
@@ -192,7 +196,7 @@ const GeneralSubroute = ({updateState}) => {
                     <h4 className="mb-1 text-red">API Key</h4>
                     <span className="text-black-60" style={{fontSize: ".9em"}}>
                         Generate access key to utilise Feedbacky API for anonymous ideas posting.<br/>
-                        Your API key <span className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</span>
+                        Your API key <ApiKeyElement className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</ApiKeyElement>
                         <CommentInternal as={FaEyeSlash} className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
                         Remember to keep it safe!<br/>
                         <span><strong className="text-red" style={{cursor: "pointer"}} onClick={() => setModal({open: true, type: "apiReset"})}>Click here</strong> to regenerate API key if it got compromised.</span>

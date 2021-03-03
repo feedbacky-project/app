@@ -109,7 +109,7 @@ const CreatorBoardRoute = () => {
     return <React.Fragment>
         <ProfileNavbar/>
         <UiContainer>
-            <UiRow className={"mt-4 mt-sm-5"}>
+            <UiRow className={"mt-4 mt-sm-5 mb-5"}>
                 <UiProgressBar currentStep={settings.step} steps={4}>
                     <Step title={"Choose Name"}/>
                     <Step title={"Brand Board"}/>

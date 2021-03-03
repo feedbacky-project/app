@@ -44,7 +44,7 @@
     min-width: 150px;
     max-width: 568px;
     display: inline-flex;
-    border-radius: .35rem;
+    border-radius: var(--border-radius);
     margin: 24px;
   }
 }

@@ -45,7 +45,7 @@ const BadgeContainer = styled.span`
     }
     
     & > div:first-of-type {
-        border-radius: .35rem 0 0 .35rem;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
     }
     & > div:nth-of-type(n+2) {
         border-radius: 0;
@@ -54,7 +54,7 @@ const BadgeContainer = styled.span`
         border-radius: 0 .35rem .35rem 0;
     }
     & > div:only-of-type {
-        border-radius: .35rem;
+        border-radius: var(--border-radius);
     }
 `;
 

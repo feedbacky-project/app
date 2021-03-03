@@ -9,6 +9,7 @@
 * **[CHANGE]** Unified Web Content Accessibility Guidelines color contrast checking for various UI elements
 * **[CHANGE]** Filters and sorts will be now reset after each page visit (requested by [yeah idk](https://app.feedbacky.net/i/reseting-the-filtering-and-sorting-types.2006))
 * **[CHANGE]** Default sort for comments is now Newest
+* **[CHANGE]** Default theme color is now blue-ish to look like Feedbacky theme colors not green
 * **[FIX]** Google users couldn't log-in for the first time if their avatar URL length exceeded 255 characters
 * **[FIX]** Moderators couldn't be removed
 

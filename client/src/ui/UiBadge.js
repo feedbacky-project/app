@@ -10,7 +10,7 @@ const Badge = styled.div`
     padding: .2rem .5rem;
     box-shadow: none;
     border-width: 0;
-    border-radius: .35rem;
+    border-radius: var(--border-radius);
     font-size: .7rem;
     line-height: 1;
     text-align: center;

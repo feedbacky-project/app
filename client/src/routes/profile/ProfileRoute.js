@@ -26,7 +26,7 @@ const ProfileRoute = () => {
                     image={ServiceLogo} boardName={getEnvVar("REACT_APP_SERVICE_NAME")} redirectUrl={"me"}/>
         <ProfileNavbar onNotLoggedClick={() => setLoginModalOpen(true)}/>
         <UiContainer>
-            <UiRow centered className={"pb-4"}>
+            <UiRow centered className={"pb-5"}>
                 <ProfileSidebar currentNode={currentNode} reRouteTo={destination => history.push({pathname: "/me/" + destination})}/>
                 <Suspense fallback={<UiCol xs={12} md={9}><UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow></UiCol>}>
                     <Switch>

@@ -9,6 +9,7 @@ const OptionCard = styled(UiCard)`
   width: 200px;
   max-width: 250px;
   cursor: pointer;
+  transition: var(--hover-transition);
 `;
 
 export const SetupCardIcon = styled.div`

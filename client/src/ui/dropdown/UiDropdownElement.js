@@ -5,6 +5,7 @@ import {Dropdown} from "react-bootstrap";
 const DropdownItem = styled(Dropdown.Item)`
   font-size: 14px;
   padding: 4px 10px;
+  transition: var(--hover-transition);
   
   &:active {
     background-color: hsla(0, 0%, 0%, .075);

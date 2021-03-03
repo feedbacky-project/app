@@ -10,7 +10,7 @@ export const PageButton = styled(Button)`
   color: white;
   box-shadow: var(--box-shadow);
   transition: var(--hover-transition);
-  border-radius: .35rem;
+  border-radius: var(--border-radius);
   border: 1px solid transparent;
   
   &:focus {

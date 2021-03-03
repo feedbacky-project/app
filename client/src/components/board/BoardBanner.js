@@ -9,7 +9,7 @@ export const Banner = styled.div`
   text-align: center;
   background-position: center;
   box-shadow: var(--box-shadow);
-  border-radius: .35rem;
+  border-radius: var(--border-radius);
   padding: 2rem 1rem;
   @media(min-width: 576px) {
    padding: 4rem 2rem;
@@ -40,7 +40,7 @@ const SocialLinkContainer = styled.div`
 const SocialLink = styled(Link)`
   padding: .7rem 1rem;
   background-color: hsla(0, 0%, 0%, .5);
-  transition: .2s ease-in-out;
+  transition: var(--hover-transition);
 
   &:first-of-type {
     border-top-left-radius: 4px;
