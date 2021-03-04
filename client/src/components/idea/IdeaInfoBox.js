@@ -18,7 +18,7 @@ import {UiCol} from "ui/grid";
 import {htmlDecode, popupError, popupNotification} from "utils/basic-utils";
 
 const IdeaInfoBox = () => {
-    const {getTheme} = useContext(AppContext);
+    const {user, getTheme} = useContext(AppContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
     const history = useHistory();
@@ -89,7 +89,14 @@ const IdeaInfoBox = () => {
         <UiCol sm={12} md={10}>
             <UiCol xs={12} className={"d-inline-flex mb-2 p-0"}>
                 <div className={"my-auto mr-2"} ref={voteRef}>
-                    <VoteButton idea={ideaData} animationRef={voteRef} onVote={(upvoted, votersAmount) => updateState({...ideaData, upvoted, votersAmount})}/>
+                    <VoteButton idea={ideaData} animationRef={voteRef} onVote={(upvoted, votersAmount) => {
+                        updateState({...ideaData, upvoted, votersAmount});
+                        if(upvoted) {
+                            setVoters({...voters, data: voters.data.concat(user.data)});
+                        } else {
+                            setVoters({...voters, data: voters.data.filter(voter => voter.id === user.id)});
+                        }
+                    }}/>
                 </div>
                 <TitleInfo editor={editor} setEditor={setEditor} setModal={setModal}/>
             </UiCol>

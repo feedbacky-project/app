@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext} from "react";
-import {FaFrown} from "react-icons/all";
+import {FaRegFrown} from "react-icons/all";
 import {UiLoadingSpinner, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
 
@@ -48,10 +48,10 @@ const VotersInfo = ({data}) => {
             </React.Fragment>
         }
         if (data.error) {
-            return <div className={"text-red"}><FaFrown className={"move-top-2px"}/> Failed to load</div>
+            return <div className={"text-red"}><FaRegFrown className={"move-top-2px"}/> Failed to load</div>
         }
         if (data.data.length === 0) {
-            return <div style={{height: 25}}><FaFrown className={"move-top-2px"}/> None</div>
+            return <div style={{height: 25}}><FaRegFrown className={"move-top-2px"}/> None</div>
         }
         return <div>
             {data.data.slice(0, 5).map(dataUser => {
