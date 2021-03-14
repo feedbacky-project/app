@@ -6,6 +6,7 @@
   --tertiary: hsl(210, 17%, 98%);
   --disabled: hsla(217, 11%, 14%, .2);
   --hover: hsla(0, 0%, 0%, .1);
+  --internal: hsl(210, 12%, 88%);
 
   --hover-transition: all .2s ease-in-out;
   --hover-transform-scale-sm: scale(1.05);
@@ -20,5 +21,6 @@
   --dark-font-color: hsl(0, 0%, 95%);
   --dark-disabled: hsl(243, 17%, 21%);
   --dark-hover: hsl(219, 11%, 32%);
+  --dark-internal: hsl(217, 11%, 16%);
   --dark-box-shadow: none;
 }

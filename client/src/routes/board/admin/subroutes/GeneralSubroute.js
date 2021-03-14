@@ -36,6 +36,14 @@ const ThemeSelector = styled.div`
   }
 `;
 
+export const ApiKeyIcon = styled(FaEyeSlash)`
+  color: hsl(210, 100%, 50%);
+  
+  .dark & {
+    color: hsl(210, 100%, 60%);
+  }
+`;
+
 const ApiKeyElement = styled.span`
   transition: var(--hover-transition);
 `;
@@ -197,7 +205,7 @@ const GeneralSubroute = ({updateState}) => {
                     <span className="text-black-60" style={{fontSize: ".9em"}}>
                         Generate access key to utilise Feedbacky API for anonymous ideas posting.<br/>
                         Your API key <ApiKeyElement className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</ApiKeyElement>
-                        <CommentInternal as={FaEyeSlash} className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
+                        <ApiKeyIcon className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
                         Remember to keep it safe!<br/>
                         <span><strong className="text-red" style={{cursor: "pointer"}} onClick={() => setModal({open: true, type: "apiReset"})}>Click here</strong> to regenerate API key if it got compromised.</span>
                     </span>

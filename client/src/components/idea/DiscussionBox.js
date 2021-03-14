@@ -199,7 +199,7 @@ const DiscussionBox = () => {
             <CommentWriteBox submitOpen={submitOpen} onCommentSubmit={onCommentSubmit} onCommentBoxKeyUp={onCommentBoxKeyUp}/>
             {renderNoDataImage()}
         </UiCol>
-        <UiCol xs={11} md={10} className={"px-0"}>
+        <UiCol xs={12} sm={11} md={10} className={"px-0"}>
             {renderComments()}
         </UiCol>
     </UiCol>

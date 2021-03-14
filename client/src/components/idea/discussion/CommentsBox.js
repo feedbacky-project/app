@@ -10,16 +10,25 @@ import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
 
-export const CommentInternal = styled.span`
-  color: hsl(210, 100%, 50%);
-  
-  .dark & {
-    color: hsl(210, 100%, 60%);
-  }
-`;
-
 const LikeContainer = styled.span`
   cursor: pointer;
+`;
+
+const CommentContainer = styled.div`
+  display: inline-flex;
+  margin-bottom: .5rem;
+  word-break: break-word;
+  min-width: 55%;
+`;
+
+const InternalContainer = styled(CommentContainer)`
+  border-radius: var(--border-radius);
+  background-color: var(--internal);
+  padding: .5rem 1rem;
+  
+  .dark & {
+    background-color: var(--dark-internal);
+  }
 `;
 
 const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onSuspend}) => {
@@ -28,7 +37,7 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
     const renderCommentUsername = () => {
         if (data.viewType === "INTERNAL") {
             return <React.Fragment>
-                <small style={{fontWeight: "bold"}}><CommentInternal>{data.user.username}</CommentInternal></small>
+                <small style={{fontWeight: "bold"}}><UiPrettyUsername user={data.user}/></small>
                 <UiTooltip id={"internalT_" + data.id} text={"Internal Comment"}>
                     <UiClassicIcon className={"ml-1"} as={FaLowVision}/>
                 </UiTooltip>
@@ -64,8 +73,14 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
         return <LikeContainer onClick={() => onCommentLike(data)}><FaRegHeart className={"move-top-1px"}/> {likes}</LikeContainer>
     };
     if (!data.special) {
+        let CommentComponent;
+        if(data.viewType === "INTERNAL") {
+           CommentComponent = InternalContainer;
+        } else {
+            CommentComponent = CommentContainer;
+        }
         return <React.Fragment key={data.id}>
-            <div className={"d-inline-flex mb-2"} style={{wordBreak: "break-word"}}>
+            <CommentComponent>
                 <UiAvatar roundedCircle className={"mr-3 mt-2"} size={30} user={data.user} style={{minWidth: "30px"}}/>
                 <div>
                     {renderCommentUsername(data)}
@@ -75,7 +90,7 @@ const CommentsBox = ({data, onCommentDelete, onCommentUnlike, onCommentLike, onS
                     <MarkdownContainer text={data.description}/>
                     <small className={"text-black-60"}> {renderLikes(data)} · <TimeAgo datetime={data.creationDate}/></small>
                 </div>
-            </div>
+            </CommentComponent>
             <br/>
         </React.Fragment>
     }
