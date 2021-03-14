@@ -1,3 +1,7 @@
+### 1.0.0.alpha.5
+* **[FEATURE]** Allow users to edit their comments (requested by [Matou0014](https://app.feedbacky.net/i/edit-comments.2681))
+TODO test
+
 ### 1.0.0.alpha.4
 * **[FEATURE]** Page routes now includes browser changeable tab titles instead of hardcoded one
 * **[FEATURE]** Ideas can be filtered by tags now (requested at [Feedbacky](https://app.feedbacky.net/i/more-moderation-options.2662))

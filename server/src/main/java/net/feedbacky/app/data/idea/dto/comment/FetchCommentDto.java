@@ -26,6 +26,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
   private String viewType;
   private int likesAmount;
   private boolean liked;
+  private boolean edited;
   private Date creationDate;
 
   @Override
@@ -39,6 +40,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.viewType = entity.getViewType().name();
     this.likesAmount = entity.getLikers().size();
     this.liked = false;
+    this.edited = entity.isEdited();
     this.creationDate = entity.getCreationDate();
     return this;
   }

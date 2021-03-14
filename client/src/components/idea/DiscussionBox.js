@@ -55,7 +55,7 @@ const DiscussionBox = () => {
             dataLength={comments.data.length}
             loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}>
             {comments.data.map(data =>
-                <CommentsBox key={data.id} data={data} onCommentDelete={onCommentPreDelete} onCommentLike={onCommentLike}
+                <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentLike={onCommentLike}
                              onCommentUnlike={onCommentUnlike} onSuspend={onPreSuspend}/>
             )}
         </InfiniteScroll>
@@ -68,6 +68,12 @@ const DiscussionBox = () => {
             return <SvgNotice Component={UndrawNoData} title={"No comments here."} description={"Maybe it's time to write one?"}/>
         }
         return <React.Fragment/>
+    };
+    const onCommentUpdate = (data) => {
+        const newComments = [...comments.data];
+        const index = newComments.data.findIndex(c => c.id === data.id);
+        newComments.data[index] = data;
+        setComments({...comments, data: newComments});
     };
     const onCommentSubmit = (internal) => {
         const textarea = document.getElementById("commentMessage");

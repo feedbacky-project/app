@@ -24,7 +24,7 @@ const TitleInfo = ({setModal, editor, setEditor}) => {
         <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
         <ModeratorActionsButton/>
         {renderDeletionButton()}
-        {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60 ml-1"} onClick={() => setEditor({...editor, enabled: true})}/>}
+        {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60 ml-1"} onClick={() => setEditor({...editor, enabled: !editor.enabled})}/>}
         <br/>
         <UiAvatar roundedCircle className={"mr-1"} user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
         <small><UiPrettyUsername user={ideaData.user}/> ·{" "}</small>

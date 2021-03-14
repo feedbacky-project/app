@@ -55,6 +55,7 @@ public class Comment implements Serializable {
   private String description;
   private boolean special;
   private SpecialType specialType;
+  private boolean edited;
   private ViewType viewType = ViewType.PUBLIC;
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> likers = new HashSet<>();
