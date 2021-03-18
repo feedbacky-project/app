@@ -94,7 +94,7 @@ const IdeaInfoBox = () => {
                         if(upvoted) {
                             setVoters({...voters, data: voters.data.concat(user.data)});
                         } else {
-                            setVoters({...voters, data: voters.data.filter(voter => voter.id === user.id)});
+                            setVoters({...voters, data: voters.data.filter(voter => voter.id !== user.data.id)});
                         }
                     }}/>
                 </div>
