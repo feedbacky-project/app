@@ -16,11 +16,12 @@ const ColorPicker = styled(ChromePicker)`
     border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
   }
   & > div:last-of-type {
-  border-radius: 0 0 var(--border-radius) var(--border-radius) !important;
+    border-radius: 0 0 var(--border-radius) var(--border-radius) !important;
   }
   
   .dark & {
     box-shadow: var(--dark-box-shadow) !important;
+    background-color: var(--dark-secondary) !important;
 
     & > div {
       background-color: var(--dark-secondary);
