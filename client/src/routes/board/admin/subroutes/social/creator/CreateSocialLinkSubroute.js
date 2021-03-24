@@ -54,7 +54,7 @@ const CreateSocialLinkSubroute = () => {
                         popupWarning("Couldn't add social link due to unknown error");
                         return;
                     }
-                    popupNotification("Social link added", getTheme().toHexString());
+                    popupNotification("Social link added", getTheme());
                     history.push({
                         pathname: "/ba/" + boardData.discriminator + "/social",
                         state: null

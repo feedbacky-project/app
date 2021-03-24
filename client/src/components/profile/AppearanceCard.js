@@ -9,6 +9,7 @@ const OptionCard = styled(UiCard)`
   max-width: 200px;
   cursor: pointer;
   margin: 0.5rem 1rem;
+  transition: var(--hover-transition);
   
   .card-img {
     border-radius: .2rem;
@@ -18,6 +19,7 @@ const OptionCard = styled(UiCard)`
 const OptionImage = styled.img`
   flex-shrink: 0;
   width: 100%;
+  border-radius: .2rem;
 `;
 
 const AppearanceCard = ({className, chosen, alt, imgSrc, onClick}) => {

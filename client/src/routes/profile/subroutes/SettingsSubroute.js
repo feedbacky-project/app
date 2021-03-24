@@ -40,7 +40,7 @@ const SettingsSubroute = () => {
             }
             user.data.username = username;
             user.data.avatar = avatar;
-            popupNotification("Settings updated", getTheme().toHexString());
+            popupNotification("Settings updated", getTheme());
         });
     };
     const onAccountDeactivation = () => {
@@ -51,7 +51,7 @@ const SettingsSubroute = () => {
             }
             user.onLogOut();
             history.push("/me");
-            popupNotification("Account deactivated and logged out", getTheme().toHexString());
+            popupNotification("Account deactivated and logged out", getTheme());
         });
     };
 

@@ -45,7 +45,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
         let description = editor.value;
         if (data.description === description) {
             setEditor({enabled: false, value: htmlDecode(description)});
-            popupNotification("Nothing changed", getTheme().toHexString());
+            popupNotification("Nothing changed", getTheme());
             return Promise.resolve();
         }
         return axios.patch("/comments/" + data.id, {
@@ -57,7 +57,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
             }
             setEditor({enabled: false, value: htmlDecode(description)});
             onCommentUpdate({...data, description, edited: true});
-            popupNotification("Comment edited", getTheme().toHexString());
+            popupNotification("Comment edited", getTheme());
         });
     };
     const renderCommentUsername = () => {

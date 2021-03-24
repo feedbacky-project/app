@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import marked from "marked";
 import React from "react";
 
 const MarkdownBox = styled.div`
@@ -18,6 +17,15 @@ const MarkdownBox = styled.div`
     }
   }
 `;
+
+const marked = require("marked");
+const renderer = new marked.Renderer();
+const linkRenderer = renderer.link;
+renderer.link = (href, title, text) => {
+    const html = linkRenderer.call(renderer, href, title, text);
+    return html.replace(/^<a /, '<a target="_blank" rel="nofollow noopener noreferrer" ');
+};
+marked.setOptions({renderer: renderer, ...marked.options,});
 
 const MarkdownContainer = ({text}) => {
     const parseEmojis = (preText) => {

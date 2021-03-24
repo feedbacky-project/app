@@ -34,7 +34,7 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
             }
             onHide();
             onEdit(tag, res.data);
-            popupNotification("Tag edited", getTheme().toHexString());
+            popupNotification("Tag edited", getTheme());
         });
     };
     return renderModal(isOpen, onHide, "Edit Tag", handleSubmit, color, setColor, tagData, setTagData);

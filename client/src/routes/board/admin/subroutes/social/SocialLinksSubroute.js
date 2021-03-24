@@ -106,7 +106,7 @@ const SocialLinksSubroute = () => {
             const data = socialLinks.data.filter(item => item.id !== modal.data);
             setSocialLinks({...socialLinks, data});
             updateState({...boardData, socialLinks: data});
-            popupNotification("Social link deleted", getTheme().toHexString());
+            popupNotification("Social link deleted", getTheme());
         });
     };
     return <UiCol xs={12} md={9}>

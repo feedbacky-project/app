@@ -41,7 +41,7 @@ const IdeaInfoBox = () => {
         let description = editor.value;
         if (ideaData.description === description) {
             setEditor({enabled: false, value: htmlDecode(description)});
-            popupNotification("Nothing changed", getTheme().toHexString());
+            popupNotification("Nothing changed", getTheme());
             return Promise.resolve();
         }
         return axios.patch("/ideas/" + ideaData.id, {
@@ -53,7 +53,7 @@ const IdeaInfoBox = () => {
             }
             setEditor({enabled: false, value: htmlDecode(description)});
             updateState({...ideaData, description, edited: true});
-            popupNotification("Idea edited", getTheme().toHexString());
+            popupNotification("Idea edited", getTheme());
         });
     };
     const onDelete = () => {
@@ -63,7 +63,7 @@ const IdeaInfoBox = () => {
                 return;
             }
             history.push("/b/" + ideaData.boardDiscriminator);
-            popupNotification("Idea deleted", getTheme().toHexString());
+            popupNotification("Idea deleted", getTheme());
         });
     };
     const renderDescription = () => {

@@ -31,7 +31,7 @@ const AttachmentsInfo = () => {
                 return;
             }
             updateState({...ideaData, attachments: ideaData.attachments.filter(data => data.url !== modal.dataUrl)});
-            popupNotification("Attachment removed", getTheme().toHexString());
+            popupNotification("Attachment removed", getTheme());
         });
     };
     //todo lightbox for attachments

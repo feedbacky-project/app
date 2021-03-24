@@ -49,7 +49,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 return;
             }
             updateState({...ideaData, open: true});
-            popupRevertableNotification("Idea opened", getTheme().toHexString(), onIdeaClose);
+            popupRevertableNotification("Idea opened", getTheme(), onIdeaClose);
         });
     };
     const onIdeaClose = () => {
@@ -59,7 +59,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 return;
             }
             updateState({...ideaData, open: false});
-            popupRevertableNotification("Idea closed", getTheme().toHexString(), onIdeaOpen);
+            popupRevertableNotification("Idea closed", getTheme(), onIdeaOpen);
         });
     };
     const onCommentsEnable = () => {
@@ -69,7 +69,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 return;
             }
             updateState({...ideaData, commentingRestricted: false});
-            popupRevertableNotification("Commenting enabled", getTheme().toHexString(), onCommentsDisable);
+            popupRevertableNotification("Commenting enabled", getTheme(), onCommentsDisable);
         });
     };
     const onCommentsDisable = () => {
@@ -79,7 +79,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 return;
             }
             updateState({...ideaData, commentingRestricted: false});
-            popupRevertableNotification("Commenting disabled", getTheme().toHexString(), onCommentsEnable);
+            popupRevertableNotification("Commenting disabled", getTheme(), onCommentsEnable);
         });
     };
     const doIdeaDelete = () => {
@@ -88,7 +88,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 popupError();
                 return;
             }
-            popupNotification("Idea deleted", getTheme().toHexString());
+            popupNotification("Idea deleted", getTheme());
             history.push("/b/" + ideaData.boardDiscriminator);
             onIdeaDelete();
         });
@@ -104,7 +104,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 popupWarning("Failed to suspend the user");
                 return;
             }
-            popupNotification("User suspended", getTheme().toHexString());
+            popupNotification("User suspended", getTheme());
             updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
         });
     };
@@ -119,7 +119,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 return;
             }
             updateState({...ideaData, tags: res.data});
-            popupNotification("Tags updated", getTheme().toHexString());
+            popupNotification("Tags updated", getTheme());
         });
     };
     const isSuspendable = () => {

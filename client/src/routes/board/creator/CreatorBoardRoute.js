@@ -65,7 +65,7 @@ const CreatorBoardRoute = () => {
                     popupWarning("Couldn't create new board due to unknown error!");
                     return;
                 }
-                popupNotification("Board created", getTheme().toHexString());
+                popupNotification("Board created", getTheme());
                 history.push("/b/" + settings.discriminator);
             });
             return <UiLoadableButton label={"Create Board"} color={tinycolor("#00c851")} className={"ml-2"} onClick={onFinish}>Create Board</UiLoadableButton>

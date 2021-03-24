@@ -27,7 +27,7 @@ const ModeratorInviteModal = ({onHide, onModInvitationSend, isOpen}) => {
             let mod = res.data;
             mod.role = "moderator";
             onModInvitationSend(mod);
-            popupNotification("Invitation to " + res.data.user.username + " sent", getTheme().toHexString());
+            popupNotification("Invitation to " + res.data.user.username + " sent", getTheme());
         });
     };
 

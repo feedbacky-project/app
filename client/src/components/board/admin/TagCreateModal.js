@@ -28,7 +28,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             }
             onHide();
             onTagCreate(res.data);
-            popupNotification("Tag created", getTheme().toHexString());
+            popupNotification("Tag created", getTheme());
         });
     };
     return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, tagData, setTagData);

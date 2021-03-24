@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import Snackbar from "node-snackbar";
+import tinycolor from "tinycolor2";
 import {getEnvVar} from "utils/env-vars";
 
 export const getDefaultAvatar = (username) => {
@@ -31,25 +32,25 @@ export const popupRevertableNotification = (content, color, onUndo) => {
 };
 
 export const hideNotifications = () => {
-  popup("", "", {duration: 1});
+    popup("", tinycolor("#d35400"), {duration: 1});
 };
 
 export const popupNotification = (content, color) => {
-    popup(content, color, {showAction: false});
+    popup(content, color, {showAction: false, duration: 100000});
 };
 
 export const popupWarning = (content = "Something unexpected happened") => {
-    popup(content, "#d35400", {showAction: false, duration: 6000});
+    popup(content, tinycolor("#d35400"), {showAction: false, duration: 6000});
 };
 
 export const popupError = (content = "Something unexpected happened") => {
-    popup(content, "#e43e3e", {showAction: false, duration: 8000});
+    popup(content, tinycolor("#e43e3e"), {showAction: false, duration: 8000});
 };
 
-const popup = (content, backgroundColor, data) => {
+const popup = (content, theme, data) => {
     Snackbar.show({
         text: content,
-        backgroundColor: backgroundColor,
+        backgroundColor: theme.toString(),
         pos: "bottom-center",
         ...data
     });

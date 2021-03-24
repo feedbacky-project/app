@@ -225,7 +225,7 @@ const GeneralSubroute = ({updateState}) => {
             //user no longer owns this board, remove from local context
             user.data.permissions = user.data.permissions.filter(board => board.boardDiscriminator !== boardData.discriminator);
             history.push("/me");
-            popupNotification("Board deleted", getTheme().toHexString());
+            popupNotification("Board deleted", getTheme());
         });
     };
     const onApiKeyEnable = () => {
@@ -235,7 +235,7 @@ const GeneralSubroute = ({updateState}) => {
                 return;
             }
             updateState({...boardData, apiKey: res.data.apiKey});
-            popupNotification("API key generated and enabled.");
+            popupNotification("API key generated and enabled.", getTheme());
         });
     };
     const onApiKeyDisable = () => {
@@ -245,7 +245,7 @@ const GeneralSubroute = ({updateState}) => {
                 return;
             }
             updateState({...boardData, apiKey: ""});
-            popupNotification("API key disabled.");
+            popupNotification("API key disabled.", getTheme());
         });
     };
     const onApiKeyRegenerate = () => {
@@ -256,7 +256,7 @@ const GeneralSubroute = ({updateState}) => {
             }
             setApiKeyBlurred(true);
             updateState({...boardData, apiKey: res.data.apiKey});
-            popupNotification("API key regenerated.");
+            popupNotification("API key regenerated.", getTheme());
         });
     };
     const onChangesSave = (anonymousAllowed = boardData.anonymousAllowed) => {
@@ -273,7 +273,7 @@ const GeneralSubroute = ({updateState}) => {
                 popupError();
                 return;
             }
-            popupNotification("Settings updated", getTheme().toHexString());
+            popupNotification("Settings updated", getTheme());
             updateState({
                 ...boardData,
                 name, shortDescription, fullDescription, themeColor,

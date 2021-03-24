@@ -80,7 +80,7 @@ const TagsSubroute = () => {
                 return;
             }
             updateState({...boardData, tags: boardData.tags.filter(item => item.name !== modal.data.name)});
-            popupNotification("Tag deleted", getTheme().toHexString());
+            popupNotification("Tag deleted", getTheme());
         });
     };
     return <UiCol xs={12} md={9}>

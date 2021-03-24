@@ -16,7 +16,7 @@ const NotificationUnsubscribeRoute = () => {
                 popupWarning("Invalid unsubscribe token");
                 return;
             }
-            popupNotification("Unsubscribed from future notifications", getTheme().toHexString());
+            popupNotification("Unsubscribed from future notifications", getTheme());
         }).catch(() => {
             history.push("/");
             popupWarning("Invalid unsubscribe token");

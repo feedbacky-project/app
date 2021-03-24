@@ -125,7 +125,7 @@ const DiscussionBox = () => {
                 popupError("Failed to suspend the user");
                 return;
             }
-            popupNotification("User suspended", getTheme().toHexString());
+            popupNotification("User suspended", getTheme());
             updateBoardState({...data, suspendedUsers: data.suspendedUsers.concat(res.data)});
         }).catch(err => popupError(err.response.data.errors[0]));
     };
@@ -138,7 +138,7 @@ const DiscussionBox = () => {
             }
             setComments({...comments, data: comments.data.filter(item => item.id !== modal.data)});
             updateState({...ideaData, commentsAmount: ideaData.commentsAmount - 1});
-            popupNotification("Comment deleted", getTheme().toHexString());
+            popupNotification("Comment deleted", getTheme());
         });
     };
     const onCommentLike = (data) => {

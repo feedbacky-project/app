@@ -57,7 +57,7 @@ const CreateWebhookSubroute = () => {
                         popupWarning("Couldn't add webhook due to unknown error");
                         return;
                     }
-                    popupNotification("Webhook added and sent sample response", getTheme().toHexString());
+                    popupNotification("Webhook added and sent sample response", getTheme());
                     history.push("/ba/" + boardData.discriminator + "/webhooks");
                 }).catch(() => setSettings({...settings, step: 3}));
             };

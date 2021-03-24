@@ -107,7 +107,7 @@ const ModeratorsSubroute = () => {
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
                             <ClickableButton onClick={() => {
                                 copy(getEnvVar("REACT_APP_SERVER_IP_ADDRESS") + "/moderator_invitation/" + invited.code);
-                                popupNotification("Copied", getTheme().toHexString());
+                                popupNotification("Copied", getTheme());
                             }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></ClickableButton>
                         </div>
                     </div>
@@ -147,7 +147,7 @@ const ModeratorsSubroute = () => {
             }
             const data = moderators.filter(item => item.userId !== modal.data);
             setModerators(data);
-            popupNotification("Permissions revoked", getTheme().toHexString());
+            popupNotification("Permissions revoked", getTheme());
         });
     };
     const onModInvitationSend = (inviteData) => setInvited({...invited, data: invited.data.concat(inviteData)});
@@ -158,7 +158,7 @@ const ModeratorsSubroute = () => {
                 return;
             }
             setInvited({...invited, data: invited.data.filter(item => item.id !== modal.data)});
-            popupNotification("Invitation removed", getTheme().toHexString());
+            popupNotification("Invitation removed", getTheme());
         });
     };
     const onPromotion = () => {
@@ -168,7 +168,7 @@ const ModeratorsSubroute = () => {
         }).then(res => {
             const updated = moderators.map(mod => mod.userId === modal.data ? {...mod, role: res.data.role} : mod);
             updateState({...boardData, moderators: updated});
-            popupNotification("Promoted to administrator.", getTheme().toHexString());
+            popupNotification("Promoted to administrator.", getTheme());
         });
     };
     const onDemotion = () => {
@@ -178,7 +178,7 @@ const ModeratorsSubroute = () => {
         }).then(res => {
             const updated = moderators.map(mod => mod.userId === modal.data ? {...mod, role: res.data.role} : mod);
             updateState({...boardData, moderators: updated});
-            popupNotification("Demoted to moderator.", getTheme().toHexString());
+            popupNotification("Demoted to moderator.", getTheme());
         });
     };
     return <UiCol xs={12} md={9}>

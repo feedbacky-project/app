@@ -56,7 +56,7 @@ const SuspensionSettings = () => {
                 return;
             }
             const suspendedUsers = boardData.suspendedUsers.filter(item => item.id !== modal.data);
-            popupNotification("User suspended", getTheme().toHexString());
+            popupNotification("User suspended", getTheme());
             updateState({...boardData, suspendedUsers: suspendedUsers});
         });
     };

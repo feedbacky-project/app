@@ -27,7 +27,7 @@ const NotificationsInfo = () => {
                 return;
             }
             updateState({...ideaData, subscribed: !ideaData.subscribed});
-            popupNotification("Notifications toggled", getTheme().toHexString());
+            popupNotification("Notifications toggled", getTheme());
         });
     };
     const renderButton = () => {

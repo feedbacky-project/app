@@ -18,7 +18,7 @@ const ModeratorInvitationRoute = () => {
                 return;
             }
             history.push("/b/" + res.data.discriminator);
-            popupNotification("Invitation accepted, you're a moderator now", getTheme().toHexString());
+            popupNotification("Invitation accepted, you're a moderator now", getTheme());
         }).catch(() => history.push("/me"));
         // eslint-disable-next-line
     }, []);

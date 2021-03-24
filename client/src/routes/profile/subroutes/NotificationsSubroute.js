@@ -24,7 +24,7 @@ const NotificationsSubroute = () => {
                 return;
             }
             user.data.mailPreferences.setNotificationsEnabled = setNotificationsEnabled;
-            popupNotification("Settings updated", getTheme().toHexString());
+            popupNotification("Settings updated", getTheme());
         });
     };
     if (!user.loggedIn) {
