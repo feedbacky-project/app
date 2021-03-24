@@ -36,7 +36,7 @@ export const hideNotifications = () => {
 };
 
 export const popupNotification = (content, color) => {
-    popup(content, color, {showAction: false, duration: 100000});
+    popup(content, color, {showAction: false});
 };
 
 export const popupWarning = (content = "Something unexpected happened") => {
