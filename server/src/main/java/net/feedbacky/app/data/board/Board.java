@@ -94,6 +94,7 @@ public class Board implements Serializable {
   private Set<SocialLink> socialLinks = new HashSet<>();
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<SuspendedUser> suspensedList = new HashSet<>();
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Changelog> changelogs = new HashSet<>();
   private boolean anonymousAllowed = true;
 
