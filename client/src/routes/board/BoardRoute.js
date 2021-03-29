@@ -1,7 +1,7 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
 import BoardIdeaCardContainer from "components/board/BoardIdeaCardContainer";
-import BoardNavbar from "components/board/BoardNavbar";
+import BoardNavbar from "components/commons/BoardNavbar";
 import BoardSearchBar from "components/board/BoardSearchBar";
 import LoginModal from "components/LoginModal";
 import AppContext from "context/AppContext";
@@ -42,7 +42,7 @@ const BoardRoute = () => {
     useTitle(board.loaded ? board.data.name : "Loading...");
     return <BoardContextedRouteUtil board={board} setBoard={data => setBoard(data)} onNotLoggedClick={() => setModalOpen(true)} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onHide={() => setModalOpen(false)}/>
-        <BoardNavbar/>
+        <BoardNavbar selectedNode={"feedback"}/>
         <UiContainer className={"pb-5"}>
             <UiRow className={"pb-4"}>
                 <BoardBanner/>

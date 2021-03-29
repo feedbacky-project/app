@@ -74,10 +74,14 @@ public class WebhookExecutor {
       case IDEA_TAG_CHANGE:
         embedObject.addField("Tags Changed", data.get(WebhookMapData.TAGS_CHANGED.getName()), true);
         break;
+      case CHANGELOG_CREATE:
+        embedObject.addField("Description", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName()), true);
+        break;
     }
     switch(event) {
       case IDEA_CREATE:
       case IDEA_COMMENT:
+      case CHANGELOG_CREATE:
         embedObject.setFooter("Posted by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName()));
         break;
       case IDEA_DELETE:
@@ -108,7 +112,8 @@ public class WebhookExecutor {
   public enum WebhookMapData {
     USER_NAME("user_name"), USER_AVATAR("user_avatar"), USER_ID("user_id"), IDEA_NAME("idea_name"),
     IDEA_DESCRIPTION("idea_description"), IDEA_LINK("idea_link"), IDEA_ID("idea_id"),
-    COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"), TAGS_CHANGED("tags_changed");
+    COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"), TAGS_CHANGED("tags_changed"),
+    CHANGELOG_NAME("changelog_name"), CHANGELOG_DESCRIPTION("changelog_description");
 
     private final String name;
 

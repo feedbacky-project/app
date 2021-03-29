@@ -14,9 +14,6 @@ const RoadmapContainer = styled.div`
   max-height: 310px;
   overflow: auto;
   scrollbar-width: thin; /* firefox property */
-  background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
   &::-webkit-scrollbar {
     height: 6px;
     width: 6px;
@@ -24,9 +21,6 @@ const RoadmapContainer = styled.div`
   }
   
   .dark {
-    background-color: var(--dark-secondary);
-    box-shadow: var(--dark-box-shadow);
-
     scrollbar-color: var(--dark-hover) var(--dark-tertiary); /* firefox property */
     &::-webkit-scrollbar {
       background: var(--dark-tertiary);

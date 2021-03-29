@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.board.changelog.Changelog;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
@@ -93,6 +94,7 @@ public class Board implements Serializable {
   private Set<SocialLink> socialLinks = new HashSet<>();
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<SuspendedUser> suspensedList = new HashSet<>();
+  private Set<Changelog> changelogs = new HashSet<>();
   private boolean anonymousAllowed = true;
 
 }

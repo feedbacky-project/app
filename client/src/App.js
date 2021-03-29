@@ -19,6 +19,7 @@ const CreateBoardRoute = lazy(() => retry(() => import("routes/board/creator/Cre
 const ModeratorInvitationRoute = lazy(() => retry(() => import("routes/ModeratorInvitationRoute")));
 const BoardRoute = lazy(() => retry(() => import("routes/board/BoardRoute")));
 const RoadmapRoute = lazy(() => retry(() => import("routes/RoadmapRoute")));
+const ChangelogRoute = lazy(() => retry(() => import("routes/ChangelogRoute")));
 const BoardAdminPanelRoute = lazy(() => retry(() => import("routes/board/admin/BoardAdminPanelRoute")));
 const IdeaRoute = lazy(() => retry(() => import("routes/IdeaRoute")));
 const LoginRoute = lazy(() => retry(() => import("routes/LoginRoute")));
@@ -165,6 +166,7 @@ const App = ({appearanceSettings}) => {
                     <Route path={"/me/"} component={ProfileRoute}/>
                     <Route path={"/moderator_invitation/:code"} component={ModeratorInvitationRoute}/>
                     <Route path={"/b/:id/roadmap"} component={RoadmapRoute}/>
+                    <Route path={"/b/:id/changelog"} component={ChangelogRoute}/>
                     <Route path={"/b/:id"} component={BoardRoute}/>
                     <Route path={"/ba/:id"} component={BoardAdminPanelRoute}/>
                     <Route path={"/i/:id"} component={IdeaRoute}/>

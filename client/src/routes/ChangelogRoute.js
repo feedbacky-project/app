@@ -1,9 +1,10 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
+import BoardChangelogBox from "components/changelog/BoardChangelogBox";
+import BoardNavbar from "components/commons/BoardNavbar";
 import ComponentLoader from "components/ComponentLoader";
 import LoginModal from "components/LoginModal";
 import {BoardRoadmapBox} from "components/roadmap/BoardRoadmapBox";
-import BoardNavbar from "components/commons/BoardNavbar";
 import AppContext from "context/AppContext";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
@@ -14,14 +15,14 @@ import {UiLoadingSpinner} from "ui";
 import {UiContainer, UiRow} from "ui/grid";
 import {useTitle} from "utils/use-title";
 
-const RoadmapRoute = () => {
+const ChangelogRoute = () => {
     const {onThemeChange, defaultTheme, user} = useContext(AppContext);
     const location = useLocation();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
-    const [roadmap, setRoadmap] = useState({data: {}, loaded: false, error: false});
+    const [changelog, setChangelog] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
-    useTitle(board.loaded ? board.data.name + " | Roadmap" : "Loading...");
+    useTitle(board.loaded ? board.data.name + " | Changelog" : "Loading...");
     const resolvePassedData = () => {
         const state = location.state;
         if (state._boardData !== undefined) {
@@ -31,19 +32,19 @@ const RoadmapRoute = () => {
         }
         return false;
     };
-    const loadRoadmapData = () => {
-        axios.get("/boards/" + id + "/roadmap").then(res => {
+    const loadChangelogData = () => {
+        axios.get("/boards/" + id + "/changelog").then(res => {
             if (res.status !== 200) {
-                setRoadmap({...roadmap, error: true});
+                setChangelog({...changelog, error: true});
                 return;
             }
-            setRoadmap({...roadmap, data: res.data, loaded: true});
-        }).catch(() => setRoadmap({...roadmap, error: true}));
+            setChangelog({...changelog, data: res.data, loaded: true});
+        }).catch(() => setChangelog({...changelog, error: true}));
     };
     useEffect(() => {
         if (location.state != null) {
             if (resolvePassedData()) {
-                loadRoadmapData();
+                loadChangelogData();
                 return;
             }
         }
@@ -57,26 +58,24 @@ const RoadmapRoute = () => {
             onThemeChange(data.themeColor || defaultTheme);
             setBoard({...board, data, loaded: true});
         }).catch(() => setBoard({...board, error: true}));
-        loadRoadmapData();
+        loadChangelogData();
         // eslint-disable-next-line
     }, [user.session]);
-    if (roadmap.error) {
-        return <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>
-    }
+
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setModalOpen(true)}
                                     errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={modalOpen} image={board.data.logo}
-                    boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/roadmap"}
+                    boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/changelog"}
                     onHide={() => setModalOpen(false)}/>
-        <BoardNavbar selectedNode={"roadmap"}/>
+        <BoardNavbar selectedNode={"changelog"}/>
         <UiContainer className={"pb-5"}>
             <UiRow centered className={"pb-4"}>
-                <BoardBanner customName={board.data.name + " - Roadmap"}/>
-                <ComponentLoader loaded={roadmap.loaded} loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}
-                                 component={<BoardRoadmapBox roadmapData={roadmap.data}/>}/>
+                <BoardBanner customName={board.data.name + " - Changelog"}/>
+                <ComponentLoader loaded={changelog.loaded} loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}
+                                 component={<BoardChangelogBox changelogData={changelog.data}/>}/>
             </UiRow>
         </UiContainer>
     </BoardContextedRouteUtil>
 };
 
-export default RoadmapRoute;
+export default ChangelogRoute;

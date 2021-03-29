@@ -1,5 +1,5 @@
 import BoardBanner from "components/board/BoardBanner";
-import BoardNavbar from "components/board/BoardNavbar";
+import BoardNavbar from "components/commons/BoardNavbar";
 import {QuestionIcon} from "components/commons/DangerousActionModal";
 import IdeaNavbar from "components/idea/IdeaNavbar";
 import ProfileNavbar from "components/profile/ProfileNavbar";
@@ -45,7 +45,7 @@ const UiTestRoute = () => {
             <UiNavbar>
                 <div>Plain navbar</div>
             </UiNavbar>
-            <BoardNavbar/>
+            <BoardNavbar selectedNode={"feedback"}/>
             <IdeaNavbar/>
             <UiDismissibleModal id={"testModal"} isOpen={modal.open} onHide={() => setModal({open: false})} title={"Dismissible Test"}
                                 applyButton={<UiButton label={"Apply"} onClick={() => setModal({open: false})}>Apply</UiButton>}>

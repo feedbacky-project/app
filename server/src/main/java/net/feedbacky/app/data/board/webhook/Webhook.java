@@ -60,12 +60,12 @@ public class Webhook implements Serializable {
   }
 
   public enum Event {
-    IDEA_CREATE(0, "New Idea Created - `${idea.name}`"), IDEA_DELETE(1, "Idea Deleted - `${idea.name}`"),
-    IDEA_COMMENT(2, "Idea Commented - `${idea.name}`"), IDEA_COMMENT_DELETE(3, "Idea Comment Deleted - `${idea.name}`"),
-    IDEA_EDIT(4, "Idea Edited - `${idea.name}`"), IDEA_TAG_CHANGE(6, "Tags of Idea Changed - `${idea.name}`"),
-    IDEA_OPEN(7, "Idea Opened - `${idea.name}`"), IDEA_CLOSE(8, "Idea Closed - `${idea.name}`"),
-    SAMPLE_EVENT(9, "I am alive! Sample request received."), IDEA_COMMENTS_RESTRICT(10, "Idea Commenting Restricted - `${idea.name}`"),
-    IDEA_COMMENTS_ALLOW(10, "Idea Commenting Allowed - `${idea.name}`");
+    IDEA_CREATE(0, "New Idea Created - `${placeholder}`"), IDEA_DELETE(1, "Idea Deleted - `${placeholder}`"),
+    IDEA_COMMENT(2, "Idea Commented - `${placeholder}`"), IDEA_COMMENT_DELETE(3, "Idea Comment Deleted - `${placeholder}`"),
+    IDEA_EDIT(4, "Idea Edited - `${placeholder}`"), IDEA_TAG_CHANGE(6, "Tags of Idea Changed - `${placeholder}`"),
+    IDEA_OPEN(7, "Idea Opened - `${placeholder}`"), IDEA_CLOSE(8, "Idea Closed - `${placeholder}`"),
+    SAMPLE_EVENT(9, "I am alive! Sample request received."), IDEA_COMMENTS_RESTRICT(10, "Idea Commenting Restricted - `${placeholder}`"),
+    IDEA_COMMENTS_ALLOW(10, "Idea Commenting Allowed - `${placeholder}`"), CHANGELOG_CREATE(11, "New Changelog Created - `${placeholder}`");
 
     private final int id;
     private final String message;
@@ -79,8 +79,8 @@ public class Webhook implements Serializable {
       return id;
     }
 
-    public String getFormattedMessage(String ideaName) {
-      return message.replace("${idea.name}", ideaName);
+    public String getFormattedMessage(String placeholder) {
+      return message.replace("${placeholder}", placeholder);
     }
   }
 
