@@ -50,7 +50,7 @@ const App = ({appearanceSettings}) => {
     const [session, setSession] = useState(Cookies.get("FSID"));
     const [localPrefs, setLocalPrefs] = useState({
         ideas: {filter: "opened", sort: "trending"},
-        comments: {sort: "newest"}
+        comments: {sort: "newest"}, changelog: {sort: "newest"}
     });
     const [serviceData, setServiceData] = useState({loaded: false, data: [], error: false});
     const [userData, setUserData] = useState({loaded: false, data: [], error: false});

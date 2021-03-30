@@ -6,8 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,6 +47,10 @@ public class Changelog {
   private String title;
   private String description;
   private boolean edited;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @LazyToOne(LazyToOneOption.NO_PROXY)
+  @JoinColumn(name = "user_id")
+  private User creator;
   @CreationTimestamp
   private Date creationDate;
 

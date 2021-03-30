@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.Changelog;
+import net.feedbacky.app.data.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -33,10 +34,11 @@ public class PostChangelogDto {
   @Length(min = 20, max = 1800, message = "Description cannot be shorter than 20 or longer than 1800 characters.")
   private String description;
 
-  public Changelog convertToEntity(Board board) {
+  public Changelog convertToEntity(Board board, User creator) {
     Changelog changelog = new ModelMapper().map(this, Changelog.class);
     changelog.setEdited(false);
     changelog.setBoard(board);
+    changelog.setCreator(creator);
     return changelog;
   }
 

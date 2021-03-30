@@ -74,7 +74,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.MODERATOR, user);
-    Changelog changelog = dto.convertToEntity(board);
+    Changelog changelog = dto.convertToEntity(board, user);
     board.getChangelogs().add(changelog);
     changelogRepository.save(changelog);
 

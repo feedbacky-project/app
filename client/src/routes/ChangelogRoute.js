@@ -1,6 +1,8 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
+import BoardSearchBar from "components/board/BoardSearchBar";
 import BoardChangelogBox from "components/changelog/BoardChangelogBox";
+import BoardChangelogSearchBar from "components/changelog/BoardChangelogSearchBar";
 import BoardNavbar from "components/commons/BoardNavbar";
 import ComponentLoader from "components/ComponentLoader";
 import LoginModal from "components/LoginModal";
@@ -20,7 +22,6 @@ const ChangelogRoute = () => {
     const location = useLocation();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
-    const [changelog, setChangelog] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     useTitle(board.loaded ? board.data.name + " | Changelog" : "Loading...");
     const resolvePassedData = () => {
@@ -32,19 +33,9 @@ const ChangelogRoute = () => {
         }
         return false;
     };
-    const loadChangelogData = () => {
-        axios.get("/boards/" + id + "/changelog").then(res => {
-            if (res.status !== 200) {
-                setChangelog({...changelog, error: true});
-                return;
-            }
-            setChangelog({...changelog, data: res.data, loaded: true});
-        }).catch(() => setChangelog({...changelog, error: true}));
-    };
     useEffect(() => {
         if (location.state != null) {
             if (resolvePassedData()) {
-                loadChangelogData();
                 return;
             }
         }
@@ -58,7 +49,6 @@ const ChangelogRoute = () => {
             onThemeChange(data.themeColor || defaultTheme);
             setBoard({...board, data, loaded: true});
         }).catch(() => setBoard({...board, error: true}));
-        loadChangelogData();
         // eslint-disable-next-line
     }, [user.session]);
 
@@ -69,10 +59,10 @@ const ChangelogRoute = () => {
                     onHide={() => setModalOpen(false)}/>
         <BoardNavbar selectedNode={"changelog"}/>
         <UiContainer className={"pb-5"}>
-            <UiRow centered className={"pb-4"}>
+            <UiRow className={"pb-4"}>
                 <BoardBanner customName={board.data.name + " - Changelog"}/>
-                <ComponentLoader loaded={changelog.loaded} loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}
-                                 component={<BoardChangelogBox changelogData={changelog.data}/>}/>
+                <BoardChangelogSearchBar/>
+                <BoardChangelogBox/>
             </UiRow>
         </UiContainer>
     </BoardContextedRouteUtil>
