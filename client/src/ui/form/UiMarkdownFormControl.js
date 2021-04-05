@@ -80,7 +80,7 @@ const UiMarkdownFormControl = (props) => {
         }}/>
         <TextInputCustomModal size={"sm"} id={"imageInput"} isOpen={modal.open && modal.type === "image"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
                               actionDescription={"Insert image, type image URL."} onAction={link => {
-            markdownInsert("![" + link + "]()", false);
+            markdownInsert("![](" + link + ")", false);
             return Promise.resolve();
         }}/>
         <MarkdownOptions as={CustomOptions}>

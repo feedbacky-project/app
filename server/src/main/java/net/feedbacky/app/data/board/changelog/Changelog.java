@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -45,6 +46,7 @@ public class Changelog {
   @JoinColumn(name = "board_id")
   private Board board;
   private String title;
+  @Column(name = "description", columnDefinition = "text", length = 65_535)
   private String description;
   private boolean edited;
   @ManyToOne(fetch = FetchType.LAZY)
