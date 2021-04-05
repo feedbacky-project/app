@@ -5,26 +5,29 @@ import BoardInfoCard from "components/board/BoardInfoCard";
 import BoardChangelogInfoCard from "components/changelog/BoardChangelogInfoCard";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import {SvgNotice} from "components/commons/SvgNotice";
+import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useEffect, useState} from "react";
 import {FaRegFrown} from "react-icons/all";
 import InfiniteScroll from "react-infinite-scroll-component";
 import TimeAgo from "timeago-react/esm/timeago-react";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiPrettyUsername} from "ui";
 import {UiCol} from "ui/grid";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
+import {prepareFilterAndSortRequests} from "utils/basic-utils";
 
 const BoardChangelogBox = () => {
+    const {user} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [changelog, setChangelog] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [page, setPage] = useState(0);
     useEffect(() => {
         onLoadRequest(true);
         // eslint-disable-next-line
-    }, []);
+    }, [user.session, user.localPreferences.changelog]);
     const onLoadRequest = (override = false) => {
         const currentPage = override ? 0 : page;
-        return axios.get("/boards/" + boardData.discriminator + "/changelog?page=" + currentPage).then(res => {
+        return axios.get("/boards/" + boardData.discriminator + "/changelog?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog)).then(res => {
             const data = res.data.data;
             if (override) {
                 setChangelog({...changelog, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
@@ -52,15 +55,15 @@ const BoardChangelogBox = () => {
             loader={<UiCol className={"text-center mt-5 pt-5"}><UiLoadingSpinner/></UiCol>}>
             {changelog.data.map(element => {
                 return <UiCol xs={12} className={"my-2 px-0"} key={element.id}>
-                    <UiViewBoxBackground className={"p-4"}>
+                    <UiViewBoxBackground className={"d-inline-block p-4"}>
                         <div style={{fontSize: "1.35em", fontWeight: "bold"}}>{element.title}</div>
                         <MarkdownContainer text={element.description}/>
-                        <small className={"text-black-60 mt-2"}>
+                        <small className={"text-black-60 mt-2 float-left"}>
                             Published {" "}
                             <TimeAgo datetime={element.creationDate}/>
                         </small>
                         <small className={"text-black-60 mt-2 float-right"}>
-                            By XYZ
+                            By <UiPrettyUsername user={element.creator}/>
                         </small>
                     </UiViewBoxBackground>
                 </UiCol>

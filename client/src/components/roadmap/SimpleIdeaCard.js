@@ -1,4 +1,5 @@
 import {CardLinkStyle, IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
+import MarkdownContainer from "components/commons/MarkdownContainer";
 import VoteButton from "components/commons/VoteButton";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
@@ -50,7 +51,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
                             {renderComments()}
                         </div>
                     </div>
-                    <IdeaCardDescription dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
+                    <MarkdownContainer as={IdeaCardDescription} text={idea.description} truncate={85}  stripped/>
                 </CardLinkStyle>
             </UiRow>
         </div>

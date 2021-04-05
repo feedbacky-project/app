@@ -3,14 +3,12 @@ import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import {FaRegImage} from "react-icons/fa";
-import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiLabelledCheckbox} from "ui";
-import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
-import {UiFormControl, UiFormLabel} from "ui/form";
+import {UiClickableTip} from "ui";
+import {UiLoadableButton} from "ui/button";
+import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
-import {formatRemainingCharacters, getBase64FromFile, popupError, popupNotification, popupWarning, validateImageWithWarning} from "utils/basic-utils";
+import {formatRemainingCharacters, popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
     const {getTheme} = useContext(AppContext);
@@ -67,13 +65,13 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
                 Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
                 Please keep under 1800 characters.
             </React.Fragment>} aria-label={"Idea description"}/>
-            <UiFormControl label={"Write description"} as={TextareaAutosize} id={"descriptionTextarea"} rows={5} maxRows={10}
-                           placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
-                           style={{resize: "none", overflow: "hidden"}}
-                           onChange={e => {
-                               e.target.value = e.target.value.substring(0, 1800);
-                               formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
-                           }}/>
+            <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} id={"descriptionTextarea"} rows={5} maxRows={10}
+                                   placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
+                                   style={{resize: "none", overflow: "hidden"}}
+                                   onChange={e => {
+                                       e.target.value = e.target.value.substring(0, 1800);
+                                       formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
+                                   }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 1800 Remaining
             </small>

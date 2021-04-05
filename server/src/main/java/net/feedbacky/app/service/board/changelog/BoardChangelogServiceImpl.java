@@ -18,6 +18,7 @@ import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.repository.board.ChangelogRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.SortFilterResolver;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.request.ServiceValidator;
 
@@ -56,10 +57,10 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   }
 
   @Override
-  public PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize) {
+  public PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize, SortType sortType) {
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.empty())
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    Page<Changelog> pageData = changelogRepository.findByBoard(board, PageRequest.of(page, pageSize));
+    Page<Changelog> pageData = changelogRepository.findByBoard(board, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sortType)));
     List<Changelog> changelogs = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), changelogs.stream()

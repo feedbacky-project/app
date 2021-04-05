@@ -1,5 +1,6 @@
 package net.feedbacky.app.util;
 
+import net.feedbacky.app.service.board.changelog.BoardChangelogService;
 import net.feedbacky.app.service.comment.CommentService;
 import net.feedbacky.app.service.idea.IdeaService;
 
@@ -22,6 +23,16 @@ public class SortFilterResolver {
       case OLDEST:
       default:
         return Sort.by(Sort.Direction.ASC, "creationDate");
+    }
+  }
+
+  public static Sort resolveIdeaSorting(BoardChangelogService.SortType sortType) {
+    switch(sortType) {
+      case OLDEST:
+        return Sort.by(Sort.Direction.ASC, "creationDate");
+      case NEWEST:
+      default:
+        return Sort.by(Sort.Direction.DESC, "creationDate");
     }
   }
 

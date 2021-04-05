@@ -15,10 +15,14 @@ import java.util.List;
  */
 public interface BoardChangelogService {
 
-  PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize);
+  PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize, SortType sortType);
 
   ResponseEntity<FetchChangelogDto> post(String discriminator, PostChangelogDto dto);
 
   ResponseEntity delete(long id);
+
+  enum SortType {
+    NEWEST, OLDEST
+  }
 
 }

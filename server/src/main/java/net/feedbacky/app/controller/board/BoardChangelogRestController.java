@@ -5,6 +5,7 @@ import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.data.board.dto.social.PostSocialLinkDto;
 import net.feedbacky.app.service.board.changelog.BoardChangelogService;
+import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestParamsParser;
 
@@ -43,7 +44,14 @@ public class BoardChangelogRestController {
   @GetMapping("v1/boards/{discriminator}/changelog")
   public PaginableRequest<List<FetchChangelogDto>> getAll(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
     RequestParamsParser parser = new RequestParamsParser(requestParams);
-    return boardChangelogService.getAll(discriminator, parser.getPage(), parser.getPageSize());
+    BoardChangelogService.SortType sortType = BoardChangelogService.SortType.NEWEST;
+    if(requestParams.containsKey("sort")) {
+      try {
+        sortType = BoardChangelogService.SortType.valueOf(requestParams.get("sort").toUpperCase());
+      } catch(Exception ignoredInvalid) {
+      }
+    }
+    return boardChangelogService.getAll(discriminator, parser.getPage(), parser.getPageSize(), sortType);
   }
 
   @PostMapping("v1/boards/{discriminator}/changelog")

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import MarkdownContainer from "components/commons/MarkdownContainer";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import BoardContext from "context/BoardContext";
@@ -122,7 +123,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
                     {renderTags()}
                     <ModeratorActionsButton onIdeaDelete={() => onIdeaDelete(idea.id)}/>
                 </div>
-                <IdeaCardDescription dangerouslySetInnerHTML={{__html: truncateText(idea.description, 85)}}/>
+                <MarkdownContainer as={IdeaCardDescription} text={idea.description} truncate={85} stripped/>
                 {renderAuthor()}
             </CardLinkStyle>
         </CardStyle>

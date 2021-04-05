@@ -1,5 +1,8 @@
 ### 1.0.0.alpha.5
 * **[FEATURE]** Allow users to edit their comments (requested by [Matou0014](https://app.feedbacky.net/i/edit-comments.2681))
+* **[FEATURE]** Added changelogs feature (still working on it) (requested at [Feedbacky](https://app.feedbacky.net/i/changelogs.1343))
+* **[FEATURE]** Added simple markdown buttons (bold, italics, image, link) for some larger text areas
+* **[CHANGE]** Markdown is now stripped at idea card descriptions to display clearer text (suggested by Matou0014)
 * **[FIX]** Fixed javascript URI schemes and XSS vulnerability via markdown links (reported by [Mattx8y](https://app.feedbacky.net/i/disable-javascript-uri-schemes-in-markdown.2795))
 
 ### 1.0.0.alpha.4

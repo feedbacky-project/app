@@ -18,11 +18,11 @@ export const QuestionIcon = styled(FaQuestion)`
   margin-right: auto;
 `;
 
-const DangerousActionModal = ({id, isOpen, onHide, onAction, actionButtonName = "Delete", actionDescription, size = "sm"}) => {
+const DangerousActionModal = ({id, isOpen, onHide, onAction, actionButtonName = "Delete", actionDescription, size = "sm", ...otherProps}) => {
     return <UiDismissibleModal id={id} isOpen={isOpen} onHide={onHide} title={""} size={size} className={"mx-0"}
                                applyButton={<UiLoadableButton label={actionButtonName} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction().then(onHide)}>
                                    <FaExclamation className={"move-top-1px"}/> {actionButtonName}
-                               </UiLoadableButton>}>
+                               </UiLoadableButton>} {...otherProps}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
                 <QuestionIcon/>

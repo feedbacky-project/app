@@ -17,7 +17,7 @@ import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
-import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
+import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText, UiMarkdownFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxDangerBackground} from "ui/viewbox/UiViewBox";
@@ -33,6 +33,14 @@ const ThemeSelector = styled.div`
   
   &:hover {
     transform: var(--hover-transform-scale-lg);
+  }
+`;
+
+const CustomOptions = styled.div`
+  background-color: var(--background) !important;
+  
+  .dark & {
+    background-color: var(--dark-tertiary) !important;
   }
 `;
 
@@ -83,9 +91,9 @@ const GeneralSubroute = ({updateState}) => {
                     <strong>Markdown Tips:</strong>
                     <br/><UiKeyboardInput><strong>**bold text**</strong></UiKeyboardInput> <UiKeyboardInput><i>*italic text*</i></UiKeyboardInput>
                 </React.Fragment>}/>
-                <UiFormControl as={TextareaAutosize} label={"Type board description"} className={"bg-light"} minLength={10} maxLength={2500} rows={6}
+                <UiMarkdownFormControl as={TextareaAutosize} label={"Type board description"} className={"bg-light"} minLength={10} maxLength={2500} rows={6}
                                maxRows={13} required placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
-                               defaultValue={htmlDecode(boardData.fullDescription)} id={"fullDescrTextarea"}
+                               defaultValue={htmlDecode(boardData.fullDescription)} id={"fullDescrTextarea"} CustomOptions={CustomOptions}
                                onChange={e => {
                                    e.target.value = e.target.value.substring(0, 2500);
                                    formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);

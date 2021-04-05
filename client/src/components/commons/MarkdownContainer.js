@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
+import {truncateText} from "utils/basic-utils";
 
 const MarkdownBox = styled.div`
   word-break: break-word;
@@ -27,7 +28,8 @@ renderer.link = (href, title, text) => {
 };
 marked.setOptions({renderer: renderer, ...marked.options,});
 
-const MarkdownContainer = ({text}) => {
+const MarkdownContainer = (props) => {
+    const {text, stripped, truncate = -1, ...otherProps} = props;
     const parseEmojis = (preText) => {
         let replaced = preText;
         replaced = replaced.replace(":)", "\uD83D\uDE04");
@@ -41,7 +43,14 @@ const MarkdownContainer = ({text}) => {
         replaced = replaced.replace(":@", "\uD83D\uDE21");
         return replaced;
     };
-    return <MarkdownBox dangerouslySetInnerHTML={{__html: parseEmojis(marked.parseInline(text, {breaks: true}))}}/>
+    let html = parseEmojis(marked.parseInline(text, {breaks: true}));
+    if(stripped) {
+        html = html.replace(/<br\s*\/?>/ig, " ").replace(/(&nbsp;|<([^>]+)>)/ig, "");
+    }
+    if(truncate > 0) {
+        html = truncateText(html, truncate);
+    }
+    return <MarkdownBox dangerouslySetInnerHTML={{__html: html}} {...otherProps}/>
 };
 
 export default MarkdownContainer;
