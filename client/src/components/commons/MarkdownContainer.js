@@ -17,6 +17,9 @@ const MarkdownBox = styled.div`
       color: hsl(208, 100%, 75%) !important;
     }
   }
+  & img {
+    width: 100%;
+  }
 `;
 
 const marked = require("marked");

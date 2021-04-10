@@ -13,6 +13,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import TimeAgo from "timeago-react/esm/timeago-react";
 import {UiLoadingSpinner, UiPrettyUsername} from "ui";
 import {UiCol} from "ui/grid";
+import {UiAvatar} from "ui/image";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 import {prepareFilterAndSortRequests} from "utils/basic-utils";
 
@@ -47,6 +48,7 @@ const BoardChangelogBox = () => {
         if (changelog.loaded && changelog.data.length === 0 && !changelog.moreToLoad) {
             return <SvgNotice Component={UndrawNoData} title={"This Changelog Is Empty"}/>
         }
+        console.log(changelog.data);
         return <InfiniteScroll
             style={{overflow: "initial"}}
             next={onLoadRequest}
@@ -63,7 +65,8 @@ const BoardChangelogBox = () => {
                             <TimeAgo datetime={element.creationDate}/>
                         </small>
                         <small className={"text-black-60 mt-2 float-right"}>
-                            By <UiPrettyUsername user={element.creator}/>
+                            By <UiPrettyUsername user={element.creator}/> {" "}
+                            <UiAvatar size={16} user={element.creator} className={"align-top"} roundedCircle/>
                         </small>
                     </UiViewBoxBackground>
                 </UiCol>
