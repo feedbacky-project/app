@@ -24,6 +24,10 @@ const CommentContainer = styled.div`
   margin-bottom: .5rem;
   word-break: break-word;
   min-width: 55%;
+  
+  @media(max-width: 576px) {
+    width: 100%;
+  }
 `;
 
 const InternalContainer = styled(CommentContainer)`
