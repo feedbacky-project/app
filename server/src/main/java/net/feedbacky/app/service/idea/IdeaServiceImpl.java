@@ -301,7 +301,7 @@ public class IdeaServiceImpl implements IdeaService {
     List<Tag> addedTags = new ArrayList<>();
     List<Tag> removedTags = new ArrayList<>();
     for(PatchTagRequestDto preTag : tags) {
-      Tag tag = tagRepository.findByBoardAndId(idea.getBoard(), preTag.getName())
+      Tag tag = tagRepository.findByBoardAndName(idea.getBoard(), preTag.getName())
               .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with name {0} not found.", preTag.getName())));
       for(Tag ideaTag : idea.getBoard().getTags()) {
         if(!ideaTag.getName().equals(preTag.getName())) {
