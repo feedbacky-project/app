@@ -23,7 +23,7 @@ const TagsSubroute = () => {
     const {getTheme} = useContext(AppContext);
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
-    const [modal, setModal] = useState({open: false, type: "", data: {name: ""}});
+    const [modal, setModal] = useState({open: false, type: "", data: {id: -1}});
     useEffect(() => setCurrentNode("tags"), [setCurrentNode]);
     useTitle(boardData.name + " | Tags");
     const onTagCreate = (data) => {
@@ -34,7 +34,7 @@ const TagsSubroute = () => {
             <UiFormLabel>Created Tags</UiFormLabel>
             <UiRow>{renderTags()}</UiRow>
             <UiLoadableButton label={"Add New"} className={"mt-3 float-right"} onClick={() => {
-                setModal({open: true, type: "new", data: {name: ""}});
+                setModal({open: true, type: "new", data: {id: -1}});
                 return Promise.resolve();
             }}>Add New</UiLoadableButton>
         </UiCol>
@@ -58,7 +58,7 @@ const TagsSubroute = () => {
                     <UiHoverableIcon as={FaPen} onClick={() => onTagEdit(tag)} className={"ml-1"}/>
                 </UiTooltip>
                 <UiTooltip id={"tag" + i + "delete"} text={"Delete Tag"}>
-                    <UiHoverableIcon as={FaTrashAlt} onClick={() => setModal({open: true, type: "delete", data: {name: tag.name, color: tinycolor(tag.color)}})}
+                    <UiHoverableIcon as={FaTrashAlt} onClick={() => setModal({open: true, type: "delete", data: {id: tag.id, color: tinycolor(tag.color)}})}
                                      className={"ml-1"}/>
                 </UiTooltip>
             </UiCol>
@@ -74,7 +74,7 @@ const TagsSubroute = () => {
         updateState({...boardData, tags});
     };
     const onTagDelete = () => {
-        return axios.delete("/boards/" + boardData.discriminator + "/tags/" + modal.data.name).then(res => {
+        return axios.delete("/boards/" + boardData.discriminator + "/tags/" + modal.data.id).then(res => {
             if (res.status !== 204) {
                 popupError();
                 return;

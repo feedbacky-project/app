@@ -217,11 +217,11 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public FetchTagDto getTagByName(String discriminator, String name) {
+  public FetchTagDto getTagById(String discriminator, long id) {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    Tag tag = tagRepository.findByBoardAndName(board, name)
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with name {0} not found.", name)));
+    Tag tag = tagRepository.findByBoardAndId(board, id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with id {0} not found.", id)));
     return new FetchTagDto().from(tag);
   }
 
@@ -242,15 +242,15 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public FetchTagDto patchTag(String discriminator, String name, PatchTagDto dto) {
+  public FetchTagDto patchTag(String discriminator, long id, PatchTagDto dto) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
-    Tag tag = tagRepository.findByBoardAndName(board, name)
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with name {0} not found.", name)));
+    Tag tag = tagRepository.findByBoardAndId(board, id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with id {0} not found.", id)));
 
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
@@ -261,15 +261,15 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public ResponseEntity deleteTag(String discriminator, String name) {
+  public ResponseEntity deleteTag(String discriminator, long id) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
-    Tag tag = tagRepository.findByBoardAndName(board, name)
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with name {0} not found.", name)));
+    Tag tag = tagRepository.findByBoardAndId(board, id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with id {0} not found.", id)));
     board.getIdeas().forEach(idea -> {
       idea.getTags().remove(tag);
       ideaRepository.save(idea);

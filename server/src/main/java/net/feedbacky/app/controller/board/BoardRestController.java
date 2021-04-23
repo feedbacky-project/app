@@ -10,7 +10,6 @@ import net.feedbacky.app.service.board.BoardService;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestParamsParser;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -75,9 +74,9 @@ public class BoardRestController {
     return boardService.getAllTags(discriminator);
   }
 
-  @GetMapping("v1/boards/{discriminator}/tags/{name}")
-  public FetchTagDto getTagByName(@PathVariable String discriminator, @PathVariable String name) {
-    return boardService.getTagByName(discriminator, name);
+  @GetMapping("v1/boards/{discriminator}/tags/{id}")
+  public FetchTagDto getTagById(@PathVariable String discriminator, @PathVariable long id) {
+    return boardService.getTagById(discriminator, id);
   }
 
   @PostMapping("v1/boards/{discriminator}/tags")
@@ -85,14 +84,14 @@ public class BoardRestController {
     return boardService.postTag(discriminator, dto);
   }
 
-  @PatchMapping("v1/boards/{discriminator}/tags/{name}")
-  public FetchTagDto patchTag(@PathVariable String discriminator, @PathVariable String name, @Valid @RequestBody PatchTagDto dto) {
-    return boardService.patchTag(discriminator, name, dto);
+  @PatchMapping("v1/boards/{discriminator}/tags/{id}")
+  public FetchTagDto patchTag(@PathVariable String discriminator, @PathVariable long id, @Valid @RequestBody PatchTagDto dto) {
+    return boardService.patchTag(discriminator, id, dto);
   }
 
-  @DeleteMapping("v1/boards/{discriminator}/tags/{name}")
-  public ResponseEntity deleteTag(@PathVariable String discriminator, @PathVariable String name) {
-    return boardService.deleteTag(discriminator, name);
+  @DeleteMapping("v1/boards/{discriminator}/tags/{id}")
+  public ResponseEntity deleteTag(@PathVariable String discriminator, @PathVariable long id) {
+    return boardService.deleteTag(discriminator, id);
   }
 
 }

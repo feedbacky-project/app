@@ -13,7 +13,7 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
     useEffect(() => {
         setColor(tag.color);
         if(tag.roadmapIgnored != null && tag.publicUse != null) {
-            setTagData({name: tag.name, roadmapIgnored: tag.roadmapIgnored, publicUse: tag.publicUse});
+            setTagData({id: tag.id, name: tag.name, roadmapIgnored: tag.roadmapIgnored, publicUse: tag.publicUse});
         }
     }, [tag]);
 
@@ -25,7 +25,7 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
         }
         const roadmapIgnored = tagData.roadmapIgnored;
         const publicUse = tagData.publicUse;
-        return axios.patch("/boards/" + data.discriminator + "/tags/" + tag.name, {
+        return axios.patch("/boards/" + data.discriminator + "/tags/" + tag.id, {
             name, color, roadmapIgnored, publicUse,
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {

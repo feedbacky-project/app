@@ -31,12 +31,12 @@ public interface BoardService {
 
   List<FetchTagDto> getAllTags(String discriminator);
 
-  FetchTagDto getTagByName(String discriminator, String name);
+  FetchTagDto getTagById(String discriminator, long id);
 
   ResponseEntity<FetchTagDto> postTag(String discriminator, PostTagDto dto);
 
-  FetchTagDto patchTag(String discriminator, String name, PatchTagDto dto);
+  FetchTagDto patchTag(String discriminator, long id, PatchTagDto dto);
 
-  ResponseEntity deleteTag(String discriminator, String name);
+  ResponseEntity deleteTag(String discriminator, long id);
 
 }

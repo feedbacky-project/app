@@ -20,6 +20,8 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
   List<Tag> findByBoard(Board board);
 
+  Optional<Tag> findByBoardAndId(Board board, long id);
+
   Optional<Tag> findByBoardAndName(Board board, String name);
 
 }
