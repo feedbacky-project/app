@@ -75,6 +75,7 @@ public class WebhookExecutor {
         embedObject.addField("Tags Changed", data.get(WebhookMapData.TAGS_CHANGED.getName()), true);
         break;
       case CHANGELOG_CREATE:
+        embedObject.setTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.CHANGELOG_NAME.getName(), "")));
         embedObject.addField("Description", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName()), true);
         break;
     }

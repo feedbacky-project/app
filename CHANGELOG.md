@@ -1,3 +1,7 @@
+### 1.0.0.alpha.6
+* **[IMPROVEMENT]** Changelogs can now be deleted
+* **[FIX]** Changelogs webhook title wasn't displayed correctly
+
 ### 1.0.0.alpha.5
 * **[FEATURE]** Allow users to edit their comments (requested by [Matou0014](https://app.feedbacky.net/i/edit-comments.2681))
 * **[FEATURE]** Added changelogs feature (still working on it) (requested at [Feedbacky](https://app.feedbacky.net/i/changelogs.1343))
