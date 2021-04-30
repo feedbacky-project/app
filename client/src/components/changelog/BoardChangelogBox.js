@@ -3,6 +3,7 @@ import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 import axios from "axios";
 import BoardInfoCard from "components/board/BoardInfoCard";
 import BoardChangelogInfoCard from "components/changelog/BoardChangelogInfoCard";
+import BoardChangelogTitle from "components/changelog/BoardChangelogTitle";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import {SvgNotice} from "components/commons/SvgNotice";
 import AppContext from "context/AppContext";
@@ -41,6 +42,11 @@ const BoardChangelogBox = () => {
     const onChangelogCreation = (data) => {
         setChangelog({...changelog, data: [data, ...changelog.data]});
     };
+    const onChangelogDelete = (data) => {
+      let newData = changelog.data;
+      newData = newData.filter(changelog => changelog.id !== data.id);
+      setChangelog({...changelog, data: newData});
+    };
     const loadChangelogs = () => {
         if (changelog.error) {
             return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className={"mr-1"}/> Failed to load changelog</React.Fragment>}/>
@@ -48,7 +54,6 @@ const BoardChangelogBox = () => {
         if (changelog.loaded && changelog.data.length === 0 && !changelog.moreToLoad) {
             return <SvgNotice Component={UndrawNoData} title={"This Changelog Is Empty"}/>
         }
-        console.log(changelog.data);
         return <InfiniteScroll
             style={{overflow: "initial"}}
             next={onLoadRequest}
@@ -58,8 +63,8 @@ const BoardChangelogBox = () => {
             {changelog.data.map(element => {
                 return <UiCol xs={12} className={"my-2 px-0"} key={element.id}>
                     <UiViewBoxBackground className={"d-inline-block p-4"}>
-                        <div style={{fontSize: "1.35em", fontWeight: "bold"}}>{element.title}</div>
-                        <MarkdownContainer text={element.description}/>
+                        <BoardChangelogTitle data={element} onChangelogDelete={onChangelogDelete}/>
+                        <MarkdownContainer className={"mb-2"} text={element.description}/>
                         <small className={"text-black-60 mt-2 float-left"}>
                             Published {" "}
                             <TimeAgo datetime={element.creationDate}/>

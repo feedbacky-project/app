@@ -13,7 +13,7 @@ import {useHistory} from "react-router-dom";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {popupError, popupNotification, popupRevertableNotification, popupWarning} from "utils/basic-utils";
 
-const IconToggle = styled(FaCog)`
+export const IconToggle = styled(FaCog)`
   transition: all 0.7s ease-in-out 0s;
   color: var(--pure-dark-half);
   
@@ -31,7 +31,7 @@ const IconToggle = styled(FaCog)`
   }
 `;
 
-const DropdownOption = styled(UiDropdownElement)`
+export const DropdownOption = styled(UiDropdownElement)`
   cursor: pointer;
 `;
 
