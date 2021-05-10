@@ -3,15 +3,37 @@ import {WCAG_AA_CONTRAST} from "App";
 import AppContext from "context/AppContext";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
-import {Button} from "react-bootstrap";
 import tinycolor from "tinycolor2";
 
-export const PageButton = styled(Button)`
+export const BasePageButton = styled.button`
+  display: inline-block;
+  font-weight: 400;
+  font-size: var(--font-size);
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  line-height: 1.5;
+  border-radius: var(--border-radius);
+  transition: var(--hover-transition);
+  
+  ${props => props.small === true &&
+    `
+      padding: .25rem .5rem !important;
+      font-size: .82031rem !important;
+    `}
+  ${props => props.disabled === true &&
+    `
+      opacity: .65;
+    `}
+`;
+
+export const PageButton = styled(BasePageButton)`
   color: white;
   box-shadow: var(--box-shadow);
-  transition: var(--hover-transition);
-  border-radius: var(--border-radius);
-  border: 1px solid transparent;
   
   &:focus {
     outline: 1px dotted white;
@@ -37,18 +59,18 @@ const UiButton = (props) => {
         if (tinycolor.readability(color, "#282828") < WCAG_AA_CONTRAST) {
             buttonColor = buttonColor.lighten(25);
         }
-        return <PageButton aria-label={label} variant={""} style={{color: buttonColor, fontWeight: "bold", backgroundColor: buttonColor.clone().setAlpha(.1), style}}
+        return <PageButton aria-label={label} style={{color: buttonColor, fontWeight: "bold", backgroundColor: buttonColor.clone().setAlpha(.1), style}}
                            ref={innerRef} {...otherProps}>{children}</PageButton>
     } else {
         if (tinycolor.readability(buttonColor, "#fff") < WCAG_AA_CONTRAST) {
             buttonColor = buttonColor.darken(10);
         }
     }
-    return <PageButton aria-label={label} variant={""} style={{backgroundColor: buttonColor.clone().setAlpha(.1), color: buttonColor, fontWeight: "500", style}} ref={innerRef} {...otherProps}>{children}</PageButton>
+    return <PageButton aria-label={label} style={{backgroundColor: buttonColor.clone().setAlpha(.1), color: buttonColor, fontWeight: "500", style}} ref={innerRef} {...otherProps}>{children}</PageButton>
 };
 
 UiButton.propTypes = {
-  label: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
 };
 
 export {UiButton};

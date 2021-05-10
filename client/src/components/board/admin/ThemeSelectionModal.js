@@ -9,7 +9,7 @@ const ThemeSelectionModal = ({isOpen, onHide, onUpdate}) => {
     const context = useContext(AppContext);
     const theme = context.getTheme(false);
     const [color, setColor] = useState(theme);
-    return <UiDismissibleModal id={"colorSelection"} isOpen={isOpen} onHide={onHide} title={"Choose New Theme Color"} size={"sm"}
+    return <UiDismissibleModal id={"colorSelection"} isOpen={isOpen} onHide={onHide} title={"Choose New Theme Color"} small
                                applyButton={<UiButton label={"Save"} color={theme} onClick={() => onUpdate(color)} className={"mx-0"}>Save</UiButton>}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2"}>

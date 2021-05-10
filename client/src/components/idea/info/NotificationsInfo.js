@@ -31,7 +31,7 @@ const NotificationsInfo = () => {
         });
     };
     const renderButton = () => {
-        return <UiLoadableButton label={"Subscribe Toggle"} size={"sm"} onClick={onSubscribeToggle}>
+        return <UiLoadableButton label={"Subscribe Toggle"} small onClick={onSubscribeToggle}>
             {ideaData.subscribed ?
                 <React.Fragment><FaRegBellSlash className={"move-top-1px"}/> Unsubscribe</React.Fragment>
                 : <React.Fragment><FaRegBell className={"move-top-1px"}/> Subscribe</React.Fragment>}

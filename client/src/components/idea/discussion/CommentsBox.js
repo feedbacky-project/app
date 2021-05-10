@@ -114,8 +114,8 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
                            placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
                            style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={htmlDecode(editor.value)}/>
             <div className={"m-0 mt-2"}>
-                <UiLoadableButton label={"Save"} size={"sm"} onClick={onEditApply}>Save</UiLoadableButton>
-                <UiCancelButton size={"sm"} onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
+                <UiLoadableButton label={"Save"} small onClick={onEditApply}>Save</UiLoadableButton>
+                <UiCancelButton small onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
             </div>
         </React.Fragment>
     };

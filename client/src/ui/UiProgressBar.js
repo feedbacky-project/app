@@ -4,7 +4,6 @@ import AppContext from "context/AppContext";
 import PropTypes from "prop-types";
 import Steps from "rc-steps";
 import React, {useContext} from "react";
-import {ProgressBar} from "react-bootstrap";
 import {UiCol} from "ui/grid";
 
 const ProgressSteps = styled(Steps)`
@@ -31,13 +30,31 @@ const ProgressSteps = styled(Steps)`
   }
 `;
 
-const PageProgressBar = styled(ProgressBar)`
+const PageProgress = styled.div`
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size);
+  
   .dark & {
     background-color: var(--dark-font-color) !important;
   }
-  .progress-bar-striped {
-    background-color: ${props => props.theme.toHexString()};
-  }
+`;
+
+const PageProgressBar = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  transition: width 0.6s ease;
+  background-size: 1rem;
+  background-color: ${props => props.theme.toHexString()};
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  width: ${props => props.now}%;
 `;
 
 const UiProgressBar = (props) => {
@@ -51,7 +68,9 @@ const UiProgressBar = (props) => {
         </UiCol>
         <UiCol xs={12} className={"d-sm-none px-4"}>
             <small>Step {currentStep}</small>
-            <PageProgressBar striped theme={getTheme()} now={(currentStep / steps) * 100}/>
+            <PageProgress>
+                <PageProgressBar theme={getTheme()} now={(currentStep / steps) * 100}/>
+            </PageProgress>
         </UiCol>
     </React.Fragment>
 };

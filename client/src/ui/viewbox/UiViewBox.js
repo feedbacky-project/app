@@ -45,7 +45,7 @@ export const UiViewBoxBackground = styled(UiCol)`
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   
-  .form-control:not(:disabled) {
+  input:not(:disabled) {
     background-color: var(--tertiary) !important;
   }
   
@@ -53,7 +53,7 @@ export const UiViewBoxBackground = styled(UiCol)`
     background-color: var(--dark-secondary);
     box-shadow: var(--dark-box-shadow) !important;
     
-    .form-control:not(:disabled) {
+    input:not(:disabled) {
       background-color: var(--dark-quaternary) !important;
     }
   }

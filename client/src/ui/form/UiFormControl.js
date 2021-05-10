@@ -1,9 +1,19 @@
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import React from "react";
-import Form from "react-bootstrap/Form";
 
-const FormControl = styled(Form.Control)`
+const FormControl = styled.input`
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem);
+  padding: 0.375rem 0.75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  border: none;
+  overflow: visible;
+  margin: 0;
+  border-radius: var(--border-radius);
+  
   min-height: 36px;
   resize: none;
   color: hsla(0, 0%, 0%, .6);
@@ -15,6 +25,7 @@ const FormControl = styled(Form.Control)`
   }
   &:focus {
     box-shadow: var(--box-shadow);
+    outline: none; //bootstrap override
   }
   &:disabled {
     background-color: var(--disabled);
@@ -33,10 +44,10 @@ const FormControl = styled(Form.Control)`
   }
   &::placeholder {
     font-size: 15px;
-    color: hsla(0, 0%, 0%, .5);
+    color: hsla(0, 0%, 0%, .9);
   }
   .dark &::placeholder {
-    color: hsl(0, 0%, 49%) !important;
+    color: hsl(0, 0%, 75%) !important;
   }
   .dark &:disabled {
     background-color: var(--dark-disabled) !important;

@@ -36,12 +36,12 @@ const CommentWriteBox = ({submitOpen, onCommentSubmit, onCommentBoxKeyUp}) => {
             return <React.Fragment/>
         }
         return <div className={"mt-2"}>
-            <UiLoadableButton label={"Submit"} size={"sm"} onClick={() => onCommentSubmit(false)}>
+            <UiLoadableButton label={"Submit"} small onClick={() => onCommentSubmit(false)}>
                 Submit
             </UiLoadableButton>
 
             {isModerator && <React.Fragment>
-                <UiLoadableButton label={"Submit Internal"} color={tinycolor("#0080FF")} size={"sm"} className={"ml-1"} onClick={() => onCommentSubmit(true)}>
+                <UiLoadableButton label={"Submit Internal"} color={tinycolor("#0080FF")} small className={"ml-1"} onClick={() => onCommentSubmit(true)}>
                     Submit Internal
                 </UiLoadableButton>
                 <div className="d-inline-flex align-top"><UiClickableTip id={"internalTip"} title={"Internal Comments"} description={"Comments visible only for moderators of the project, hidden from public view."}/></div>

@@ -57,9 +57,9 @@ const UiTestRoute = () => {
             <div style={{position: "fixed", zIndex: 1000, left: "15px", top: "50%", width: 150, borderRadius: "var(--border-radius)", backgroundColor: "#2d2d2d"}}>
                 <UiContainer className={"py-2 justify-content-center"}>
                     <div style={{textAlign: "center", marginBottom: ".5rem", color: "white"}}>Debug Card</div>
-                    <UiButton label={"Dark Mode"} size={"sm"} className={"my-1"} onClick={() => context.onAppearanceToggle()}>Dark Mode</UiButton>
-                    <UiButton label={"Random Theme"} size={"sm"} className={"my-1"} onClick={() => context.onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
-                    <UiButton label={"Snackbar Test"} size={"sm"} className={"my-1"} onClick={() => popupNotification("Snackbar test", getCustomTheme())}>Snackbar Test</UiButton>
+                    <UiButton label={"Dark Mode"} small className={"my-1"} onClick={() => context.onAppearanceToggle()}>Dark Mode</UiButton>
+                    <UiButton label={"Random Theme"} small className={"my-1"} onClick={() => context.onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
+                    <UiButton label={"Snackbar Test"} small className={"my-1"} onClick={() => popupNotification("Snackbar test", getCustomTheme())}>Snackbar Test</UiButton>
                 </UiContainer>
             </div>
             <UiContainer>

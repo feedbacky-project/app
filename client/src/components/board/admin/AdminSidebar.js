@@ -1,8 +1,8 @@
 import {CLIENT_VERSION} from "App";
+import SafeAnchor from "components/commons/SafeAnchor";
 import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/sidebar-commons";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
-import {SafeAnchor} from "react-bootstrap";
 import {FaAt, FaColumns, FaSlidersH, FaTags, FaUserLock, FaUsersCog} from "react-icons/all";
 import {UiCol} from "ui/grid";
 
@@ -22,7 +22,7 @@ const AdminSidebar = ({currentNode, reRouteTo}) => {
         <ul>{renderSidebarRoutes(routes, themeColor, currentNode, reRouteTo)}</ul>
         <small className={"text-black-60"}>
             <div>
-                Running <img alt={"Project Logo"} src={"https://cdn.feedbacky.net/static/img/logo.png"} width={16} height={16}/> <SafeAnchor href={"https://feedbacky.net"} className={"text-black-60"}>Feedbacky</SafeAnchor>
+                Running <img alt={"Project Logo"} src={"https://cdn.feedbacky.net/static/img/logo.png"} width={16} height={16}/> <SafeAnchor url={"https://feedbacky.net"} className={"text-black-60"}>Feedbacky</SafeAnchor>
                 <span className={"text-black-75"}>{" "}v{CLIENT_VERSION}</span>
             </div>
             <div>Server Version <span className={"text-black-75"}>v{context.serviceData.serverVersion}</span></div>

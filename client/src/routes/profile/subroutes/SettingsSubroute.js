@@ -103,7 +103,7 @@ const SettingsSubroute = () => {
                                  component={<UiButton label={"Change"} color={tinycolor("#00c851")} className={"align-top mx-3 my-0"}
                                                       onClick={() => setModal({open: true, type: "avatar"})}>Change</UiButton>}
                                  loader={<UiButton label={"Loading..."} color={tinycolor("#00c851")} disabled className={"align-top mx-3 my-0"}>
-                                     <UiLoadingSpinner className={"mr-1"} size={"sm"}/> Loading
+                                     <UiLoadingSpinner className={"mr-1"} small/> Loading
                                  </UiButton>}
                 />
             </UiCol>
