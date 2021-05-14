@@ -19,7 +19,6 @@ const FormControl = styled.input`
   color: hsla(0, 0%, 0%, .6);
   background-color: var(--secondary);
   box-shadow: var(--box-shadow);
-  transition: var(--hover-transition);
   &.darker {
     background-color: var(--background);
   }
