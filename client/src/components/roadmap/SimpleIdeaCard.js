@@ -8,7 +8,7 @@ import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import {UiClassicIcon} from "ui";
 import {UiRow} from "ui/grid";
-import {convertIdeaToSlug, truncateText} from "utils/basic-utils";
+import {convertIdeaToSlug} from "utils/basic-utils";
 
 export const SimpleIdeaCard = ({ideaData}) => {
     const cardRef = React.createRef();

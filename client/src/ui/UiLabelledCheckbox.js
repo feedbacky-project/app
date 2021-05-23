@@ -1,6 +1,6 @@
+import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from "react";
-import styled from "@emotion/styled";
 
 const StyledElement = styled.div`
   display: inline-block;

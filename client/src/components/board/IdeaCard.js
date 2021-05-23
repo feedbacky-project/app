@@ -11,7 +11,7 @@ import tinycolor from "tinycolor2";
 import {UiBadge, UiCard, UiClassicIcon, UiPrettyUsername} from "ui";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
-import {convertIdeaToSlug, truncateText} from "utils/basic-utils";
+import {convertIdeaToSlug} from "utils/basic-utils";
 
 const CardStyle = styled(UiCard)`
   padding: 0 1rem;

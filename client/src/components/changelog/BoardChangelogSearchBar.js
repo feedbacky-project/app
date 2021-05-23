@@ -1,7 +1,5 @@
-import styled from "@emotion/styled";
 import AppContext from "context/AppContext";
 import React, {useContext} from 'react';
-import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol} from "ui/grid";
 

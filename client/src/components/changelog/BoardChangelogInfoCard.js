@@ -1,4 +1,3 @@
-import IdeaCreateModal from "components/board/IdeaCreateModal";
 import ChangelogCreateModal from "components/changelog/ChangelogCreateModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import AppContext from "context/AppContext";

@@ -1,7 +1,6 @@
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 import axios from "axios";
-import BoardInfoCard from "components/board/BoardInfoCard";
 import BoardChangelogInfoCard from "components/changelog/BoardChangelogInfoCard";
 import BoardChangelogTitle from "components/changelog/BoardChangelogTitle";
 import MarkdownContainer from "components/commons/MarkdownContainer";

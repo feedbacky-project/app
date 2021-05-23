@@ -1,8 +1,8 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
 import BoardIdeaCardContainer from "components/board/BoardIdeaCardContainer";
-import BoardNavbar from "components/commons/BoardNavbar";
 import BoardSearchBar from "components/board/BoardSearchBar";
+import BoardNavbar from "components/commons/BoardNavbar";
 import LoginModal from "components/LoginModal";
 import AppContext from "context/AppContext";
 import React, {useContext, useEffect, useState} from 'react';
