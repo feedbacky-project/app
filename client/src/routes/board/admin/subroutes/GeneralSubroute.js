@@ -6,7 +6,6 @@ import ColorPickerContainer from "components/commons/ColorPickerContainer";
 import ConfirmationActionModal from "components/commons/ConfirmationActionModal";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import UploadIconBox from "components/commons/UploadIconBox";
-import {CommentInternal} from "components/idea/discussion/CommentsBox";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import PageNodesContext from "context/PageNodesContext";
@@ -17,7 +16,7 @@ import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
-import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText, UiMarkdownFormControl} from "ui/form";
+import {UiCountableFormControl, UiFormLabel, UiFormText, UiMarkdownFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxDangerBackground} from "ui/viewbox/UiViewBox";
@@ -61,6 +60,8 @@ const GeneralSubroute = ({updateState}) => {
     const {onThemeChange, getTheme, user} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [anonymousVoting, setAnonymousVoting] = useState(boardData.anonymousAllowed);
+    const [roadmapEnabled, setRoadmapEnabled] = useState(boardData.roadmapEnabled);
+    const [changelogEnabled, setChangelogEnabled] = useState(boardData.changelogEnabled);
     const [apiKeyBlurred, setApiKeyBlurred] = useState(true);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, type: ""});
@@ -92,12 +93,12 @@ const GeneralSubroute = ({updateState}) => {
                     <br/><UiKeyboardInput><strong>**bold text**</strong></UiKeyboardInput> <UiKeyboardInput><i>*italic text*</i></UiKeyboardInput>
                 </React.Fragment>}/>
                 <UiMarkdownFormControl as={TextareaAutosize} label={"Type board description"} className={"bg-light"} minLength={10} maxLength={2500} rows={6}
-                               maxRows={13} required placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
-                               defaultValue={htmlDecode(boardData.fullDescription)} id={"fullDescrTextarea"} CustomOptions={CustomOptions}
-                               onChange={e => {
-                                   e.target.value = e.target.value.substring(0, 2500);
-                                   formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);
-                               }}/>
+                                       maxRows={13} required placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
+                                       defaultValue={htmlDecode(boardData.fullDescription)} id={"fullDescrTextarea"} CustomOptions={CustomOptions}
+                                       onChange={e => {
+                                           e.target.value = e.target.value.substring(0, 2500);
+                                           formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);
+                                       }}/>
                 <UiFormText className={"float-left"}>
                     Markdown Supported
                 </UiFormText>
@@ -174,6 +175,40 @@ const GeneralSubroute = ({updateState}) => {
                     }, () => {
                         setAnonymousVoting(false);
                         return onChangesSave(false);
+                    })}
+                </UiCol>
+            </UiRow>
+            <UiRow noGutters className={"m-0 p-0 px-4 my-2 mb-4"}>
+                <UiCol sm={9} xs={12}>
+                    <h4 className={"mb-1"}>Roadmaps Enabled</h4>
+                    <span className={"text-black-60"} style={{fontSize: ".9em"}}>
+                        Utilize roadmaps for your short-term and long-term goals.
+                    </span>
+                </UiCol>
+                <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
+                    {conditionalButton(anonymousVoting, () => {
+                        setRoadmapEnabled(true);
+                        return onChangesSave(anonymousVoting, true);
+                    }, () => {
+                        setRoadmapEnabled(false);
+                        return onChangesSave(anonymousVoting, false);
+                    })}
+                </UiCol>
+            </UiRow>
+            <UiRow noGutters className={"m-0 p-0 px-4 my-2 mb-4"}>
+                <UiCol sm={9} xs={12}>
+                    <h4 className={"mb-1"}>Changelogs Enabled</h4>
+                    <span className={"text-black-60"} style={{fontSize: ".9em"}}>
+                        Utilize changelogs to record all notable changes of your project.
+                    </span>
+                </UiCol>
+                <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
+                    {conditionalButton(anonymousVoting, () => {
+                        setChangelogEnabled(true);
+                        return onChangesSave(anonymousVoting, roadmapEnabled, true);
+                    }, () => {
+                        setChangelogEnabled(false);
+                        return onChangesSave(anonymousVoting, roadmapEnabled, false);
                     })}
                 </UiCol>
             </UiRow>
@@ -267,7 +302,7 @@ const GeneralSubroute = ({updateState}) => {
             popupNotification("API key regenerated.", getTheme());
         });
     };
-    const onChangesSave = (anonymousAllowed = boardData.anonymousAllowed) => {
+    const onChangesSave = (anonymousAllowed = boardData.anonymousAllowed, roadmapEnabled = boardData.roadmapEnabled, changelogEnabled = boardData.changelogEnabled) => {
         const banner = bannerInput;
         const logo = logoInput;
         const name = document.getElementById("boardTextarea").value;
@@ -275,7 +310,7 @@ const GeneralSubroute = ({updateState}) => {
         const fullDescription = document.getElementById("fullDescrTextarea").value;
         const themeColor = getTheme(false).toHexString();
         return axios.patch("/boards/" + boardData.discriminator, {
-            name, shortDescription, fullDescription, themeColor, banner, logo, anonymousAllowed
+            name, shortDescription, fullDescription, themeColor, banner, logo, anonymousAllowed, roadmapEnabled, changelogEnabled
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();

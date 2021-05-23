@@ -97,5 +97,7 @@ public class Board implements Serializable {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Changelog> changelogs = new HashSet<>();
   private boolean anonymousAllowed = true;
+  private boolean roadmapEnabled = true;
+  private boolean changelogEnabled = true;
 
 }

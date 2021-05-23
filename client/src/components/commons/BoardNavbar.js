@@ -25,16 +25,20 @@ const BoardNavbar = ({selectedNode}) => {
                     <FaRegComment className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
                     <span className={"d-sm-inline-block d-none align-middle"}>Feedback</span>
                 </FeedbackComponent>
+                {data.roadmapEnabled &&
                 <RoadmapComponent to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
                                   theme={context.getTheme()} border={selectedNode === "roadmap" ? context.getTheme().setAlpha(.75) : undefined} aria-label={"Roadmap"}>
                     <FaRegMap className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
                     <span className={"d-sm-inline-block d-none align-middle"}>Roadmap</span>
                 </RoadmapComponent>
+                }
+                {data.changelogEnabled &&
                 <ChangelogComponent to={{pathname: "/b/" + data.discriminator + "/changelog", state: {_boardData: data}}}
                                     theme={context.getTheme()} border={selectedNode === "changelog" ? context.getTheme().setAlpha(.75) : undefined} aria-label={"Changelog"}>
                     <FaRegListAlt className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
                     <span className={"d-sm-inline-block d-none align-middle"}>Changelog</span>
                 </ChangelogComponent>
+                }
             </div>
             {renderLogIn(onNotLoggedClick, context)}
         </UiContainer>

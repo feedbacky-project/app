@@ -7,7 +7,7 @@ import BoardNavbar from "components/commons/BoardNavbar";
 import AppContext from "context/AppContext";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation, useHistory, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import {UiLoadingSpinner} from "ui";
@@ -17,6 +17,7 @@ import {useTitle} from "utils/use-title";
 const RoadmapRoute = () => {
     const {onThemeChange, defaultTheme, user} = useContext(AppContext);
     const location = useLocation();
+    const history = useHistory();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [roadmap, setRoadmap] = useState({data: {}, loaded: false, error: false});
@@ -60,6 +61,10 @@ const RoadmapRoute = () => {
         loadRoadmapData();
         // eslint-disable-next-line
     }, [user.session]);
+    if(board.loaded && !board.data.roadmapEnabled) {
+        history.push("/b/" + id);
+        return <React.Fragment/>
+    }
     if (roadmap.error) {
         return <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>
     }

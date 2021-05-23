@@ -1,4 +1,5 @@
 ### 1.0.0.alpha.6
+* **[FEATURE]** Changelogs and roadmaps can now be disabled
 * **[IMPROVEMENT]** Changelogs can now be deleted
 * **[FIX]** Changelogs webhook title wasn't displayed correctly
 

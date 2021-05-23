@@ -36,5 +36,7 @@ public class PatchBoardDto {
   private String banner;
 
   private boolean anonymousAllowed;
+  private boolean roadmapEnabled;
+  private boolean changelogEnabled;
 
 }

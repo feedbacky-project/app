@@ -10,7 +10,7 @@ import {BoardRoadmapBox} from "components/roadmap/BoardRoadmapBox";
 import AppContext from "context/AppContext";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
-import {useLocation, useParams} from "react-router-dom";
+import {useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import {UiLoadingSpinner} from "ui";
@@ -20,6 +20,7 @@ import {useTitle} from "utils/use-title";
 const ChangelogRoute = () => {
     const {onThemeChange, defaultTheme, user} = useContext(AppContext);
     const location = useLocation();
+    const history = useHistory();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
@@ -52,6 +53,10 @@ const ChangelogRoute = () => {
         // eslint-disable-next-line
     }, [user.session]);
 
+    if(board.loaded && !board.data.changelogEnabled) {
+        history.push("/b/" + id);
+        return <React.Fragment/>
+    }
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setModalOpen(true)}
                                     errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={modalOpen} image={board.data.logo}
