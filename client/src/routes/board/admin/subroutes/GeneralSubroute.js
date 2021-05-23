@@ -186,7 +186,7 @@ const GeneralSubroute = ({updateState}) => {
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    {conditionalButton(anonymousVoting, () => {
+                    {conditionalButton(roadmapEnabled, () => {
                         setRoadmapEnabled(true);
                         return onChangesSave(anonymousVoting, true);
                     }, () => {
@@ -203,7 +203,7 @@ const GeneralSubroute = ({updateState}) => {
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    {conditionalButton(anonymousVoting, () => {
+                    {conditionalButton(changelogEnabled, () => {
                         setChangelogEnabled(true);
                         return onChangesSave(anonymousVoting, roadmapEnabled, true);
                     }, () => {
