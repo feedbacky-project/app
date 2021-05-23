@@ -320,7 +320,8 @@ const GeneralSubroute = ({updateState}) => {
             updateState({
                 ...boardData,
                 name, shortDescription, fullDescription, themeColor,
-                banner: banner || boardData.banner, logo: logo || boardData.logo
+                banner: banner || boardData.banner, logo: logo || boardData.logo,
+                anonymousAllowed, roadmapEnabled, changelogEnabled
             });
         });
     };
