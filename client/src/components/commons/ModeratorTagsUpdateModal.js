@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {QuestionIcon} from "components/commons/DangerousActionModal";
 import BoardContext from "context/BoardContext";
 import IdeaContext from "context/IdeaContext";
@@ -8,6 +9,21 @@ import {UiBadge, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
+
+const TagsContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: stretch;
+  text-align: left;
+  margin-top: .25rem;
+`;
+
+const SelectableTag = styled.div`
+  width: 130px;
+  flex-grow: 1;
+  display: inline-block;
+  margin-right: .5rem;
+`;
 
 const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const {data: boardData} = useContext(BoardContext);
@@ -25,7 +41,7 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
                 <h3>Are you sure?</h3>
                 <div>
                     Choose tags to add or remove and click Update to confirm.
-                    <div>
+                    <TagsContainer>
                         {allTags.map((tag, i) => {
                             const update = () => {
                                 let newTags;
@@ -38,12 +54,15 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
                                 setTimeout(() => setTags(newTags), 10);
                             };
                             //FIXME odd workaround for not working checkbox
-                            return <div key={i} onClick={update} className={"d-inline"}>
-                                <UiLabelledCheckbox id={"applicableTag_" + tag.id} key={i} checked={tags.some(t => t.name === tag.name)} onChange={update} className={"mr-3"}
+                            return <SelectableTag key={i} onClick={update} className={"d-inline-block"}>
+                                <UiLabelledCheckbox id={"applicableTag_" + tag.id} key={i} checked={tags.some(t => t.name === tag.name)} onChange={update}
                                                     label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
-                            </div>
+                            </SelectableTag>
                         })}
-                    </div>
+                        {/* for uneven amount of tags add a dummy div(s) for even flex stretch*/}
+                        {allTags.length % 3 === 1 || <SelectableTag/>}
+                        {allTags.length % 3 === 2 || <SelectableTag/>}
+                    </TagsContainer>
                 </div>
             </div>
         </UiRow>
