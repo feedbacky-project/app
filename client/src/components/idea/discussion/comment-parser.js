@@ -33,11 +33,11 @@ const parseTag = (result, moderatorsData, tagsData) => {
 };
 
 const parseBoardTagData = (data, tagsData) => {
-    const foundTag = tagsData.find(el => el.name === data[2]);
+    const foundTag = tagsData.find(el => el.id === data[1]);
     if (foundTag === undefined) {
-        return <UiBadge key={data[2]} color={tinycolor(data[3])}>{data[2]}</UiBadge>
+        return <UiBadge key={data[1]} color={tinycolor(data[3])}>{data[2]}</UiBadge>
     }
-    return <UiBadge key={data[2]} color={tinycolor(foundTag.color)}>{foundTag.name}</UiBadge>
+    return <UiBadge key={data[1]} color={tinycolor(foundTag.color)}>{foundTag.name}</UiBadge>
 };
 
 const parseModeratorData = (data) => {
