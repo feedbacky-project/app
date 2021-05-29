@@ -5,7 +5,6 @@ import React from "react";
 const FormControl = styled.input`
   display: block;
   width: 100%;
-  height: calc(1.5em + 0.75rem);
   padding: 0.375rem 0.75rem;
   font-weight: 400;
   line-height: 1.5;

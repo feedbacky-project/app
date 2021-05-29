@@ -2,6 +2,7 @@
 * **[FEATURE]** Changelogs and roadmaps can now be disabled
 * **[IMPROVEMENT]** Changelogs can now be deleted
 * **[FIX]** Changelogs webhook title wasn't displayed correctly
+* **[FIX]** Height of some forms was set improperly
 
 ### 1.0.0.alpha.5
 * **[FEATURE]** Allow users to edit their comments (requested by [Matou0014](https://app.feedbacky.net/i/edit-comments.2681))
