@@ -24,6 +24,19 @@ const AttachmentButton = styled(UiClassicButton)`
   }
 `;
 
+const TagsContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: stretch;
+`;
+
+const SelectableTag = styled.div`
+  width: 130px;
+  flex-grow: 1;
+  display: inline-block;
+  margin-right: .5rem;
+`;
+
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
     const {getTheme} = useContext(AppContext);
     const {discriminator, tags} = useContext(BoardContext).data;
@@ -139,7 +152,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             <div className={"my-2"}>
                 <UiFormLabel>Tags</UiFormLabel>
                 <UiClickableTip id={"ideaTags"} title={"Choosing Tags"} description={"Choose tags you wish to be used in your idea."}/>
-                <div>
+                <TagsContainer>
                     {applicableTags.map((tag, i) => {
                         const update = () => {
                             let newTags;
@@ -151,10 +164,13 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                             // https://stackoverflow.com/a/39225750/10156191
                             setTimeout(() => setChosenTags(newTags), 0);
                         };
-                        return <UiLabelledCheckbox id={"applicableTag_" + tag.id} key={i} checked={chosenTags.includes(tag)} onChange={update} className={"mr-3"}
+                        return <SelectableTag as={UiLabelledCheckbox} id={"applicableTag_" + tag.id} key={i} checked={chosenTags.includes(tag)} onChange={update}
                                                    label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
                     })}
-                </div>
+                    {/* for uneven amount of tags add a dummy div(s) for even flex stretch*/}
+                    {applicableTags.length % 3 === 1 || <SelectableTag/>}
+                    {applicableTags.length % 3 === 2 || <SelectableTag/>}
+                </TagsContainer>
             </div>
         </React.Fragment>
         }

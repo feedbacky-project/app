@@ -1,6 +1,7 @@
 ### 1.0.0.alpha.6
 * **[FEATURE]** Changelogs and roadmaps can now be disabled
 * **[IMPROVEMENT]** Changelogs can now be deleted
+* **[IMPROVEMENT]** Align public tags evenly in idea create modal (requested by [srnyx](https://app.feedbacky.net/i/align-tags-better.2933))
 * **[FIX]** Changelogs webhook title wasn't displayed correctly
 * **[FIX]** Height of some forms was set improperly
 
