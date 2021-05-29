@@ -35,6 +35,7 @@ const SelectableTag = styled.div`
   flex-grow: 1;
   display: inline-block;
   margin-right: .5rem;
+  cursor: pointer;
 `;
 
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
@@ -164,8 +165,10 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                             // https://stackoverflow.com/a/39225750/10156191
                             setTimeout(() => setChosenTags(newTags), 0);
                         };
-                        return <SelectableTag as={UiLabelledCheckbox} id={"applicableTag_" + tag.id} key={i} checked={chosenTags.includes(tag)} onChange={update}
+                        return <SelectableTag key={i} onClick={update} className={"d-inline-block"}>
+                                <UiLabelledCheckbox id={"applicableTag_" + tag.id} checked={chosenTags.includes(tag)} onChange={update}
                                                    label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
+                        </SelectableTag>
                     })}
                     {/* for uneven amount of tags add a dummy div(s) for even flex stretch*/}
                     {applicableTags.length % 3 === 1 || <SelectableTag/>}

@@ -23,6 +23,7 @@ const SelectableTag = styled.div`
   flex-grow: 1;
   display: inline-block;
   margin-right: .5rem;
+  cursor: pointer;
 `;
 
 const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
