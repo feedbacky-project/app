@@ -42,7 +42,7 @@ const parseBoardTagData = (data, tagsData) => {
 
 const parseModeratorData = (data) => {
     //simulate user from user context, WARNING, might be unsafe in the future!
-    return <span key={data[1]}>
+    return <span className={"font-weight-bold"} key={data[1]}>
         <UiPrettyUsername user={{id: parseInt(data[1]), username: data[2]}}/>
     </span>
 };
