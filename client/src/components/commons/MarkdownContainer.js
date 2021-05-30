@@ -1,21 +1,21 @@
 import styled from "@emotion/styled";
-import React from "react";
+import AppContext from "context/AppContext";
+import React, {useContext} from "react";
 import {truncateText} from "utils/basic-utils";
 
 const MarkdownBox = styled.div`
   word-break: break-word;
   & a {
-    color: hsl(195, 100%, 30%);
+    color: ${props => props.theme.toHexString()};
     &:hover {
-    
-      color: hsl(195, 100%, 15%);
+      color: ${props => props.theme.clone().darken(10).toHexString()};
     }
   }
   .dark & a {
-    color: hsl(208, 100%, 62%) !important;
+    color: ${props => props.theme.toHexString()}; !important;
 
     &:hover {
-      color: hsl(208, 100%, 75%) !important;
+      color: ${props => props.theme.clone().lighten(10).toHexString()} !important;
     }
   }
   & img {
@@ -33,6 +33,7 @@ renderer.link = (href, title, text) => {
 marked.setOptions({renderer: renderer, ...marked.options,});
 
 const MarkdownContainer = (props) => {
+    const {getTheme} = useContext(AppContext);
     const {text, stripped, truncate = -1, ...otherProps} = props;
     const parseEmojis = (preText) => {
         let replaced = preText;
@@ -54,7 +55,7 @@ const MarkdownContainer = (props) => {
     if(truncate > 0) {
         html = truncateText(html, truncate);
     }
-    return <MarkdownBox dangerouslySetInnerHTML={{__html: html}} {...otherProps}/>
+    return <MarkdownBox theme={getTheme()} dangerouslySetInnerHTML={{__html: html}} {...otherProps}/>
 };
 
 export default MarkdownContainer;

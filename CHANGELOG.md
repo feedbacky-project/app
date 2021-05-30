@@ -1,5 +1,6 @@
 ### 1.0.0.alpha.6
 * **[FEATURE]** Changelogs and roadmaps can now be disabled
+* **[IMPROVEMENT]** Links are now colored based on current page theme (requested at [Feedbacky](https://app.feedbacky.net/i/make-links-color-from-theme-color.3213))
 * **[IMPROVEMENT]** Changelogs can now be deleted
 * **[IMPROVEMENT]** Align public tags evenly in idea create modal (requested by [srnyx](https://app.feedbacky.net/i/align-tags-better.2933))
 * **[FIX]** Changelogs webhook title wasn't displayed correctly
