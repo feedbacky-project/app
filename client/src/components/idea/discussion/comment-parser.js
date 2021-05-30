@@ -33,7 +33,7 @@ const parseTag = (result, moderatorsData, tagsData) => {
 };
 
 const parseBoardTagData = (data, tagsData) => {
-    const foundTag = tagsData.find(el => el.id === data[1]);
+    const foundTag = tagsData.find(el => el.id === parseInt(data[1]));
     if (foundTag === undefined) {
         return <UiBadge key={data[1]} color={tinycolor(data[3])}>{data[2]}</UiBadge>
     }

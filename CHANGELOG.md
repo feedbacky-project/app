@@ -4,6 +4,7 @@
 * **[IMPROVEMENT]** Align public tags evenly in idea create modal (requested by [srnyx](https://app.feedbacky.net/i/align-tags-better.2933))
 * **[FIX]** Changelogs webhook title wasn't displayed correctly
 * **[FIX]** Height of some forms was set improperly
+* **[FIX]** Tags weren't updated in comments once renamed (reported and fixed by [Matou0014](https://app.feedbacky.net/i/tag-name-not-updated-if-renamed.3197))
 
 ### 1.0.0.alpha.5
 * **[FEATURE]** Allow users to edit their comments (requested by [Matou0014](https://app.feedbacky.net/i/edit-comments.2681))
