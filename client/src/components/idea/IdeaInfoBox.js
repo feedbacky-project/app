@@ -7,6 +7,7 @@ import NotificationsInfo from "components/idea/info/NotificationsInfo";
 import TagsInfo from "components/idea/info/TagsInfo";
 import TitleInfo from "components/idea/info/TitleInfo";
 import VotersInfo from "components/idea/info/VotersInfo";
+import ShareBox from "components/idea/ShareBox";
 import AppContext from "context/AppContext";
 import IdeaContext from "context/IdeaContext";
 import React, {useContext, useEffect, useState} from 'react';
@@ -109,6 +110,7 @@ const IdeaInfoBox = () => {
             <TagsInfo/>
             <AttachmentsInfo/>
             <NotificationsInfo/>
+            <ShareBox/>
         </UiCol>
     </React.Fragment>
 };
