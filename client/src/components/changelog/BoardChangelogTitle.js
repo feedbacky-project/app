@@ -1,14 +1,15 @@
 import axios from "axios";
+import ChangelogUpdateModal from "components/changelog/ChangelogUpdateModal";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import {DropdownOption, IconToggle} from "components/commons/ModeratorActionsButton";
 import AppContext from "context/AppContext";
 import BoardContext from "context/BoardContext";
 import React, {useContext, useState} from "react";
-import {FaTrash} from "react-icons/all";
+import {FaEdit, FaTrash} from "react-icons/all";
 import {UiDropdown} from "ui/dropdown";
 import {popupError, popupNotification} from "utils/basic-utils";
 
-const BoardChangelogTitle = ({data, onChangelogDelete}) => {
+const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [modal, setModal] = useState({open: false, type: ""});
@@ -34,6 +35,8 @@ const BoardChangelogTitle = ({data, onChangelogDelete}) => {
         return <UiDropdown label={"Moderate Idea"} className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline"}/>}>
             <DangerousActionModal id={"delete"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "delete"} onAction={doChangelogDelete}
                                   actionDescription={<div>Changelog will be permanently <u>deleted</u>.</div>}/>
+            <ChangelogUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "update"} changelog={data} onChangelogUpdate={onChangelogUpdate}/>
+            <DropdownOption onClick={() => setModal({open: true, type: "update"})} as={"span"}><FaEdit className={"mr-1 move-top-2px"} style={{color}}/> Update Changelog</DropdownOption>
             <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Changelog</DropdownOption>
         </UiDropdown>
     };

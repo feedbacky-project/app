@@ -41,6 +41,12 @@ const BoardChangelogBox = () => {
     const onChangelogCreation = (data) => {
         setChangelog({...changelog, data: [data, ...changelog.data]});
     };
+    const onChangelogUpdate = (data) => {
+        const newChangelogs = [...changelog.data];
+        const index = newChangelogs.data.findIndex(c => c.id === data.id);
+        newChangelogs.data[index] = data;
+        setChangelog({...changelog, data: newChangelogs});
+    };
     const onChangelogDelete = (data) => {
       let newData = changelog.data;
       newData = newData.filter(changelog => changelog.id !== data.id);
@@ -62,7 +68,7 @@ const BoardChangelogBox = () => {
             {changelog.data.map(element => {
                 return <UiCol xs={12} className={"my-2 px-0"} key={element.id}>
                     <UiViewBoxBackground className={"d-inline-block p-4"}>
-                        <BoardChangelogTitle data={element} onChangelogDelete={onChangelogDelete}/>
+                        <BoardChangelogTitle data={element} onChangelogDelete={onChangelogDelete} onChangelogUpdate={onChangelogUpdate}/>
                         <MarkdownContainer className={"mb-2"} text={element.description}/>
                         <small className={"text-black-60 mt-2 float-left"}>
                             Published {" "}

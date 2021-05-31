@@ -4,6 +4,7 @@ import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.Changelog;
 import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
+import net.feedbacky.app.data.board.dto.changelog.PatchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
@@ -26,6 +27,7 @@ import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraph;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -83,6 +85,20 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
     board.getWebhookExecutor().executeWebhooks(Webhook.Event.CHANGELOG_CREATE, builder.build());
 
     return ResponseEntity.ok(new FetchChangelogDto().from(changelog));
+  }
+
+  @Override
+  public FetchChangelogDto patch(long id, PatchChangelogDto dto) {
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    Changelog changelog = changelogRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog with id {0} not found.", id)));
+    ServiceValidator.isPermitted(changelog.getBoard(), Moderator.Role.MODERATOR, user);
+    changelog.setTitle(dto.getTitle());
+    changelog.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
+    changelogRepository.save(changelog);
+    return new FetchChangelogDto().from(changelog);
   }
 
   @Override
