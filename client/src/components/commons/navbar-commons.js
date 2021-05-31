@@ -49,7 +49,7 @@ const TopDropdownElement = styled(UiDropdownElement)`
   border-top: 2px solid ${props => props.theme};
 `;
 
-export const renderLogIn = (onNotLoggedClick, context) => {
+export const renderLogIn = (onNotLoggedClick, context, boardData = null) => {
     if (!context.user.loggedIn) {
         return <LoginButton label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
     }
@@ -64,7 +64,7 @@ export const renderLogIn = (onNotLoggedClick, context) => {
             <strong className={"d-inline-block align-middle text-truncate"} style={{maxWidth: 100}}>{context.user.data.username}</strong>
         </TopDropdownElement>
         <div className={"my-1"}/>
-        <UiDropdownElement as={Link} to={"/me"}>
+        <UiDropdownElement as={Link} to={{pathname: "/me", state: {_boardData: boardData}}}>
             Settings
         </UiDropdownElement>
         <UiDropdownElement onClick={context.user.onLogOut}>

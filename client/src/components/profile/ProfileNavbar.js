@@ -1,5 +1,7 @@
 import {renderLogIn} from "components/commons/navbar-commons";
+import IdeaNavbar from "components/idea/IdeaNavbar";
 import AppContext from "context/AppContext";
+import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import {UiContainer} from "ui/grid";
 import {UiAvatar} from "ui/image";
@@ -8,7 +10,11 @@ import {UiNavbar, UiNavbarBrand} from "ui/navbar";
 const ProfileNavbar = ({onNotLoggedClick}) => {
     const context = useContext(AppContext);
     const {user, getTheme} = context;
+    const {data: boardData} = useContext(BoardContext);
     const theme = getTheme(false);
+    if(boardData !== null) {
+        return <IdeaNavbar/>;
+    }
     const renderHello = () => {
         if (!user.loggedIn) {
             return <React.Fragment>
@@ -27,7 +33,7 @@ const ProfileNavbar = ({onNotLoggedClick}) => {
             <UiNavbarBrand theme={context.getTheme().toString()} to={"/me"}>
                 {renderHello(context)}
             </UiNavbarBrand>
-            {renderLogIn(onNotLoggedClick, context)}
+            {renderLogIn(onNotLoggedClick, context, boardData)}
         </UiContainer>
     </UiNavbar>
 };

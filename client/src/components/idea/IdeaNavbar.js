@@ -43,7 +43,7 @@ const IdeaNavbar = () => {
                 <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Board Logo"}/>
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
-            {renderLogIn(onNotLoggedClick, context)}
+            {renderLogIn(onNotLoggedClick, context, data)}
         </UiContainer>
     </UiNavbar>
 };

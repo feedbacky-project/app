@@ -15,7 +15,7 @@ const BoardNavbar = ({selectedNode}) => {
 
     return <UiNavbar>
         <UiContainer className={"d-flex"}>
-            <UiNavbarBrand theme={context.getTheme().toString()} to={"/me"}>
+            <UiNavbarBrand theme={context.getTheme().toString()} to={{pathname: "/me", state: {_boardData: data}}}>
                 <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Board Logo"}/>
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
@@ -40,7 +40,7 @@ const BoardNavbar = ({selectedNode}) => {
                 </ChangelogComponent>
                 }
             </div>
-            {renderLogIn(onNotLoggedClick, context)}
+            {renderLogIn(onNotLoggedClick, context, data)}
         </UiContainer>
     </UiNavbar>
 };

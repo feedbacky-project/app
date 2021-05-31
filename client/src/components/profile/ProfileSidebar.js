@@ -1,5 +1,6 @@
 import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/sidebar-commons";
 import AppContext from "context/AppContext";
+import BoardContext from "context/BoardContext";
 import React, {useContext} from 'react';
 import {FaRegAddressCard, FaRegBell, FaRegKeyboard} from "react-icons/all";
 import {UiCol} from "ui/grid";
@@ -11,8 +12,13 @@ const ProfileSidebar = ({currentNode, reRouteTo}) => {
         {notifications: data => <React.Fragment><SidebarIcon as={FaRegBell} style={data}/> Notifications</React.Fragment>},
     ];
     const {defaultTheme} = useContext(AppContext);
+    const {data} = useContext(BoardContext);
+    let theme = defaultTheme;
+    if(data !== null) {
+        theme = data.themeColor;
+    }
     return <UiCol xs={12} md={3} as={Sidebar}>
-        <ul>{renderSidebarRoutes(routes, defaultTheme, currentNode, reRouteTo)}</ul>
+        <ul>{renderSidebarRoutes(routes, theme, currentNode, reRouteTo)}</ul>
     </UiCol>
 };
 
