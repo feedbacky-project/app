@@ -44,16 +44,18 @@ const NavbarSelectedOption = styled(Link)`
   
   color: ${props => props.theme.toString()};
   margin-bottom: -4px; 
-  margin-top: .5rem;
-  margin-right: .75rem;
+  padding-top: .5rem;
+  padding-left: .4rem;
+  padding-right: .4rem;
   border-bottom: 2px solid ${props => props.border.toString()};
 `;
 
 const NavbarOption = styled(Link)`
   color: var(--font-color);
   margin-bottom: -4px;
-  margin-top: .5rem;
-  margin-right: .75rem;
+  padding-top: .5rem;
+  padding-left: .4rem;
+  padding-right: .4rem;
   transition: var(--hover-transition);
   
   &:hover {

@@ -55,7 +55,7 @@ export const renderLogIn = (onNotLoggedClick, context, boardData = null) => {
     }
     return <UiDropdown label={"Options"} toggleClassName={"px-0"} menuClassName={"pt-0 rounded-top-0"} toggle={
         <OptionsButton>
-            <UiAvatar className={"mr-1"} roundedCircle user={context.user.data} size={28} style={{border: "1px solid " + context.getTheme()}}/>
+            <UiAvatar className={"mx-1"} roundedCircle user={context.user.data} size={28} style={{border: "1px solid " + context.getTheme()}}/>
             <FaAngleDown color={context.getTheme()}/>
         </OptionsButton>
     }>
