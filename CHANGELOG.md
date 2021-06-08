@@ -1,3 +1,5 @@
+**TODO** Override default :root variables when `.dark` class is used, don't use separate variables
+
 ### 1.0.0.alpha.7
 * **[FEATURE]** Changelogs can now be edited
 * **[FEATURE]** User settings page is now directly tied to previous board so users won't leave currently viewed board
