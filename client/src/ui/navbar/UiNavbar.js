@@ -6,7 +6,6 @@ import {UiContainer, UiRow} from "ui/grid";
 
 const StyledNavbar = styled.div`
   background-color: var(--tertiary);
-  font-weight: 300;
   padding-top: .3rem;
   z-index: 3;
   flex-flow: row nowrap;

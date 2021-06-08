@@ -1,6 +1,7 @@
 ### 1.0.0.alpha.7
 * **[FEATURE]** Changelogs can now be edited
 * **[FEATURE]** User settings page is now directly tied to previous board so users won't leave currently viewed board
+* **[REMOVE]** Roboto Light unused font is no longer included in CSS and won't be loaded anymore
 
 ### 1.0.0.alpha.6
 * **[FEATURE]** Changelogs and roadmaps can now be disabled
