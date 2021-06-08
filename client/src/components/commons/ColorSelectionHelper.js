@@ -10,7 +10,7 @@ import {UiFormLabel} from "ui/form";
 const ColorPicker = styled(ChromePicker)`
   box-shadow: var(--box-shadow) !important;
   border-radius: var(--border-radius) !important;
-  background-color: var(--dark-secondary) !important;
+  background-color: var(--secondary) !important;
   
   & > div:first-of-type {
     border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
