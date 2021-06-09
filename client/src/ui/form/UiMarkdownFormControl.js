@@ -34,10 +34,6 @@ const FormControl = styled(UiFormControl)`
 const TextInputCustomModal = styled(TextInputActionModal)`
   .modal-content {
     background-color: var(--tertiary);
-    
-    .dark & .form-control:focus {
-      background-color: var(--background) !important;
-    }
   }
 `;
 
