@@ -21,12 +21,12 @@ const RoadmapContainer = styled.div`
   }
   
   .dark {
-    scrollbar-color: var(--dark-hover) var(--dark-tertiary); /* firefox property */
+    scrollbar-color: var(--hover) var(--tertiary); /* firefox property */
     &::-webkit-scrollbar {
-      background: var(--dark-tertiary);
+      background: var(--tertiary);
     }
     &::-webkit-scrollbar-thumb {
-      background: var(--dark-hover);
+      background: var(--hover);
     }
   }
 `;

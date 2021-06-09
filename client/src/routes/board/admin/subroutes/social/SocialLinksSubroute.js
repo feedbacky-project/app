@@ -22,7 +22,7 @@ import {useTitle} from "utils/use-title";
 
 const SocialIcon = styled(UiImage)`
   padding: .5rem;
-  background-color: var(--dark-quaternary) !important;
+  background-color: hsl(213, 7%, 24%);
 `;
 
 const SocialLinksSubroute = () => {

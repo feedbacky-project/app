@@ -12,7 +12,7 @@ import {popupError, popupNotification} from "utils/basic-utils";
 
 const Attachment = styled(UiImage)`
   .dark & {
-    background-color: var(--dark-tertiary);
+    background-color: var(--tertiary);
   }
 `;
 

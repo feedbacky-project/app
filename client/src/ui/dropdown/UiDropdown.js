@@ -23,15 +23,14 @@ export const DropdownMenu = styled(Dropdown.Menu)`
   }
   
   .dark & {
-    box-shadow: var(--dark-box-shadow);
-    background-color: var(--dark-quaternary);
-    color: var(--dark-font-color);
-    scrollbar-color: var(--dark-hover) var(--dark-tertiary); /* firefox property */
+    background-color: var(--quaternary);
+    color: var(--font-color);
+    scrollbar-color: var(--hover) var(--tertiary); /* firefox property */
     &::-webkit-scrollbar {
-      background: var(--dark-tertiary);
+      background: var(--tertiary);
     }
     &::-webkit-scrollbar-thumb {
-      background: var(--dark-hover);
+      background: var(--hover);
     }
   }
 `;

@@ -9,7 +9,7 @@ const KeyboardInput = styled.kbd`
   border-radius: var(--border-radius);
   box-shadow: inset 0 -.1rem 0 hsla(0, 0%, 0%, .25);
   .dark & {
-    background-color: var(--dark-quaternary) !important;
+    background-color: hsl(213, 7%, 24%);
   }
 `;
 

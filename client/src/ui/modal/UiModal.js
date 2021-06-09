@@ -7,12 +7,7 @@ const StyledModal = styled(Modal)`
   .modal-content {
     background-color: var(--background);
     box-shadow: var(--box-shadow) !important;
-    
-    .dark & {
-      background-color: var(--dark-background);
-      color: var(--dark-font-color) !important;
-      box-shadow: var(--dark-box-shadow) !important;
-    }
+    color: var(--font-color) !important;
   }
 `;
 

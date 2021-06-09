@@ -13,11 +13,7 @@ const StyledNavbar = styled.div`
   position: relative;
   flex-wrap: wrap;
   align-items: center;
-  
-  .dark & {
-    background-color: var(--dark-tertiary);
-    box-shadow: var(--dark-box-shadow) !important;
-  }
+  box-shadow: var(--box-shadow);
 `;
 
 const Brand = styled(Link)`
@@ -61,10 +57,6 @@ const NavbarOption = styled(Link)`
   &:hover {
     color: var(--font-color);
     transform: var(--hover-transform-scale-sm);
-  }
-  
-  .dark & {
-    color: var(--dark-font-color);
   }
 `;
 

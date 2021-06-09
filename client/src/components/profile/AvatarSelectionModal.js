@@ -17,7 +17,7 @@ const SelectableAvatar = styled(UiImage)`
     transform: var(--hover-transform-scale-lg);
   }
   .dark & {
-    background-color: var(--dark-tertiary);
+    background-color: var(--tertiary);
   }
 `;
 

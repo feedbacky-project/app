@@ -6,24 +6,15 @@ const DropdownItem = styled(Dropdown.Item)`
   font-size: 14px;
   padding: 4px 10px;
   transition: var(--hover-transition);
+  box-shadow: var(--box-shadow);
+  color: var(--font-color) !important;
   
   &:active {
     background-color: hsla(0, 0%, 0%, .075);
-    color: var(--font-color);
   }
 
   &:hover {
-    background-color: var(--hover);
-  }
-  
-  .dark & {
-    box-shadow: var(--dark-box-shadow);
-    background-color: var(--dark-quaternary);
-    color: var(--dark-font-color);
-  }
-  
-  .dark &:hover {
-    background-color: var(--dark-hover);
+    background-color: var(--hover) !important;
   }
 `;
 

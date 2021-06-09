@@ -4,7 +4,7 @@ import React from "react";
 const HorizontalRule = styled.hr`
   border-top: 2px solid ${props => props.theme.toString()};
   .dark & {
-    background-color: var(--dark-secondary);
+    background-color: var(--secondary);
   }
 `;
 

@@ -18,10 +18,6 @@ export const Banner = styled.div`
   margin-bottom: .5rem;
   text-shadow: 0 0 4px black;
   background-image: url("${props => props.image}");
-  
-  .dark & {
-    box-shadow: var(--dark-box-shadow) !important;
-  }
 `;
 
 const SocialLinkContainer = styled.div`

@@ -11,12 +11,8 @@ const MarkdownBox = styled.div`
       color: ${props => props.theme.clone().darken(10).toHexString()};
     }
   }
-  .dark & a {
-    color: ${props => props.theme.toHexString()}; !important;
-
-    &:hover {
-      color: ${props => props.theme.clone().lighten(10).toHexString()} !important;
-    }
+  .dark & a:hover {
+    color: ${props => props.theme.clone().lighten(10).toHexString()} !important;
   }
   & img {
     width: 100%;

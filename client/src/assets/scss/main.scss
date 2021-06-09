@@ -29,6 +29,9 @@ body {
   min-height: 100vh;
   position: relative;
   margin: 0;
+
+  background-color: var(--background);
+  color: var(--font-color);
 }
 
 @keyframes pulse {
@@ -54,5 +57,3 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-
-@import "main-dark";

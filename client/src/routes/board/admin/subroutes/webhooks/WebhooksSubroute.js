@@ -31,7 +31,7 @@ const EventsContainer = styled.div`
 
 const WebhookIcon = styled(UiImage)`
   padding: .5rem;
-  background-color: var(--dark-quaternary) !important;
+  background-color: hsl(213, 7%, 24%);
 `;
 
 const WebhooksSubroute = () => {

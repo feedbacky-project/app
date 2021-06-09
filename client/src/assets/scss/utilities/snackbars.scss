@@ -21,9 +21,7 @@
 }
 
 .dark .snackbar-container {
-  background-color: var(--dark-secondary);
-  color: var(--dark-font-color);
-  box-shadow: var(--dark-box-shadow) !important;
+  background-color: var(--secondary);
 }
 
 .snackbar-container .action {

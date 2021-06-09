@@ -30,11 +30,9 @@ const FormControl = styled.input`
   }
   .dark & {
     color: hsla(0, 0%, 95%, .6) !important;
-    background-color: var(--dark-secondary) !important;
-    box-shadow: var(--dark-box-shadow) !important;
   }
   .dark &:focus {
-    background-color: var(--dark-tertiary) !important;
+    background-color: var(--tertiary) !important;
   }
   
   &:-moz-focusring {
@@ -46,9 +44,6 @@ const FormControl = styled.input`
   }
   .dark &::placeholder {
     color: hsl(0, 0%, 75%) !important;
-  }
-  .dark &:disabled {
-    background-color: var(--dark-disabled) !important;
   }
 `;
 

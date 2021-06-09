@@ -23,10 +23,6 @@ export const CardLinkStyle = styled(UiCol)`
   padding-right: 0;
   text-decoration: none !important;
   color: var(--font-color) !important;
-  
-  .dark & {
-    color: var(--dark-font-color) !important;
-  }
 `;
 
 export const IdeaCardDescription = styled.small`
@@ -60,12 +56,13 @@ const BadgeContainer = styled.span`
 `;
 
 export const InfoContainer = styled.small`
-  color: hsla(0, 0%, 0%, .6);
+  color:  hsla(0, 0%, 0%, .6);
   float: right;
   margin-left: 0.25rem;
   transform: translateY(3px);
+  
   .dark & {
-    color: var(--dark-font-color) !important;
+    color: hsla(0, 0%, 95%, .6) !important;
   }
 `;
 

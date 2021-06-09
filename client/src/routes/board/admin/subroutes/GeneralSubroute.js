@@ -39,7 +39,7 @@ const CustomOptions = styled.div`
   background-color: var(--background) !important;
   
   .dark & {
-    background-color: var(--dark-tertiary) !important;
+    background-color: var(--tertiary) !important;
   }
 `;
 

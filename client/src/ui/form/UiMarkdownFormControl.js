@@ -9,10 +9,6 @@ const MarkdownOptions = styled.div`
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
   padding: 0.375rem 0.75rem;
-  
-  .dark & {
-    background-color: var(--dark-secondary);
-  }
 `;
 
 const MarkdownIcon = styled.div`
@@ -26,8 +22,7 @@ const MarkdownIcon = styled.div`
   cursor: pointer;
   
   .dark & {
-    background-color: var(--dark-quaternary);
-    border: 1px solid var(--dark-disabled);
+    background-color: var(--quaternary) !important;
   }
 `;
 
@@ -40,12 +35,8 @@ const TextInputCustomModal = styled(TextInputActionModal)`
   .modal-content {
     background-color: var(--tertiary);
     
-    .dark & {
-      background-color: var(--dark-tertiary);
-      
-      .form-control:focus {
-        background-color: var(--dark-background) !important;
-      }
+    .dark & .form-control:focus {
+      background-color: var(--background) !important;
     }
   }
 `;

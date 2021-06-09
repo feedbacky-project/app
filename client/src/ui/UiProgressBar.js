@@ -7,6 +7,9 @@ import React, {useContext} from "react";
 import {UiCol} from "ui/grid";
 
 const ProgressSteps = styled(Steps)`
+  .rc-steps-item-title {
+    color: var(--font-color) !important;
+  }
   .rc-steps-item-tail:after {
      background-color: var(--secondary);
   }
@@ -19,15 +22,6 @@ const ProgressSteps = styled(Steps)`
   .rc-steps-item-finish .rc-steps-item-tail:after {
     background-color: ${props => props.theme.toHexString()};
   }
-  
-  .dark & {
-    .rc-steps-item-title {
-      color: var(--dark-font-color) !important;
-    }
-    .rc-steps-item-wait .rc-steps-item-icon > .rc-steps-icon .rc-steps-icon-dot {
-      background-color: var(--dark-font-color) !important;
-    }
-  }
 `;
 
 const PageProgress = styled.div`
@@ -38,7 +32,7 @@ const PageProgress = styled.div`
   font-size: var(--font-size);
   
   .dark & {
-    background-color: var(--dark-font-color) !important;
+    background-color: var(--font-color) !important;
   }
 `;
 

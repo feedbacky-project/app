@@ -29,10 +29,6 @@ const TitleOverlayChild = styled(UiCol)`
   position: absolute;
   bottom: 0;
   background-color: var(--background);
-  
-  .dark & {
-    background-color: var(--dark-background);
-  }
 `;
 
 const ViewBoxContent = styled(UiRow)`
@@ -50,11 +46,8 @@ export const UiViewBoxBackground = styled(UiCol)`
   }
   
   .dark & {
-    background-color: var(--dark-secondary);
-    box-shadow: var(--dark-box-shadow) !important;
-    
     input:not(:disabled), textarea:not(:disabled) {
-      background-color: var(--dark-quaternary) !important;
+      background-color: var(--quaternary) !important;
     }
   }
 `;

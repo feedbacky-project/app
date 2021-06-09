@@ -7,21 +7,14 @@ import {UiHoverableIcon} from "ui/index";
 
 const PopoverBox = styled(Popover)`
   box-shadow: var(--box-shadow);
-  .dark & {
-    background-color: var(--dark-quaternary) !important;
-    color: var(--dark-font-color) !important;
-    box-shadow: var(--dark-box-shadow);
-  }
+  background-color: var(--quaternary);
+  color: var(--font-color);
 `;
 
 const PopoverBody = styled(Popover.Content)`
   border-bottom-left-radius: .35rem;
   border-bottom-right-radius: .35rem;
-  
-  .dark & {
-    background-color: var(--dark-quaternary) !important;
-    color: var(--dark-font-color) !important;
-  }
+  color: var(--font-color);
 `;
 
 const PopoverHeader = styled(Popover.Title)`
@@ -29,7 +22,7 @@ const PopoverHeader = styled(Popover.Title)`
   font-weight: 450;
   
   .dark & {
-    background-color: var(--dark-tertiary);
+    background-color: var(--tertiary);
   }
 `;
 

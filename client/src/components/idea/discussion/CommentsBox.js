@@ -34,10 +34,6 @@ const InternalContainer = styled(CommentContainer)`
   border-radius: var(--border-radius);
   background-color: var(--internal);
   padding: .5rem 1rem;
-  
-  .dark & {
-    background-color: var(--dark-internal);
-  }
 `;
 
 const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, onCommentLike, onSuspend}) => {

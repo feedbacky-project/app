@@ -40,7 +40,7 @@ const LoginHeader = styled(UiImage)`
   background-color: var(--secondary);
   
   .dark & {
-    background-color: var(--dark-tertiary);
+    background-color: var(--tertiary);
   }
 `;
 

@@ -12,10 +12,6 @@ const Icon = styled.div`
   box-shadow: 0 0 0 1px var(--background), 0 0 0 2px currentColor;
   margin-right: 1rem;
   
-  .dark & {
-    box-shadow: 0 0 0 1px var(--dark-background), 0 0 0 2px currentColor;
-  }
-  
   .icon {
     vertical-align: bottom;
   }

@@ -43,10 +43,6 @@ export const PageButton = styled(BasePageButton)`
     color: white;
     transform: var(--hover-transform-scale-sm);
   }
-  
-  .dark & {
-    box-shadow: var(--dark-box-shadow) !important;
-  }
 `;
 
 const UiButton = (props) => {

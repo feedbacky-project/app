@@ -12,11 +12,6 @@ const StyledCard = styled.div`
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius) !important;
   background-color: var(--secondary);
-  
-  .dark & {
-    box-shadow: var(--dark-box-shadow) !important;
-    background-color: var(--dark-secondary);
-  }
 `;
 
 const StyledBody = styled.div`

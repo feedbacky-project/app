@@ -30,10 +30,6 @@ const ShareIcon = styled.div`
   cursor: pointer;
   color: var(--font-color);
   
-  .dark & {
-    color: var(--dark-font-color);
-  }
-  
   &:hover {
     color: ${props => props.theme};
     transition: var(--hover-transition);
