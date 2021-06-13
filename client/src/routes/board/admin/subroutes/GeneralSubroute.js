@@ -69,6 +69,9 @@ const GeneralSubroute = ({updateState}) => {
     const [logoInput, setLogoInput] = useState(null);
     useEffect(() => setCurrentNode("general"), [setCurrentNode]);
     useTitle(boardData.name + " | General");
+
+    const bannerUpload = () => document.getElementById("bannerInput").click();
+    const logoUpload = () => document.getElementById("logoInput").click();
     const renderContent = () => {
         return <React.Fragment>
             <ThemeSelectionModal isOpen={modal.open && modal.type === "theme"} onHide={() => setModal({...modal, open: false})} onUpdate={color => onThemeChange(color)}/>
@@ -126,7 +129,7 @@ const GeneralSubroute = ({updateState}) => {
                 <UiFormLabel>Board Banner</UiFormLabel>
                 <UiClickableTip id={"banner"} title={"Set Board Banner"} description={"Suggested size: 1120x400. Maximum size 500 kb, PNG and JPG only."}/>
                 <br/>
-                <div aria-label={"Banner Upload"} onClick={() => document.getElementById("bannerInput").click()}>
+                <div aria-label={"Banner Upload"} role={"button"} tabIndex={0} onClick={bannerUpload} onKeyPress={bannerUpload}>
                     <Banner image={boardData.banner} aria-label={"Board Banner View"} id={"boardBannerPreview"} className={"mb-2"}
                             style={{minHeight: 200, position: "relative"}}>
                         <h3 style={{color: "transparent"}}>{boardData.name}</h3>
@@ -138,9 +141,8 @@ const GeneralSubroute = ({updateState}) => {
             </UiCol>
             <UiCol xs={12} lg={4} className={"mt-2"}>
                 <UiFormLabel>Board Logo</UiFormLabel>
-                <UiClickableTip id={"logo"} title={"Set Board Logo"}
-                                description={"Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."}/>
-                <div aria-label={"Logo Upload"} style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
+                <UiClickableTip id={"logo"} title={"Set Board Logo"} description={"Suggested size: 100x100. Maximum size 150 kb, PNG and JPG only."}/>
+                <div aria-label={"Logo Upload"} style={{position: "relative", maxWidth: 200}} role={"button"} tabIndex={0} onClick={logoUpload} onKeyPress={logoUpload}>
                     <img alt={"Board Logo View"} src={boardData.logo} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
                     <UploadIconBox/>
                 </div>
@@ -159,6 +161,7 @@ const GeneralSubroute = ({updateState}) => {
         }
         return <UiLoadableButton label={"Enable"} color={tinycolor("#00c851")} className={"mt-sm-0 mt-2"} onClick={funcEnable}>Enable</UiLoadableButton>
     };
+    const apiResetPrompt = () => setModal({open: true, type: "apiReset"});
     const renderDangerContent = () => {
         return <UiViewBoxDangerBackground className={"mb-3 px-1 py-3 rounded mt-2 rounded-bottom"}>
             <UiRow noGutters className={"m-0 p-0 px-4 my-2 mb-4"}>
@@ -250,7 +253,7 @@ const GeneralSubroute = ({updateState}) => {
                         Your API key <ApiKeyElement className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</ApiKeyElement>
                         <ApiKeyIcon className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
                         Remember to keep it safe!<br/>
-                        <span><strong className="text-red" style={{cursor: "pointer"}} onClick={() => setModal({open: true, type: "apiReset"})}>Click here</strong> to regenerate API key if it got compromised.</span>
+                        <span><strong className="text-red" role={"button"} tabIndex={0} style={{cursor: "pointer"}} onClick={apiResetPrompt} onKeyPress={apiResetPrompt}>Click here</strong> to regenerate API key if it got compromised.</span>
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className="text-sm-right text-left my-auto">

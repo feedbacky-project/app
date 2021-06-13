@@ -29,6 +29,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
             updateSettings({...settings, banner: data});
         });
     };
+    const logoUpload = () => document.getElementById("logoInput").click();
     return <React.Fragment>
         <SetupImageBanner svg={UndrawBrandProject} stepName={"Brand Your Board"} stepDescription={"Upload your board logo and banner. This step is required."}/>
         <UiCol xs={12} sm={6} className={"mt-4 px-md-5 px-3"}>
@@ -64,7 +65,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
                 </strong>
             </React.Fragment>}/>
             <br/>
-            <div style={{position: "relative", maxWidth: 200}} onClick={() => document.getElementById("logoInput").click()}>
+            <div style={{position: "relative", maxWidth: 200}} role={"button"} tabIndex={0} onClick={logoUpload} onKeyPress={logoUpload}>
                 <img alt={"logo"} src={settings.logo || "https://cdn.feedbacky.net/static/img/logo.png"} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
                 <UploadIconBox/>
             </div>
