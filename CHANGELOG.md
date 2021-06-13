@@ -1,6 +1,7 @@
-**TODO** Override default :root variables when `.dark` class is used, don't use separate variables
+### 1.0.0.beta.1
 
-### 1.0.0.alpha.7
+
+### 1.0.0.alpha.7 (July 12, 2021)
 * **[FEATURE]** Changelogs can now be edited
 * **[FEATURE]** User settings page is now directly tied to previous board so users won't leave currently viewed board
 * **[IMPROVEMENT]** Increase tap target of mobile navbar Feedback/Roadmap/Changelog buttons (Mobile Friendly improvement from Google Lighthouse)
