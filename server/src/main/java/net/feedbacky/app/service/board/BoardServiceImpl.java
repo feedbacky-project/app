@@ -94,7 +94,8 @@ public class BoardServiceImpl implements BoardService {
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.named("Board.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     final User finalUser = user;
-    boolean allowConfidential = board.getCreator().equals(user) || board.getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
+    boolean allowConfidential = board.getCreator().equals(user)
+            || board.getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser) && mod.getRole() == Moderator.Role.ADMINISTRATOR);
     return new FetchBoardDto().from(board).withConfidentialData(board, allowConfidential);
   }
 

@@ -1,5 +1,5 @@
 ### 1.0.0.beta.1
-
+* **[FIX]** Show confidential board data (API keys) only to admins and owners of the board not moderators
 
 ### 1.0.0.alpha.7 (July 12, 2021)
 * **[FEATURE]** Changelogs can now be edited
