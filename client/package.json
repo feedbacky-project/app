@@ -14,7 +14,6 @@
     "marked": "^2.0.7",
     "md5": "^2.3.0",
     "node-sass": "^6.0.0",
-    "node-snackbar": "^0.1.16",
     "querystringify": "^2.2.0",
     "rc-steps": "^4.1.3",
     "react": "^16.13.1",

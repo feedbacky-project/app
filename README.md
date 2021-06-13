@@ -46,5 +46,7 @@ Some SVG illustrations provided by https://undraw.co/
 
 Design system used in project provided by https://getbootstrap.com/
 
+Snackbars adjusted to Feedbacky purposes created by [polonel](https://github.com/polonel/SnackBar) based on MIT License
+
 ## License
 Feedbacky is free and open source software under the [MIT License](https://github.com/Plajer/feedbacky-project/blob/master/LICENSE.md).

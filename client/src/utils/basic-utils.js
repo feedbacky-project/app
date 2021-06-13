@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import Snackbar from "node-snackbar";
+import Snackbar from "utils/snackbar";
 import tinycolor from "tinycolor2";
 import {getEnvVar} from "utils/env-vars";
 
@@ -50,7 +50,8 @@ export const popupError = (content = "Something unexpected happened") => {
 const popup = (content, theme, data) => {
     Snackbar.show({
         text: content,
-        backgroundColor: theme.toString(),
+        textColor: theme.toString(),
+        backgroundColor: theme.setAlpha(.1).toRgbString(),
         pos: "bottom-center",
         ...data
     });

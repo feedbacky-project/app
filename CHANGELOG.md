@@ -1,4 +1,5 @@
 ### 1.0.0.beta.1
+* **[IMPROVEMENT]** Snackbars are updated to look like other parts of the UI (transparent background, bold full color text)
 * **[FIX]** Show confidential board data (API keys) only to admins and owners of the board not moderators
 * **[FIX]** Profile page light theme color when switching from Dark to Light mode didn't change properly
 * **[FIX]** Board creator navbar crashed the app when leaving the creator page while using it
