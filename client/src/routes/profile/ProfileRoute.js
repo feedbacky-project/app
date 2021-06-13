@@ -29,7 +29,7 @@ const ProfileRoute = () => {
       return location.state._boardData;
     };
     const [board, setBoard] = useState({data: getPassedBoardData(), loaded: true, error: false});
-    const {onThemeChange} = useContext(AppContext);
+    const {onThemeChange, defaultTheme} = useContext(AppContext);
     useEffect(() => {
         const data = getPassedBoardData();
         if(data !== null) {
@@ -37,7 +37,7 @@ const ProfileRoute = () => {
             return;
         }
         onThemeChange();
-    }, []);
+    }, [defaultTheme]);
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setLoginModalOpen(true)}
                                     errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
