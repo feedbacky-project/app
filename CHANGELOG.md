@@ -5,6 +5,10 @@
 * **[FIX]** Board creator navbar crashed the app when leaving the creator page while using it
 * **[FIX]** Ensure error in tab title is properly set when error page shows up
 
+** **TODO** **
+* Batch update for migrator entries
+* Make migrator more stable
+
 ### 1.0.0.alpha.7 (July 12, 2021)
 * **[FEATURE]** Changelogs can now be edited
 * **[FEATURE]** User settings page is now directly tied to previous board so users won't leave currently viewed board
