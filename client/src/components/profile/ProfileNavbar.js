@@ -12,7 +12,8 @@ const ProfileNavbar = ({onNotLoggedClick}) => {
     const {user, getTheme} = context;
     const {data: boardData} = useContext(BoardContext);
     const theme = getTheme(false);
-    if(boardData !== null) {
+    //neither null nor empty object
+    if(boardData !== null && Object.keys(boardData).length !== 0) {
         return <IdeaNavbar/>;
     }
     const renderHello = () => {
