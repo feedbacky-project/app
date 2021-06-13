@@ -14,18 +14,9 @@
   top: -100px;
   opacity: 0;
   z-index: 9999;
-  font-weight: bold;
 
   color: var(--font-color);
   box-shadow: var(--box-shadow);
-
-  & p {
-    font-weight: bold !important;
-  }
-}
-
-body .snackbar-container p {
-  font-weight: bold;
 }
 
 .dark .snackbar-container {
