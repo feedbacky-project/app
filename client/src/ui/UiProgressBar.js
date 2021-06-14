@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import "assets/scss/commons/setup-steps.scss";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import PropTypes from "prop-types";
 import Steps from "rc-steps";
 import React, {useContext} from "react";

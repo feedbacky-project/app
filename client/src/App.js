@@ -2,7 +2,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import {DARK_THEME_COLOR, LIGHT_THEME_COLOR} from "AppAppearance";
 import axios from "axios";
 import ComponentLoader from "components/ComponentLoader";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import Cookies from "js-cookie";
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {FaDizzy, FaExclamationCircle} from "react-icons/fa";

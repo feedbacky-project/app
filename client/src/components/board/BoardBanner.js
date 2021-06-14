@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import BoardContext from "context/BoardContext";
+import {BoardContext} from "context";
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 import {UiCol} from "ui/grid";

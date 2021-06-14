@@ -4,7 +4,7 @@ import BoardChangelogBox from "components/changelog/BoardChangelogBox";
 import BoardChangelogSearchBar from "components/changelog/BoardChangelogSearchBar";
 import BoardNavbar from "components/commons/BoardNavbar";
 import LoginModal from "components/LoginModal";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
 import {useHistory, useLocation, useParams} from "react-router-dom";

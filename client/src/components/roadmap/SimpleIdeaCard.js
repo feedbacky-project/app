@@ -1,8 +1,7 @@
 import {CardLinkStyle, IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import VoteButton from "components/commons/VoteButton";
-import BoardContext from "context/BoardContext";
-import IdeaContext from "context/IdeaContext";
+import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaLock, FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";

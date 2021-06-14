@@ -1,5 +1,5 @@
 import axios from "axios";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext, useEffect} from 'react';
 import {useHistory, useParams} from "react-router-dom";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";

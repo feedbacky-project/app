@@ -1,7 +1,5 @@
 import axios from "axios";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
-import PageNodesContext from "context/PageNodesContext";
+import {AppContext, BoardContext, PageNodesContext} from "context";
 import {Step} from "rc-steps";
 import React, {useContext, useEffect, useState} from 'react';
 import {Link, useHistory, withRouter} from "react-router-dom";

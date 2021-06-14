@@ -1,5 +1,5 @@
 import {LIGHT_THEME_COLOR} from "AppAppearance";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from "react";
 import tinycolor from "tinycolor2";

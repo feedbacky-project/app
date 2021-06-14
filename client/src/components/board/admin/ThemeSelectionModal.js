@@ -1,5 +1,5 @@
 import ColorSelectionHelper from "components/commons/ColorSelectionHelper";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext, useState} from 'react';
 import {UiButton} from "ui/button";
 import {UiRow} from "ui/grid";

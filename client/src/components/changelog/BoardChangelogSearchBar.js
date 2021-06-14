@@ -1,4 +1,4 @@
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext} from 'react';
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol} from "ui/grid";

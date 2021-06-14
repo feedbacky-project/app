@@ -5,8 +5,7 @@ import BoardChangelogInfoCard from "components/changelog/BoardChangelogInfoCard"
 import BoardChangelogTitle from "components/changelog/BoardChangelogTitle";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import {SvgNotice} from "components/commons/SvgNotice";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
+import {AppContext, BoardContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaRegFrown} from "react-icons/all";
 import InfiniteScroll from "react-infinite-scroll-component";

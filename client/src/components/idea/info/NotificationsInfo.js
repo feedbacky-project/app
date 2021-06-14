@@ -1,7 +1,5 @@
 import axios from "axios";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
-import IdeaContext from "context/IdeaContext";
+import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
 import {FaRegBell, FaRegBellSlash} from "react-icons/all";
 import {UiClickableTip} from "ui";

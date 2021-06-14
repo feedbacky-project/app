@@ -1,7 +1,6 @@
 import ChangelogCreateModal from "components/changelog/ChangelogCreateModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
+import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from 'react';
 import {FaPencilAlt} from "react-icons/fa";
 import {UiCard, UiHorizontalRule} from "ui";

@@ -1,4 +1,4 @@
-import BoardContext from "context/BoardContext";
+import {BoardContext} from "context";
 import React from "react";
 import {FaSadTear} from "react-icons/all";
 import ErrorRoute from "routes/ErrorRoute";

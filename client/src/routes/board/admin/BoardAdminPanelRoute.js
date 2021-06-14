@@ -1,8 +1,7 @@
 import axios from "axios";
 import AdminSidebar from "components/board/admin/AdminSidebar";
 import IdeaNavbar from "components/idea/IdeaNavbar";
-import AppContext from "context/AppContext";
-import PageNodesContext from "context/PageNodesContext";
+import {AppContext, PageNodesContext} from "context";
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {FaExclamationCircle} from "react-icons/fa";
 import {Route, Switch, useHistory, useLocation, useParams} from "react-router-dom";

@@ -3,7 +3,7 @@ import axios from 'axios';
 import BoardInfoCard from "components/board/BoardInfoCard";
 import IdeaCard from "components/board/IdeaCard";
 import {SvgNotice} from "components/commons/SvgNotice";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaRegFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";

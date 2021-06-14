@@ -1,6 +1,5 @@
 import axios from "axios";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
+import {AppContext, BoardContext} from "context";
 import React, {useContext} from 'react';
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel} from "ui/form";

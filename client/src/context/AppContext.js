@@ -18,4 +18,4 @@ const AppContext = React.createContext({
     clientVersion: ""
 });
 
-export default AppContext;
+export {AppContext};

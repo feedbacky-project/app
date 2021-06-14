@@ -8,4 +8,4 @@ const BoardContext = React.createContext({
     updateState: () => void 0
 });
 
-export default BoardContext;
+export {BoardContext};

@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import SafeAnchor from "components/commons/SafeAnchor";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
+import {AppContext, BoardContext} from "context";
 import copy from "copy-text-to-clipboard";
 import React, {useContext} from "react";
 import {FaFacebookSquare, FaLink, FaTwitterSquare} from "react-icons/all";

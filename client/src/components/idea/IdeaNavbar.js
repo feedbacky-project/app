@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import {renderLogIn} from "components/commons/navbar-commons";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
+import {AppContext, BoardContext} from "context";
 import React, {useContext} from 'react';
 import {FaChevronLeft} from "react-icons/fa";
 import {Link} from "react-router-dom";

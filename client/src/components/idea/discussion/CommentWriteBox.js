@@ -1,7 +1,5 @@
 import styled from "@emotion/styled";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
-import IdeaContext from "context/IdeaContext";
+import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
 import TextareaAutosize from "react-autosize-textarea";
 import tinycolor from "tinycolor2";

@@ -1,4 +1,4 @@
-import IdeaContext from "context/IdeaContext";
+import {IdeaContext} from "context";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";
 import {UiBadge} from "ui";

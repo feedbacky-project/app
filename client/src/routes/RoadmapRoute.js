@@ -4,7 +4,7 @@ import BoardNavbar from "components/commons/BoardNavbar";
 import ComponentLoader from "components/ComponentLoader";
 import LoginModal from "components/LoginModal";
 import {BoardRoadmapBox} from "components/roadmap/BoardRoadmapBox";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
 import {useHistory, useLocation, useParams} from "react-router-dom";

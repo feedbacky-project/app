@@ -1,6 +1,5 @@
 import axios from "axios";
-import AppContext from "context/AppContext";
-import PageNodesContext from "context/PageNodesContext";
+import {AppContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import tinycolor from "tinycolor2";
 import {UiButton, UiLoadableButton} from "ui/button";

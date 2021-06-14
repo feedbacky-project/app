@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import {QuestionIcon} from "components/commons/DangerousActionModal";
-import BoardContext from "context/BoardContext";
-import IdeaContext from "context/IdeaContext";
+import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useState} from "react";
 import {FaExclamation} from "react-icons/all";
 import tinycolor from "tinycolor2";

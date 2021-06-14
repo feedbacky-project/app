@@ -1,7 +1,5 @@
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
-import IdeaContext from "context/IdeaContext";
+import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
 import {FaLock, FaPen, FaTrash} from "react-icons/all";
 import TimeAgo from "timeago-react";

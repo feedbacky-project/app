@@ -1,7 +1,7 @@
 import {CLIENT_VERSION} from "App";
 import SafeAnchor from "components/commons/SafeAnchor";
 import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/sidebar-commons";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext} from 'react';
 import {FaAt, FaColumns, FaSlidersH, FaTags, FaUserLock, FaUsersCog} from "react-icons/all";
 import {UiCol} from "ui/grid";

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 import {UiContainer, UiRow} from "ui/grid";

@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import AppearanceCard from "components/profile/AppearanceCard";
-import AppContext from "context/AppContext";
-import PageNodesContext from "context/PageNodesContext";
+import {AppContext, PageNodesContext} from "context";
 import React, {useContext, useEffect} from "react";
 import {UiBadge} from "ui";
 import {UiCol} from "ui/grid";

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import BoardContext from "context/BoardContext";
+import {BoardContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {FaBan} from "react-icons/all";

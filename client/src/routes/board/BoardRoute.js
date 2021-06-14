@@ -4,7 +4,7 @@ import BoardIdeaCardContainer from "components/board/BoardIdeaCardContainer";
 import BoardSearchBar from "components/board/BoardSearchBar";
 import BoardNavbar from "components/commons/BoardNavbar";
 import LoginModal from "components/LoginModal";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaExclamationCircle} from "react-icons/fa";
 import {useLocation, useParams} from "react-router-dom";

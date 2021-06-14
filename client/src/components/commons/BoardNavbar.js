@@ -1,6 +1,5 @@
 import {renderLogIn} from "components/commons/navbar-commons";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
+import {AppContext, BoardContext} from "context";
 import React, {useContext} from 'react';
 import {FaRegComment, FaRegListAlt, FaRegMap} from "react-icons/all";
 import {UiContainer} from "ui/grid";

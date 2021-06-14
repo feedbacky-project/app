@@ -7,4 +7,4 @@ const IdeaContext = React.createContext({
     updateState: () => void 0,
 });
 
-export default IdeaContext;
+export {IdeaContext};

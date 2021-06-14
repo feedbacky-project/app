@@ -1,6 +1,6 @@
 import axios from "axios";
 import ProfileNavbar from "components/profile/ProfileNavbar";
-import AppContext from "context/AppContext";
+import {AppContext} from "context";
 import {Step} from "rc-steps";
 import React, {useContext, useEffect, useState} from 'react';
 import {Link, useHistory} from "react-router-dom";

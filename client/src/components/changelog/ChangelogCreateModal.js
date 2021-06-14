@@ -1,6 +1,5 @@
 import axios from "axios";
-import AppContext from "context/AppContext";
-import BoardContext from "context/BoardContext";
+import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {UiClickableTip} from "ui";
