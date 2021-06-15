@@ -21,6 +21,9 @@ export const Banner = styled.div`
 `;
 
 const SocialLinkContainer = styled.div`
+  &:empty {
+    display: none !important;
+  }
   @media(max-width: 576px) {
     position: relative;
     display: inline-block;

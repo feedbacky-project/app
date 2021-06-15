@@ -5,6 +5,7 @@
 * **[FIX]** Profile page light theme color when switching from Dark to Light mode didn't change properly
 * **[FIX]** Board creator navbar crashed the app when leaving the creator page while using it
 * **[FIX]** Ensure error in tab title is properly set when error page shows up
+* **[FIX]** Social links container in board banner will no longer show on mobile if it's empty - empty whitespace was there before
 
 ** **TODO** **
 * Make migrator more stable
