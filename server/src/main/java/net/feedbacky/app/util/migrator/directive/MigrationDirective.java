@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  * <p>
  * Created at 22.01.2021
  */
-public abstract class MigrationDirective {
+public abstract class MigrationDirective<T> {
 
   protected final Logger logger = Logger.getLogger("Migrator");
   protected int migratedEntries = 0;
@@ -22,7 +22,10 @@ public abstract class MigrationDirective {
   public void doMigrate() {
   }
 
-  public void migrateNewEntry() {
+  public void migrateEntry(T entry) {
+  }
+
+  public void migrationSuccess() {
     migratedEntries++;
     if(migratedEntries % 50 == 0) {
       logger.log(Level.INFO, "Migrated {0} entries.", migratedEntries);

@@ -17,6 +17,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -25,11 +27,13 @@ import java.util.logging.Level;
  * Created at 22.01.2021
  */
 @Component
-public class MailNotificationsDirective extends MigrationDirective {
+public class MailNotificationsDirective extends MigrationDirective<User> {
 
   private UserRepository userRepository;
   @PersistenceContext(type = PersistenceContextType.EXTENDED)
   private EntityManager entityManager;
+
+  private boolean missingValues = false;
 
   @Autowired
   public MailNotificationsDirective(UserRepository userRepository) {
@@ -46,57 +50,16 @@ public class MailNotificationsDirective extends MigrationDirective {
   public void doMigrate() {
     logger.log(Level.INFO, "Migrating Feedbacky from version 2 to 3 (mail notifications revamp)...");
     logger.log(Level.INFO, "It may take some time depending on users amount in database.");
-    boolean missingValues = false;
+    List<User> migratedUsers = new ArrayList<>();
     for(User user : userRepository.findAll(EntityGraphUtils.fromAttributePaths("mailPreferences"))) {
-      Hibernate.initialize(user.getMailPreferences());
-      MailPreferences preferences = user.getMailPreferences();
-      if(preferences == null) {
-        logger.log(Level.WARNING, "Mail preferences missing for " + user.getId());
-        preferences = new MailPreferences();
-        preferences.setUser(user);
-        preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
-        preferences.setNotificationsEnabled(false);
-        user.setMailPreferences(preferences);
-        userRepository.save(user);
-        continue;
-      }
-      if(missingValues) {
-        preferences.setNotificationsEnabled(true);
-        user.setMailPreferences(preferences);
-        userRepository.save(user);
-        super.migrateNewEntry();
-        continue;
-      }
-      Query query = entityManager.createNativeQuery("SELECT notify_from_moderators_comments, notify_from_status_change, notify_from_tags_change FROM users_mail_preferences WHERE user_id = ?");
-      query.setParameter(1, user.getId());
-      Object[] result;
       try {
-        result = (Object[]) query.getSingleResult();
-      } catch(Exception e) {
-        logger.log(Level.WARNING, "Encountered SQL exception, probably missing some fields to migrate, switching to non SQL migration.");
-        missingValues = true;
-        preferences.setNotificationsEnabled(true);
-        user.setMailPreferences(preferences);
-        userRepository.save(user);
-        super.migrateNewEntry();
-        continue;
+        migrateEntry(user);
+        migratedUsers.add(user);
+      } catch(Exception ex) {
+        logger.log(Level.WARNING, "[EX1] Encountered unknown exception while migrating user with id " + user.getId() + ", skipping entry...");
       }
-      int notificationsEnabledAmount = 0;
-      if((boolean) result[0]) {
-        notificationsEnabledAmount++;
-      }
-      if((boolean) result[1]) {
-        notificationsEnabledAmount++;
-      }
-      if((boolean) result[2]) {
-        notificationsEnabledAmount++;
-      }
-      //if 2 out of 3 notification methods are enabled assume that user want to receive future notifications about all types of events
-      preferences.setNotificationsEnabled(notificationsEnabledAmount >= 2);
-      user.setMailPreferences(preferences);
-      userRepository.save(user);
-      super.migrateNewEntry();
     }
+    userRepository.saveAll(migratedUsers);
     try {
       EntityManager manager = entityManager.getEntityManagerFactory().createEntityManager();
       manager.getTransaction().begin();
@@ -108,4 +71,52 @@ public class MailNotificationsDirective extends MigrationDirective {
     }
     logger.log(Level.INFO, "Migrated to version 3 (mail notification revamp).");
   }
+
+  public void migrateEntry(User user) {
+    Hibernate.initialize(user.getMailPreferences());
+    MailPreferences preferences = user.getMailPreferences();
+    if(preferences == null) {
+      logger.log(Level.WARNING, "[EX2] Mail preferences missing for " + user.getId());
+      preferences = new MailPreferences();
+      preferences.setUser(user);
+      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+      preferences.setNotificationsEnabled(false);
+      user.setMailPreferences(preferences);
+      return;
+    }
+    if(this.missingValues) {
+      preferences.setNotificationsEnabled(true);
+      user.setMailPreferences(preferences);
+      super.migrationSuccess();
+      return;
+    }
+    Query query = entityManager.createNativeQuery("SELECT notify_from_moderators_comments, notify_from_status_change, notify_from_tags_change FROM users_mail_preferences WHERE user_id = ?");
+    query.setParameter(1, user.getId());
+    Object[] result;
+    try {
+      result = (Object[]) query.getSingleResult();
+    } catch(Exception e) {
+      logger.log(Level.WARNING, "[EX3] Encountered SQL exception, probably missing some fields to migrate, switching to non SQL migration.");
+      this.missingValues = true;
+      preferences.setNotificationsEnabled(true);
+      user.setMailPreferences(preferences);
+      super.migrationSuccess();
+      return;
+    }
+    int notificationsEnabledAmount = 0;
+    if((boolean) result[0]) {
+      notificationsEnabledAmount++;
+    }
+    if((boolean) result[1]) {
+      notificationsEnabledAmount++;
+    }
+    if((boolean) result[2]) {
+      notificationsEnabledAmount++;
+    }
+    //if 2 out of 3 notification methods are enabled assume that user want to receive future notifications about all types of events
+    preferences.setNotificationsEnabled(notificationsEnabledAmount >= 2);
+    user.setMailPreferences(preferences);
+    super.migrationSuccess();
+  }
+
 }
