@@ -1,4 +1,5 @@
 ### 1.0.0.beta.2
+* **[IMPROVEMENT]** Improve mails design and extended support for mail clients
 * **[FIX]** Snackbars background color was shorter than the whole snackbar
 * **[FIX]** Snackbars undo button was outside the snackbar
 
