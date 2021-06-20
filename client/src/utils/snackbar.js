@@ -72,6 +72,8 @@
         $div.style.backgroundColor = options.backgroundColor;
         $div.style.borderRadius = bodyStyle.getPropertyValue("--border-radius");
         $div.style.padding = "18px 24px";
+        $div.style.width = "100%";
+        $div.style.textAlign = "center";
         var $p = document.createElement('p');
         $p.style.margin = 0;
         $p.style.padding = 0;
@@ -79,6 +81,7 @@
         $p.style.fontSize = '14px';
         $p.style.fontWeight = 500;
         $p.style.lineHeight = '1em';
+        $p.style.display = "inline-block";
         $p.innerHTML = options.text;
         $div.appendChild($p);
         Snackbar.snackbar.appendChild($div);
@@ -87,25 +90,27 @@
         if (options.showSecondButton) {
             var secondButton = document.createElement('button');
             secondButton.className = 'action';
+            secondButton.style.display = "inline-block";
             secondButton.innerHTML = options.secondButtonText;
             secondButton.setAttribute('aria-label', options.secondButtonAria);
             secondButton.style.color = options.secondButtonTextColor;
             secondButton.addEventListener('click', function() {
                 options.onSecondButtonClick(Snackbar.snackbar);
             });
-            Snackbar.snackbar.appendChild(secondButton);
+            $div.appendChild(secondButton);
         }
 
         if (options.showAction) {
             var actionButton = document.createElement('button');
             actionButton.className = 'action';
+            actionButton.style.display = "inline-block";
             actionButton.innerHTML = options.actionText;
             actionButton.setAttribute('aria-label', options.actionTextAria);
             actionButton.style.color = options.actionTextColor;
             actionButton.addEventListener('click', function() {
                 options.onActionClick(Snackbar.snackbar);
             });
-            Snackbar.snackbar.appendChild(actionButton);
+            $div.appendChild(actionButton);
         }
 
         if (options.duration) {

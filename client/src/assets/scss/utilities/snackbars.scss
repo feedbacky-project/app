@@ -29,9 +29,11 @@
   border: none;
   font-size: inherit;
   text-transform: uppercase;
-  color: #4caf50;
-  margin: 0 0 0 24px;
-  padding: 0;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, .4);
+  margin: 0 0 0 18px;
+  padding: 0 6px;
+  border-radius: var(--border-radius);
   min-width: min-content;
   cursor: pointer;
 }

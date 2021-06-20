@@ -1,3 +1,7 @@
+### 1.0.0.beta.2
+* **[FIX]** Snackbars background color was shorter than the whole snackbar
+* **[FIX]** Snackbars undo button was outside the snackbar
+
 ### 1.0.0.beta.1
 * **[IMPROVEMENT]** Snackbars are updated to look like other parts of the UI (transparent background, bold full color text)
 * **[IMPROVEMENT]** Migrator is now using batch entry updates for better performance
