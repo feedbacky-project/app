@@ -94,8 +94,27 @@ public class Idea implements Serializable {
     this.trendScore = getCalculatedTrendScore();
   }
 
+  public void setSubscribers(Set<User> subscribers) {
+    this.subscribers = subscribers;
+    this.trendScore = getCalculatedTrendScore();
+  }
+
+  public void setComments(Set<Comment> comments) {
+    this.comments = comments;
+    this.trendScore = getCalculatedTrendScore();
+  }
+
   public double getCalculatedTrendScore() {
-    return ((double) voters.size() - 1.0) / Math.pow(ChronoUnit.DAYS.between(creationDate.toInstant(), Instant.now()) + 2.0, 1.8);
+    /*
+    voters (upvotes) count as * 1
+    (subscribers - 1) as * 0.75 (minus one to exclude idea creator)
+    comments as * 0.5
+    */
+    double value = Math.abs((double) voters.size()
+            + Math.abs(((double) subscribers.size() - 1) * 0.75)
+            + ((double) comments.stream().filter(comment -> !comment.isSpecial()).count() * 0.5));
+    double gravity = Math.pow(ChronoUnit.DAYS.between(creationDate.toInstant(), Instant.now()) + 2.0, 1.8);
+    return value / gravity;
   }
 
   public String toViewLink() {

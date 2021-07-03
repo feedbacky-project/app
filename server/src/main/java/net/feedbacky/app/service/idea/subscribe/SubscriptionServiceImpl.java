@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -46,7 +47,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     if(idea.getSubscribers().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already subscribed.");
     }
-    idea.getSubscribers().add(user);
+    Set<User> subscribers = idea.getSubscribers();
+    subscribers.add(user);
+    idea.setSubscribers(subscribers);
     ideaRepository.save(idea);
     return new FetchUserDto().from(user);
   }
@@ -61,7 +64,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     if(!idea.getSubscribers().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet subscribed.");
     }
-    idea.getSubscribers().remove(user);
+    Set<User> subscribers = idea.getSubscribers();
+    subscribers.remove(user);
+    idea.setSubscribers(subscribers);
     ideaRepository.save(idea);
     //no need to expose
     return ResponseEntity.noContent().build();
