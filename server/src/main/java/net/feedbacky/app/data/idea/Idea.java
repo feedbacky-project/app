@@ -91,16 +91,20 @@ public class Idea implements Serializable {
   public void setVoters(Set<User> voters) {
     this.voters = voters;
     this.votersAmount = voters.size();
-    this.trendScore = getCalculatedTrendScore();
+    recalculateTrendScore();
   }
 
   public void setSubscribers(Set<User> subscribers) {
     this.subscribers = subscribers;
-    this.trendScore = getCalculatedTrendScore();
+    recalculateTrendScore();
   }
 
   public void setComments(Set<Comment> comments) {
     this.comments = comments;
+    recalculateTrendScore();
+  }
+
+  public void recalculateTrendScore() {
     this.trendScore = getCalculatedTrendScore();
   }
 
@@ -112,7 +116,7 @@ public class Idea implements Serializable {
     */
     double value = Math.abs((double) voters.size()
             + Math.abs(((double) subscribers.size() - 1) * 0.75)
-            + ((double) comments.stream().filter(comment -> !comment.isSpecial()).count() * 0.5));
+            + ((double) comments.stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count() * 0.5));
     double gravity = Math.pow(ChronoUnit.DAYS.between(creationDate.toInstant(), Instant.now()) + 2.0, 1.8);
     return value / gravity;
   }
