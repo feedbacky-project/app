@@ -43,6 +43,7 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -136,7 +137,11 @@ public class CommentServiceImpl implements CommentService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't post duplicated comments.");
     }
     commentRepository.save(comment);
-    idea.recalculateTrendScore();
+    //to force trend score update
+    Set<Comment> comments = idea.getComments();
+    comments.add(comment);
+    idea.setComments(comments);
+    ideaRepository.save(idea);
 
     //do not publish information about private internal comments
     if(comment.getViewType() != Comment.ViewType.INTERNAL) {
@@ -206,9 +211,14 @@ public class CommentServiceImpl implements CommentService {
       throw new InsufficientPermissionsException();
     }
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
-    comment.getIdea().getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
+    Idea idea = comment.getIdea();
+    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
     commentRepository.delete(comment);
-    comment.getIdea().recalculateTrendScore();
+    //to force trend score update
+    Set<Comment> comments = idea.getComments();
+    comments.remove(comment);
+    idea.setComments(comments);
+    ideaRepository.save(idea);
     return ResponseEntity.noContent().build();
   }
 
