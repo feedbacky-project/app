@@ -10,11 +10,11 @@ const ProfileSidebar = ({currentNode, reRouteTo}) => {
         {appearance: data => <React.Fragment><SidebarIcon as={FaRegKeyboard} style={data}/> Appearance</React.Fragment>},
         {notifications: data => <React.Fragment><SidebarIcon as={FaRegBell} style={data}/> Notifications</React.Fragment>},
     ];
-    const {defaultTheme} = useContext(AppContext);
+    const {defaultTheme, getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     let theme = defaultTheme;
     if(data !== null) {
-        theme = data.themeColor;
+        theme = getTheme();
     }
     return <UiCol xs={12} md={3} as={Sidebar}>
         <ul>{renderSidebarRoutes(routes, theme, currentNode, reRouteTo)}</ul>

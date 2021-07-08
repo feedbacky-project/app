@@ -68,7 +68,7 @@ const SettingsSubroute = () => {
     }, []);
     if (!user.loggedIn) {
         return <UiCol xs={12} md={9}>
-            <UiViewBox theme={getTheme(false)} title={"User Settings"} description={"Edit your account here."}>
+            <UiViewBox title={"User Settings"} description={"Edit your account here."}>
                 <UiCol className={"text-center py-4"}>Please log in to see contents of this page.</UiCol>
             </UiViewBox>
         </UiCol>
@@ -121,7 +121,7 @@ const SettingsSubroute = () => {
         </React.Fragment>
     };
     return <UiCol xs={12} md={9}>
-        <UiViewBox theme={getTheme(false)} title={"User Settings"} description={"Edit your account here."}>
+        <UiViewBox title={"User Settings"} description={"Edit your account here."}>
             {renderContent()}
         </UiViewBox>
         <UiViewBoxDangerBackground xs={12} className={"mb-3 mt-2 py-2"}>

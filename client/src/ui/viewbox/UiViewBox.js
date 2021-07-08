@@ -65,7 +65,7 @@ const UiViewBox = (props) => {
     const {getTheme} = useContext(AppContext);
     const {theme = getTheme(), title, description, children} = props;
     return <React.Fragment>
-        <ViewBox style={{backgroundColor: theme.clone().setAlpha(.1), color: theme}} bodyClassName={"p-0"}>
+        <ViewBox style={{color: theme, backgroundColor: theme.clone().setAlpha(.1)}} bodyClassName={"p-0"}>
             <h3 className={"mb-0"}>{title}</h3>
             <div>{description}</div>
         </ViewBox>

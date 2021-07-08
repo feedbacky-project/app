@@ -13,7 +13,7 @@ const InlineCard = styled.div`
 `;
 
 const AppearanceSubroute = () => {
-    const {appearance, onAppearanceToggle, getTheme} = useContext(AppContext);
+    const {appearance, onAppearanceToggle} = useContext(AppContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     useEffect(() => setCurrentNode("appearance"), [setCurrentNode]);
     useTitle("Profile | Appearance");
@@ -38,7 +38,7 @@ const AppearanceSubroute = () => {
         </UiCol>
     };
     return <UiCol xs={12} md={9}>
-        <UiViewBox theme={getTheme(false)} title={"Appearance"} description={"Configure how Feedbacky will look like."}>
+        <UiViewBox title={"Appearance"} description={"Configure how Feedbacky will look like."}>
             {renderContent()}
         </UiViewBox>
     </UiCol>

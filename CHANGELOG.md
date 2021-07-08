@@ -1,6 +1,7 @@
 ### 1.0.0.beta.3
 * **[IMPROVEMENT]** Trend score received an improvement, now it includes subscribers and comments amount and it's should be 1.0 by default
 to be seen at the top of ideas list
+* **[FIX]** Inconsistency between sidebar and navbar theme colors in Profile Page
 
 ### 1.0.0.beta.2
 * **[IMPROVEMENT]** Improve mails design and extended support for mail clients

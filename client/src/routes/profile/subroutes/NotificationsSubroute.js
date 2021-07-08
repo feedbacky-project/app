@@ -28,7 +28,7 @@ const NotificationsSubroute = () => {
     };
     if (!user.loggedIn) {
         return <UiCol xs={12} md={9}>
-            <UiViewBox theme={getTheme(false)} title={"Mail Notifications"} description={"Configure your mail notifications here."}>
+            <UiViewBox title={"Mail Notifications"} description={"Configure your mail notifications here."}>
                 <UiCol className={"text-center py-4"}>Please log in to see contents of this page.</UiCol>
             </UiViewBox>
         </UiCol>
@@ -58,7 +58,7 @@ const NotificationsSubroute = () => {
         </React.Fragment>
     };
     return <UiCol xs={12} md={9}>
-        <UiViewBox theme={getTheme(false)} title={"Mail Notifications"} description={"Configure your mail notifications here."}>
+        <UiViewBox title={"Mail Notifications"} description={"Configure your mail notifications here."}>
             {renderContent()}
         </UiViewBox>
     </UiCol>
