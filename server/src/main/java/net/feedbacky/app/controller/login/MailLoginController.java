@@ -66,7 +66,7 @@ public class MailLoginController {
     codeCache.put(code, user.getEmail());
     builder.withTemplate(MailService.EmailTemplate.MAIL_LOGIN_ATTEMPT)
             .withRecipient(user)
-            .withCustomPlaceholder("${login.link}", MailService.HOST_ADDRESS + "/auth/mail?code=" + code)
+            .withCustomPlaceholder("${login.link}", MailService.HOST_ADDRESS + "/auth/mail?code=" + code + " &state=%2Fme")
             .sendMail(mailHandler.getMailService()).sync();
     return ResponseEntity.ok().build();
   }
