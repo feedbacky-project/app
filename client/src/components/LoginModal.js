@@ -53,7 +53,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
     const onMailLogin = (email) => {
         axios.get("/service/mailRequest?email=" + email).then(res => {
             if (res.status === 200) {
-                popupNotification("Check mailbox for Log-in Link.");
+                popupNotification("Check mailbox for Log-in Link.", getTheme());
             }
             setMailModalOpen(false);
         });
