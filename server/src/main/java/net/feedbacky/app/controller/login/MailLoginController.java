@@ -62,7 +62,7 @@ public class MailLoginController {
     }
     User user = getUser(email);
     MailBuilder builder = new MailBuilder();
-    String code = RandomStringUtils.randomAlphanumeric(10);
+    String code = RandomStringUtils.randomAlphanumeric(20);
     codeCache.put(code, user.getEmail());
     builder.withTemplate(MailService.EmailTemplate.MAIL_LOGIN_ATTEMPT)
             .withRecipient(user)
