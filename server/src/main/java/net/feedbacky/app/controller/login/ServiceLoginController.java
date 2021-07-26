@@ -1,4 +1,4 @@
-package net.feedbacky.app.controller;
+package net.feedbacky.app.controller.login;
 
 import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.MailPreferences;
@@ -168,16 +168,15 @@ public class ServiceLoginController {
         user.setServiceStaff(true);
       }
       return userRepository.save(user);
-    } else {
-      User user = optional.get();
-      if(user.getConnectedAccounts().stream().noneMatch(acc -> acc.getProvider().equals(id))) {
-        Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
-        accounts.add(generateConnectedAccount(id, data, fields, user));
-        user.setConnectedAccounts(accounts);
-        return userRepository.save(user);
-      }
-      return user;
     }
+    User user = optional.get();
+    if(user.getConnectedAccounts().stream().noneMatch(acc -> acc.getProvider().equals(id))) {
+      Set<ConnectedAccount> accounts = new HashSet<>(user.getConnectedAccounts());
+      accounts.add(generateConnectedAccount(id, data, fields, user));
+      user.setConnectedAccounts(accounts);
+      return userRepository.save(user);
+    }
+    return user;
   }
 
   private ConnectedAccount generateConnectedAccount(String id, Map<String, Object> data, LoginProvider.OauthDetails.DataFields fields, User user) {

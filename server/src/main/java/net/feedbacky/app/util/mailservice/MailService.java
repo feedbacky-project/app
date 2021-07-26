@@ -23,7 +23,9 @@ public interface MailService {
     ACCOUNT_DEACTIVATED("mail_templates/account_deactivated.html", "", "${username} - Account Deactivated",
             "You requested to deactivate your ${username} account and we executed the request, your account was anonymized. (HTML not supported, default message sent)"),
     SUBSCRIBE_NOTIFICATION("mail_templates/notification/new_notifications.html", "", "${notifications.amount} New Notification(s) Received",
-            "You received new notifications, however, you can see them only when HTML is supported (HTML not supported, default message sent)");
+            "You received new notifications, however, you can see them only when HTML is supported (HTML not supported, default message sent)"),
+    MAIL_LOGIN_ATTEMPT("mail_templates/mail_login_attempt.html", HOST_ADDRESS + "/auth/mail", "Login Attempt via Mail",
+            "There was a request to log in with email address, please allow HTML to see more. (HTML not supported, default message sent)");
 
     private final String html;
     private final String inviteLink;

@@ -8,6 +8,8 @@ import com.google.errorprone.annotations.CheckReturnValue;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -30,6 +32,7 @@ public class MailBuilder {
   private Board board = null;
   private Invitation invitation = null;
   private User recipient;
+  private Map<String, String> customPlaceholders = new HashMap<>();
 
   public MailBuilder withTemplate(MailService.EmailTemplate template) {
     this.template = template;
@@ -66,6 +69,11 @@ public class MailBuilder {
     return this;
   }
 
+  public MailBuilder withCustomPlaceholder(String placeholder, String value) {
+    this.customPlaceholders.put(placeholder, value);
+    return this;
+  }
+
   @CheckReturnValue
   public MailSendDetails sendMail(MailService service) {
     return new MailSendDetails(service);
@@ -91,6 +99,9 @@ public class MailBuilder {
       String customSubject = parsePlaceholders(subject == null ? template.getSubject() : subject);
       String customHtml = parsePlaceholders(html == null ? template.getHtml() : html);
       String customText = parsePlaceholders(text == null ? template.getLegacyText() : text);
+      for(Map.Entry<String, String> entry : customPlaceholders.entrySet()) {
+        customHtml = StringUtils.replace(customHtml, entry.getKey(), entry.getValue());
+      }
       service.send(recipient.getEmail(), customSubject, customText, customHtml);
     }
 

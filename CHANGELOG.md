@@ -1,3 +1,6 @@
+### 1.0.0.beta.4
+* **[FEATURE]** Allow logging in via email address
+
 ### 1.0.0.beta.3
 * **[IMPROVEMENT]** Trend score received an improvement, now it includes subscribers and comments amount and it's should be 1.0 by default
 to be seen at the top of ideas list

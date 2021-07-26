@@ -20,5 +20,6 @@ public class AboutFeedbackyData {
   private List<LoginProvider.ProviderData> loginProviders;
   private List<FetchUserDto> serviceAdmins;
   private boolean closedIdeasCommenting;
+  private boolean mailLoginEnabled;
 
 }
