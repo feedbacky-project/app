@@ -51,6 +51,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
     const {serviceData, getTheme} = useContext(AppContext);
     const [mailModalOpen, setMailModalOpen] = useState(false);
     const onMailLogin = (email) => {
+        popupNotification("Sending Log-in Link...", getTheme());
         axios.get("/service/mailRequest?email=" + email).then(res => {
             if (res.status === 200) {
                 popupNotification("Check mailbox for Log-in Link.", getTheme());
