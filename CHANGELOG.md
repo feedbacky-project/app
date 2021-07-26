@@ -1,5 +1,6 @@
 ### 1.0.0.beta.4
 * **[FEATURE]** Allow logging in via email address
+* **[FIX]** Logging out from profile page crashed the app
 
 ### 1.0.0.beta.3
 * **[IMPROVEMENT]** Trend score received an improvement, now it includes subscribers and comments amount and it's should be 1.0 by default

@@ -22,7 +22,7 @@ const ProfileRoute = () => {
     const history = useHistory();
     const location = useLocation();
     const getPassedBoardData = () => {
-      if(location.state === undefined) {
+      if(location.state === null) {
           return null;
       }
       return location.state._boardData;
