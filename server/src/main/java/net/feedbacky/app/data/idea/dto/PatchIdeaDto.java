@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.annotation.base64.Base64;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -28,5 +29,7 @@ public class PatchIdeaDto {
   private Boolean open;
   private Boolean commentingRestricted;
   private Boolean pinned;
+  @Base64(maximumKbSize = 1024, mimeType = {"image/png", "image/jpeg"}, message = "Attachment must be a valid image with maximum size of 1 MB.", allowEmpty = true)
+  private String attachment;
 
 }

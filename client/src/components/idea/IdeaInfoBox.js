@@ -25,6 +25,7 @@ const IdeaInfoBox = () => {
     const [voters, setVoters] = useState({data: [], loaded: false, error: false});
     const [editor, setEditor] = useState({enabled: false, value: htmlDecode(ideaData.description)});
     const [modal, setModal] = useState({open: false});
+    const [updatedAttachment, setUpdatedAttachment] = useState(null);
     useEffect(() => {
         axios.get("/ideas/" + ideaData.id + "/voters").then(res => {
             if (res.status !== 200) {
@@ -39,13 +40,13 @@ const IdeaInfoBox = () => {
 
     const onEditApply = () => {
         let description = editor.value;
-        if (ideaData.description === description) {
+        if (ideaData.description === description && updatedAttachment == null) {
             setEditor({enabled: false, value: htmlDecode(description)});
             popupNotification("Nothing changed", getTheme());
             return Promise.resolve();
         }
         return axios.patch("/ideas/" + ideaData.id, {
-            description
+            description, attachment: updatedAttachment
         }).then(res => {
             if (res.status !== 200) {
                 popupError();
@@ -107,7 +108,7 @@ const IdeaInfoBox = () => {
         <UiCol md={2} xs={12}>
             <VotersInfo data={voters}/>
             <TagsInfo/>
-            <AttachmentsInfo/>
+            <AttachmentsInfo editor={editor} onAttachmentUpdate={(data) => setUpdatedAttachment(data)}/>
             <NotificationsInfo/>
             <ShareBox/>
         </UiCol>

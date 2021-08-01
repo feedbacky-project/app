@@ -6,6 +6,7 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
@@ -26,14 +27,16 @@ import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.repository.board.TagRepository;
+import net.feedbacky.app.repository.idea.AttachmentRepository;
 import net.feedbacky.app.repository.idea.CommentRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
+import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.CommentBuilder;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RandomNicknameUtils;
-import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
+import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.request.ServiceValidator;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
@@ -53,6 +56,7 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -71,6 +75,7 @@ public class IdeaServiceImpl implements IdeaService {
   private final UserRepository userRepository;
   private final TagRepository tagRepository;
   private final CommentRepository commentRepository;
+  private final AttachmentRepository attachmentRepository;
   private final ObjectStorage objectStorage;
   private final SubscriptionExecutor subscriptionExecutor;
   private final IdeaServiceCommons ideaServiceCommons;
@@ -79,13 +84,14 @@ public class IdeaServiceImpl implements IdeaService {
   @Autowired
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
-                         CommentRepository commentRepository, ObjectStorage objectStorage, SubscriptionExecutor subscriptionExecutor,
-                         IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils) {
+                         CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
+                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.tagRepository = tagRepository;
     this.commentRepository = commentRepository;
+    this.attachmentRepository = attachmentRepository;
     this.objectStorage = objectStorage;
     this.subscriptionExecutor = subscriptionExecutor;
     this.ideaServiceCommons = ideaServiceCommons;
@@ -94,34 +100,24 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort, String anonymousId) {
-    User user = null;
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if(auth instanceof AnonymousAuthenticationToken && anonymousId != null) {
-      user = userRepository.findByEmail(anonymousId).orElse(null);
-    } else if(auth instanceof UserAuthenticationToken) {
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
-    }
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    return ideaServiceCommons.getAllIdeas(board, user, page, pageSize, filter, sort);
+    return ideaServiceCommons.getAllIdeas(board, getRequestUser(anonymousId), page, pageSize, filter, sort);
   }
 
   @Override
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(String discriminator, int page, int pageSize, String query, String anonymousId) {
-    User user = null;
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if(auth instanceof AnonymousAuthenticationToken && anonymousId != null) {
-      user = userRepository.findByEmail(anonymousId).orElse(null);
-    } else if(auth instanceof UserAuthenticationToken) {
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
-    }
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    return ideaServiceCommons.getAllIdeasContaining(board, user, page, pageSize, query);
+    return ideaServiceCommons.getAllIdeasContaining(board, getRequestUser(anonymousId), page, pageSize, query);
   }
 
   @Override
   public FetchIdeaDto getOne(long id, String anonymousId) {
+    return ideaServiceCommons.getOne(getRequestUser(anonymousId), id);
+  }
+
+  private User getRequestUser(String anonymousId) {
     User user = null;
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if(auth instanceof AnonymousAuthenticationToken && anonymousId != null) {
@@ -129,7 +125,7 @@ public class IdeaServiceImpl implements IdeaService {
     } else if(auth instanceof UserAuthenticationToken) {
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
-    return ideaServiceCommons.getOne(user, id);
+    return user;
   }
 
   @Override
@@ -157,6 +153,15 @@ public class IdeaServiceImpl implements IdeaService {
       throw new InsufficientPermissionsException();
     }
 
+    handleStatusUpdate(idea, dto, user);
+    handleAttachmentUpdate(idea, dto);
+
+    idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
+    ideaRepository.save(idea);
+    return new FetchIdeaDto().from(idea).withUser(idea, user);
+  }
+
+  private void handleStatusUpdate(Idea idea, PatchIdeaDto dto, User user) {
     boolean edited = false;
     long creationTimeDiffMillis = Math.abs(Calendar.getInstance().getTime().getTime() - idea.getCreationDate().getTime());
     long minutesDiff = TimeUnit.MINUTES.convert(creationTimeDiffMillis, TimeUnit.MILLISECONDS);
@@ -199,10 +204,15 @@ public class IdeaServiceImpl implements IdeaService {
         event = Webhook.Event.IDEA_UNPINNED;
       }
     }
-    //the change was made, notify webhooks
+    //the change was made, notify webhooks and save moderation comment
     if(comment != null) {
       WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
       idea.getBoard().getWebhookExecutor().executeWebhooks(event, builder.build());
+
+      Set<Comment> comments = idea.getComments();
+      comments.add(comment);
+      idea.setComments(comments);
+      commentRepository.save(comment);
     }
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
@@ -210,15 +220,20 @@ public class IdeaServiceImpl implements IdeaService {
     if(dto.getOpen() != null) {
       idea.setStatus(Idea.IdeaStatus.toIdeaStatus(dto.getOpen()));
     }
-    idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
-    if(comment != null) {
-      Set<Comment> comments = idea.getComments();
-      comments.add(comment);
-      idea.setComments(comments);
-      commentRepository.save(comment);
+  }
+
+  private void handleAttachmentUpdate(Idea idea, PatchIdeaDto dto) {
+    if(dto.getAttachment() == null) {
+      return;
     }
-    ideaRepository.save(idea);
-    return new FetchIdeaDto().from(idea).withUser(idea, user);
+    Set<Attachment> attachments = new HashSet<>();
+    String link = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getAttachment()), ObjectStorage.ImageType.ATTACHMENT);
+    Attachment attachment = new Attachment();
+    attachment.setIdea(idea);
+    attachment.setUrl(link);
+    attachment = attachmentRepository.save(attachment);
+    attachments.add(attachment);
+    idea.setAttachments(attachments);
   }
 
   @Override
