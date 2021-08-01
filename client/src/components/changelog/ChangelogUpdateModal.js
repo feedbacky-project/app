@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AppContext, BoardContext} from "context";
+import {AppContext} from "context";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {UiClickableTip} from "ui";
@@ -11,7 +11,6 @@ import {formatRemainingCharacters, popupError, popupNotification, popupWarning} 
 
 const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) => {
     const {getTheme} = useContext(AppContext);
-    const {discriminator} = useContext(BoardContext).data;
     const [title, setTitle] = useState(changelog.title);
 
     const handleSubmit = () => {
@@ -24,7 +23,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
             popupWarning("Description should be at least 20 characters long");
             return Promise.resolve();
         }
-        return axios.patch("/boards/" + discriminator + "/changelog/", {
+        return axios.patch("/changelog/" + changelog.id, {
             title, description
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
