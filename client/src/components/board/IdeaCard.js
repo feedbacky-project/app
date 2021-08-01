@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
-import {BoardContext, IdeaContext} from "context";
+import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaThumbtack} from "react-icons/all";
 import {FaLock, FaRegComment} from "react-icons/fa";
@@ -16,6 +16,7 @@ import {convertIdeaToSlug} from "utils/basic-utils";
 const CardStyle = styled(UiCard)`
   padding: 0 1rem;
   margin: .5rem 0;
+  ${props => !props.pinned || (props.darkMode ? `border: 1px dashed var(--quaternary)` : `border: 1px dashed var(--disabled)`)};
 `;
 
 export const CardLinkStyle = styled(UiCol)`
@@ -66,8 +67,13 @@ export const InfoContainer = styled.small`
   }
 `;
 
+export const PinIcon = styled(FaThumbtack)`
+  transform: translateY(-2px) rotate(30deg);
+`;
+
 const IdeaCard = ({ideaData, onIdeaDelete}) => {
     const cardRef = React.createRef();
+    const {user} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     const history = useHistory();
     const location = useLocation();
@@ -106,7 +112,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             history.replace({pathname: location.pathname, state: null});
         },
     }}>
-        <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"}>
+        <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"} pinned={idea.pinned} darkMode={user.darkMode}>
             <span className={"my-auto mr-3"}>
                 <VoteButton idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>
             </span>
@@ -114,7 +120,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
                 <div>
                     <div className={"d-inline"} style={{fontSize: `1.15em`}}>
                         {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
-                        {!idea.pinned || <UiClassicIcon as={FaThumbtack} className={"mr-1 move-top-2px"}/>}
+                        {!idea.pinned || <UiClassicIcon as={PinIcon} className={"mr-1"}/>}
                         <span dangerouslySetInnerHTML={{__html: idea.title}}/>
                         {renderComments()}
                     </div>
