@@ -127,7 +127,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                               onAction={() => doIdeaStateChange("commentingRestricted", true, "Commenting disabled.", "Commenting enabled.")}
                               actionDescription={<div>Only moderators will be able to comment this idea.</div>} actionButtonName={"Disable"}/>
         <DangerousActionModal id={"unpin"} onHide={hide} isOpen={modal.open && modal.type === "unpin"}
-                              onAction={() => doIdeaStateChange("pinned", true, "Idea unpinned.", "Idea pinned.")}
+                              onAction={() => doIdeaStateChange("pinned", false, "Idea unpinned.", "Idea pinned.")}
                               actionDescription={<div>Idea will no longer be pinned at the top of ideas list.</div>} actionButtonName={"Unpin"}/>
         <DangerousActionModal id={"pin"} onHide={hide} isOpen={modal.open && modal.type === "pin"}
                               onAction={() => doIdeaStateChange("pinned", true, "Idea pinned.", "Idea unpinned.")}
