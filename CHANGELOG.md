@@ -27,6 +27,7 @@ eg. ?name=Plajer?size=32 (broken, outputs Plajer?size=32)
 
 ** **TODO** **
 * Make migrator more stable
+* Investigate odd roadmaps idea status fields issue
 
 ### 1.0.0.alpha.7 (July 12, 2021)
 * **[FEATURE]** Changelogs can now be edited

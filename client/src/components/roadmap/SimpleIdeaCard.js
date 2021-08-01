@@ -39,8 +39,6 @@ export const SimpleIdeaCard = ({ideaData}) => {
                 <CardLinkStyle as={Link} className={"d-inline text-left"} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                     <div>
                         <div className={"d-inline mr-1"} style={{letterSpacing: `-.15pt`}}>
-                            {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
-                            {!idea.pinned || <UiClassicIcon as={FaThumbtack} className={"mr-1 move-top-2px"}/>}
                             <span dangerouslySetInnerHTML={{__html: idea.title}}/>
                             {renderComments()}
                         </div>
