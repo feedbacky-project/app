@@ -38,6 +38,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   private boolean open;
   private boolean edited;
   private boolean commentingRestricted;
+  private boolean pinned;
   private Date creationDate;
 
   private String votersUrl = "/v1/ideas/:id/voters";
@@ -60,6 +61,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
     this.open = entity.getStatus() == Idea.IdeaStatus.OPENED;
     this.edited = entity.isEdited();
     this.commentingRestricted = entity.isCommentingRestricted();
+    this.pinned = entity.isPinned();
     this.creationDate = entity.getCreationDate();
     return this;
   }

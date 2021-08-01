@@ -3,7 +3,7 @@ import MarkdownContainer from "components/commons/MarkdownContainer";
 import VoteButton from "components/commons/VoteButton";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaLock, FaRegComment} from "react-icons/all";
+import {FaLock, FaRegComment, FaThumbtack} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import {UiClassicIcon} from "ui";
 import {UiRow} from "ui/grid";
@@ -16,12 +16,6 @@ export const SimpleIdeaCard = ({ideaData}) => {
     const {data} = useContext(BoardContext);
     const [idea, setIdea] = useState(ideaData);
     useEffect(() => setIdea(ideaData), [ideaData]);
-    const renderLockState = () => {
-        if (idea.open) {
-            return;
-        }
-        return <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>
-    };
     const renderComments = () => {
         if (idea.commentsAmount > 0) {
             return <InfoContainer>
@@ -45,7 +39,8 @@ export const SimpleIdeaCard = ({ideaData}) => {
                 <CardLinkStyle as={Link} className={"d-inline text-left"} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                     <div>
                         <div className={"d-inline mr-1"} style={{letterSpacing: `-.15pt`}}>
-                            {renderLockState()}
+                            {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
+                            {!idea.pinned || <UiClassicIcon as={FaThumbtack} className={"mr-1 move-top-2px"}/>}
                             <span dangerouslySetInnerHTML={{__html: idea.title}}/>
                             {renderComments()}
                         </div>

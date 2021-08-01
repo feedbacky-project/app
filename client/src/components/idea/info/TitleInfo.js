@@ -1,7 +1,7 @@
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
-import {FaLock, FaPen, FaTrash} from "react-icons/all";
+import {FaLock, FaPen, FaThumbtack, FaTrash} from "react-icons/all";
 import TimeAgo from "timeago-react";
 import {UiHoverableIcon, UiPrettyUsername} from "ui";
 import {UiAvatar} from "ui/image";
@@ -19,6 +19,7 @@ const TitleInfo = ({setModal, editor, setEditor}) => {
     };
     return <div>
         {ideaData.open || <FaLock className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
+        {!ideaData.pinned || <FaThumbtack className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
         <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
         <ModeratorActionsButton/>
         {renderDeletionButton()}

@@ -4,6 +4,7 @@ import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
+import {FaThumbtack} from "react-icons/all";
 import {FaLock, FaRegComment} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import tinycolor from "tinycolor2";
@@ -113,6 +114,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
                 <div>
                     <div className={"d-inline"} style={{fontSize: `1.15em`}}>
                         {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
+                        {!idea.pinned || <UiClassicIcon as={FaThumbtack} className={"mr-1 move-top-2px"}/>}
                         <span dangerouslySetInnerHTML={{__html: idea.title}}/>
                         {renderComments()}
                     </div>
