@@ -87,6 +87,7 @@ public class Idea implements Serializable {
   private Date creationDate;
   private boolean edited = false;
   private boolean commentingRestricted = false;
+  private boolean pinned = false;
 
   public void setVoters(Set<User> voters) {
     this.voters = voters;

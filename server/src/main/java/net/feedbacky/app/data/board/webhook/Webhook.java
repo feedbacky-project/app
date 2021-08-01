@@ -65,7 +65,8 @@ public class Webhook implements Serializable {
     IDEA_EDIT(4, "Idea Edited - `${placeholder}`"), IDEA_TAG_CHANGE(6, "Tags of Idea Changed - `${placeholder}`"),
     IDEA_OPEN(7, "Idea Opened - `${placeholder}`"), IDEA_CLOSE(8, "Idea Closed - `${placeholder}`"),
     SAMPLE_EVENT(9, "I am alive! Sample request received."), IDEA_COMMENTS_RESTRICT(10, "Idea Commenting Restricted - `${placeholder}`"),
-    IDEA_COMMENTS_ALLOW(10, "Idea Commenting Allowed - `${placeholder}`"), CHANGELOG_CREATE(11, "New Changelog Created - `${placeholder}`");
+    IDEA_COMMENTS_ALLOW(10, "Idea Commenting Allowed - `${placeholder}`"), CHANGELOG_CREATE(11, "New Changelog Created - `${placeholder}`"),
+    IDEA_PINNED(12, "Idea Pinned - `${placeholder}`"), IDEA_UNPINNED(13, "Idea Unpinned - `${placeholder}`");
 
     private final int id;
     private final String message;

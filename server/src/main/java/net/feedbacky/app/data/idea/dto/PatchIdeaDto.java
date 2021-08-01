@@ -27,5 +27,6 @@ public class PatchIdeaDto {
   private String description;
   private Boolean open;
   private Boolean commentingRestricted;
+  private Boolean pinned;
 
 }

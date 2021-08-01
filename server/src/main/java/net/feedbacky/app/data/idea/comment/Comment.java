@@ -63,7 +63,7 @@ public class Comment implements Serializable {
   private Date creationDate;
 
   public enum SpecialType {
-    LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED, COMMENTS_RESTRICTED, COMMENTS_ALLOWED
+    LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED, COMMENTS_RESTRICTED, COMMENTS_ALLOWED, IDEA_PINNED, IDEA_UNPINNED
   }
 
   public enum ViewType {

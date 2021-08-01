@@ -149,7 +149,8 @@ public class IdeaServiceImpl implements IdeaService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    if((dto.getOpen() != null || dto.getCommentingRestricted() != null) && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+    if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null)
+            && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
     if(!idea.getCreator().equals(user) && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
@@ -166,33 +167,42 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Comment comment = null;
     CommentBuilder commentBuilder = new CommentBuilder().of(idea).by(user);
-    //assuming you can never close and edit idea in the same request
+    Webhook.Event event = null;
+    //assuming you can never do any of these actions together
     if(edited) {
       comment = commentBuilder.type(Comment.SpecialType.IDEA_EDITED).message(user.convertToSpecialCommentMention() + " has edited description of the idea.").build();
-      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-      idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_EDIT, builder.build());
+      event = Webhook.Event.IDEA_EDIT;
     } else if(dto.getOpen() != null && idea.getStatus().getValue() != dto.getOpen()) {
       if(!dto.getOpen()) {
         comment = commentBuilder.type(Comment.SpecialType.IDEA_CLOSED).message(user.convertToSpecialCommentMention() + " has closed the idea.").build();
-        WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-        idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_CLOSE, builder.build());
+        event = Webhook.Event.IDEA_CLOSE;
       } else {
         comment = commentBuilder.type(Comment.SpecialType.IDEA_OPENED).message(user.convertToSpecialCommentMention() + " has reopened the idea.").build();
-        WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-        idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_OPEN, builder.build());
+        event = Webhook.Event.IDEA_OPEN;
       }
       subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_STATUS_CHANGE, user,
               idea, idea.getStatus().name()));
     } else if(dto.getCommentingRestricted() != null && idea.isCommentingRestricted() != dto.getCommentingRestricted()) {
       if(dto.getCommentingRestricted()) {
         comment = commentBuilder.type(Comment.SpecialType.COMMENTS_RESTRICTED).message(user.convertToSpecialCommentMention() + " has restricted commenting to moderators only.").build();
-        WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-        idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENTS_RESTRICT, builder.build());
+        event = Webhook.Event.IDEA_COMMENTS_RESTRICT;
       } else {
         comment = commentBuilder.type(Comment.SpecialType.COMMENTS_ALLOWED).message(user.convertToSpecialCommentMention() + " has removed commenting restrictions.").build();
-        WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-        idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENTS_ALLOW, builder.build());
+        event = Webhook.Event.IDEA_COMMENTS_ALLOW;
       }
+    } else if(dto.getPinned() != null && idea.isPinned() != dto.getPinned()) {
+      if(dto.getPinned()) {
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_PINNED).message(user.convertToSpecialCommentMention() + " has pinned the idea.").build();
+        event = Webhook.Event.IDEA_PINNED;
+      } else {
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_UNPINNED).message(user.convertToSpecialCommentMention() + " has unpinned the idea.").build();
+        event = Webhook.Event.IDEA_UNPINNED;
+      }
+    }
+    //the change was made, notify webhooks
+    if(comment != null) {
+      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
+      idea.getBoard().getWebhookExecutor().executeWebhooks(event, builder.build());
     }
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
