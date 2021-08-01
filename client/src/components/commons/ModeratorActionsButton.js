@@ -46,7 +46,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 popupError();
                 return;
             }
-            updateState({...ideaData, open: true});
+            updateState({...ideaData, [state]: value});
             let finalMessage = message;
             if (isRevert) {
                 finalMessage = revertMessage;
