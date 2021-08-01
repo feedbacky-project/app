@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
-import {FaEdit, FaLock, FaLockOpen, FaTags} from "react-icons/all";
+import {FaComment, FaCommentSlash, FaEdit, FaLink, FaLock, FaLockOpen, FaTags, FaUnlink} from "react-icons/all";
 
-const Icon = styled.div`
+const IconOverlay = styled.div`
   text-align: center;
   border-radius: 50%;
   height: 30px;
@@ -11,10 +11,13 @@ const Icon = styled.div`
   transform: translateY(-3px);
   box-shadow: 0 0 0 1px var(--background), 0 0 0 2px currentColor;
   margin-right: 1rem;
-  
-  .icon {
-    vertical-align: bottom;
-  }
+  color: ${props => props.theme};
+  background-color: ${props => props.theme};
+`;
+
+const Icon = styled.div`
+  fill: ${props => props.fill};
+  vertical-align: bottom;
 `;
 
 const CommentIcon = ({specialType}) => {
@@ -27,18 +30,26 @@ const CommentIcon = ({specialType}) => {
         const fill = user.darkMode ? getTheme() : "white";
         switch (type) {
             case "IDEA_CLOSED":
-                return <FaLock className={"icon"} fill={fill}/>;
+                return <Icon as={FaLock} fill={fill}/>;
             case "IDEA_OPENED":
-                return <FaLockOpen className={"icon"} fill={fill}/>;
+                return <Icon as={FaLockOpen} fill={fill}/>;
             case "IDEA_EDITED":
-                return <FaEdit className={"icon"} fill={fill}/>;
+                return <Icon as={FaEdit} fill={fill}/>;
+            case "COMMENTS_RESTRICTED":
+                return <Icon as={FaCommentSlash} fill={fill}/>;
+            case "COMMENTS_ALLOWED":
+                return <Icon as={FaComment} fill={fill}/>;
+            case "IDEA_PINNED":
+                return <Icon as={FaLink} fill={fill}/>;
+            case "IDEA_UNPINNED":
+                return <Icon as={FaUnlink} fill={fill}/>;
             case "LEGACY":
             case "TAGS_MANAGED":
             default:
-                return <FaTags className={"icon"} fill={fill}/>;
+                return <Icon as={FaTags} fill={fill}/>;
         }
     };
-    return <Icon style={{backgroundColor: color, color, minWidth: 30}}>{retrieveSpecialCommentTypeIcon(specialType)}</Icon>
+    return <IconOverlay theme={color.toString()}>{retrieveSpecialCommentTypeIcon(specialType)}</IconOverlay>
 };
 
 export default CommentIcon;
