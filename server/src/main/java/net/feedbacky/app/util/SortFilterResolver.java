@@ -26,13 +26,13 @@ public class SortFilterResolver {
     }
   }
 
-  public static Sort resolveIdeaSorting(BoardChangelogService.SortType sortType) {
+  public static Sort resolveChangelogSorting(BoardChangelogService.SortType sortType) {
     switch(sortType) {
       case OLDEST:
-        return Sort.by(Sort.Order.desc("pinned"), Sort.Order.asc("creationDate"));
+        return Sort.by(Sort.Order.asc("creationDate"));
       case NEWEST:
       default:
-        return Sort.by(Sort.Order.desc("pinned"), Sort.Order.desc("creationDate"));
+        return Sort.by(Sort.Order.desc("creationDate"));
     }
   }
 

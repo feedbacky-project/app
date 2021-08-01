@@ -9,8 +9,6 @@ import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
-import net.feedbacky.app.data.idea.Idea;
-import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
@@ -23,12 +21,9 @@ import net.feedbacky.app.util.SortFilterResolver;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.request.ServiceValidator;
 
-import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraph;
-import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,7 +57,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   public PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize, SortType sortType) {
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.empty())
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    Page<Changelog> pageData = changelogRepository.findByBoard(board, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sortType)));
+    Page<Changelog> pageData = changelogRepository.findByBoard(board, PageRequest.of(page, pageSize, SortFilterResolver.resolveChangelogSorting(sortType)));
     List<Changelog> changelogs = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), changelogs.stream()
