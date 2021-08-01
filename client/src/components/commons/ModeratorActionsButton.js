@@ -41,7 +41,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
     const history = useHistory();
     const visible = boardData.moderators.find(mod => mod.userId === user.data.id);
     const doIdeaStateChange = (state, value, message, revertMessage, isRevert = false) => {
-        return axios.patch("/ideas/" + ideaData.id, {state: value}).then(res => {
+        return axios.patch("/ideas/" + ideaData.id, {[state]: value}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
                 return;
