@@ -13,7 +13,7 @@ const DropdownItem = styled(Dropdown.Item)`
     background-color: hsla(0, 0%, 0%, .075);
   }
 
-  &:hover {
+  &:hover, &:focus {
     background-color: var(--hover) !important;
   }
 `;
