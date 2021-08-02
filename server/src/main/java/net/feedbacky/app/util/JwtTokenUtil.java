@@ -17,7 +17,7 @@ import java.util.function.Function;
  */
 public class JwtTokenUtil {
 
-  public static final long JWT_TOKEN_VALIDITY_DAYS = 14;
+  public static final long JWT_TOKEN_VALIDITY_DAYS = 30;
   private static final String secret = System.getenv("JWT_SECRET");
 
   private JwtTokenUtil() {

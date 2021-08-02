@@ -2,6 +2,7 @@
 * **[FEATURE]** Allow logging in via email address (requested by [ANONYMANONYM](https://app.feedbacky.net/i/add-option-to-login-just-with-email.2508))
 * **[FEATURE]** Ideas can now be pinned and unpinned (requested by [Matou0014](https://app.feedbacky.net/i/pinnable-ideas.2875))
 * **[FEATURE]** You can now upload attachment while editing idea (if not previously attached) (requested by [Matou0014](https://app.feedbacky.net/i/send-multiple-attachements.2680))
+* **[CHANGE]** Increase login cookie time from 14 days to 30
 * **[FIX]** Logging out from profile page crashed the app
 * **[FIX]** Warning and error toasts are now dark mode aware (will apply lighter color)
 
