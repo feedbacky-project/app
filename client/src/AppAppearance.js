@@ -54,11 +54,11 @@ const AppAppearance = () => {
                     setAppearance({...appearance, mode: "light", systemDefault: true});
                 }
             } else if(type === "dark") {
-                Cookies.set("prefs_appearance", "dark", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+                Cookies.set("prefs_appearance", "dark", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "strict"});
                 setAppearance({...appearance, mode: "dark", systemDefault: false});
                 document.body.classList.add("dark");
             } else if(type === "light") {
-                Cookies.set("prefs_appearance", "light", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+                Cookies.set("prefs_appearance", "light", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "strict"});
                 setAppearance({...appearance, mode: "light", systemDefault: false});
                 document.body.classList.remove("dark");
             }
@@ -68,13 +68,13 @@ const AppAppearance = () => {
             setAppearance({...appearance, mode: "light"});
             document.body.classList.remove("dark");
             if(!appearance.systemDefault) {
-                Cookies.set("prefs_appearance", "light", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+                Cookies.set("prefs_appearance", "light", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "strict"});
             }
         } else if(appearance.mode === "light") {
             setAppearance({...appearance, mode: "dark"});
             document.body.classList.add("dark");
             if(!appearance.systemDefault) {
-                Cookies.set("prefs_appearance", "dark", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "Lax"});
+                Cookies.set("prefs_appearance", "dark", {expires: 10 * 365 * 7 /* 10 years */, sameSite: "strict"});
             }
         }
     };

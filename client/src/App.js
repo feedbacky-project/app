@@ -134,6 +134,13 @@ const App = ({appearanceSettings}) => {
         }
         setLocalPrefs(data);
     };
+    const onThemeChange = (newTheme) => {
+        let changedTheme = newTheme;
+        if(changedTheme == null) {
+            changedTheme = (appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        }
+        setTheme(changedTheme);
+    };
     if (serviceData.error) {
         return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"} onBackButtonClick={() => window.location.reload()}/></BrowserRouter>
     }
@@ -155,7 +162,7 @@ const App = ({appearanceSettings}) => {
             appearance: appearance,
             setAppearance: setAppearance,
             defaultTheme: appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
-            onThemeChange: (newTheme = (appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR)) => setTheme(newTheme),
+            onThemeChange: onThemeChange,
             hardResetData: hardResetData,
         }}>
             <Suspense fallback={<LoadingRouteUtil/>}>

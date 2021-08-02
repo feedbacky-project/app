@@ -23,10 +23,10 @@ const OptionImage = styled.img`
 `;
 
 const AppearanceCard = ({className, chosen, alt, imgSrc, onClick}) => {
-    const {defaultTheme} = useContext(AppContext);
+    const {getTheme} = useContext(AppContext);
     let style;
     if (chosen) {
-        style = {border: "2px solid " + defaultTheme};
+        style = {border: "2px solid " + getTheme().toString()};
     } else {
         style = {border: "2px solid transparent"};
     }
