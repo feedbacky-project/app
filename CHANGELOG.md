@@ -34,6 +34,8 @@ eg. ?name=Plajer?size=32 (broken, outputs Plajer?size=32)
 
 ** **KNOWN BUGS** **
 * Theme gets set to the default theme while switching between light and dark themes in Appearance settings
+* Ideas retrieved via roadmap API route contains every boolean set to true even if they're not when user is not logged in.
+When logged in only some of them are true.
 
 ### 1.0.0.alpha.7 (July 12, 2021)
 * **[FEATURE]** Changelogs can now be edited
