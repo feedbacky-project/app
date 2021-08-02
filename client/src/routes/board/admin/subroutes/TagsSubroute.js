@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import TagCreateModal from "components/board/admin/TagCreateModal";
@@ -6,16 +7,25 @@ import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {AppContext, BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
-import {FaEyeSlash, FaPen, FaUserTag} from "react-icons/all";
-import {FaTrashAlt} from "react-icons/fa";
+import {FaPencilAlt} from "react-icons/all";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiHoverableIcon, UiTooltip} from "ui";
-import {UiLoadableButton} from "ui/button";
+import {UiBadge} from "ui";
+import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
-import {UiCol, UiRow} from "ui/grid";
+import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
+
+const TagIcon = styled.div`
+  padding: .5rem;
+  background-color: hsl(213, 7%, 24%);
+  border-radius: var(--border-radius);
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  cursor: pointer;
+`;
 
 const TagsSubroute = () => {
     const {getTheme} = useContext(AppContext);
@@ -30,7 +40,7 @@ const TagsSubroute = () => {
     const renderContent = () => {
         return <UiCol xs={12}>
             <UiFormLabel>Created Tags</UiFormLabel>
-            <UiRow>{renderTags()}</UiRow>
+            <div>{renderTags()}</div>
             <UiLoadableButton label={"Add New"} className={"mt-3 float-right"} onClick={() => {
                 setModal({open: true, type: "new", data: {id: -1, name: ""}});
                 return Promise.resolve();
@@ -42,24 +52,16 @@ const TagsSubroute = () => {
             return <SvgNotice Component={UndrawNoData} title={"No tags yet."} description={"How about creating one?"}/>
         }
         return boardData.tags.map((tag, i) => {
-            return <UiCol xs={6} key={i}>
-                <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>
-                {!tag.roadmapIgnored ||
-                <UiTooltip id={"tag" + i + "map"} text={"Ignores Roadmap"}>
-                    <UiHoverableIcon as={FaEyeSlash} className={"text-red ml-1"}/>
-                </UiTooltip>}
-                {!tag.publicUse ||
-                <UiTooltip id={"tag" + i + "public"} text={"Publicly Accessible"}>
-                    <UiHoverableIcon as={FaUserTag} className={"text-blue ml-1"}/>
-                </UiTooltip>}
-                <UiTooltip id={"tag" + i + "edit"} text={"Edit Tag"}>
-                    <UiHoverableIcon as={FaPen} onClick={() => onTagEdit(tag)} className={"ml-1"}/>
-                </UiTooltip>
-                <UiTooltip id={"tag" + i + "delete"} text={"Delete Tag"}>
-                    <UiHoverableIcon as={FaTrashAlt} onClick={() => setModal({open: true, type: "delete", data: {id: tag.id, name: tag.name, color: tinycolor(tag.color)}})}
-                                     className={"ml-1"}/>
-                </UiTooltip>
-            </UiCol>
+            return <div className={"d-inline-flex justify-content-center mr-2"} key={tag.id}>
+                <div className={"text-center"}>
+                    <UiElementDeleteButton tooltipName={"Delete"} id={"tag-" + tag.id + "-del"} offsetX={"12px"}
+                                           onClick={() => setModal({open: true, type: "delete", data: {id: tag.id, name: tag.name, color: tinycolor(tag.color)}})}/>
+                    <TagIcon onClick={() => onTagEdit(tag)} style={{backgroundColor: tinycolor(tag.color).setAlpha(.1)}}>
+                        <FaPencilAlt style={{height: 18, width: 18, color: tag.color}}/>
+                    </TagIcon>
+                    <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>
+                </div>
+            </div>
         });
     };
     const onTagEdit = (tag) => {

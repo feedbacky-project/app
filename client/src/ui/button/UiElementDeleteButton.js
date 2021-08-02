@@ -11,17 +11,17 @@ const DeleteButton = styled(FaTimes)`
   cursor: pointer;
   background-color: #383c41;
   position: absolute;
-  transform: translate(-6px, -6px);
+  transform: translate(${props => props.offsetX}, ${props => props.offsetY});
   
   &:hover {
-    transform: translate(-6px, -6px) var(--hover-transform-scale-lg);
+    transform: translate(${props => props.offsetX}, ${props => props.offsetY}) var(--hover-transform-scale-lg);
   }
 `;
 
 const UiElementDeleteButton = (props) => {
-    const {id, tooltipName, onClick} = props;
+    const {id, tooltipName, onClick, offsetX = "-6px", offsetY = "-6px"} = props;
     return <OverlayTrigger overlay={<Tooltip id={id}>{tooltipName}</Tooltip>}>
-        <DeleteButton onClick={onClick}/>
+        <DeleteButton onClick={onClick} offsetX={offsetX} offsetY={offsetY}/>
     </OverlayTrigger>
 };
 
