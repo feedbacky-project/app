@@ -29,6 +29,9 @@ eg. ?name=Plajer?size=32 (broken, outputs Plajer?size=32)
 * Make migrator more stable
 * Investigate odd roadmaps idea status fields issue
 
+** **KNOWN BUGS** **
+* Theme gets set to the default theme while switching between light and dark themes in Appearance settings
+
 ### 1.0.0.alpha.7 (July 12, 2021)
 * **[FEATURE]** Changelogs can now be edited
 * **[FEATURE]** User settings page is now directly tied to previous board so users won't leave currently viewed board
