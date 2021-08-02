@@ -101,9 +101,6 @@ const App = ({appearanceSettings}) => {
         // eslint-disable-next-line
     }, [userData]);
     const hardResetData = () => {
-        Cookies.remove("prefs_searchFilter");
-        Cookies.remove("prefs_searchSort");
-        Cookies.remove("prefs_comments_sort");
         Cookies.remove("prefs_appearance");
         onLogOut();
         setServiceData({...serviceData, data: [], loaded: false, error: false});
@@ -121,18 +118,6 @@ const App = ({appearanceSettings}) => {
         setSession(null);
         history.push({pathname: location.pathname, state: null});
         setUserData({...userData, data: [], loaded: true, loggedIn: false});
-    };
-    const onLocalPreferencesUpdate = (data) => {
-        if (data.ideas.filter != null) {
-            Cookies.set("prefs_searchFilter", data.ideas.filter, {expires: 10 * 365 * 7 /* 10 years */});
-        }
-        if (data.ideas.sort != null) {
-            Cookies.set("prefs_searchSort", data.ideas.sort, {expires: 10 * 365 * 7 /* 10 years */});
-        }
-        if (data.comments.sort != null) {
-            Cookies.set("prefs_comments_sort", data.comments.sort, {expires: 10 * 365 * 7 /* 10 years */});
-        }
-        setLocalPrefs(data);
     };
     const onThemeChange = (newTheme) => {
         let changedTheme = newTheme;
@@ -155,7 +140,7 @@ const App = ({appearanceSettings}) => {
                 onLogOut: onLogOut,
             },
             serviceData: serviceData.data,
-            onLocalPreferencesUpdate: onLocalPreferencesUpdate,
+            onLocalPreferencesUpdate: setLocalPrefs,
             onAppearanceToggle: onAppearanceToggle,
             getTheme: getTheme,
             theme: theme,
