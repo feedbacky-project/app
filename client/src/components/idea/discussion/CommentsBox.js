@@ -142,7 +142,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
         return renderDescription();
     }
     return <React.Fragment key={data.id}>
-        <div className={"d-inline-flex my-1"}>
+        <div className={"d-inline-flex my-2"}>
             <CommentIcon specialType={data.specialType}/>
             <div>
                 <span style={{color: getTheme()}}>{parseComment(data.description, boardData.moderators, boardData.tags)}</span>

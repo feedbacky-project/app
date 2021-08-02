@@ -28,6 +28,7 @@ const ShareIcon = styled.div`
   width: 1rem;
   cursor: pointer;
   color: var(--font-color);
+  transform: translateY(-1px);
   
   &:hover {
     color: ${props => props.theme};

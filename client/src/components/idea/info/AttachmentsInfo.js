@@ -10,9 +10,7 @@ import {UiImage} from "ui/image";
 import {getBase64FromFile, popupError, popupNotification, validateImageWithWarning} from "utils/basic-utils";
 
 const Attachment = styled(UiImage)`
-  .dark & {
-    background-color: var(--tertiary);
-  }
+  background-color: var(--quaternary);
 `;
 
 const AttachmentsInfo = ({editor, onAttachmentUpdate}) => {

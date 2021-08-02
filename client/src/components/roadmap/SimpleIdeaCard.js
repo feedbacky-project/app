@@ -3,9 +3,8 @@ import MarkdownContainer from "components/commons/MarkdownContainer";
 import VoteButton from "components/commons/VoteButton";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaLock, FaRegComment, FaThumbtack} from "react-icons/all";
+import {FaRegComment} from "react-icons/all";
 import {Link, useHistory, useLocation} from "react-router-dom";
-import {UiClassicIcon} from "ui";
 import {UiRow} from "ui/grid";
 import {convertIdeaToSlug} from "utils/basic-utils";
 
@@ -43,7 +42,7 @@ export const SimpleIdeaCard = ({ideaData}) => {
                             {renderComments()}
                         </div>
                     </div>
-                    <MarkdownContainer as={IdeaCardDescription} text={idea.description} truncate={85}  stripped/>
+                    <MarkdownContainer as={IdeaCardDescription} text={idea.description} truncate={85} stripped/>
                 </CardLinkStyle>
             </UiRow>
         </div>
