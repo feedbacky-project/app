@@ -19,7 +19,7 @@ const TitleInfo = ({setModal, editor, setEditor}) => {
     };
     return <div>
         {ideaData.open || <FaLock className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
-        {!ideaData.pinned || <FaThumbtack className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
+        {!ideaData.pinned || <FaThumbtack className={"mr-1"} style={{transform: "translateY(-4px) rotate(30deg)"}}/>}
         <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
         <ModeratorActionsButton/>
         {renderDeletionButton()}
