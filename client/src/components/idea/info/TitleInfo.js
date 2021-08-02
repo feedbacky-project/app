@@ -6,7 +6,7 @@ import TimeAgo from "timeago-react";
 import {UiHoverableIcon, UiPrettyUsername} from "ui";
 import {UiAvatar} from "ui/image";
 
-const TitleInfo = ({setModal, editor, setEditor}) => {
+const TitleInfo = ({setModal, editor, setEditor, onStateChange}) => {
     const {ideaData} = useContext(IdeaContext);
     const {data} = useContext(BoardContext);
     const {user} = useContext(AppContext);
@@ -21,7 +21,7 @@ const TitleInfo = ({setModal, editor, setEditor}) => {
         {ideaData.open || <FaLock className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
         {!ideaData.pinned || <FaThumbtack className={"mr-1"} style={{transform: "translateY(-4px) rotate(30deg)"}}/>}
         <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
-        <ModeratorActionsButton/>
+        <ModeratorActionsButton onStateChange={onStateChange}/>
         {renderDeletionButton()}
         {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60 ml-1"} onClick={() => setEditor({...editor, enabled: !editor.enabled})}/>}
         <br/>

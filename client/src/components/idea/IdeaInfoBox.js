@@ -17,7 +17,7 @@ import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {htmlDecode, popupError, popupNotification} from "utils/basic-utils";
 
-const IdeaInfoBox = () => {
+const IdeaInfoBox = ({onStateChange}) => {
     const {user, getTheme} = useContext(AppContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
@@ -99,7 +99,7 @@ const IdeaInfoBox = () => {
                         }
                     }}/>
                 </div>
-                <TitleInfo editor={editor} setEditor={setEditor} setModal={setModal}/>
+                <TitleInfo editor={editor} setEditor={setEditor} setModal={setModal} onStateChange={onStateChange}/>
             </UiCol>
             <UiCol xs={12} className={"p-0 mb-3"}>
                 {renderDescription()}

@@ -33,7 +33,7 @@ export const DropdownOption = styled(UiDropdownElement)`
   cursor: pointer;
 `;
 
-const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
+const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = () => void 0}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData, updateState: updateBoardState} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
@@ -52,6 +52,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
                 finalMessage = revertMessage;
             }
             popupRevertableNotification(finalMessage, getTheme(), () => doIdeaStateChange(state, !value, message, revertMessage, !isRevert));
+            onStateChange();
         });
     };
     const doIdeaDelete = () => {
@@ -92,6 +93,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0}) => {
             }
             updateState({...ideaData, tags: res.data});
             popupNotification("Tags updated", getTheme());
+            onStateChange();
         });
     };
     const isSuspendable = () => {

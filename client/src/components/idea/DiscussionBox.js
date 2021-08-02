@@ -5,7 +5,7 @@ import {SvgNotice} from "components/commons/SvgNotice";
 import CommentsBox from "components/idea/discussion/CommentsBox";
 import CommentWriteBox from "components/idea/discussion/CommentWriteBox";
 import {AppContext, BoardContext, IdeaContext} from "context";
-import React, {useContext, useEffect, useState} from 'react';
+import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
 import {FaFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner} from "ui";
@@ -13,7 +13,7 @@ import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
 import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
 
-const DiscussionBox = () => {
+const DiscussionBox = forwardRef((props, ref) => {
     const {user, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
@@ -25,6 +25,11 @@ const DiscussionBox = () => {
         {newest: "Newest"},
         {oldest: "Oldest"}
     ];
+    useImperativeHandle(ref, () => ({
+        onStateChange() {
+            onLoadRequest(true);
+        }
+    }));
     useEffect(() => {
         onLoadRequest(true);
         // eslint-disable-next-line
@@ -207,6 +212,6 @@ const DiscussionBox = () => {
             {renderComments()}
         </UiCol>
     </UiCol>
-};
+});
 
 export default DiscussionBox;

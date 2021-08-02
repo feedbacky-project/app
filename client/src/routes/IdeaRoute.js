@@ -5,7 +5,7 @@ import IdeaInfoBox from "components/idea/IdeaInfoBox";
 import IdeaNavbar from "components/idea/IdeaNavbar";
 import LoginModal from "components/LoginModal";
 import {AppContext, IdeaContext} from "context";
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FaExclamationCircle} from "react-icons/fa";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
@@ -31,6 +31,7 @@ const IdeaRoute = () => {
     const [idea, setIdea] = useState({data: {}, loaded: false, error: false});
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
+    const discussionRef = useRef();
     useTitle((idea.loaded && board.loaded) ? board.data.name + " | " + idea.data.title : "Loading...");
     const loadBoardDataCascade = (ideaData) => {
         if (board.loaded) {
@@ -85,9 +86,9 @@ const IdeaRoute = () => {
             <IdeaNavbar/>
             <UiContainer className={"pb-5"}>
                 <UiRow centered className={"my-4"}>
-                    <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox/>}/>
+                    <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox onStateChange={() => discussionRef.current.onStateChange()}/>}/>
                     <UiCol xs={12}><UiHorizontalRule theme={context.getTheme().setAlpha(.1)}/></UiCol>
-                    <ComponentLoader loaded={idea.loaded} component={<DiscussionBox/>}/>
+                    <ComponentLoader loaded={idea.loaded} component={<DiscussionBox ref={discussionRef}/>}/>
                 </UiRow>
             </UiContainer>
         </IdeaContext.Provider>
