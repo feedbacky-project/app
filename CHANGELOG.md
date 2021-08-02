@@ -3,6 +3,7 @@
 * **[FEATURE]** Ideas can now be pinned and unpinned (requested by [Matou0014](https://app.feedbacky.net/i/pinnable-ideas.2875))
 * **[FEATURE]** You can now upload attachment while editing idea (if not previously attached) (requested by [Matou0014](https://app.feedbacky.net/i/send-multiple-attachements.2680))
 * **[FIX]** Logging out from profile page crashed the app
+* **[FIX]** Warning and error toasts are now dark mode aware (will apply lighter color)
 
 ### 1.0.0.beta.3
 * **[IMPROVEMENT]** Trend score received an improvement, now it includes subscribers and comments amount and it's should be 1.0 by default
