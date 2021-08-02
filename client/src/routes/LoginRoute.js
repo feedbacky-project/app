@@ -28,7 +28,7 @@ const LoginRoute = ({onLogin}) => {
                 return;
             }
             const response = res.data;
-            Cookies.set("FSID", response.token, {expires: 14});
+            Cookies.set("FSID", response.token, {expires: 14, sameSite: "strict"});
             setData({...data, loaded: true});
             onLogin(response.token);
         }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
