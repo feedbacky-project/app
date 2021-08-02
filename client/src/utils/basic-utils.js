@@ -40,11 +40,23 @@ export const popupNotification = (content, color) => {
 };
 
 export const popupWarning = (content = "Something unexpected happened") => {
-    popup(content, tinycolor("#d35400"), {showAction: false, duration: 6000});
+    let color;
+    if(document.body.classList.contains("dark")) {
+        color = tinycolor("hsl(48, 100%, 50%)");
+    } else {
+        color = tinycolor("hsl(27, 99%, 50%)");
+    }
+    popup(content, color, {showAction: false, duration: 6000});
 };
 
 export const popupError = (content = "Something unexpected happened") => {
-    popup(content, tinycolor("#e43e3e"), {showAction: false, duration: 8000});
+    let color;
+    if(document.body.classList.contains("dark")) {
+        color = tinycolor("hsl(2, 95%, 66%)");
+    } else {
+        color = tinycolor("hsl(355, 67%, 48%)");
+    }
+    popup(content, color, {showAction: false, duration: 8000});
 };
 
 const popup = (content, theme, data) => {
