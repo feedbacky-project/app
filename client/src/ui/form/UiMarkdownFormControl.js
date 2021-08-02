@@ -31,6 +31,12 @@ const FormControl = styled(UiFormControl)`
   border-top-right-radius: 0;
 `;
 
+const MarkdownOptionModal = styled.div`
+  & .modal-content {
+    background-color: var(--tertiary);
+  }
+`;
+
 const UiMarkdownFormControl = (props) => {
     const ref = useRef(null);
     const {CustomOptions, ...otherProps} = props;
@@ -54,12 +60,12 @@ const UiMarkdownFormControl = (props) => {
         form.scrollTop = scrollPos;
     };
     return <React.Fragment>
-        <TextInputActionModal size={"sm"} id={"linkInput"} isOpen={modal.open && modal.type === "link"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
+        <MarkdownOptionModal as={TextInputActionModal} size={"sm"} id={"linkInput"} isOpen={modal.open && modal.type === "link"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
                               actionDescription={"Insert link, type link URL."} onAction={link => {
             markdownInsert("[", true, "](" + link + ")");
             return Promise.resolve();
         }}/>
-        <TextInputActionModal size={"sm"} id={"imageInput"} isOpen={modal.open && modal.type === "image"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
+        <MarkdownOptionModal as={TextInputActionModal} className={"test"} size={"sm"} id={"imageInput"} isOpen={modal.open && modal.type === "image"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
                               actionDescription={"Insert image, type image URL."} onAction={link => {
             markdownInsert("![](" + link + ")", false);
             return Promise.resolve();
