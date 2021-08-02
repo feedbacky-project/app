@@ -5,7 +5,7 @@ const KeyboardInput = styled.kbd`
   padding: .2rem .4rem;
   font-size: 87.5%;
   color: white;
-  background-color: hsl(210, 11%, 15%);
+  background-color: hsl(214, 6%, 23%);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   .dark & {
