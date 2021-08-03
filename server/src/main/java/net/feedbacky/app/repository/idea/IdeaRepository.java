@@ -34,7 +34,7 @@ public interface IdeaRepository extends EntityGraphJpaRepository<Idea, Long> {
   Optional<Idea> findByTitleAndBoard(String title, Board board);
 
   @EntityGraph(value = "Idea.fetch")
-  Page<Idea> findByBoardAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(Board board, String title, String description, Pageable pageable);
+  Page<Idea> findByBoardAndTitleIgnoreCaseContaining(Board board, String title, Pageable pageable);
 
   @EntityGraph(value = "Idea.fetch")
   Page<Idea> findByBoardAndTagsIn(Board board, List<Tag> tags, Pageable pageable);
