@@ -88,7 +88,7 @@ public class IdeaServiceCommons {
   }
 
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(Board board, User user, int page, int pageSize, String query) {
-    Page<Idea> pageData = ideaRepository.findByBoardAndTitleIgnoreCaseContaining(board, query, PageRequest.of(page, pageSize));
+    Page<Idea> pageData = ideaRepository.findByBoardAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(board, query, query, PageRequest.of(page, pageSize));
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()

@@ -1,3 +1,6 @@
+### 1.0.0.beta.5
+* **[IMPROVEMENT]** Search query now searches through ideas descriptions as well as titles
+
 ### 1.0.0.beta.4
 * **[FEATURE]** Allow logging in via email address (requested by [ANONYMANONYM](https://app.feedbacky.net/i/add-option-to-login-just-with-email.2508))
 * **[FEATURE]** Ideas can now be pinned and unpinned (requested by [Matou0014](https://app.feedbacky.net/i/pinnable-ideas.2875))
