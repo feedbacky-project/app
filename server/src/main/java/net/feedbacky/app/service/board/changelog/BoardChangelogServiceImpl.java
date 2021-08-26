@@ -80,6 +80,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withChangelog(changelog);
     board.getWebhookExecutor().executeWebhooks(Webhook.Event.CHANGELOG_CREATE, builder.build());
     board.setLastChangelogUpdate(Calendar.getInstance().getTime());
+    boardRepository.save(board);
 
     return ResponseEntity.ok(new FetchChangelogDto().from(changelog));
   }

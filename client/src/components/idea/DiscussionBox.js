@@ -6,9 +6,11 @@ import CommentsBox from "components/idea/discussion/CommentsBox";
 import CommentWriteBox from "components/idea/discussion/CommentWriteBox";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
+import {FaCommentSlash} from "react-icons/all";
 import {FaFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner} from "ui";
+import {UiButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
 import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
@@ -203,6 +205,7 @@ const DiscussionBox = forwardRef((props, ref) => {
         <div>
             <div className={"d-inline-block text-black-75 mr-1"}>Discussion ({ideaData.commentsAmount} comments)</div>
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
+            <UiButton small label={"Disable Comments"} className={"float-right"}><FaCommentSlash className={"mr-1 move-top-2px"}/> Disable Comments</UiButton>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>
             <CommentWriteBox submitOpen={submitOpen} onCommentSubmit={onCommentSubmit} onCommentBoxKeyUp={onCommentBoxKeyUp}/>
