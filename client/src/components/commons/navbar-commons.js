@@ -49,7 +49,7 @@ export const renderLogIn = (onNotLoggedClick, context, boardData = null) => {
     if (!context.user.loggedIn) {
         return <LoginButton label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
     }
-    return <UiDropdown label={"Options"} toggleClassName={"px-0"} menuClassName={"pt-0 rounded-top-0"} toggle={
+    return <UiDropdown className={"d-inline-block float-right order-sm-2 order-1"} label={"Options"} toggleClassName={"px-0"} menuClassName={"pt-0 rounded-top-0"} toggle={
         <OptionsButton>
             <UiAvatar className={"mx-1"} roundedCircle user={context.user.data} size={28} style={{border: "1px solid " + context.getTheme()}}/>
             <FaAngleDown color={context.getTheme()}/>

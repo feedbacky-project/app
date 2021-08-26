@@ -53,6 +53,7 @@ const NavbarOption = styled(Link)`
   padding-left: .4rem;
   padding-right: .4rem;
   transition: var(--hover-transition);
+  font-weight: normal !important;
   
   &:hover {
     color: var(--font-color);
