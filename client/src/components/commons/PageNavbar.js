@@ -4,6 +4,7 @@ import {AppContext, BoardContext} from "context";
 import React, {useContext} from 'react';
 import {FaChevronLeft, FaRegComment, FaRegListAlt, FaRegMap, FaRegUser} from "react-icons/all";
 import {Link} from "react-router-dom";
+import {UiBadge} from "ui";
 import {UiContainer} from "ui/grid";
 import {UiNavbar, UiNavbarBrand, UiNavbarOption, UiNavbarSelectedOption} from "ui/navbar";
 
@@ -32,12 +33,30 @@ const SelectedRoute = styled(UiNavbarSelectedOption)`
   }
 `;
 
+const NotificationBubble = styled(UiBadge)`
+  border-radius: 50%;
+  font-size: 10px;
+  transform: translateY(-6px);
+  padding: .2rem 0 0 0 !important;
+  line-height: 1;
+  width: 1rem;
+  height: 1rem;
+`;
+
 const PageNavbar = ({selectedNode, goBackVisible = false}) => {
     const context = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const FeedbackComponent = selectedNode === "feedback" ? SelectedRoute : UiNavbarOption;
     const RoadmapComponent = selectedNode === "roadmap" ? SelectedRoute : UiNavbarOption;
     const ChangelogComponent = selectedNode === "changelog" ? SelectedRoute : UiNavbarOption;
+    const renderChangelogNotificationBubble = () => {
+        const dateStr = localStorage.getItem("notifs_" + data.id + "_lastChangelogUpdate");
+        const date = Date.parse(dateStr);
+        if(date != null && (date < new Date())) {
+            return <NotificationBubble>1</NotificationBubble>
+        }
+        return <React.Fragment/>
+    };
 
     return <UiNavbar>
         {goBackVisible && <GoBackButton theme={context.getTheme().toString()} to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}} aria-label={"Go Back"}>
@@ -72,11 +91,14 @@ const PageNavbar = ({selectedNode, goBackVisible = false}) => {
                 </RoadmapComponent>
                 }
                 {(data.changelogEnabled && selectedNode !== "admin") &&
-                <ChangelogComponent to={{pathname: "/b/" + data.discriminator + "/changelog", state: {_boardData: data}}}
-                                    theme={context.getTheme()} border={selectedNode === "changelog" ? context.getTheme().setAlpha(.75) : undefined} aria-label={"Changelog"}>
-                    <FaRegListAlt className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
-                    <span className={"d-inline-block align-middle"}>Changelog</span>
-                </ChangelogComponent>
+                <React.Fragment>
+                    <ChangelogComponent to={{pathname: "/b/" + data.discriminator + "/changelog", state: {_boardData: data}}}
+                                        theme={context.getTheme()} border={selectedNode === "changelog" ? context.getTheme().setAlpha(.75) : undefined} aria-label={"Changelog"}>
+                        <FaRegListAlt className={"mr-sm-2 mr-0 mx-sm-0 mx-1"}/>
+                        <span className={"d-inline-block align-middle"}>Changelog</span>
+                        {renderChangelogNotificationBubble()}
+                    </ChangelogComponent>
+                </React.Fragment>
                 }
             </div>
         </UiContainer>

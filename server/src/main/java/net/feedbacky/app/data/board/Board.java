@@ -99,5 +99,6 @@ public class Board implements Serializable {
   private boolean anonymousAllowed = true;
   private boolean roadmapEnabled = true;
   private boolean changelogEnabled = true;
+  private Date lastChangelogUpdate;
 
 }

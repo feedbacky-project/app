@@ -44,6 +44,7 @@ const ChangelogRoute = () => {
             data.socialLinks.sort((a, b) => (a.id > b.id) ? 1 : -1);
             onThemeChange(data.themeColor || defaultTheme);
             setBoard({...board, data, loaded: true});
+            localStorage.setItem("notifs_" + board.id + "_lastChangelogUpdate", board.lastChangelogUpdate);
         }).catch(() => setBoard({...board, error: true}));
         // eslint-disable-next-line
     }, [user.session]);

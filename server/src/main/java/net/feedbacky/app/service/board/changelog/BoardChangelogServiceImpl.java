@@ -31,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,6 +79,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
 
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withChangelog(changelog);
     board.getWebhookExecutor().executeWebhooks(Webhook.Event.CHANGELOG_CREATE, builder.build());
+    board.setLastChangelogUpdate(Calendar.getInstance().getTime());
 
     return ResponseEntity.ok(new FetchChangelogDto().from(changelog));
   }
