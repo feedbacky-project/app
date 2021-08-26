@@ -32,7 +32,7 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
         {closed: {name: "Closed", data: closedIdeas}},
         {all: {name: "All", data: allIdeas}}
     ];
-    tags.forEach(tag => filters.push({["tag:" + tag.id]: {name: <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>, data: null}}));
+    tags.forEach(tag => filters.push({["tag:" + tag.id]: {name: <UiBadge className={"d-block"} color={tinycolor(tag.color)}>{tag.name}</UiBadge>, data: null}}));
     const sorts = [
         {trending: "Trending"},
         {voters_desc: "Most Voted"},

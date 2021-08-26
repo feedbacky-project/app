@@ -1,6 +1,6 @@
 import axios from "axios";
 import AdminSidebar from "components/board/admin/AdminSidebar";
-import IdeaNavbar from "components/idea/IdeaNavbar";
+import PageNavbar from "components/commons/PageNavbar";
 import {AppContext, PageNodesContext} from "context";
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {FaExclamationCircle} from "react-icons/fa";
@@ -52,25 +52,25 @@ const BoardAdminPanelRoute = () => {
         return <LoadingRouteUtil/>
     }
     const canView = () => {
-      if(!user.loggedIn) {
-          return false;
-      }
-      if(!board.loaded) {
-          return true;
-      }
-      if(board.data.creatorId === user.data.id || board.data.moderators.find(mod => mod.userId === user.data.id && mod.role === "ADMINISTRATOR")) {
-          return true;
-      }
-      return false;
+        if (!user.loggedIn) {
+            return false;
+        }
+        if (!board.loaded) {
+            return true;
+        }
+        if (board.data.creatorId === user.data.id || board.data.moderators.find(mod => mod.userId === user.data.id && mod.role === "ADMINISTRATOR")) {
+            return true;
+        }
+        return false;
     };
-    if(!canView()) {
+    if (!canView()) {
         history.push("/b/" + id);
         return <React.Fragment/>
     }
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => console.warn("BoardAdminPanelRoute invalid onNotLoggedClick call")}
                                     errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
-            <IdeaNavbar/>
+            <PageNavbar selectedNode={"admin"} goBackVisible/>
             <UiContainer>
                 <UiRow centered className={"pb-5"}>
                     <AdminSidebar currentNode={currentNode} reRouteTo={route => history.push({pathname: "/ba/" + board.data.discriminator + "/" + route, state: {_boardData: board.data}})} data={board}/>

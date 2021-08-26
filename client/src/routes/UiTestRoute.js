@@ -1,7 +1,6 @@
 import BoardBanner from "components/board/BoardBanner";
-import BoardNavbar from "components/commons/BoardNavbar";
 import {QuestionIcon} from "components/commons/DangerousActionModal";
-import IdeaNavbar from "components/idea/IdeaNavbar";
+import PageNavbar from "components/commons/PageNavbar";
 import ProfileNavbar from "components/profile/ProfileNavbar";
 import {AppContext, IdeaContext} from "context";
 import {Step} from "rc-steps";
@@ -44,8 +43,8 @@ const UiTestRoute = () => {
             <UiNavbar>
                 <div>Plain navbar</div>
             </UiNavbar>
-            <BoardNavbar selectedNode={"feedback"}/>
-            <IdeaNavbar/>
+            <PageNavbar selectedNode={"feedback"}/>
+            <PageNavbar goBackVisible selectedNode={"admin"}/>
             <UiDismissibleModal id={"testModal"} isOpen={modal.open} onHide={() => setModal({open: false})} title={"Dismissible Test"}
                                 applyButton={<UiButton label={"Apply"} onClick={() => setModal({open: false})}>Apply</UiButton>}>
                 <UiCol className={"text-center"}>

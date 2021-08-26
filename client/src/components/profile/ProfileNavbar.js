@@ -1,5 +1,5 @@
 import {renderLogIn} from "components/commons/navbar-commons";
-import IdeaNavbar from "components/idea/IdeaNavbar";
+import PageNavbar from "components/commons/PageNavbar";
 import {AppContext, BoardContext} from "context";
 import React, {useContext} from 'react';
 import {UiContainer} from "ui/grid";
@@ -12,8 +12,8 @@ const ProfileNavbar = ({onNotLoggedClick}) => {
     const {data: boardData} = useContext(BoardContext);
     const theme = getTheme(false);
     //neither null nor empty object
-    if(boardData !== null && Object.keys(boardData).length !== 0) {
-        return <IdeaNavbar/>;
+    if (boardData !== null && Object.keys(boardData).length !== 0) {
+        return <PageNavbar goBackVisible/>;
     }
     const renderHello = () => {
         if (!user.loggedIn) {

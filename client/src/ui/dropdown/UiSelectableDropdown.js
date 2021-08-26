@@ -42,14 +42,13 @@ const UiSelectableDropdown = (props) => {
         if (tinycolor.readability(color, "#282828") < 2.5) {
             color = color.lighten(25);
         }
-        children = <SelectableDropdown label={label} as={DropdownToggle} id={id} variant={""} className={"move-top-1px"}
-                                       style={{backgroundColor: getTheme().setAlpha(.1)}}>
-            <span style={{color, marginRight: "0.2rem"}}>{currentValue}</span>
+        children = <SelectableDropdown label={label} as={DropdownToggle} id={id} variant={""} className={"move-top-1px"} style={{backgroundColor: getTheme().setAlpha(.1)}}>
+            <span style={{color, marginRight: "0.2rem", display: "inline-block"}}>{currentValue}</span>
             <FaAngleDown style={{color: getTheme()}}/>
         </SelectableDropdown>
     } else {
         children = <SelectableDropdown style={{backgroundColor: "var(--secondary)"}} label={label} as={DropdownToggle} id={id} variant={""} className={"move-top-1px"}>
-            <span style={{color: getTheme(), marginRight: "0.2rem"}}>{currentValue}</span>
+            <span style={{color: getTheme(), marginRight: "0.2rem", display: "inline-block"}}>{currentValue}</span>
             <FaAngleDown style={{color: getTheme()}}/>
         </SelectableDropdown>
     }

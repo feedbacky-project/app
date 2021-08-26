@@ -2,7 +2,7 @@ import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
 import BoardChangelogBox from "components/changelog/BoardChangelogBox";
 import BoardChangelogSearchBar from "components/changelog/BoardChangelogSearchBar";
-import BoardNavbar from "components/commons/BoardNavbar";
+import PageNavbar from "components/commons/PageNavbar";
 import LoginModal from "components/LoginModal";
 import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
@@ -57,7 +57,7 @@ const ChangelogRoute = () => {
         <LoginModal isOpen={modalOpen} image={board.data.logo}
                     boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/changelog"}
                     onHide={() => setModalOpen(false)}/>
-        <BoardNavbar selectedNode={"changelog"}/>
+        <PageNavbar selectedNode={"changelog"}/>
         <UiContainer className={"pb-5"}>
             <UiRow className={"pb-4"}>
                 <BoardBanner customName={board.data.name + " - Changelog"}/>

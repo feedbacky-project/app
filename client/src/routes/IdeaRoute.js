@@ -1,8 +1,8 @@
 import axios from "axios";
+import PageNavbar from "components/commons/PageNavbar";
 import ComponentLoader from "components/ComponentLoader";
 import DiscussionBox from "components/idea/DiscussionBox";
 import IdeaInfoBox from "components/idea/IdeaInfoBox";
-import IdeaNavbar from "components/idea/IdeaNavbar";
 import LoginModal from "components/LoginModal";
 import {AppContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useRef, useState} from 'react';
@@ -83,7 +83,7 @@ const IdeaRoute = () => {
         }}>
             <LoginModal isOpen={modalOpen} onHide={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
                         redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
-            <IdeaNavbar/>
+            <PageNavbar goBackVisible/>
             <UiContainer className={"pb-5"}>
                 <UiRow centered className={"my-4"}>
                     <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox onStateChange={() => discussionRef.current.onStateChange()}/>}/>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
-import BoardNavbar from "components/commons/BoardNavbar";
+import PageNavbar from "components/commons/PageNavbar";
 import ComponentLoader from "components/ComponentLoader";
 import LoginModal from "components/LoginModal";
 import {BoardRoadmapBox} from "components/roadmap/BoardRoadmapBox";
@@ -73,7 +73,7 @@ const RoadmapRoute = () => {
         <LoginModal isOpen={modalOpen} image={board.data.logo}
                     boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/roadmap"}
                     onHide={() => setModalOpen(false)}/>
-        <BoardNavbar selectedNode={"roadmap"}/>
+        <PageNavbar selectedNode={"roadmap"}/>
         <UiContainer className={"pb-5"}>
             <UiRow centered className={"pb-4"}>
                 <BoardBanner customName={board.data.name + " - Roadmap"}/>
