@@ -1,3 +1,7 @@
+### 1.0.0.beta.5
+* **[IMPROVEMENT]** Improved navbar sections (Feedback, Changelog, Roadmap) for mobile users (requested at [Feedbacky](https://app.feedbacky.net/i/extended-navbar-on-mobile.3585))
+* **[FIX]** 0 wasn't displayed as a badge in Filtering dropdown elements 
+
 ### 1.0.0.beta.4
 * **[FEATURE]** Allow logging in via email address (requested by [ANONYMANONYM](https://app.feedbacky.net/i/add-option-to-login-just-with-email.2508))
 * **[FEATURE]** Ideas can now be pinned and unpinned (requested by [Matou0014](https://app.feedbacky.net/i/pinnable-ideas.2875))
