@@ -7,7 +7,7 @@ import NotificationsInfo from "components/idea/info/NotificationsInfo";
 import TagsInfo from "components/idea/info/TagsInfo";
 import TitleInfo from "components/idea/info/TitleInfo";
 import VotersInfo from "components/idea/info/VotersInfo";
-import ShareBox from "components/idea/ShareBox";
+import {ShareBox, ShareBoxAlignment} from "components/idea/ShareBox";
 import {AppContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
@@ -92,7 +92,7 @@ const IdeaInfoBox = ({onStateChange}) => {
                 <div className={"my-auto mr-2"} ref={voteRef}>
                     <VoteButton idea={ideaData} animationRef={voteRef} onVote={(upvoted, votersAmount) => {
                         updateState({...ideaData, upvoted, votersAmount});
-                        if(upvoted) {
+                        if (upvoted) {
                             setVoters({...voters, data: voters.data.concat(user.data)});
                         } else {
                             setVoters({...voters, data: voters.data.filter(voter => voter.id !== user.data.id)});
@@ -110,7 +110,7 @@ const IdeaInfoBox = ({onStateChange}) => {
             <TagsInfo/>
             <AttachmentsInfo editor={editor} onAttachmentUpdate={(data) => setUpdatedAttachment(data)}/>
             <NotificationsInfo/>
-            <ShareBox/>
+            <ShareBoxAlignment><ShareBox/></ShareBoxAlignment>
         </UiCol>
     </React.Fragment>
 };

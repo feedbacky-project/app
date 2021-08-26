@@ -68,15 +68,7 @@ const BoardChangelogBox = () => {
                 return <UiCol xs={12} className={"my-2 px-0"} key={element.id}>
                     <UiViewBoxBackground className={"d-inline-block p-4"}>
                         <BoardChangelogTitle data={element} onChangelogDelete={onChangelogDelete} onChangelogUpdate={onChangelogUpdate}/>
-                        <MarkdownContainer className={"mb-2"} text={element.description}/>
-                        <small className={"text-black-60 mt-2 float-left"}>
-                            Published {" "}
-                            <TimeAgo datetime={element.creationDate}/>
-                        </small>
-                        <small className={"text-black-60 mt-2 float-right"}>
-                            By <UiPrettyUsername user={element.creator}/> {" "}
-                            <UiAvatar size={16} user={element.creator} className={"align-top"} roundedCircle/>
-                        </small>
+                        <MarkdownContainer className={"my-2"} text={element.description}/>
                     </UiViewBoxBackground>
                 </UiCol>
             })}

@@ -5,7 +5,9 @@ import {DropdownOption, IconToggle} from "components/commons/ModeratorActionsBut
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
 import {FaEdit, FaTrash} from "react-icons/all";
+import {UiPrettyUsername} from "ui";
 import {UiDropdown} from "ui/dropdown";
+import {UiAvatar} from "ui/image";
 import {popupError, popupNotification} from "utils/basic-utils";
 
 const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
@@ -39,8 +41,15 @@ const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
             <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Changelog</DropdownOption>
         </UiDropdown>
     };
+    const dateStr = new Date(data.creationDate).toLocaleString("default", {month: "short", year: "numeric", day: "numeric"});
     return <React.Fragment>
-        <div style={{fontSize: "1.35em", fontWeight: "bold", display: "inline"}}>{data.title}</div>
+        <div style={{fontSize: "1.6em", fontWeight: "bold", display: "inline"}}>{data.title}</div>
+        <div className={"d-sm-inline-block d-block float-sm-right small text-black-60 text-sm-right text-left"}>
+            {dateStr}
+            <div>
+                By {data.creator.username + " "} <UiAvatar size={16} user={data.creator} className={"align-top"} roundedCircle/>
+            </div>
+        </div>
         {renderContent()}
     </React.Fragment>
 };

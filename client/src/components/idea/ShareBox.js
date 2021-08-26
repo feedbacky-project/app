@@ -37,7 +37,7 @@ const ShareIcon = styled.div`
   }
 `;
 
-const ShareBox = () => {
+const ShareBox = ({bodyClassName = null}) => {
     const {getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
 
@@ -45,25 +45,29 @@ const ShareBox = () => {
         copy(window.location.href + "?source=share");
         popupNotification("Copied to clipboard", getTheme());
     };
+    return <UiCard bodyClassName={bodyClassName || "px-2 py-1"}>
+        <SafeAnchor url={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(window.location.href + "?source=share")}>
+            <UiTooltip id={"share-facebook"} text={"Share on Facebook"}>
+                <ShareIcon as={FaFacebookSquare} theme={getTheme().toHexString()}/>
+            </UiTooltip>
+        </SafeAnchor>
+        <SafeAnchor url={"https://twitter.com/intent/tweet?url=" + encodeURI(window.location.href + "?source=share") + "&text=Check%20this%20idea%20at%20" + encodeURI(data.name)}>
+            <UiTooltip id={"share-twitter"} text={"Share on Twitter"}>
+                <ShareIcon as={FaTwitterSquare} theme={getTheme().toHexString()}/>
+            </UiTooltip>
+        </SafeAnchor>
+        <UiTooltip id={"share-link"} text={"Share Link"}>
+            <ShareIcon as={FaLink} theme={getTheme().toHexString()} onClick={copyLink}/>
+        </UiTooltip>
+    </UiCard>
+};
+
+const ShareBoxAlignment = ({children}) => {
     return <ShareRelativeContainer>
         <ShareAbsoluteContainer>
-            <UiCard bodyClassName={"px-2 py-1"}>
-                <SafeAnchor url={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(window.location.href + "?source=share")}>
-                    <UiTooltip id={"share-facebook"} text={"Share on Facebook"}>
-                        <ShareIcon as={FaFacebookSquare} theme={getTheme().toHexString()}/>
-                    </UiTooltip>
-                </SafeAnchor>
-                <SafeAnchor url={"https://twitter.com/intent/tweet?url=" + encodeURI(window.location.href + "?source=share") + "&text=Check%20this%20idea%20at%20" + encodeURI(data.name)}>
-                    <UiTooltip id={"share-twitter"} text={"Share on Twitter"}>
-                        <ShareIcon as={FaTwitterSquare} theme={getTheme().toHexString()}/>
-                    </UiTooltip>
-                </SafeAnchor>
-                <UiTooltip id={"share-link"} text={"Share Link"}>
-                    <ShareIcon as={FaLink} theme={getTheme().toHexString()} onClick={copyLink}/>
-                </UiTooltip>
-            </UiCard>
+            {children}
         </ShareAbsoluteContainer>
     </ShareRelativeContainer>
 };
 
-export default ShareBox;
+export {ShareBox, ShareBoxAlignment};
