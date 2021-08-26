@@ -25,6 +25,7 @@ const ChangelogRoute = () => {
         if (state._boardData !== undefined) {
             onThemeChange(state._boardData.themeColor || defaultTheme);
             setBoard({...board, data: state._boardData, loaded: true});
+            localStorage.setItem("notifs_" + state._boardData.id + "_lastChangelogUpdate", state._boardData.lastChangelogUpdate);
             return true;
         }
         return false;
@@ -44,7 +45,7 @@ const ChangelogRoute = () => {
             data.socialLinks.sort((a, b) => (a.id > b.id) ? 1 : -1);
             onThemeChange(data.themeColor || defaultTheme);
             setBoard({...board, data, loaded: true});
-            localStorage.setItem("notifs_" + board.id + "_lastChangelogUpdate", board.lastChangelogUpdate);
+            localStorage.setItem("notifs_" + data.id + "_lastChangelogUpdate", data.lastChangelogUpdate);
         }).catch(() => setBoard({...board, error: true}));
         // eslint-disable-next-line
     }, [user.session]);

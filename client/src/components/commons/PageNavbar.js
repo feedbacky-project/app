@@ -51,8 +51,11 @@ const PageNavbar = ({selectedNode, goBackVisible = false}) => {
     const ChangelogComponent = selectedNode === "changelog" ? SelectedRoute : UiNavbarOption;
     const renderChangelogNotificationBubble = () => {
         const dateStr = localStorage.getItem("notifs_" + data.id + "_lastChangelogUpdate");
+        if(dateStr == null) {
+            return <NotificationBubble>1</NotificationBubble>
+        }
         const date = Date.parse(dateStr);
-        if(date != null && (date < new Date())) {
+        if(date < new Date()) {
             return <NotificationBubble>1</NotificationBubble>
         }
         return <React.Fragment/>
