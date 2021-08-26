@@ -31,6 +31,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   private boolean roadmapEnabled;
   private boolean changelogEnabled;
   private Date creationDate;
+  private Date lastChangelogUpdate;
 
   private List<FetchSocialLinkDto> socialLinks;
   private List<FetchTagDto> tags;
@@ -65,6 +66,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.roadmapEnabled = entity.isRoadmapEnabled();
     this.changelogEnabled = entity.isChangelogEnabled();
     this.creationDate = entity.getCreationDate();
+    this.lastChangelogUpdate = entity.getLastChangelogUpdate();
     this.socialLinks = entity.getSocialLinks().stream().map(link -> new FetchSocialLinkDto().from(link)).collect(Collectors.toList());
     this.tags = entity.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
     this.moderators = entity.getModerators().stream().map(mod -> new FetchModeratorDto().from(mod)).collect(Collectors.toList());
