@@ -83,7 +83,7 @@ const IdeaRoute = () => {
         }}>
             <LoginModal isOpen={modalOpen} onHide={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
                         redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
-            <PageNavbar goBackVisible/>
+            <PageNavbar selectedNode={"feedback"} goBackVisible/>
             <UiContainer className={"pb-5"}>
                 <UiRow centered className={"my-4"}>
                     <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox onStateChange={() => discussionRef.current.onStateChange()}/>}/>
