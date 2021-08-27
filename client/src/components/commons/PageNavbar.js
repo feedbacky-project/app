@@ -50,12 +50,15 @@ const PageNavbar = ({selectedNode, goBackVisible = false}) => {
     const RoadmapComponent = selectedNode === "roadmap" ? SelectedRoute : UiNavbarOption;
     const ChangelogComponent = selectedNode === "changelog" ? SelectedRoute : UiNavbarOption;
     const renderChangelogNotificationBubble = () => {
+        if(data.lastChangelogUpdate == null) {
+            return <React.Fragment/>
+        }
         const dateStr = localStorage.getItem("notifs_" + data.id + "_lastChangelogUpdate");
         if(dateStr == null) {
             return <NotificationBubble>1</NotificationBubble>
         }
         const date = Date.parse(dateStr);
-        if(date < new Date()) {
+        if(date < data.lastChangelogUpdate) {
             return <NotificationBubble>1</NotificationBubble>
         }
         return <React.Fragment/>
