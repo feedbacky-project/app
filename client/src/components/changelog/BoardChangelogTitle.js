@@ -44,13 +44,13 @@ const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
     const dateStr = new Date(data.creationDate).toLocaleString("default", {month: "short", year: "numeric", day: "numeric"});
     return <React.Fragment>
         <div style={{fontSize: "1.6em", fontWeight: "bold", display: "inline"}}>{data.title}</div>
+        {renderContent()}
         <div className={"d-sm-inline-block d-block float-sm-right small text-black-60 text-sm-right text-left"}>
             {dateStr}
             <div>
                 By {data.creator.username + " "} <UiAvatar size={16} user={data.creator} className={"align-top"} roundedCircle/>
             </div>
         </div>
-        {renderContent()}
     </React.Fragment>
 };
 
