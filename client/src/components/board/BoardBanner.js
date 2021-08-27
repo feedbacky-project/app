@@ -14,6 +14,9 @@ export const Banner = styled.div`
   @media(min-width: 576px) {
    padding: 4rem 2rem;
   }
+  @media(max-width: 576px) {
+    margin-top: .25rem;
+  }
   color: white;
   margin-bottom: .5rem;
   text-shadow: 0 0 4px black;
