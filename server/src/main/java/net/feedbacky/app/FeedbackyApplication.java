@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 public class FeedbackyApplication {
 
-  public static final String BACKEND_VERSION = "1.0.0.beta.4";
+  public static final String BACKEND_VERSION = "1.0.0.beta.5";
 
   public static void main(String[] args) {
     if(!new StartupValidator().validateStartup()) {
