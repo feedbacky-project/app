@@ -29,7 +29,7 @@ const GoBackButton = styled(Link)`
 
 const SelectedRoute = styled(UiNavbarSelectedOption)`
   @media(max-width: 576px) {
-    padding-bottom: 12px;
+    padding-bottom: 13px;
   }
 `;
 
