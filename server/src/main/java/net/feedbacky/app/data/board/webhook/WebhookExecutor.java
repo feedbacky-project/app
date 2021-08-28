@@ -77,6 +77,7 @@ public class WebhookExecutor {
       case CHANGELOG_CREATE:
         embedObject.setTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.CHANGELOG_NAME.getName(), "")));
         embedObject.addField("Description", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName()), true);
+        embedObject.setUrl(MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator() + "/changelog");
         break;
     }
     switch(event) {

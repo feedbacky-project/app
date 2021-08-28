@@ -7,6 +7,7 @@
     Fixes `* Ideas retrieved via roadmap API route contains every boolean set to true even if they're not when user is not logged in.
   When logged in only some of them are true.`
 * **[FIX]** Editing own comments crashed the app
+* **[FIX]** Discord webhook didn't execute properly when idea or changelog title contained special characters (reported by [ANONYMANONYM](https://app.feedbacky.net/i/changelogs-are-not-sent-to-webhook.3220)) 
 
 ### 1.0.0.beta.5
 * **[FEATURE]** Added small notification bubble if there is new unseen changelog posted

@@ -75,7 +75,7 @@ class DiscordWebhook {
       for (EmbedObject embed : this.embeds) {
         JSONObject jsonEmbed = new JSONObject();
 
-        jsonEmbed.put("title", embed.getTitle());
+        jsonEmbed.put("title", StringEscapeUtils.escapeJson(embed.getTitle()));
         jsonEmbed.put("description", StringEscapeUtils.escapeJson(embed.getDescription()));
         jsonEmbed.put("url", embed.getUrl());
         if(embed.getTimestamp() != null) {
@@ -377,7 +377,7 @@ class DiscordWebhook {
         builder.append(quote(entry.getKey())).append(":");
 
         if (val instanceof String) {
-          builder.append(quote(String.valueOf(val)));
+          builder.append(quote(StringEscapeUtils.escapeJson(String.valueOf(val))));
         } else if (val instanceof Integer) {
           builder.append(Integer.valueOf(String.valueOf(val)));
         } else if (val instanceof Boolean) {
