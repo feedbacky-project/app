@@ -37,8 +37,14 @@ public class StartupMigrator {
   private File versionFile;
   private List<MigrationDirective> migrationDirectives = new ArrayList<>();
 
+  private boolean migratorEnabled = true;
+
   @Autowired
   public StartupMigrator(ApplicationContext context) {
+    if((boolean) context.getBean("isDevelopmentMode")) {
+      migratorEnabled = false;
+      return;
+    }
     registerDirectives(context);
   }
 
@@ -51,6 +57,9 @@ public class StartupMigrator {
 
   @PostConstruct
   public void attemptMigration() {
+    if(!migratorEnabled) {
+      return;
+    }
     versionFile = new File("storage-data" + File.separator + ".version");
     try {
       //migration never happened, create file and start migrating
