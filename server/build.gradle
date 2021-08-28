@@ -85,7 +85,6 @@ dependencies {
 group = 'net.feedbacky'
 version = '1.0.0-SNAPSHOT'
 description = 'Feedbacky Server'
-sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
