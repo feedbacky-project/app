@@ -4,6 +4,8 @@ server:
   error:
     whitelabel:
       enabled: false
+  servlet:
+    contextPath: "/api"
 
 spring:
   main:
@@ -18,8 +20,10 @@ spring:
       initialize-schema: "always"
   jpa:
     database-platform: "net.feedbacky.app.config.MySQLCustomDialect"
-    show-sql: false
+    show-sql: true
     generate-ddl: true
+    properties:
+      hibernate.format_sql: true
     hibernate:
       ddl-auto: "update"
   cache:

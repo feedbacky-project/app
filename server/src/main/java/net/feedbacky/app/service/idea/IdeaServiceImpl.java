@@ -156,7 +156,7 @@ public class IdeaServiceImpl implements IdeaService {
     handleStatusUpdate(idea, dto, user);
     handleAttachmentUpdate(idea, dto);
 
-    idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
+    idea.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(idea.getDescription())));
     ideaRepository.save(idea);
     return new FetchIdeaDto().from(idea).withUser(idea, user);
   }
@@ -166,7 +166,9 @@ public class IdeaServiceImpl implements IdeaService {
     long creationTimeDiffMillis = Math.abs(Calendar.getInstance().getTime().getTime() - idea.getCreationDate().getTime());
     long minutesDiff = TimeUnit.MINUTES.convert(creationTimeDiffMillis, TimeUnit.MILLISECONDS);
     //mark ideas edited only if they were posted later than 5 minutes for any typo fixes etc.
-    if(dto.getDescription() != null && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(dto.getDescription())) && minutesDiff > 5) {
+    if(dto.getDescription() != null
+            && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())))
+            && minutesDiff > 5) {
       edited = true;
       idea.setEdited(true);
     }

@@ -188,14 +188,16 @@ public class CommentServiceImpl implements CommentService {
     long creationTimeDiffMillis = Math.abs(Calendar.getInstance().getTime().getTime() - comment.getCreationDate().getTime());
     long minutesDiff = TimeUnit.MINUTES.convert(creationTimeDiffMillis, TimeUnit.MILLISECONDS);
     //mark comments edited only if they were posted later than 5 minutes for any typo fixes etc.
-    if(dto.getDescription() != null && !comment.getDescription().equals(StringEscapeUtils.escapeHtml4(dto.getDescription())) && minutesDiff > 5) {
+    if(dto.getDescription() != null
+            && !comment.getDescription().equals(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(comment.getDescription())))
+            && minutesDiff > 5) {
       comment.setEdited(true);
     }
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, comment);
 
-    comment.setDescription(StringEscapeUtils.escapeHtml4(comment.getDescription()));
+    comment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(comment.getDescription())));
     commentRepository.save(comment);
     return new FetchCommentDto().from(comment).withUser(comment, user);
   }

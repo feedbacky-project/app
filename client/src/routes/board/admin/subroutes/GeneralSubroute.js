@@ -18,7 +18,7 @@ import {UiCountableFormControl, UiFormLabel, UiFormText, UiMarkdownFormControl} 
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxDangerBackground} from "ui/viewbox/UiViewBox";
-import {formatRemainingCharacters, getBase64FromFile, htmlDecode, popupError, popupNotification, validateImageWithWarning} from "utils/basic-utils";
+import {formatRemainingCharacters, getBase64FromFile, htmlDecodeEntities, popupError, popupNotification, validateImageWithWarning} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
 
 const ThemeSelector = styled.div`
@@ -82,7 +82,7 @@ const GeneralSubroute = ({updateState}) => {
                 <UiFormLabel>Short Description</UiFormLabel>
                 <UiClickableTip id={"boardShortDescription"} title={"Set Short Description"} description={"Very short board description used for thumbnail purposes. Keep it under 50 characters long."}/>
                 <UiCountableFormControl label={"Type board short description"} id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
-                                        defaultValue={boardData.shortDescription}/>
+                                        defaultValue={htmlDecodeEntities(boardData.shortDescription)}/>
             </UiCol>
             <UiCol xs={12} lg={6} className={"mt-2"}>
                 <UiFormLabel>Full Description</UiFormLabel>
@@ -95,7 +95,7 @@ const GeneralSubroute = ({updateState}) => {
                 </React.Fragment>}/>
                 <UiMarkdownFormControl as={TextareaAutosize} label={"Type board description"} className={"bg-light"} minLength={10} maxLength={2500} rows={6}
                                        maxRows={13} required placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
-                                       defaultValue={htmlDecode(boardData.fullDescription)} id={"fullDescrTextarea"} CustomOptions={CustomOptions}
+                                       defaultValue={htmlDecodeEntities(boardData.fullDescription)} id={"fullDescrTextarea"} CustomOptions={CustomOptions}
                                        onChange={e => {
                                            e.target.value = e.target.value.substring(0, 2500);
                                            formatRemainingCharacters("remainingFullDescr", "fullDescrTextarea", 2500);
@@ -131,7 +131,7 @@ const GeneralSubroute = ({updateState}) => {
                     <Banner image={boardData.banner} aria-label={"Board Banner View"} id={"boardBannerPreview"} className={"mb-2"}
                             style={{minHeight: 200, position: "relative"}}>
                         <h3 style={{color: "transparent"}}>{boardData.name}</h3>
-                        <h5 style={{color: "transparent"}}>{boardData.shortDescription}</h5>
+                        <h5 style={{color: "transparent"}}>{htmlDecodeEntities(boardData.shortDescription)}</h5>
                         <UploadIconBox/>
                     </Banner>
                 </div>
@@ -310,6 +310,7 @@ const GeneralSubroute = ({updateState}) => {
         const shortDescription = document.getElementById("shortDescrTextarea").value;
         const fullDescription = document.getElementById("fullDescrTextarea").value;
         const themeColor = getTheme(false).toHexString();
+        console.log()
         return axios.patch("/boards/" + boardData.discriminator, {
             name, shortDescription, fullDescription, themeColor, banner, logo, anonymousAllowed, roadmapEnabled, changelogEnabled
         }).then(res => {
@@ -318,11 +319,14 @@ const GeneralSubroute = ({updateState}) => {
                 return;
             }
             popupNotification("Settings updated", getTheme());
+            const data = res.data;
             updateState({
                 ...boardData,
-                name, shortDescription, fullDescription, themeColor,
-                banner: banner || boardData.banner, logo: logo || boardData.logo,
-                anonymousAllowed, roadmapEnabled, changelogEnabled
+                name: data.name, shortDescription: data.shortDescription,
+                fullDescription: data.fullDescription, themeColor: data.themeColor,
+                banner: data.banner || boardData.banner, logo: data.logo || boardData.logo,
+                anonymousAllowed: data.anonymousAllowed, roadmapEnabled: data.roadmapEnabled,
+                changelogEnabled: data.changelogEnabled
             });
         });
     };

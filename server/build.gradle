@@ -4,14 +4,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.hibernate:hibernate-gradle-plugin:5.4.17.Final"
+        classpath "org.hibernate:hibernate-gradle-plugin:5.5.7.Final"
     }
 }
 
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'org.springframework.boot' version "2.3.0.RELEASE"
+    id 'org.springframework.boot' version "2.4.10"
 }
 
 apply plugin: 'org.hibernate.orm'
@@ -44,14 +44,14 @@ hibernate {
 }
 
 ext {
-    springVersion = "2.3.0.RELEASE"
+    springVersion = "2.4.10"
 }
 
 dependencies {
     compileOnly "org.projectlombok:lombok:1.18.8"
     annotationProcessor "org.projectlombok:lombok:1.18.8"
 
-    implementation "org.hibernate:hibernate-core:5.4.17.Final"
+    implementation "org.hibernate:hibernate-core:5.5.7.Final"
     implementation "org.springframework.boot:spring-boot-starter-data-jdbc:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-jdbc:$springVersion"
@@ -61,7 +61,7 @@ dependencies {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
     }
     implementation "org.springframework.boot:spring-boot-starter-undertow:$springVersion"
-    implementation "com.cosium.spring.data:spring-data-jpa-entity-graph:2.3.0"
+    implementation "com.cosium.spring.data:spring-data-jpa-entity-graph:2.4.2"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1"
 
     //API rate limiting
@@ -92,5 +92,5 @@ tasks.withType(JavaCompile) {
 }
 
 bootJar {
-    mainClassName = 'net.feedbacky.app.FeedbackyApplication'
+    mainClass = 'net.feedbacky.app.FeedbackyApplication'
 }

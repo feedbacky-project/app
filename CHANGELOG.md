@@ -1,3 +1,13 @@
+### 1.0.0.beta.6
+* **[FIX]** Editing changelogs crashed the app
+* **[FIX]** After editing changelog once again changelog title in modal was missing
+* **[FIX]** Accents and unicode symbols were replaced by html entity tags in various places (reported by [Matou0014](https://app.feedbacky.net/i/symbols-and-accents-gets-replaced-by-tags.2844))
+* **[FIX]** Ideas filtered through Tags filtering or accessed via roadmap had all boolean values set to true (Database issue)
+    
+    Fixes `* Ideas retrieved via roadmap API route contains every boolean set to true even if they're not when user is not logged in.
+  When logged in only some of them are true.`
+* **[FIX]** Editing own comments crashed the app
+
 ### 1.0.0.beta.5
 * **[FEATURE]** Added small notification bubble if there is new unseen changelog posted
 * **[IMPROVEMENT]** Improved navbar sections (Feedback, Changelog, Roadmap) for mobile users (requested at [Feedbacky](https://app.feedbacky.net/i/extended-navbar-on-mobile.3585))
@@ -36,12 +46,9 @@ eg. ?name=Plajer?size=32 (broken, outputs Plajer?size=32)
 
 ** **TODO** **
 * Make migrator more stable
-* Investigate odd roadmaps idea status fields issue
 
 ** **KNOWN BUGS** **
 * Theme gets set to the default theme while switching between light and dark themes in Appearance settings
-* Ideas retrieved via roadmap API route contains every boolean set to true even if they're not when user is not logged in.
-When logged in only some of them are true.
 
 ### 1.0.0.alpha.7 (July 12, 2021)
 * **[FEATURE]** Changelogs can now be edited

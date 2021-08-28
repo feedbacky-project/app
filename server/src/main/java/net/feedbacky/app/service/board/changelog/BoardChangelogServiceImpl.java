@@ -94,7 +94,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog with id {0} not found.", id)));
     ServiceValidator.isPermitted(changelog.getBoard(), Moderator.Role.MODERATOR, user);
     changelog.setTitle(dto.getTitle());
-    changelog.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
+    changelog.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())));
     changelogRepository.save(changelog);
     return new FetchChangelogDto().from(changelog);
   }

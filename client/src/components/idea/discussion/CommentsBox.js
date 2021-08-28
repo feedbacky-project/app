@@ -12,7 +12,7 @@ import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiAvatar} from "ui/image";
-import {htmlDecode, popupError, popupNotification} from "utils/basic-utils";
+import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
 
 const LikeContainer = styled.span`
   cursor: pointer;
@@ -38,12 +38,12 @@ const InternalContainer = styled(CommentContainer)`
 const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, onCommentLike, onSuspend}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
-    const [editor, setEditor] = useState({enabled: false, value: htmlDecode(data.description)});
+    const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(data.description)});
 
     const onEditApply = () => {
         let description = editor.value;
         if (data.description === description) {
-            setEditor({enabled: false, value: htmlDecode(description)});
+            setEditor({...editor, enabled: false});
             popupNotification("Nothing changed", getTheme());
             return Promise.resolve();
         }
@@ -54,8 +54,8 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
                 popupError();
                 return;
             }
-            setEditor({enabled: false, value: htmlDecode(description)});
-            onCommentUpdate({...data, description, edited: true});
+            setEditor({enabled: false, value: htmlDecodeEntities(res.data.description)});
+            onCommentUpdate({...data, description: res.data.description, edited: true});
             popupNotification("Comment edited", getTheme());
         });
     };
@@ -107,7 +107,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
         return <React.Fragment>
             <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
                            placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
-                           style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={htmlDecode(editor.value)}/>
+                           style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={editor.value}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} small onClick={onEditApply}>Save</UiLoadableButton>
                 <UiCancelButton small onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>

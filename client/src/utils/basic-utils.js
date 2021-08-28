@@ -132,12 +132,16 @@ export const prettifyEnum = (text) => {
     return newText;
 };
 
-export const htmlDecode = (input) => {
-    return input.replace(/&amp;/g, "&")
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"');
-};
+export const htmlDecodeEntities = (input) => {
+    let element = document.createElement('div');
+    // strip script/html tags
+    input = input.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+    input = input.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+    element.innerHTML = input;
+    input = element.textContent;
+    element.textContent = '';
+    return input;
+}
 
 export const isServiceAdmin = (context) => {
     let isAdmin = false;

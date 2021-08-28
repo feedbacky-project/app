@@ -74,8 +74,8 @@ const DiscussionBox = forwardRef((props, ref) => {
     };
     const onCommentUpdate = (data) => {
         const newComments = [...comments.data];
-        const index = newComments.data.findIndex(c => c.id === data.id);
-        newComments.data[index] = data;
+        const index = newComments.findIndex(c => c.id === data.id);
+        newComments[index] = data;
         setComments({...comments, data: newComments});
     };
     const onCommentSubmit = (internal) => {

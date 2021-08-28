@@ -7,7 +7,7 @@ import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
-import {formatRemainingCharacters, popupError, popupNotification, popupWarning} from "utils/basic-utils";
+import {formatRemainingCharacters, htmlDecodeEntities, popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) => {
     const {getTheme} = useContext(AppContext);
@@ -31,7 +31,6 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
                 return;
             }
             popupNotification("Changelog updated", getTheme());
-            setTitle("");
             onHide();
             onChangelogUpdate(res.data);
         });
@@ -63,7 +62,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
                 Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
                 Please keep under 1800 characters.
             </React.Fragment>} aria-label={"Idea description"}/>
-            <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} defaultValue={changelog.description} id={"descriptionTextarea"} rows={5} maxRows={10}
+            <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} defaultValue={htmlDecodeEntities(changelog.description)} id={"descriptionTextarea"} rows={5} maxRows={10}
                                    placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
                                    style={{resize: "none", overflow: "hidden"}}
                                    onChange={e => {

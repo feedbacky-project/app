@@ -42,8 +42,8 @@ const BoardChangelogBox = () => {
     };
     const onChangelogUpdate = (data) => {
         const newChangelogs = [...changelog.data];
-        const index = newChangelogs.data.findIndex(c => c.id === data.id);
-        newChangelogs.data[index] = data;
+        const index = newChangelogs.findIndex(c => c.id === data.id);
+        newChangelogs[index] = data;
         setChangelog({...changelog, data: newChangelogs});
     };
     const onChangelogDelete = (data) => {

@@ -15,7 +15,7 @@ import {useHistory} from "react-router-dom";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
-import {htmlDecode, popupError, popupNotification} from "utils/basic-utils";
+import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
 
 const IdeaInfoBox = ({onStateChange}) => {
     const {user, getTheme} = useContext(AppContext);
@@ -23,7 +23,7 @@ const IdeaInfoBox = ({onStateChange}) => {
     const voteRef = React.createRef();
     const history = useHistory();
     const [voters, setVoters] = useState({data: [], loaded: false, error: false});
-    const [editor, setEditor] = useState({enabled: false, value: htmlDecode(ideaData.description)});
+    const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(ideaData.description)});
     const [modal, setModal] = useState({open: false});
     const [updatedAttachment, setUpdatedAttachment] = useState(null);
     useEffect(() => {
@@ -41,7 +41,7 @@ const IdeaInfoBox = ({onStateChange}) => {
     const onEditApply = () => {
         let description = editor.value;
         if (ideaData.description === description && updatedAttachment == null) {
-            setEditor({enabled: false, value: htmlDecode(description)});
+            setEditor({...editor, enabled: false});
             popupNotification("Nothing changed", getTheme());
             return Promise.resolve();
         }
@@ -52,8 +52,8 @@ const IdeaInfoBox = ({onStateChange}) => {
                 popupError();
                 return;
             }
-            setEditor({enabled: false, value: htmlDecode(description)});
-            updateState({...ideaData, description, edited: true});
+            setEditor({enabled: false, value: htmlDecodeEntities(res.data.description)});
+            updateState({...ideaData, description: res.data.description, edited: true});
             popupNotification("Idea edited", getTheme());
         });
     };
@@ -77,7 +77,7 @@ const IdeaInfoBox = ({onStateChange}) => {
         return <React.Fragment>
             <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
                            placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
-                           style={{resize: "none", overflow: "hidden"}} defaultValue={htmlDecode(editor.value)}/>
+                           style={{resize: "none", overflow: "hidden"}} defaultValue={editor.value}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} small onClick={onEditApply}>Save</UiLoadableButton>
                 <UiCancelButton small onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>

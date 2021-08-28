@@ -175,9 +175,10 @@ public class BoardServiceImpl implements BoardService {
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, board);
 
-    //sanitize
-    board.setShortDescription(StringEscapeUtils.escapeHtml4(board.getShortDescription()));
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
+    //unsanitize and sanitize again
+    //by doing this we ensure that content user sends is raw and then its sanitized once not sent sanitized and sanitized once again
+    board.setShortDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(board.getShortDescription())));
+    board.setFullDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(board.getFullDescription())));
 
     boardRepository.save(board);
     return new FetchBoardDto().from(board).withConfidentialData(board, true);

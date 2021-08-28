@@ -55,8 +55,6 @@ public class PostBoardDto {
 
   public Board convertToEntity() {
     Board board = new ModelMapper().map(this, Board.class);
-    //sanitize
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
     board.setIdeas(new HashSet<>());
     board.setCreationDate(creationDate);
     return board;
