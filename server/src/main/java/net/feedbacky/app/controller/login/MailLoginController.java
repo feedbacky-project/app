@@ -98,7 +98,7 @@ public class MailLoginController {
       user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", nick));
       user.setUsername(nick);
       MailPreferences preferences = new MailPreferences();
-      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(12));
       preferences.setNotificationsEnabled(true);
       preferences.setUser(user);
       user.setMailPreferences(preferences);

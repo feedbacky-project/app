@@ -79,7 +79,7 @@ public class MailNotificationsDirective extends MigrationDirective<User> {
       logger.log(Level.WARNING, "[EX2] Mail preferences missing for " + user.getId());
       preferences = new MailPreferences();
       preferences.setUser(user);
-      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(12));
       preferences.setNotificationsEnabled(false);
       user.setMailPreferences(preferences);
       return;

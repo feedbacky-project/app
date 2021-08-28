@@ -1,4 +1,5 @@
 ### 1.0.0.beta.6
+* **[CHANGE]** Mail unsubscribe tokens are now longer
 * **[FIX]** Editing changelogs crashed the app
 * **[FIX]** After editing changelog once again changelog title in modal was missing
 * **[FIX]** Accents and unicode symbols were replaced by html entity tags in various places (reported by [Matou0014](https://app.feedbacky.net/i/symbols-and-accents-gets-replaced-by-tags.2844))

@@ -61,7 +61,7 @@ public class MailPreferencesDirective extends MigrationDirective<User> {
     }
     MailPreferences defaultPreferences = new MailPreferences();
     defaultPreferences.setNotificationsEnabled(true);
-    defaultPreferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+    defaultPreferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(12));
     defaultPreferences.setUser(user);
     user.setMailPreferences(defaultPreferences);
     super.migrationSuccess();

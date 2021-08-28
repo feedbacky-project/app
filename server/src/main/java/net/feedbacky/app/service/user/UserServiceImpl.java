@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid unsubscribe token.");
     }
     user.getMailPreferences().setNotificationsEnabled(false);
-    user.getMailPreferences().setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+    user.getMailPreferences().setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(12));
     userRepository.save(user);
     return ResponseEntity.noContent().build();
   }

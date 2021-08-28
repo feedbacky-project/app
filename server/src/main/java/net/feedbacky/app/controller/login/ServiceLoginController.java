@@ -156,7 +156,7 @@ public class ServiceLoginController {
       }
       user.setUsername((String) data.get(fields.getUsername()));
       MailPreferences preferences = new MailPreferences();
-      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(6));
+      preferences.setUnsubscribeToken(RandomStringUtils.randomAlphanumeric(12));
       preferences.setNotificationsEnabled(true);
       preferences.setUser(user);
       user.setMailPreferences(preferences);
