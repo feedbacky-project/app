@@ -58,7 +58,7 @@ const PageNavbar = ({selectedNode, goBackVisible = false}) => {
             return <NotificationBubble>1</NotificationBubble>
         }
         const date = Date.parse(dateStr);
-        if(date < data.lastChangelogUpdate) {
+        if(date < new Date(data.lastChangelogUpdate)) {
             return <NotificationBubble>1</NotificationBubble>
         }
         return <React.Fragment/>

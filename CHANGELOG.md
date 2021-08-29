@@ -1,3 +1,6 @@
+### 1.0.0.beta.7
+
+
 ### 1.0.0.beta.6
 * **[CHANGE]** Mail unsubscribe tokens are now longer
 * **[FIX]** Editing changelogs crashed the app
