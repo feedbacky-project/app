@@ -26,42 +26,44 @@ export const CardLinkStyle = styled(UiCol)`
   color: var(--font-color) !important;
 `;
 
+export const IdeaCardTitle = styled.span`
+  font-weight: 450;
+`;
+
 export const IdeaCardDescription = styled.small`
-  color: hsla(0, 0%, 0%, .6);
   letter-spacing: -.1pt;
   word-break: break-word;
-   
-  .dark & {
-    color: hsla(0, 0%, 95%, .6) !important;
-  }
 `;
 
 const BadgeContainer = styled.span`
-    margin-left: .25rem;
-    @media(max-width: 576px) {
-      margin-left: 0;
-    }
-    
-    & > div:first-of-type {
-        border-radius: var(--border-radius) 0 0 var(--border-radius);
-    }
-    & > div:nth-of-type(n+2) {
-        border-radius: 0;
-    }
-    & > div:last-of-type {
-        border-radius: 0 .35rem .35rem 0;
-    }
-    & > div:only-of-type {
-        border-radius: var(--border-radius);
-    }
+  margin-left: .25rem;
+  @media (max-width: 576px) {
+    margin-left: 0;
+  }
+
+  & > div:first-of-type {
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+  }
+
+  & > div:nth-of-type(n+2) {
+    border-radius: 0;
+  }
+
+  & > div:last-of-type {
+    border-radius: 0 .35rem .35rem 0;
+  }
+
+  & > div:only-of-type {
+    border-radius: var(--border-radius);
+  }
 `;
 
 export const InfoContainer = styled.small`
-  color:  hsla(0, 0%, 0%, .6);
+  color: hsla(0, 0%, 0%, .6);
   float: right;
   margin-left: 0.25rem;
   transform: translateY(3px);
-  
+
   .dark & {
     color: hsla(0, 0%, 95%, .6) !important;
   }
@@ -73,7 +75,7 @@ export const PinIcon = styled(FaThumbtack)`
 
 const IdeaCard = ({ideaData, onIdeaDelete}) => {
     const cardRef = React.createRef();
-    const {user} = useContext(AppContext);
+    const {user, getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     const history = useHistory();
     const location = useLocation();
@@ -88,12 +90,14 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
         }
     };
     const renderTags = () => {
-        if (idea.tags.length === 0) {
+        const assignedTag = idea.assignee && idea.assignee.id === user.data.id && <UiBadge className={"move-top-2px"} style={{border: "1px dashed " + getTheme().setAlpha(.5)}}>Assigned</UiBadge>;
+        if (idea.tags.length === 0 && !assignedTag) {
             return;
         }
         return <span>
             <br className={"d-sm-none"}/>
             <BadgeContainer>
+                {idea.assignee !== null && idea.assignee.id === user.data.id && <UiBadge className={"move-top-2px"} style={{border: "1px dashed " + getTheme().setAlpha(.5)}}>Assigned</UiBadge>}
                 {idea.tags.map((tag, i) => <UiBadge key={i} color={tinycolor(tag.color)} className={"move-top-2px"}>{tag.name}</UiBadge>)}
             </BadgeContainer>
         </span>
@@ -121,7 +125,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
                     <div className={"d-inline"} style={{fontSize: `1.15em`}}>
                         {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
                         {!idea.pinned || <UiClassicIcon as={PinIcon} className={"mr-1"}/>}
-                        <span dangerouslySetInnerHTML={{__html: idea.title}}/>
+                        <IdeaCardTitle dangerouslySetInnerHTML={{__html: idea.title}}/>
                         {renderComments()}
                     </div>
                     {renderTags()}

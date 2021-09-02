@@ -10,9 +10,9 @@ import net.feedbacky.app.data.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.modelmapper.ModelMapper;
-
 import javax.validation.constraints.NotNull;
+
+import java.sql.Timestamp;
 
 /**
  * @author Plajer
@@ -33,7 +33,8 @@ public class PostSuspendedUserDto {
   private String suspensionEndDate;
 
   public SuspendedUser convertToEntity(User user, Board board) {
-    SuspendedUser suspendedUser = new ModelMapper().map(this, SuspendedUser.class);
+    SuspendedUser suspendedUser = new SuspendedUser();
+    suspendedUser.setSuspensionEndDate(Timestamp.valueOf(suspensionEndDate));
     suspendedUser.setBoard(board);
     suspendedUser.setUser(user);
     return suspendedUser;

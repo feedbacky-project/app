@@ -21,6 +21,9 @@ public class FetchSimpleUserDto implements FetchResponseDto<FetchSimpleUserDto, 
 
   @Override
   public FetchSimpleUserDto from(User entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.username = entity.getUsername();
     this.avatar = entity.getAvatar();

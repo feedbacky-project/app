@@ -123,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
     if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !closedIdeasCommenting) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea already closed.");
     }
-    Comment comment = new ModelMapper().map(this, Comment.class);
+    Comment comment = new Comment();
     comment.setId(null);
     comment.setIdea(idea);
     comment.setCreator(user);

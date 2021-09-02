@@ -24,6 +24,9 @@ public class FetchChangelogDto implements FetchResponseDto<FetchChangelogDto, Ch
 
   @Override
   public FetchChangelogDto from(Changelog entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.title = entity.getTitle();
     this.description = entity.getDescription();

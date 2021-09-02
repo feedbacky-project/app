@@ -20,6 +20,9 @@ public class FetchTagDto implements FetchResponseDto<FetchTagDto, Tag> {
 
   @Override
   public FetchTagDto from(Tag entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.name = entity.getName();
     this.color = entity.getColor();

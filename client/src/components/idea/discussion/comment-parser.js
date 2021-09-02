@@ -7,7 +7,7 @@ const parseComment = (message, moderatorsData, tagsData) => {
     const regex = /[^{}]+(?=})/g;
     let finalMessage = message;
     message.match(regex) && message.match(regex).forEach(el => {
-        finalMessage = replace(finalMessage, "{" + el + "}", (match, i) => parseTag(el, moderatorsData, tagsData));
+        finalMessage = replace(finalMessage, "{" + el + "}", (match, i) => parseTag(el, moderatorsData, tagsData, i));
     });
     //backward compatibility
     const spanRegex = /<span[^>]*>([\s\S]*?)<\/span>/g;
@@ -23,26 +23,26 @@ const parseComment = (message, moderatorsData, tagsData) => {
     return finalMessage;
 };
 
-const parseTag = (result, moderatorsData, tagsData) => {
+const parseTag = (result, moderatorsData, tagsData, index) => {
     const data = result.split(";");
     if (data[0] === "data_tag") {
-        return parseBoardTagData(data, tagsData);
+        return parseBoardTagData(data, tagsData, index);
     } else if (data[0] === "data_user") {
-        return parseModeratorData(data);
+        return parseModeratorData(data, index);
     }
 };
 
-const parseBoardTagData = (data, tagsData) => {
+const parseBoardTagData = (data, tagsData, index) => {
     const foundTag = tagsData.find(el => el.id === parseInt(data[1]));
     if (foundTag === undefined) {
-        return <UiBadge key={data[1]} color={tinycolor(data[3])}>{data[2]}</UiBadge>
+        return <UiBadge key={data[1] + index} color={tinycolor(data[3])}>{data[2]}</UiBadge>
     }
-    return <UiBadge key={data[1]} color={tinycolor(foundTag.color)}>{foundTag.name}</UiBadge>
+    return <UiBadge key={data[1] + index} color={tinycolor(foundTag.color)}>{foundTag.name}</UiBadge>
 };
 
-const parseModeratorData = (data) => {
+const parseModeratorData = (data, index) => {
     //simulate user from user context, WARNING, might be unsafe in the future!
-    return <span className={"font-weight-bold"} key={data[1]}>
+    return <span className={"font-weight-bold"} key={data[1] + index}>
         <UiPrettyUsername user={{id: parseInt(data[1]), username: data[2]}}/>
     </span>
 };

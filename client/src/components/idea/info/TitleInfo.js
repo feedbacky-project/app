@@ -1,3 +1,4 @@
+import {IdeaCardTitle} from "components/board/IdeaCard";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
@@ -20,7 +21,7 @@ const TitleInfo = ({setModal, editor, setEditor, onStateChange}) => {
     return <div>
         {ideaData.open || <FaLock className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
         {!ideaData.pinned || <FaThumbtack className={"mr-1"} style={{transform: "translateY(-4px) rotate(30deg)"}}/>}
-        <span style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
+        <IdeaCardTitle style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
         <ModeratorActionsButton onStateChange={onStateChange}/>
         {renderDeletionButton()}
         {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"move-top-2px text-black-60 ml-1"} onClick={() => setEditor({...editor, enabled: !editor.enabled})}/>}

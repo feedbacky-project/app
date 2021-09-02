@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
-import {FaComment, FaCommentSlash, FaEdit, FaLink, FaLock, FaLockOpen, FaTags, FaUnlink} from "react-icons/all";
+import {FaComment, FaCommentSlash, FaEdit, FaLink, FaLock, FaLockOpen, FaTags, FaUnlink, FaUserCheck} from "react-icons/all";
 
 const IconOverlay = styled.div`
   text-align: center;
@@ -43,6 +43,8 @@ const CommentIcon = ({specialType}) => {
                 return <Icon as={FaLink} fill={fill}/>;
             case "IDEA_UNPINNED":
                 return <Icon as={FaUnlink} fill={fill}/>;
+            case "IDEA_ASSIGNED":
+                return <Icon as={FaUserCheck} fill={fill}/>;
             case "LEGACY":
             case "TAGS_MANAGED":
             default:

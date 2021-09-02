@@ -121,7 +121,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
         } else {
             CommentComponent = CommentContainer;
         }
-        return <React.Fragment key={data.id}>
+        return <React.Fragment>
             <CommentComponent>
                 <UiAvatar roundedCircle className={"mr-3 mt-2"} size={30} user={data.user} style={{minWidth: "30px"}}/>
                 <div style={{width: "100%"}}>
@@ -141,7 +141,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
     if (!data.special) {
         return renderDescription();
     }
-    return <React.Fragment key={data.id}>
+    return <React.Fragment>
         <div className={"d-inline-flex my-2"}>
             <CommentIcon specialType={data.specialType}/>
             <div>

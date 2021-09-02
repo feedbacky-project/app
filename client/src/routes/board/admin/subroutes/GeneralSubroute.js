@@ -310,7 +310,6 @@ const GeneralSubroute = ({updateState}) => {
         const shortDescription = document.getElementById("shortDescrTextarea").value;
         const fullDescription = document.getElementById("fullDescrTextarea").value;
         const themeColor = getTheme(false).toHexString();
-        console.log()
         return axios.patch("/boards/" + boardData.discriminator, {
             name, shortDescription, fullDescription, themeColor, banner, logo, anonymousAllowed, roadmapEnabled, changelogEnabled
         }).then(res => {

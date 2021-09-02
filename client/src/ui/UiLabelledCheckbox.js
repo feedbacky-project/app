@@ -35,10 +35,13 @@ const StyledLabel = styled.label`
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke: #c8ccd4;
+    stroke: hsla(0, 0%, 0%, .25);
     stroke-width: 1.5;
     transform: translate3d(0, 0, 0);
     transition: all 0.2s ease;
+  }
+  .dark & svg {
+    stroke: hsla(0, 0%, 95%, .5);
   }
   & svg path {
     stroke-dasharray: 60;

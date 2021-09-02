@@ -22,6 +22,9 @@ public class FetchWebhookDto implements FetchResponseDto<FetchWebhookDto, Webhoo
 
   @Override
   public FetchWebhookDto from(Webhook entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.url = entity.getUrl();
     this.type = entity.getType().name();

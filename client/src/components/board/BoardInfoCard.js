@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import IdeaCreateModal from "components/board/IdeaCreateModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import {AppContext, BoardContext} from "context";
@@ -8,6 +9,10 @@ import {Link} from "react-router-dom";
 import {UiCard, UiHorizontalRule} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
+
+const BoardDescription = styled(MarkdownContainer)`
+    color: var(--font-color) !important;
+`;
 
 const BoardInfoCard = ({onIdeaCreation}) => {
     const {user, getTheme} = useContext(AppContext);
@@ -33,7 +38,7 @@ const BoardInfoCard = ({onIdeaCreation}) => {
     return <UiCol xs={{span: 12, order: 1}} lg={{span: 4, order: 12}}>
         <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation}/>
         <UiCard className={"my-2 text-left"}>
-            <MarkdownContainer text={data.fullDescription}/>
+            <BoardDescription text={data.fullDescription}/>
             <UiHorizontalRule theme={getTheme().setAlpha(.1)} className={"pb-1"}/>
             {/* eslint-disable-next-line */}
             <UiLoadableButton label={"Create Idea"} tabIndex={1} className={"py-1"} onClick={() => {

@@ -11,7 +11,6 @@ import net.feedbacky.app.data.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
-import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotNull;
 
@@ -35,7 +34,9 @@ public class PostChangelogDto {
   private String description;
 
   public Changelog convertToEntity(Board board, User creator) {
-    Changelog changelog = new ModelMapper().map(this, Changelog.class);
+    Changelog changelog = new Changelog();
+    changelog.setTitle(title);
+    changelog.setDescription(description);
     changelog.setEdited(false);
     changelog.setBoard(board);
     changelog.setCreator(creator);

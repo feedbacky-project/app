@@ -18,6 +18,9 @@ public class FetchUserPermissionDto implements FetchResponseDto<FetchUserPermiss
 
   @Override
   public FetchUserPermissionDto from(Moderator entity) {
+    if(entity == null) {
+      return null;
+    }
     this.boardDiscriminator = entity.getBoard().getDiscriminator();
     this.boardName = entity.getBoard().getName();
     this.role = entity.getRole();

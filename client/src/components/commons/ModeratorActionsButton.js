@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
+import ModeratorAssignUpdateModal from "components/commons/ModeratorAssignUpdateModal";
 import ModeratorTagsUpdateModal from "components/commons/ModeratorTagsUpdateModal";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from 'react';
-import {FaCog, FaComment, FaCommentSlash, FaLink, FaUnlink, FaUserLock} from "react-icons/all";
+import {FaCog, FaComment, FaCommentSlash, FaLink, FaUnlink, FaUserCheck, FaUserLock} from "react-icons/all";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
@@ -96,6 +97,17 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             onStateChange();
         });
     };
+    const onModeratorAssign = (mod) => {
+        return axios.patch("/ideas/" + ideaData.id, {assignee: mod == null ? null : mod.id}).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                popupError();
+                return;
+            }
+            updateState({...ideaData, assignee: res.data.assignee});
+            popupNotification("Assignee updated", getTheme());
+            onStateChange();
+        });
+    };
     const isSuspendable = () => {
         if (boardData.moderators.find(mod => mod.user.id === ideaData.user.id)) {
             return false;
@@ -135,9 +147,13 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
                               onAction={() => doIdeaStateChange("pinned", true, "Idea pinned.", "Idea unpinned.")}
                               actionDescription={<div>Idea will be pinned at the top of ideas list.</div>} actionButtonName={"Pin"}/>
         <ModeratorTagsUpdateModal onHide={hide} isOpen={modal.open && modal.type === "tags"} onAction={onTagsManage}/>
+        <ModeratorAssignUpdateModal onHide={hide} isOpen={modal.open && modal.type === "assign"} onAction={onModeratorAssign}/>
         <DropdownOption onClick={() => {
             setModal({open: true, type: "tags"})
         }} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Change Tags</DropdownOption>
+        <DropdownOption onClick={() => {
+            setModal({open: true, type: "assign"})
+        }} as={"span"}><FaUserCheck className={"mr-1 move-top-2px"} style={{color}}/> Assign Moderator</DropdownOption>
         {ideaData.open ?
             <DropdownOption onClick={() => setModal({open: true, type: "close"})} as={"span"}><FaLock className={"mr-1 move-top-2px"} style={{color}}/> Close Idea</DropdownOption> :
             <DropdownOption onClick={() => setModal({open: true, type: "open"})} as={"span"}><FaUnlock className={"mr-1 move-top-2px"} style={{color}}/> Open Idea</DropdownOption>

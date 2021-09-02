@@ -56,6 +56,9 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
 
   @Override
   public FetchBoardDto from(Board entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.name = entity.getName();
     this.discriminator = entity.getDiscriminator();

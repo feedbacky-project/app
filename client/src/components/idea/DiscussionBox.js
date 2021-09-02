@@ -57,9 +57,9 @@ const DiscussionBox = forwardRef((props, ref) => {
             hasMore={comments.moreToLoad}
             dataLength={comments.data.length}
             loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}>
-            {comments.data.map(data =>
-                <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentLike={onCommentLike}
-                             onCommentUnlike={onCommentUnlike} onSuspend={onPreSuspend}/>
+            {comments.data.map(data => {
+                return <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentLike={onCommentLike}
+                             onCommentUnlike={onCommentUnlike} onSuspend={onPreSuspend}/>}
             )}
         </InfiniteScroll>
     };

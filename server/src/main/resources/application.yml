@@ -29,6 +29,8 @@ spring:
       spec: "maximumSize=1000000,expireAfterAccess=3600s"
   jmx:
     enabled: false
+  aop:
+    auto: false
 
 bucket4j:
   enabled: true

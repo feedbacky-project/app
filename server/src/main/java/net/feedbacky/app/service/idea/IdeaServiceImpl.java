@@ -35,6 +35,9 @@ import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.CommentBuilder;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RandomNicknameUtils;
+import net.feedbacky.app.util.mailservice.MailBuilder;
+import net.feedbacky.app.util.mailservice.MailHandler;
+import net.feedbacky.app.util.mailservice.MailService;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.request.ServiceValidator;
@@ -80,12 +83,14 @@ public class IdeaServiceImpl implements IdeaService {
   private final SubscriptionExecutor subscriptionExecutor;
   private final IdeaServiceCommons ideaServiceCommons;
   private final RandomNicknameUtils randomNicknameUtils;
+  private final MailHandler mailHandler;
 
   @Autowired
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
                          CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
-                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils) {
+                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils,
+                         MailHandler mailHandler) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -96,6 +101,7 @@ public class IdeaServiceImpl implements IdeaService {
     this.subscriptionExecutor = subscriptionExecutor;
     this.ideaServiceCommons = ideaServiceCommons;
     this.randomNicknameUtils = randomNicknameUtils;
+    this.mailHandler = mailHandler;
   }
 
   @Override
@@ -155,6 +161,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     handleStatusUpdate(idea, dto, user);
     handleAttachmentUpdate(idea, dto);
+    handleAssigneeUpdate(idea, dto, user);
 
     idea.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(idea.getDescription())));
     ideaRepository.save(idea);
@@ -236,6 +243,41 @@ public class IdeaServiceImpl implements IdeaService {
     attachment = attachmentRepository.save(attachment);
     attachments.add(attachment);
     idea.setAttachments(attachments);
+  }
+
+  private void handleAssigneeUpdate(Idea idea, PatchIdeaDto dto, User user) {
+    //assign feature is only for moderators
+    if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+      throw new InsufficientPermissionsException();
+    }
+    CommentBuilder commentBuilder = new CommentBuilder().by(user);
+    commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED);
+    if(dto.getAssignee() == null) {
+      if(idea.getAssignee() == null) {
+        return;
+      }
+      idea.setAssignee(null);
+      commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " removed assignee from this idea.");
+    } else {
+      Moderator assigneeMod = idea.getBoard().getModerators().stream().filter(mod -> mod.getUser().getId().equals(dto.getAssignee())).findFirst()
+              .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("User with id {0} is not a board moderator.", dto.getAssignee())));
+      idea.setAssignee(assigneeMod.getUser());
+
+      commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED)
+              .message(assigneeMod.getUser().convertToSpecialCommentMention() + " has been assigned to this idea by " + user.convertToSpecialCommentMention() + ".");
+      MailBuilder builder = new MailBuilder();
+      builder.withTemplate(MailService.EmailTemplate.IDEA_ASSIGNED)
+              .withRecipient(assigneeMod.getUser())
+              .withCustomPlaceholder("${idea.name}", idea.getTitle())
+              .withCustomPlaceholder("${idea.viewLink}", idea.toViewLink())
+              .sendMail(mailHandler.getMailService()).sync();
+    }
+
+    Comment comment = commentBuilder.of(idea).build();
+    Set<Comment> comments = idea.getComments();
+    comments.add(comment);
+    idea.setComments(comments);
+    commentRepository.save(comment);
   }
 
   @Override

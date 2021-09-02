@@ -16,6 +16,9 @@ public class FetchMailPreferences implements FetchResponseDto<FetchMailPreferenc
 
   @Override
   public FetchMailPreferences from(MailPreferences entity) {
+    if(entity == null) {
+      return null;
+    }
     this.notificationsEnabled = entity.isNotificationsEnabled();
     return this;
   }

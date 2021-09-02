@@ -5,6 +5,10 @@ import {truncateText} from "utils/basic-utils";
 
 const MarkdownBox = styled.div`
   word-break: break-word;
+  color: hsla(0, 0%, 0%, .75);
+  .dark & {
+    color: hsla(0, 0%, 95%, .75);
+  }
   & a {
     color: ${props => props.theme.toHexString()};
     &:hover {

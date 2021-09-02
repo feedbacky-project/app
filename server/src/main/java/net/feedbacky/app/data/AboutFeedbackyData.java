@@ -21,5 +21,6 @@ public class AboutFeedbackyData {
   private List<FetchUserDto> serviceAdmins;
   private boolean closedIdeasCommenting;
   private boolean mailLoginEnabled;
+  private boolean developmentMode;
 
 }

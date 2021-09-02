@@ -16,9 +16,12 @@ public class FetchConnectedAccount implements FetchResponseDto<FetchConnectedAcc
   private String accountId;
 
   @Override
-  public FetchConnectedAccount from(ConnectedAccount account) {
-    this.provider = account.getProvider();
-    this.accountId = account.getAccountId();
+  public FetchConnectedAccount from(ConnectedAccount entity) {
+    if(entity == null) {
+      return null;
+    }
+    this.provider = entity.getProvider();
+    this.accountId = entity.getAccountId();
     return this;
   }
 

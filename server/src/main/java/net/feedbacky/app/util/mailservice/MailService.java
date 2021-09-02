@@ -25,7 +25,9 @@ public interface MailService {
     SUBSCRIBE_NOTIFICATION("mail_templates/notification/new_notifications.html", "", "${notifications.amount} New Notification(s) Received",
             "You received new notifications, however, you can see them only when HTML is supported (HTML not supported, default message sent)"),
     MAIL_LOGIN_ATTEMPT("mail_templates/mail_login_attempt.html", HOST_ADDRESS + "/auth/mail", "Login Attempt via Mail",
-            "There was a request to log in with email address, please allow HTML to see more. (HTML not supported, default message sent)");
+            "There was a request to log in with email address, please allow HTML to see more. (HTML not supported, default message sent)"),
+    IDEA_ASSIGNED("mail_templates/idea_assigned.html", "", "${idea.name} - Idea Assigned",
+            "You were assigned to idea ${idea.name}. (HTML not supported, default message sent)");
 
     private final String html;
     private final String inviteLink;

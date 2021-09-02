@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {QuestionIcon} from "components/commons/DangerousActionModal";
 import {BoardContext, IdeaContext} from "context";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {FaExclamation} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiLabelledCheckbox} from "ui";
@@ -30,6 +30,7 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const {ideaData} = useContext(IdeaContext);
     const [tags, setTags] = useState(ideaData.tags);
     const allTags = boardData.tags;
+    useEffect(() => setTags(ideaData.tags), [onHide]);
 
     return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
                                applyButton={<UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>

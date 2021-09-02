@@ -83,6 +83,9 @@ public class Idea implements Serializable {
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> subscribers = new HashSet<>();
   private IdeaStatus status;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @LazyToOne(LazyToOneOption.NO_PROXY)
+  private User assignee;
   @CreationTimestamp
   private Date creationDate;
   private boolean edited = false;

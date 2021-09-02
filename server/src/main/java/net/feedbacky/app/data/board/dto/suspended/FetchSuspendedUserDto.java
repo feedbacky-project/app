@@ -19,6 +19,9 @@ public class FetchSuspendedUserDto implements FetchResponseDto<FetchSuspendedUse
 
   @Override
   public FetchSuspendedUserDto from(SuspendedUser entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.user = new FetchSimpleUserDto().from(entity.getUser());
     this.suspensionEndDate = entity.getSuspensionEndDate().toString();

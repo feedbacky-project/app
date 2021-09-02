@@ -32,6 +32,9 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
   @Override
   @CheckReturnValue
   public FetchCommentDto from(Comment entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.user = new FetchSimpleUserDto().from(entity.getCreator());
     this.description = entity.getDescription();

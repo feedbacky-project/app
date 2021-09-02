@@ -10,7 +10,6 @@ import net.feedbacky.app.data.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,7 +28,7 @@ public class PostInviteDto {
   private String userEmail;
 
   public Invitation convertToEntity(User user, Board board, String codeData) {
-    Invitation invitation = new ModelMapper().map(this, Invitation.class);
+    Invitation invitation = new Invitation();
     invitation.setUser(user);
     invitation.setBoard(board);
     invitation.setCode(user.getId() + "_" + codeData + "_" + RandomStringUtils.randomAlphabetic(10));

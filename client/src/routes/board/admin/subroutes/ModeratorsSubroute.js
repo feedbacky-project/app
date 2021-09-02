@@ -54,6 +54,7 @@ const ModeratorsSubroute = () => {
                     <li>Delete Board <UiKeyboardInput>Owner Only</UiKeyboardInput></li>
                     <li>Promote and Demote Moderators <UiKeyboardInput>Owner Only</UiKeyboardInput></li>
                     <li>Admin Panel Access</li>
+                    <li>Invite Moderators to Board</li>
                     <li>Remove Moderators from Board</li>
                     <li>Remove Suspended Users</li>
                     <li>All Moderator Permissions</li>
@@ -68,6 +69,7 @@ const ModeratorsSubroute = () => {
                     <li>Delete Comments</li>
                     <li>Enable and Disable Commenting</li>
                     <li>Suspend Users</li>
+                    <li>Assign Users to Ideas</li>
                 </ul>
             </UiCol>
         </React.Fragment>

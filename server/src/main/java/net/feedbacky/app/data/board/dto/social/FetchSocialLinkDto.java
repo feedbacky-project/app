@@ -18,6 +18,9 @@ public class FetchSocialLinkDto implements FetchResponseDto<FetchSocialLinkDto, 
 
   @Override
   public FetchSocialLinkDto from(SocialLink entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.logoUrl = entity.getLogoUrl();
     this.url = entity.getUrl();

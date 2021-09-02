@@ -30,6 +30,9 @@ public class FetchUserDto implements FetchResponseDto<FetchUserDto, User> {
 
   @Override
   public FetchUserDto from(User entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.username = entity.getUsername();
     this.avatar = entity.getAvatar();

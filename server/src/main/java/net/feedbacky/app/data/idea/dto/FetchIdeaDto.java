@@ -31,6 +31,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   private FetchSimpleUserDto user;
   private Set<FetchTagDto> tags;
   private List<FetchAttachmentDto> attachments;
+  private FetchSimpleUserDto assignee;
   private long votersAmount;
   private long commentsAmount;
   private boolean upvoted;
@@ -47,6 +48,9 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   @Override
   @CheckReturnValue
   public FetchIdeaDto from(Idea entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.boardDiscriminator = entity.getBoard().getDiscriminator();
     this.title = entity.getTitle();
@@ -54,6 +58,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
     this.user = new FetchSimpleUserDto().from(entity.getCreator());
     this.tags = entity.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toSet());
     this.attachments = entity.getAttachments().stream().map(attachment -> new FetchAttachmentDto().from(attachment)).collect(Collectors.toList());
+    this.assignee = new FetchSimpleUserDto().from(entity.getAssignee());
     this.votersAmount = entity.getVoters().size();
     this.commentsAmount = entity.getComments().stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count();
     this.upvoted = false;
@@ -67,6 +72,9 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   }
 
   public FetchIdeaDto withUser(Idea entity, User user) {
+    if(entity == null) {
+      return null;
+    }
     this.upvoted = entity.getVoters().contains(user);
     this.subscribed = entity.getSubscribers().contains(user);
     return this;

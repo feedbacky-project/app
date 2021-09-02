@@ -19,6 +19,9 @@ public class FetchInviteDto implements FetchResponseDto<FetchInviteDto, Invitati
 
   @Override
   public FetchInviteDto from(Invitation entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.user = new FetchSimpleUserDto().from(entity.getUser());
     this.code = entity.getCode();

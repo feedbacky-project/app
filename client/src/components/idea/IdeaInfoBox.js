@@ -2,6 +2,7 @@ import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import VoteButton from "components/commons/VoteButton";
+import AssigneeInfo from "components/idea/info/AssigneeInfo";
 import AttachmentsInfo from "components/idea/info/AttachmentsInfo";
 import NotificationsInfo from "components/idea/info/NotificationsInfo";
 import TagsInfo from "components/idea/info/TagsInfo";
@@ -109,6 +110,7 @@ const IdeaInfoBox = ({onStateChange}) => {
             <VotersInfo data={voters}/>
             <TagsInfo/>
             <AttachmentsInfo editor={editor} onAttachmentUpdate={(data) => setUpdatedAttachment(data)}/>
+            <AssigneeInfo/>
             <NotificationsInfo/>
             <ShareBoxAlignment><ShareBox/></ShareBoxAlignment>
         </UiCol>

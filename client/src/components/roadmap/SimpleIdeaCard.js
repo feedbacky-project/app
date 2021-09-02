@@ -1,10 +1,12 @@
-import {CardLinkStyle, IdeaCardDescription, InfoContainer} from "components/board/IdeaCard";
+import {CardLinkStyle, IdeaCardDescription, IdeaCardTitle, InfoContainer, PinIcon} from "components/board/IdeaCard";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import VoteButton from "components/commons/VoteButton";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaRegComment} from "react-icons/all";
+import {FaLock} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
+import {UiClassicIcon} from "ui";
 import {UiRow} from "ui/grid";
 import {convertIdeaToSlug} from "utils/basic-utils";
 
@@ -38,7 +40,9 @@ export const SimpleIdeaCard = ({ideaData}) => {
                 <CardLinkStyle as={Link} className={"d-inline text-left"} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                     <div>
                         <div className={"d-inline mr-1"} style={{letterSpacing: `-.15pt`}}>
-                            <span dangerouslySetInnerHTML={{__html: idea.title}}/>
+                            {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
+                            {!idea.pinned || <UiClassicIcon as={PinIcon} className={"mr-1"}/>}
+                            <IdeaCardTitle dangerouslySetInnerHTML={{__html: idea.title}}/>
                             {renderComments()}
                         </div>
                     </div>

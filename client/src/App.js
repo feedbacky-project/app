@@ -10,7 +10,7 @@ import {BrowserRouter, Route, Switch, useHistory, useLocation} from "react-route
 
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import {hideNotifications, popupError, popupWarning} from "utils/basic-utils";
+import {hideNotifications, popupError, popupNotification, popupWarning} from "utils/basic-utils";
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
 
@@ -74,6 +74,9 @@ const App = ({appearanceSettings}) => {
         axios.get("/service/about").then(res => {
             console.info("Service link established, running client version " + CLIENT_VERSION + ", server version " + res.data.serverVersion);
             setServiceData({...serviceData, loaded: true, data: res.data});
+            if(res.data.developmentMode) {
+                popupWarning("Development mode active.");
+            }
         }).catch(() => setServiceData({...serviceData, loaded: true, error: true}));
     }, [serviceData]);
     useEffect(() => {

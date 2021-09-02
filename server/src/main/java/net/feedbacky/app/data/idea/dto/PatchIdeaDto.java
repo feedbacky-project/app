@@ -31,5 +31,6 @@ public class PatchIdeaDto {
   private Boolean pinned;
   @Base64(maximumKbSize = 1024, mimeType = {"image/png", "image/jpeg"}, message = "Attachment must be a valid image with maximum size of 1 MB.", allowEmpty = true)
   private String attachment;
+  private Long assignee;
 
 }

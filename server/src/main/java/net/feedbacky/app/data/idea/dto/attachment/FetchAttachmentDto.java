@@ -17,6 +17,9 @@ public class FetchAttachmentDto implements FetchResponseDto<FetchAttachmentDto, 
 
   @Override
   public FetchAttachmentDto from(Attachment entity) {
+    if(entity == null) {
+      return null;
+    }
     this.id = entity.getId();
     this.url = entity.getUrl();
     return this;
