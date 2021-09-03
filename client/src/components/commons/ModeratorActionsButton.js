@@ -3,6 +3,7 @@ import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import ModeratorAssignUpdateModal from "components/commons/ModeratorAssignUpdateModal";
 import ModeratorTagsUpdateModal from "components/commons/ModeratorTagsUpdateModal";
+import ModeratorVotesResetModal from "components/commons/ModeratorVotesResetModal";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from 'react';
@@ -53,7 +54,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
                 finalMessage = revertMessage;
             }
             popupRevertableNotification(finalMessage, getTheme(), () => doIdeaStateChange(state, !value, message, revertMessage, !isRevert));
-            onStateChange();
+            onStateChange("discussion");
         });
     };
     const doIdeaDelete = () => {
@@ -94,7 +95,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             }
             updateState({...ideaData, tags: res.data});
             popupNotification("Tags updated", getTheme());
-            onStateChange();
+            onStateChange("discussion");
         });
     };
     const onModeratorAssign = (mod) => {
@@ -105,7 +106,18 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             }
             updateState({...ideaData, assignee: res.data.assignee});
             popupNotification("Assignee updated", getTheme());
-            onStateChange();
+            onStateChange("discussion");
+        });
+    };
+    const onVotesReset = (type) => {
+        return axios.patch("/ideas/" + ideaData.id + "/voters", {clearType: type}).then(res => {
+            if (res.status !== 200 && res.status !== 204) {
+                popupError();
+                return;
+            }
+            updateState({...ideaData, votersAmount: res.data.length, upvoted: type === "ALL" ? false : ideaData.upvoted});
+            popupNotification("Votes reset", getTheme());
+            onStateChange("both");
         });
     };
     const isSuspendable = () => {
@@ -148,6 +160,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
                               actionDescription={<div>Idea will be pinned at the top of ideas list.</div>} actionButtonName={"Pin"}/>
         <ModeratorTagsUpdateModal onHide={hide} isOpen={modal.open && modal.type === "tags"} onAction={onTagsManage}/>
         <ModeratorAssignUpdateModal onHide={hide} isOpen={modal.open && modal.type === "assign"} onAction={onModeratorAssign}/>
+        <ModeratorVotesResetModal onHide={hide} isOpen={modal.open && modal.type === "votes_reset"} onAction={onVotesReset}/>
         <DropdownOption onClick={() => {
             setModal({open: true, type: "tags"})
         }} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Change Tags</DropdownOption>
@@ -167,6 +180,9 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             <DropdownOption onClick={() => setModal({open: true, type: "unpin"})} as={"span"}><FaUnlink className={"mr-1 move-top-2px"} style={{color}}/> Unpin Idea</DropdownOption> :
             <DropdownOption onClick={() => setModal({open: true, type: "pin"})} as={"span"}><FaLink className={"mr-1 move-top-2px"} style={{color}}/> Pin Idea</DropdownOption>
         }
+        <DropdownOption onClick={() => {
+            setModal({open: true, type: "votes_reset"})
+        }} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Reset Votes</DropdownOption>
         {isSuspendable() && <DropdownOption onClick={() => setModal({open: true, type: "suspend"})} className={"text-red"} as={"span"}>
             <FaUserLock className={"mr-1 move-top-2px"} style={{color: getTheme()}}/> Suspend User
         </DropdownOption>

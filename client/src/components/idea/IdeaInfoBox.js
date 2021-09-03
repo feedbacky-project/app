@@ -10,7 +10,7 @@ import TitleInfo from "components/idea/info/TitleInfo";
 import VotersInfo from "components/idea/info/VotersInfo";
 import {ShareBox, ShareBoxAlignment} from "components/idea/ShareBox";
 import {AppContext, IdeaContext} from "context";
-import React, {useContext, useEffect, useState} from 'react';
+import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {useHistory} from "react-router-dom";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
@@ -18,7 +18,7 @@ import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
 
-const IdeaInfoBox = ({onStateChange}) => {
+const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
     const {user, getTheme} = useContext(AppContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
@@ -28,6 +28,15 @@ const IdeaInfoBox = ({onStateChange}) => {
     const [modal, setModal] = useState({open: false});
     const [updatedAttachment, setUpdatedAttachment] = useState(null);
     useEffect(() => {
+        onLoadRequest();
+        // eslint-disable-next-line
+    }, []);
+    useImperativeHandle(ref, () => ({
+        onStateChange() {
+            onLoadRequest();
+        }
+    }));
+    const onLoadRequest = () => {
         axios.get("/ideas/" + ideaData.id + "/voters").then(res => {
             if (res.status !== 200) {
                 setVoters({...voters, error: true});
@@ -36,8 +45,7 @@ const IdeaInfoBox = ({onStateChange}) => {
             const data = res.data;
             setVoters({...voters, data, loaded: true});
         }).catch(() => setVoters({...voters, error: true}));
-        // eslint-disable-next-line
-    }, []);
+    };
 
     const onEditApply = () => {
         let description = editor.value;
@@ -115,6 +123,6 @@ const IdeaInfoBox = ({onStateChange}) => {
             <ShareBoxAlignment><ShareBox/></ShareBoxAlignment>
         </UiCol>
     </React.Fragment>
-};
+});
 
 export default IdeaInfoBox;

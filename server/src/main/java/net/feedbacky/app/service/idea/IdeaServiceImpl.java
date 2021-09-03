@@ -10,6 +10,7 @@ import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
+import net.feedbacky.app.data.idea.dto.PatchVotersDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.idea.subscribe.NotificationEvent;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
@@ -302,6 +303,41 @@ public class IdeaServiceImpl implements IdeaService {
     Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("voters"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     return idea.getVoters().stream().map(usr -> new FetchSimpleUserDto().from(usr)).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<FetchSimpleUserDto> patchVoters(long id, PatchVotersDto dto) {
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("board", "voters"))
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
+    ServiceValidator.isPermitted(idea.getBoard(), Moderator.Role.MODERATOR, user);
+    CommentBuilder commentBuilder = new CommentBuilder().by(user).type(Comment.SpecialType.IDEA_ASSIGNED);
+    switch(PatchVotersDto.VotersClearType.valueOf(dto.getClearType().toUpperCase())) {
+      case ALL:
+        idea.setVoters(new HashSet<>());
+        idea.setVotersAmount(0);
+        idea = ideaRepository.save(idea);
+        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset all votes.");
+        break;
+      case ANONYMOUS:
+        Set<User> voters = idea.getVoters();
+        voters = voters.stream().filter(voter -> !voter.isFake()).collect(Collectors.toSet());
+        idea.setVoters(voters);
+        idea.setVotersAmount(voters.size());
+        idea = ideaRepository.save(idea);
+        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset anonymous votes.");
+        break;
+      default:
+        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid clear type provided.");
+    }
+    Comment comment = commentBuilder.of(idea).build();
+    Set<Comment> comments = idea.getComments();
+    comments.add(comment);
+    idea.setComments(comments);
+    commentRepository.save(comment);
+    return idea.getVoters().stream().map(voter -> new FetchSimpleUserDto().from(voter)).collect(Collectors.toList());
   }
 
   @Override

@@ -2,6 +2,7 @@ package net.feedbacky.app.service.idea;
 
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
+import net.feedbacky.app.data.idea.dto.PatchVotersDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
@@ -33,6 +34,8 @@ public interface IdeaService {
   ResponseEntity delete(long id);
 
   List<FetchSimpleUserDto> getAllVoters(long id);
+
+  List<FetchSimpleUserDto> patchVoters(long id, PatchVotersDto dto);
 
   FetchUserDto postUpvote(long id, String anonymousId);
 

@@ -2,6 +2,7 @@ package net.feedbacky.app.controller.idea;
 
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
+import net.feedbacky.app.data.idea.dto.PatchVotersDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
@@ -99,6 +100,11 @@ public class IdeaRestController {
   @GetMapping("v1/ideas/{id}/voters")
   public List<FetchSimpleUserDto> getAllVoters(@PathVariable long id) {
     return ideaService.getAllVoters(id);
+  }
+
+  @PatchMapping("v1/ideas/{id}/voters")
+  public List<FetchSimpleUserDto> patchVoters(@PathVariable long id, @Valid @RequestBody PatchVotersDto dto) {
+    return ideaService.patchVoters(id, dto);
   }
 
   @PostMapping("v1/ideas/{id}/voters")

@@ -64,7 +64,7 @@ public class Comment implements Serializable {
 
   public enum SpecialType {
     LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED, COMMENTS_RESTRICTED, COMMENTS_ALLOWED, IDEA_PINNED, IDEA_UNPINNED,
-    IDEA_ASSIGNED
+    IDEA_ASSIGNED, IDEA_VOTES_RESET
   }
 
   public enum ViewType {

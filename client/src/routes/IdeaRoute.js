@@ -32,6 +32,7 @@ const IdeaRoute = () => {
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [modalOpen, setModalOpen] = useState(false);
     const discussionRef = useRef();
+    const votersRef = useRef();
     useTitle((idea.loaded && board.loaded) ? board.data.name + " | " + idea.data.title : "Loading...");
     const loadBoardDataCascade = (ideaData) => {
         if (board.loaded) {
@@ -47,6 +48,16 @@ const IdeaRoute = () => {
             setBoard({...board, data: boardData, loaded: true});
             context.onThemeChange(boardData.themeColor);
         }).catch(() => setBoard({...board, error: true}));
+    };
+    const onStateChange = (stateType) => {
+        if(stateType === "discussion") {
+            discussionRef.current.onStateChange();
+        } else if(stateType === "voters") {
+            votersRef.current.onStateChange();
+        } else if(stateType === "both") {
+            discussionRef.current.onStateChange();
+            votersRef.current.onStateChange();
+        }
     };
     useEffect(() => {
         if (location.state == null) {
@@ -86,7 +97,7 @@ const IdeaRoute = () => {
             <PageNavbar selectedNode={"feedback"} goBackVisible/>
             <UiContainer className={"pb-5"}>
                 <UiRow centered className={"my-4"}>
-                    <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox onStateChange={() => discussionRef.current.onStateChange()}/>}/>
+                    <ComponentLoader loaded={board.loaded} component={<IdeaInfoBox onStateChange={onStateChange} ref={votersRef}/>}/>
                     <UiCol xs={12}><UiHorizontalRule theme={context.getTheme().setAlpha(.1)}/></UiCol>
                     <ComponentLoader loaded={idea.loaded} component={<DiscussionBox ref={discussionRef}/>}/>
                 </UiRow>

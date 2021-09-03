@@ -1,5 +1,6 @@
 ### 1.0.0.beta.7
 * **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))
+* **[FEATURE]** Idea votes can now be reset (all votes or anonymous ones) (requested at [Feedbacky](https://app.feedbacky.net/i/more-moderation-options.2662))
 * **[FIX]** Improper date parsing didn't show new changelog notification bubble
 * **[FIX]** Reset tag update modal to default values after canceling action
 
