@@ -46,6 +46,9 @@ public class BoardChangelogRestController {
   @GetMapping("v1/boards/{discriminator}/changelog")
   public PaginableRequest<List<FetchChangelogDto>> getAll(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
     RequestParamsParser parser = new RequestParamsParser(requestParams);
+    if(requestParams.containsKey("query")) {
+      return boardChangelogService.getAllChangelogsContaining(discriminator, parser.getPage(), parser.getPageSize(), requestParams.get("query"));
+    }
     BoardChangelogService.SortType sortType = BoardChangelogService.SortType.NEWEST;
     if(requestParams.containsKey("sort")) {
       try {

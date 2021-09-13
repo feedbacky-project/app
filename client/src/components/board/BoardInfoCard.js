@@ -10,7 +10,7 @@ import {UiCard, UiHorizontalRule} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 
-const BoardDescription = styled(MarkdownContainer)`
+export const BoardDescription = styled(MarkdownContainer)`
     color: var(--font-color) !important;
 `;
 

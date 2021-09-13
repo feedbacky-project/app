@@ -8,7 +8,7 @@ import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 
-const SearchBar = styled(TextareaAutosize)`
+export const SearchBar = styled(TextareaAutosize)`
   overflow: hidden !important;
   max-height: 33px !important;
   min-height: 33px !important;
@@ -66,9 +66,9 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     });
     return <React.Fragment>
         <UiCol sm={8} className={"my-1"}>
-            Filtering {" "}
+            <span className={"align-middle"}>Filtering</span> {" "}
             <UiSelectableDropdown label={"Choose Filter"} id={"filter"} className={"d-inline mr-1"} currentValue={filterCurrentValue} values={filterValues}/>
-            and Sorting {" "}
+            <span className={"align-middle"}>and Sorting</span> {" "}
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline"} currentValue={sortCurrentValue} values={sortValues}/>
         </UiCol>
         <UiCol sm={4}>

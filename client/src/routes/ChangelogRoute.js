@@ -1,5 +1,6 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
+import BoardSearchBar from "components/board/BoardSearchBar";
 import BoardChangelogBox from "components/changelog/BoardChangelogBox";
 import BoardChangelogSearchBar from "components/changelog/BoardChangelogSearchBar";
 import PageNavbar from "components/commons/PageNavbar";
@@ -18,6 +19,7 @@ const ChangelogRoute = () => {
     const history = useHistory();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
+    const [searchQuery, setSearchQuery] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     useTitle(board.loaded ? board.data.name + " | Changelog" : "Loading...");
     const resolvePassedData = () => {
@@ -63,8 +65,8 @@ const ChangelogRoute = () => {
         <UiContainer className={"pb-5"}>
             <UiRow className={"pb-4"}>
                 <BoardBanner customName={board.data.name + " - Changelog"}/>
-                <BoardChangelogSearchBar/>
-                <BoardChangelogBox/>
+                <BoardChangelogSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+                <BoardChangelogBox searchQuery={searchQuery}/>
             </UiRow>
         </UiContainer>
     </BoardContextedRouteUtil>

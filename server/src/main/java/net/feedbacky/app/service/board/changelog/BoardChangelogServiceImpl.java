@@ -66,6 +66,17 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   }
 
   @Override
+  public PaginableRequest<List<FetchChangelogDto>> getAllChangelogsContaining(String discriminator, int page, int pageSize, String query) {
+    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.empty())
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    Page<Changelog> pageData = changelogRepository.findByBoardAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(board, query, query, PageRequest.of(page, pageSize));
+    List<Changelog> changelogs = pageData.getContent();
+    int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
+    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), changelogs.stream()
+            .map(changelog -> new FetchChangelogDto().from(changelog)).collect(Collectors.toList()));
+  }
+
+  @Override
   public ResponseEntity<FetchChangelogDto> post(String discriminator, PostChangelogDto dto) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())

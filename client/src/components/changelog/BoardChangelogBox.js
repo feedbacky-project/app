@@ -16,7 +16,7 @@ import {UiAvatar} from "ui/image";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 import {prepareFilterAndSortRequests} from "utils/basic-utils";
 
-const BoardChangelogBox = () => {
+const BoardChangelogBox = ({searchQuery}) => {
     const {user} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [changelog, setChangelog] = useState({data: [], loaded: false, error: false, moreToLoad: true});
@@ -24,10 +24,11 @@ const BoardChangelogBox = () => {
     useEffect(() => {
         onLoadRequest(true);
         // eslint-disable-next-line
-    }, [user.session, user.localPreferences.changelog]);
+    }, [user.session, searchQuery, user.localPreferences.changelog]);
     const onLoadRequest = (override = false) => {
+        const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
         const currentPage = override ? 0 : page;
-        return axios.get("/boards/" + boardData.discriminator + "/changelog?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog)).then(res => {
+        return axios.get("/boards/" + boardData.discriminator + "/changelog?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog) + withQuery).then(res => {
             const data = res.data.data;
             if (override) {
                 setChangelog({...changelog, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
@@ -56,6 +57,9 @@ const BoardChangelogBox = () => {
             return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className={"mr-1"}/> Failed to load changelog</React.Fragment>}/>
         }
         if (changelog.loaded && changelog.data.length === 0 && !changelog.moreToLoad) {
+            if (searchQuery !== "") {
+                return <SvgNotice Component={UndrawNoIdeas} title={"No changelogs for query '" + searchQuery + "'."}/>
+            }
             return <SvgNotice Component={UndrawNoData} title={"This Changelog Is Empty"}/>
         }
         return <InfiniteScroll

@@ -1,3 +1,4 @@
+import {BoardDescription} from "components/board/BoardInfoCard";
 import ChangelogCreateModal from "components/changelog/ChangelogCreateModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import {AppContext, BoardContext} from "context";
@@ -31,7 +32,7 @@ const BoardChangelogInfoCard = ({onChangelogCreation}) => {
     return <UiCol xs={{span: 12, order: 1}} lg={{span: 4, order: 12}}>
         <ChangelogCreateModal isOpen={open} onHide={() => setOpen(false)} onChangelogCreation={onChangelogCreation}/>
         <UiCard className={"my-2 text-left"}>
-            <MarkdownContainer text={data.fullDescription}/>
+            <BoardDescription text={data.fullDescription}/>
             {renderButtons()}
         </UiCard>
     </UiCol>

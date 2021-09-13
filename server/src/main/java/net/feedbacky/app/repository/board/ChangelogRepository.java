@@ -19,4 +19,6 @@ public interface ChangelogRepository extends EntityGraphPagingAndSortingReposito
 
   Page<Changelog> findByBoard(Board board, Pageable pageable);
 
+  Page<Changelog> findByBoardAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(Board board, String title, String description, Pageable pageable);
+
 }

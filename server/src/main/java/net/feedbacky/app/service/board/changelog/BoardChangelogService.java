@@ -3,6 +3,7 @@ package net.feedbacky.app.service.board.changelog;
 import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PatchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
+import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import java.util.List;
 public interface BoardChangelogService {
 
   PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize, SortType sortType);
+
+  PaginableRequest<List<FetchChangelogDto>> getAllChangelogsContaining(String discriminator, int page, int pageSize, String query);
 
   ResponseEntity<FetchChangelogDto> post(String discriminator, PostChangelogDto dto);
 

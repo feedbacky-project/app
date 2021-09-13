@@ -1,14 +1,21 @@
+import {SearchBar} from "components/board/BoardSearchBar";
 import {AppContext} from "context";
 import React, {useContext} from 'react';
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
+import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 
-const BoardChangelogSearchBar = () => {
+const BoardChangelogSearchBar = ({searchQuery, setSearchQuery}) => {
     const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const queryRef = React.useRef();
+    if (searchQuery === "" && queryRef.current) {
+        queryRef.current.value = "";
+    }
     const sorts = [
         {newest: "Newest"},
         {oldest: "Oldest"}
     ];
+    let searchTimeout;
     const sortCurrentValue = Object.values(sorts.find(obj => {
         return Object.keys(obj)[0] === (user.localPreferences.changelog.sort || "newest")
     }));
@@ -19,8 +26,14 @@ const BoardChangelogSearchBar = () => {
     });
     return <React.Fragment>
         <UiCol sm={8} className={"my-1"}>
-            Sorting {" "}
+            <span className={"align-middle"}>Sorting</span> {" "}
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline"} currentValue={sortCurrentValue} values={sortValues}/>
+        </UiCol>
+        <UiCol sm={4}>
+            <UiFormControl label={"Search Ideas"} as={SearchBar} innerRef={queryRef} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery} placeholder={"Search"} onInput={() => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
+            }} aria-label={"Search bar"}/>
         </UiCol>
     </React.Fragment>
 };

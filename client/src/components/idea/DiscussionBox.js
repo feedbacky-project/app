@@ -200,8 +200,8 @@ const DiscussionBox = forwardRef((props, ref) => {
                               actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
         <DangerousActionModal id={"commentDel"} onHide={() => setModal({...modal, open: false, type: ""})} isOpen={modal.open && modal.type === "delete"} onAction={onCommentDelete}
                               actionDescription={<div>Comment will be permanently <u>deleted</u>.</div>}/>
-        <div>
-            <div className={"d-inline-block text-black-75 mr-1"}>Discussion ({ideaData.commentsAmount} comments)</div>
+        <div className={"pb-1"}>
+            <div className={"d-inline-block text-black-75 mr-1 align-middle"}>Discussion ({ideaData.commentsAmount} comments)</div>
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>
