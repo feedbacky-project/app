@@ -12,7 +12,6 @@ import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestParamsParser;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -51,9 +50,6 @@ public class IdeaRestController {
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
                                                           @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
     RequestParamsParser parser = new RequestParamsParser(requestParams);
-    if(requestParams.containsKey("query")) {
-      return ideaService.getAllIdeasContaining(discriminator, parser.getPage(), parser.getPageSize(), requestParams.get("query"), anonymousId);
-    }
     IdeaService.FilterType filterType = IdeaService.FilterType.OPENED;
     if(requestParams.containsKey("filter")) {
       try {
@@ -73,6 +69,9 @@ public class IdeaRestController {
         sortType = IdeaService.SortType.valueOf(requestParams.get("sort").toUpperCase());
       } catch(Exception ignoredInvalid) {
       }
+    }
+    if(requestParams.containsKey("query")) {
+      return ideaService.getAllIdeasContaining(discriminator, parser.getPage(), parser.getPageSize(), requestParams.get("query"), filterType, sortType, anonymousId);
     }
     return ideaService.getAllIdeas(discriminator, parser.getPage(), parser.getPageSize(), filterType, sortType, anonymousId);
   }

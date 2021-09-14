@@ -87,8 +87,27 @@ public class IdeaServiceCommons {
             .map(idea -> new FetchIdeaDto().from(idea).withUser(idea, user)).collect(Collectors.toList()));
   }
 
-  public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(Board board, User user, int page, int pageSize, String query) {
-    Page<Idea> pageData = ideaRepository.findByBoardAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(board, query, query, PageRequest.of(page, pageSize));
+  public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(Board board, User user, int page, int pageSize, String query, IdeaService.FilterType filter, IdeaService.SortType sort) {
+    Idea.IdeaStatus status = null;
+    switch(filter.getType()) {
+      case OPENED:
+        status = Idea.IdeaStatus.OPENED;
+        break;
+      case CLOSED:
+        status = Idea.IdeaStatus.CLOSED;
+        break;
+      case ALL:
+        break;
+      case TAG:
+        //unsupported
+        break;
+    }
+    Page<Idea> pageData;
+    if(status == null) {
+      pageData = ideaRepository.findByQuery(board, query, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
+    } else {
+      pageData = ideaRepository.findByQueryAndStatus(board, query, status, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
+    }
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()

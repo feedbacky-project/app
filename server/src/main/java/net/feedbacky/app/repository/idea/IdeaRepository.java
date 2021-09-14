@@ -9,6 +9,7 @@ import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaReposito
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +35,12 @@ public interface IdeaRepository extends EntityGraphJpaRepository<Idea, Long> {
   Optional<Idea> findByTitleAndBoard(String title, Board board);
 
   @EntityGraph(value = "Idea.fetch")
-  Page<Idea> findByBoardAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(Board board, String title, String description, Pageable pageable);
+  @Query("SELECT i FROM Idea i WHERE i.board = ?1 AND (i.title LIKE %?2% OR i.description LIKE %?2%)")
+  Page<Idea> findByQuery(Board board, String query, Pageable pageable);
+
+  @EntityGraph(value = "Idea.fetch")
+  @Query(value = "SELECT i FROM Idea i WHERE i.board = ?1 AND (i.title LIKE %?2% OR i.description LIKE %?2%) AND i.status = ?3")
+  Page<Idea> findByQueryAndStatus(Board board, String query, Idea.IdeaStatus status, Pageable pageable);
 
   @EntityGraph(value = "Idea.fetch")
   Page<Idea> findByBoardAndTagsIn(Board board, List<Tag> tags, Pageable pageable);

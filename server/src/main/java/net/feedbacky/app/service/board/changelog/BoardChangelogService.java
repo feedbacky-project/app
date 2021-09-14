@@ -19,7 +19,7 @@ public interface BoardChangelogService {
 
   PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize, SortType sortType);
 
-  PaginableRequest<List<FetchChangelogDto>> getAllChangelogsContaining(String discriminator, int page, int pageSize, String query);
+  PaginableRequest<List<FetchChangelogDto>> getAllChangelogsContaining(String discriminator, int page, int pageSize, String query, SortType sortType);
 
   ResponseEntity<FetchChangelogDto> post(String discriminator, PostChangelogDto dto);
 
