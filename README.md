@@ -19,25 +19,20 @@ Only Linux tutorial is available.
 ## Further customizing
 Wanna more customization? Fork the repo and edit files manually at GitHub to customize parts of the app.
 * Customize meta tags (eg. for Discord)
-    Edit [this file](https://github.com/Plajer/feedbacky-project/blob/master/client/public/index.html)
-    
-    You can include og meta tags like at https://app.feedbacky.net, our forked [file is located here](https://github.com/Feedbacky/feedbacky-project/blob/master/client/public/index.html#L15)
-    
-    Example
-    
-    ![](https://static.plajer.xyz/feedbacky/img/og-example.png)
+    Edit [this file](https://github.com/feedbacky-project/app/blob/master/client/public/index.html)
+
 * Customize email templates
-    Head over [to this folder](https://github.com/Plajer/feedbacky-project/tree/master/server/src/main/resources/mail_templates)
+    Head over [to this folder](https://github.com/feedbacky-project/app/tree/master/server/src/main/resources/mail_templates)
     and edit HTML of files as you wish.
     
     **Be careful not to replace any placeholders like `${host.address}`**
 * Customize/add new OAuth2 providers
-    Check out [this file](https://github.com/Plajer/feedbacky-project/blob/master/server/src/main/resources/oauth_providers.yml)
+    Check out [this file](https://github.com/feedbacky-project/app/blob/master/server/src/main/resources/oauth_providers.yml)
     
     There is no official documentation on this file so please contact developers if you want to add or change anything here.
 
 ## Updating from older versions
-See [UPDATING.md](https://github.com/Plajer/feedbacky-project/blob/master/UPDATING.md)
+See [UPDATING.md](https://github.com/feedbacky-project/app/blob/master/UPDATING.md)
 
 ## Attribution note
 Icons (from client project at client/src/routes/board/admin/subroutes/webhooks/creator/StepSecondSubroute.js) made by [Prosymbols](https://www.flaticon.com/authors/prosymbols) from www.flaticon.com
@@ -49,4 +44,4 @@ Design system used in project provided by https://getbootstrap.com/
 Snackbars adjusted to Feedbacky purposes created by [polonel](https://github.com/polonel/SnackBar) based on MIT License
 
 ## License
-Feedbacky is free and open source software under the [MIT License](https://github.com/Plajer/feedbacky-project/blob/master/LICENSE.md).
+Feedbacky is free and open source software under the [MIT License](https://github.com/feedbacky-project/app/blob/master/LICENSE.md).
