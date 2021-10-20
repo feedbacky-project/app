@@ -5,9 +5,11 @@ import {truncateText} from "utils/basic-utils";
 
 const MarkdownBox = styled.div`
   word-break: break-word;
-  color: hsla(0, 0%, 0%, .75);
+  //equivalent of hsla(0, 0%, 0%, .75) without alpha under --background variable
+  color: hsl(240, 1%, 23%);
   .dark & {
-    color: hsla(0, 0%, 95%, .75);
+    //equivalent of hsla(0, 0%, 95%, .75) without alpha under .dark --background variable 
+    color: hsl(210, 2%, 74%);
   }
   & a {
     color: ${props => props.theme.toHexString()};

@@ -1,3 +1,6 @@
+### 1.0.0.beta.8
+* **[FIX]** Emotes in markdown containers are no longer transparent but fully visible
+
 ### 1.0.0.beta.7
 * **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))
 * **[FEATURE]** Idea votes can now be reset (all votes or anonymous ones) (requested at [Feedbacky](https://app.feedbacky.net/i/more-moderation-options.2662))
