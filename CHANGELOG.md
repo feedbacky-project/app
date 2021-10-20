@@ -1,4 +1,5 @@
 ### 1.0.0.beta.8
+* **[IMPROVEMENT]** On network error display more friendly error messages with reload button
 * **[FIX]** Emotes in markdown containers are no longer transparent but fully visible
 
 ### 1.0.0.beta.7

@@ -1,4 +1,5 @@
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
+import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
@@ -9,6 +10,7 @@ import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState}
 import {FaFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner} from "ui";
+import {UiButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
 import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
@@ -49,7 +51,10 @@ const DiscussionBox = forwardRef((props, ref) => {
     };
     const renderComments = () => {
         if (comments.error) {
-            return <div className={"text-red mt-2 mb-3"}><FaFrown/> Failed to load comments</div>
+            return <div className={"text-center"}>
+                <SvgNotice Component={UndrawNetworkError} title={"Network Error"} description={"Failed to load comments"}/>
+                <UiButton className={"mt-1"} label={"Reload"} small onClick={() => onLoadRequest(true)}>Reload</UiButton>
+            </div>
         }
         return <InfiniteScroll
             style={{overflow: "initial"}}

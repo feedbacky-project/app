@@ -1,3 +1,4 @@
+import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 import axios from 'axios';
 import BoardInfoCard from "components/board/BoardInfoCard";
@@ -8,6 +9,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaRegFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner} from "ui";
+import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {prepareFilterAndSortRequests} from "utils/basic-utils";
 
@@ -22,7 +24,10 @@ const BoardIdeaCardContainer = ({id, searchQuery}) => {
     }, [id, searchQuery, user.session, user.localPreferences.ideas]);
     const loadIdeas = () => {
         if (ideas.error) {
-            return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className={"mr-1"}/> Failed to load ideas</React.Fragment>}/>
+            return <div className={"text-center"}>
+                <SvgNotice Component={UndrawNetworkError} title={"Network Error"} description={"Failed to load ideas"}/>
+                <UiButton className={"mt-1"} label={"Reload"} small onClick={() => onLoadRequest(true)}>Reload</UiButton>
+            </div>
         }
         if (ideas.loaded && ideas.data.length === 0 && !ideas.moreToLoad) {
             if (searchQuery !== "") {

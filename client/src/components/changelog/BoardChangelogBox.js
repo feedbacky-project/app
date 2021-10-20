@@ -1,3 +1,4 @@
+import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
 import axios from "axios";
@@ -11,6 +12,7 @@ import {FaRegFrown} from "react-icons/all";
 import InfiniteScroll from "react-infinite-scroll-component";
 import TimeAgo from "timeago-react/esm/timeago-react";
 import {UiLoadingSpinner, UiPrettyUsername} from "ui";
+import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
@@ -54,7 +56,10 @@ const BoardChangelogBox = ({searchQuery}) => {
     };
     const loadChangelogs = () => {
         if (changelog.error) {
-            return <SvgNotice Component={UndrawNoIdeas} title={<React.Fragment><FaRegFrown className={"mr-1"}/> Failed to load changelog</React.Fragment>}/>
+            return <div className={"text-center"}>
+                <SvgNotice Component={UndrawNetworkError} title={"Network Error"} description={"Failed to load changelog"}/>
+                <UiButton className={"mt-1"} label={"Reload"} small onClick={() => onLoadRequest(true)}>Reload</UiButton>
+            </div>
         }
         if (changelog.loaded && changelog.data.length === 0 && !changelog.moreToLoad) {
             if (searchQuery !== "") {
