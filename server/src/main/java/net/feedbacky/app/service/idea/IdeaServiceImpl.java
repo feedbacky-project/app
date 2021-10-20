@@ -156,7 +156,7 @@ public class IdeaServiceImpl implements IdeaService {
             && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
-    if(!idea.getCreator().equals(user) || !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+    if(!(idea.getCreator().equals(user) || ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user))) {
       throw new InsufficientPermissionsException();
     }
 
