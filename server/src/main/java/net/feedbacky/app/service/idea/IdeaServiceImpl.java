@@ -152,11 +152,11 @@ public class IdeaServiceImpl implements IdeaService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null)
+    if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null || dto.getAssignee() != null)
             && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
-    if(!idea.getCreator().equals(user) && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+    if(!idea.getCreator().equals(user) || !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
 
@@ -247,15 +247,15 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   private void handleAssigneeUpdate(Idea idea, PatchIdeaDto dto, User user) {
-    //assign feature is only for moderators
-    if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
-      throw new InsufficientPermissionsException();
-    }
     CommentBuilder commentBuilder = new CommentBuilder().by(user);
     commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED);
     if(dto.getAssignee() == null) {
       if(idea.getAssignee() == null) {
         return;
+      }
+      //assign feature is only for moderators
+      if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+        throw new InsufficientPermissionsException();
       }
       idea.setAssignee(null);
       commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " removed assignee from this idea.");
