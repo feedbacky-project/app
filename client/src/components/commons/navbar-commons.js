@@ -3,27 +3,20 @@ import React from "react";
 import {FaAngleDown, FaUserCog} from "react-icons/all";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
-import {UiClassicButton} from "ui/button";
+import {UiButton, UiClassicButton} from "ui/button";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {UiAvatar} from "ui/image";
 import {isServiceAdmin} from "utils/basic-utils";
 
-const LoginButton = styled(UiClassicButton)`
-  padding: 0 .8rem;
+const LoginButton = styled(UiButton)`
+  padding: .25rem .5rem;
   color: var(--font-color);
-  background-color: transparent !important;
   transition: var(--hover-transition);
   cursor: pointer;
   box-shadow: none;
   font-size: .9rem;
-  margin: .5rem 0;
-  
-  &:hover, &:focus {
-    color: var(--font-color);
-    box-shadow: none;
-    background-color: transparent !important;
-    transform: var(--hover-transform-scale-sm);
-  }
+  margin: .25rem 0 .25rem .25rem;
+  border: 1px dashed ${props => props.theme}
 `;
 
 const OptionsButton = styled.div`
@@ -47,7 +40,7 @@ const TopDropdownElement = styled(UiDropdownElement)`
 
 export const renderLogIn = (onNotLoggedClick, context, boardData = null) => {
     if (!context.user.loggedIn) {
-        return <LoginButton className={"d-inline-block float-right order-sm-2 order-1"} label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
+        return <LoginButton theme={context.getTheme().setAlpha(.2).toString()} className={"d-inline-block float-right order-sm-2 order-1"} label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
     }
     return <UiDropdown className={"d-inline-block float-right order-sm-2 order-1"} label={"Options"} toggleClassName={"px-0"} menuClassName={"pt-0 rounded-top-0"} toggle={
         <OptionsButton>
