@@ -41,7 +41,8 @@ const UiMarkdownFormControl = (props) => {
     const ref = useRef(null);
     const {CustomOptions, ...otherProps} = props;
     const [modal, setModal] = useState({open: false, type: ""});
-    const markdownInsert = (text, between, betweenText = "") => {
+    const [selection, setSelection] = useState(null)
+    const markdownInsert = (text, between) => {
         const form = ref.current;
         const scrollPos = form.scrollTop;
         let caretPos = form.selectionStart;
@@ -49,7 +50,7 @@ const UiMarkdownFormControl = (props) => {
         const front = form.value.substring(0, caretPos);
         const back = form.value.substring(form.selectionEnd, form.value.length);
         if (between) {
-            form.value = front + text + betweenText + back;
+            form.value = front + text + selection + text + back;
         } else {
             form.value = front + text + back;
         }
@@ -62,21 +63,21 @@ const UiMarkdownFormControl = (props) => {
     return <React.Fragment>
         <MarkdownOptionModal as={TextInputActionModal} size={"sm"} id={"linkInput"} isOpen={modal.open && modal.type === "link"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
                               actionDescription={"Insert link, type link URL."} onAction={link => {
-            markdownInsert("[", true, "](" + link + ")");
+            markdownInsert("[" + selection + "](" + link + ")", false);
             return Promise.resolve();
         }}/>
         <MarkdownOptionModal as={TextInputActionModal} className={"test"} size={"sm"} id={"imageInput"} isOpen={modal.open && modal.type === "image"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
                               actionDescription={"Insert image, type image URL."} onAction={link => {
-            markdownInsert("![](" + link + ")", false);
+            markdownInsert("![" + selection + "](" + link + ")", false);
             return Promise.resolve();
         }}/>
         <MarkdownOptions as={CustomOptions}>
-            <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("**", true, "**")}><FaBold/></MarkdownIcon>
-            <MarkdownIcon className={"mr-sm-4 mr-1"} onClick={() => markdownInsert("*", true, "*")}><FaItalic/></MarkdownIcon>
+            <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("**", true)}><FaBold/></MarkdownIcon>
+            <MarkdownIcon className={"mr-sm-4 mr-1"} onClick={() => markdownInsert("*", true)}><FaItalic/></MarkdownIcon>
             <MarkdownIcon className={"mr-1"} onClick={() => setModal({open: true, type: "image"})}><FaImage/></MarkdownIcon>
             <MarkdownIcon onClick={() => setModal({open: true, type: "link"})}><FaLink/></MarkdownIcon>
         </MarkdownOptions>
-        <FormControl innerRef={ref} {...otherProps}/>
+        <FormControl innerRef={ref} onSelect={() => setSelection(window.getSelection().toString())} {...otherProps}/>
     </React.Fragment>
 };
 
