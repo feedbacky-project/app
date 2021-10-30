@@ -87,8 +87,8 @@ const DiscussionBox = forwardRef((props, ref) => {
         const textarea = document.getElementById("commentMessage");
         const message = textarea.value;
         const type = internal ? "INTERNAL" : "PUBLIC";
-        if (message.length < 10 || message.length > 500) {
-            popupWarning("Message must be longer than 10 and shorter than 500 characters");
+        if (message.length < 10 || message.length > 1800) {
+            popupWarning("Message must be longer than 10 and shorter than 1800 characters");
             return Promise.resolve();
         }
         return axios.post("/comments/", {
