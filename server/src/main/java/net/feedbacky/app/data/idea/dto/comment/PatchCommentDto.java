@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 public class PatchCommentDto {
 
   @NotNull(message = "Description cannot be empty.")
-  @Length(min = 10, max = 650, message = "Description cannot be shorter than 10 or longer than 650 characters.")
+  @Length(min = 10, max = 1800, message = "Description cannot be shorter than 10 or longer than 1800 characters.")
   private String description;
 
 }
