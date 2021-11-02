@@ -36,7 +36,7 @@ const UiBadge = (props) => {
             badgeColor = badgeColor.darken(10);
         }
     }
-    return <Badge theme={badgeColor.toString()} style={{fontWeight: "500", color: badgeColor.toString(), backgroundColor: badgeColor.setAlpha(.1).toString(), ...style}} ref={innerRef} {...otherProps}>{children}</Badge>
+    return <Badge theme={badgeColor.toString()} style={{fontWeight: "500", color: badgeColor.clone().toString(), backgroundColor: badgeColor.clone().setAlpha(.1).toString(), ...style}} ref={innerRef} {...otherProps}>{children}</Badge>
 };
 
 export {UiBadge};

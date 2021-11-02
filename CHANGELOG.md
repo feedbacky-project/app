@@ -1,8 +1,10 @@
 ### 1.0.0.beta.8
 * **[IMPROVEMENT]** Make log-in button more noticeable
 * **[IMPROVEMENT]** On network error display more friendly error messages with reload button
+* **[CHANGE]** Changed comment max chars limit to 1800
 * **[FIX]** Emotes in markdown containers are no longer transparent but fully visible
 * **[FIX]** Users couldn't edit their own ideas if they weren't board moderators
+* **[FIX]** When selecting tag in light mode it had transparent background
 
 ### 1.0.0.beta.7
 * **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))
