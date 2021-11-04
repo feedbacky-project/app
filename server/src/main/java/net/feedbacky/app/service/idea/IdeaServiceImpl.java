@@ -299,6 +299,7 @@ public class IdeaServiceImpl implements IdeaService {
         IdeaMetadata metadata = new IdeaMetadata();
         metadata.setDataKey(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId()));
         metadata.setDataValue(id);
+        metadata.setIdea(idea);
         idea.getMetadata().add(metadata);
         ideaRepository.save(idea);
       });
