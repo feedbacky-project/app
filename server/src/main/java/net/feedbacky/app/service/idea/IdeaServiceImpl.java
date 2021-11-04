@@ -297,8 +297,8 @@ public class IdeaServiceImpl implements IdeaService {
           return;
         }
         IdeaMetadata metadata = new IdeaMetadata();
-        metadata.setKey(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId()));
-        metadata.setValue(id);
+        metadata.setDataKey(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId()));
+        metadata.setDataValue(id);
         idea.getMetadata().add(metadata);
         ideaRepository.save(idea);
       });

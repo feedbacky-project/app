@@ -36,8 +36,8 @@ public class IdeaMetadata implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Idea idea;
-  private String key;
-  private String value;
+  private String dataKey;
+  private String dataValue;
 
   @AllArgsConstructor
   @Getter
