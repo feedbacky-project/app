@@ -77,7 +77,7 @@ dependencies {
     implementation "org.modelmapper:modelmapper:2.3.8"
     implementation "org.apache.commons:commons-text:1.8"
     implementation "com.mashape.unirest:unirest-java:1.4.9"
-    implementation "com.github.MrPowerGamerBR:TemmieWebhook:59de40c3b6"
+    implementation 'club.minnced:discord-webhooks:0.7.2'
     implementation "javax.mail:mail:1.4.7"
     runtimeOnly "mysql:mysql-connector-java:8.0.20"
 }

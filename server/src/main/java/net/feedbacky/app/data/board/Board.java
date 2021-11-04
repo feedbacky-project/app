@@ -11,7 +11,6 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
 import net.feedbacky.app.data.board.suspended.SuspendedUser;
 import net.feedbacky.app.data.board.webhook.Webhook;
-import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.user.User;
@@ -33,7 +32,6 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -58,9 +56,6 @@ import java.util.Set;
         @NamedAttributeNode("moderators"), @NamedAttributeNode("tags"),
         @NamedAttributeNode("socialLinks"), @NamedAttributeNode("suspensedList")})
 public class Board implements Serializable {
-
-  @Transient
-  private final transient WebhookExecutor webhookExecutor = new WebhookExecutor(this);
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

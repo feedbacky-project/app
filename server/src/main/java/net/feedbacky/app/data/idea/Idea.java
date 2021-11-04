@@ -6,18 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.Board;
-import net.feedbacky.app.data.board.category.Category;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.tag.Tag;
-import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.util.mailservice.MailService;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
-import org.springframework.boot.context.properties.bind.Name;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
