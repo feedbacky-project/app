@@ -3,6 +3,7 @@ package net.feedbacky.app.service.idea;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
+import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
@@ -48,17 +49,19 @@ import java.util.stream.Collectors;
 @Component
 public class IdeaServiceCommons {
 
-  private IdeaRepository ideaRepository;
-  private ObjectStorage objectStorage;
-  private AttachmentRepository attachmentRepository;
-  private TagRepository tagRepository;
+  private final IdeaRepository ideaRepository;
+  private final ObjectStorage objectStorage;
+  private final AttachmentRepository attachmentRepository;
+  private final TagRepository tagRepository;
+  private final WebhookExecutor webhookExecutor;
 
   @Autowired
-  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository) {
+  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository, WebhookExecutor webhookExecutor) {
     this.ideaRepository = ideaRepository;
     this.objectStorage = objectStorage;
     this.attachmentRepository = attachmentRepository;
     this.tagRepository = tagRepository;
+    this.webhookExecutor = webhookExecutor;
   }
 
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(Board board, User user, int page, int pageSize, IdeaService.FilterType filter, IdeaService.SortType sort) {
@@ -169,7 +172,7 @@ public class IdeaServiceCommons {
 
     FetchIdeaDto fetchDto = new FetchIdeaDto().from(idea).withUser(idea, user);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_CREATE, builder.build());
+    webhookExecutor.executeWebhooks(board, Webhook.Event.IDEA_CREATE, builder.build());
     return fetchDto;
   }
 

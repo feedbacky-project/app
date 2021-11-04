@@ -4,6 +4,7 @@ import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
+import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
@@ -59,14 +60,16 @@ public class CommentServiceImpl implements CommentService {
   private final IdeaRepository ideaRepository;
   private final UserRepository userRepository;
   private final SubscriptionExecutor subscriptionExecutor;
+  private final WebhookExecutor webhookExecutor;
   private final boolean closedIdeasCommenting = Boolean.parseBoolean(System.getenv("SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS"));
 
   @Autowired
-  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor) {
+  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor, WebhookExecutor webhookExecutor) {
     this.commentRepository = commentRepository;
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
     this.subscriptionExecutor = subscriptionExecutor;
+    this.webhookExecutor = webhookExecutor;
   }
 
   @Override
@@ -146,7 +149,7 @@ public class CommentServiceImpl implements CommentService {
     //do not publish information about private internal comments
     if(comment.getViewType() != Comment.ViewType.INTERNAL) {
       WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-      idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT, webhookBuilder.build());
+      webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT, webhookBuilder.build());
 
       //notify only if moderator
       if(isModerator) {
@@ -214,7 +217,7 @@ public class CommentServiceImpl implements CommentService {
     }
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     Idea idea = comment.getIdea();
-    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
+    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
     commentRepository.delete(comment);
     //to force trend score update
     Set<Comment> comments = idea.getComments();

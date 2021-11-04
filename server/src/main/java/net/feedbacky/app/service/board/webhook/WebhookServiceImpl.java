@@ -8,6 +8,7 @@ import net.feedbacky.app.data.board.dto.webhook.PostWebhookDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
+import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -43,12 +44,14 @@ public class WebhookServiceImpl implements WebhookService {
   private final BoardRepository boardRepository;
   private final WebhookRepository webhookRepository;
   private final UserRepository userRepository;
+  private final WebhookExecutor webhookExecutor;
 
   @Autowired
-  public WebhookServiceImpl(BoardRepository boardRepository, WebhookRepository webhookRepository, UserRepository userRepository) {
+  public WebhookServiceImpl(BoardRepository boardRepository, WebhookRepository webhookRepository, UserRepository userRepository, WebhookExecutor webhookExecutor) {
     this.boardRepository = boardRepository;
     this.webhookRepository = webhookRepository;
     this.userRepository = userRepository;
+    this.webhookExecutor = webhookExecutor;
   }
 
   @Override
@@ -78,7 +81,7 @@ public class WebhookServiceImpl implements WebhookService {
     board.getWebhooks().add(webhook);
     boardRepository.save(board);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user);
-    board.getWebhookExecutor().executeWebhook(webhook, Webhook.Event.SAMPLE_EVENT, builder.build());
+    webhookExecutor.executeWebhook(webhook, Webhook.Event.SAMPLE_EVENT, builder.build());
     return ResponseEntity.status(HttpStatus.CREATED).body(new FetchWebhookDto().from(webhook));
   }
 

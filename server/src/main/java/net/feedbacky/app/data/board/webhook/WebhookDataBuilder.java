@@ -2,6 +2,7 @@ package net.feedbacky.app.data.board.webhook;
 
 import net.feedbacky.app.data.board.changelog.Changelog;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.IdeaMetadata;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.user.User;
 
@@ -48,6 +49,13 @@ public class WebhookDataBuilder {
   public WebhookDataBuilder withChangelog(Changelog changelog) {
     data.put(WebhookExecutor.WebhookMapData.CHANGELOG_NAME.getName(), changelog.getTitle());
     data.put(WebhookExecutor.WebhookMapData.CHANGELOG_DESCRIPTION.getName(), changelog.getDescription());
+    return this;
+  }
+
+  public WebhookDataBuilder withWebhookUpdate(Webhook webhook, Idea idea) {
+    data.put(WebhookExecutor.WebhookMapData.IDEA_DISCORD_MESSAGE_ID_METADATA.getName(),
+            String.valueOf(idea.getMetadata().stream().filter(m -> m.getKey().equals(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId())))
+                    .findFirst().orElse(null)));
     return this;
   }
 

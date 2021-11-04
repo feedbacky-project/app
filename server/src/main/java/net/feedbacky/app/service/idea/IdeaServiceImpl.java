@@ -5,7 +5,9 @@ import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
+import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.IdeaMetadata;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
@@ -85,13 +87,14 @@ public class IdeaServiceImpl implements IdeaService {
   private final IdeaServiceCommons ideaServiceCommons;
   private final RandomNicknameUtils randomNicknameUtils;
   private final MailHandler mailHandler;
+  private final WebhookExecutor webhookExecutor;
 
   @Autowired
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
                          CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
                          SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils,
-                         MailHandler mailHandler) {
+                         MailHandler mailHandler, WebhookExecutor webhookExecutor) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -103,6 +106,7 @@ public class IdeaServiceImpl implements IdeaService {
     this.ideaServiceCommons = ideaServiceCommons;
     this.randomNicknameUtils = randomNicknameUtils;
     this.mailHandler = mailHandler;
+    this.webhookExecutor = webhookExecutor;
   }
 
   @Override
@@ -217,7 +221,7 @@ public class IdeaServiceImpl implements IdeaService {
     //the change was made, notify webhooks and save moderation comment
     if(comment != null) {
       WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-      idea.getBoard().getWebhookExecutor().executeWebhooks(event, builder.build());
+      webhookExecutor.executeWebhooks(idea.getBoard(), event, builder.build());
 
       Set<Comment> comments = idea.getComments();
       comments.add(comment);
@@ -229,6 +233,10 @@ public class IdeaServiceImpl implements IdeaService {
     mapper.map(dto, idea);
     if(dto.getOpen() != null) {
       idea.setStatus(Idea.IdeaStatus.toIdeaStatus(dto.getOpen()));
+    }
+
+    if(edited) {
+      handleDescriptionUpdate(idea, user);
     }
   }
 
@@ -281,6 +289,22 @@ public class IdeaServiceImpl implements IdeaService {
     commentRepository.save(comment);
   }
 
+  private void handleDescriptionUpdate(Idea idea, User user) {
+    for(Webhook webhook : idea.getBoard().getWebhooks()) {
+      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withWebhookUpdate(webhook, idea);
+      webhookExecutor.executeWebhook(webhook, Webhook.Event.IDEA_CREATE, builder.build()).thenAccept(id -> {
+        if(id == null) {
+          return;
+        }
+        IdeaMetadata metadata = new IdeaMetadata();
+        metadata.setKey(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId()));
+        metadata.setValue(id);
+        idea.getMetadata().add(metadata);
+        ideaRepository.save(idea);
+      });
+    }
+  }
+
   @Override
   public ResponseEntity delete(long id) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
@@ -293,7 +317,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
     idea.getAttachments().forEach(attachment -> objectStorage.deleteImage(attachment.getUrl()));
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_DELETE, builder.build());
+    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_DELETE, builder.build());
     ideaRepository.delete(idea);
     return ResponseEntity.noContent().build();
   }
@@ -433,7 +457,7 @@ public class IdeaServiceImpl implements IdeaService {
     ideaRepository.save(idea);
     WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea())
             .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
-    idea.getBoard().getWebhookExecutor().executeWebhooks(Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
+    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
 
     subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE, user,
             idea, prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));

@@ -9,6 +9,7 @@ import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
+import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
@@ -46,12 +47,14 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   private final BoardRepository boardRepository;
   private final UserRepository userRepository;
   private final ChangelogRepository changelogRepository;
+  private final WebhookExecutor webhookExecutor;
 
   @Autowired
-  public BoardChangelogServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ChangelogRepository changelogRepository) {
+  public BoardChangelogServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ChangelogRepository changelogRepository, WebhookExecutor webhookExecutor) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.changelogRepository = changelogRepository;
+    this.webhookExecutor = webhookExecutor;
   }
 
   @Override
@@ -89,7 +92,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
     changelogRepository.save(changelog);
 
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withChangelog(changelog);
-    board.getWebhookExecutor().executeWebhooks(Webhook.Event.CHANGELOG_CREATE, builder.build());
+    webhookExecutor.executeWebhooks(board, Webhook.Event.CHANGELOG_CREATE, builder.build());
     board.setLastChangelogUpdate(Calendar.getInstance().getTime());
     boardRepository.save(board);
 
