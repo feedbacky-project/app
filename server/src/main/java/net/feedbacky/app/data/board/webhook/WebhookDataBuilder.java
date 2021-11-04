@@ -54,7 +54,7 @@ public class WebhookDataBuilder {
 
   public WebhookDataBuilder withWebhookUpdate(Webhook webhook, Idea idea) {
     data.put(WebhookExecutor.WebhookMapData.IDEA_DISCORD_MESSAGE_ID_METADATA.getName(),
-            String.valueOf(idea.getMetadata().stream().filter(m -> m.getKey().equals(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId())))
+            String.valueOf(idea.getMetadata().stream().filter(m -> m.getDataKey().equals(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId())))
                     .findFirst().orElse(null)));
     return this;
   }
