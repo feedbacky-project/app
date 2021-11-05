@@ -1,6 +1,7 @@
 package net.feedbacky.app.data.board.webhook;
 
 import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.exception.HttpException;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
@@ -111,14 +112,19 @@ public class WebhookExecutor {
     }
     builder.addEmbeds(embedBuilder.build());
     String msgId = data.get(WebhookMapData.IDEA_DISCORD_MESSAGE_ID_METADATA.getName());
-    if(msgId == null) {
-      return client.send(builder.build()).thenApply(res -> String.valueOf(res.getId()));
-    } else {
-      if(event == Webhook.Event.IDEA_DELETE) {
-        client.delete(msgId);
-        return CompletableFuture.completedFuture(null);
+    try {
+      if(msgId == null) {
+        return client.send(builder.build()).thenApply(res -> String.valueOf(res.getId()));
+      } else {
+        if(event == Webhook.Event.IDEA_DELETE) {
+          client.delete(msgId);
+          return CompletableFuture.completedFuture(null);
+        }
+        return client.edit(Long.parseLong(msgId), builder.build()).thenApply(res -> String.valueOf(res.getId()));
       }
-      return client.edit(Long.parseLong(msgId), builder.build()).thenApply(res -> String.valueOf(res.getId()));
+    } catch(HttpException ignored) {
+      //suppress
+      return CompletableFuture.completedFuture(null);
     }
   }
 
