@@ -235,7 +235,7 @@ public class IdeaServiceImpl implements IdeaService {
       idea.setStatus(Idea.IdeaStatus.toIdeaStatus(dto.getOpen()));
     }
 
-    if(edited) {
+    if(dto.getDescription() != null && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())))) {
       handleDescriptionUpdate(idea, user);
     }
   }
