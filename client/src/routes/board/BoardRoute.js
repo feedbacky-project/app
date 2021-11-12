@@ -13,7 +13,7 @@ import {UiContainer, UiRow} from "ui/grid";
 import {useTitle} from "utils/use-title";
 
 const BoardRoute = () => {
-    const {onThemeChange, defaultTheme} = useContext(AppContext);
+    const {onThemeChange, defaultTheme, user, onLocalPreferencesUpdate} = useContext(AppContext);
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [searchQuery, setSearchQuery] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
@@ -22,6 +22,8 @@ const BoardRoute = () => {
     useEffect(() => {
         //reset search query for board switch
         setSearchQuery("");
+        //reset invalid tags after board switch
+        onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: "open"}});
         if (location.state == null || location.state._boardData === undefined) {
             axios.get("/boards/" + id).then(res => {
                 if (res.status !== 200) {
