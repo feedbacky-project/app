@@ -13,7 +13,7 @@ import {UiDismissibleModal} from "ui/modal";
 import {formatRemainingCharacters, getBase64FromFile, popupError, popupNotification, popupWarning, validateImageWithWarning} from "utils/basic-utils";
 
 const AttachmentButton = styled(UiClassicButton)`
-  max-height: 38px;
+  max-height: 36px;
   background-color: var(--secondary);
   color: var(--font-color);
   .dark & {
@@ -82,7 +82,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             <UiCol xs={"auto"} className={"d-inline-block px-0"}>
                 <AttachmentButton label={"Add Attachment"} variant={""} className={"m-0 p-0"}>
                     <input accept={"image/jpeg, image/png"} type={"file"} className={"d-none"} id={"attachmentUpload"} onChange={onAttachmentUpload}/>
-                    <label htmlFor={"attachmentUpload"} className={"mb-0"} style={{cursor: "pointer", height: 38, width: 38, color: "hsl(210, 11%, 15%)"}}>
+                    <label htmlFor={"attachmentUpload"} className={"mb-0"} style={{cursor: "pointer", height: 36, width: 36, color: "hsl(210, 11%, 15%)"}}>
                         <FaRegImage className={"align-top"} style={{position: "relative", top: "50%", transform: "translateY(-50%)"}}/>
                     </label>
                 </AttachmentButton>

@@ -6,6 +6,7 @@
 * **[FIX]** Users couldn't edit their own ideas if they weren't board moderators
 * **[FIX]** When selecting tag in light mode it had transparent background
 * **[FIX]** Mail notifications toggle didn't set proper values client-side but did server-side
+* **[FIX]** Choosing tag filter and switching boards threw No ideas found error
 
 ### 1.0.0.beta.7
 * **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))
