@@ -15,14 +15,12 @@ const NotificationsSubroute = () => {
     useEffect(() => setCurrentNode("notifications"), [setCurrentNode]);
     useTitle("Profile | Notifications");
     const onChangesSave = () => {
-        return axios.patch("/users/@me/mailPreferences", {
-            notificationsEnabled: notificationsEnabled,
-        }).then(res => {
+        return axios.patch("/users/@me/mailPreferences", {notificationsEnabled}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
                 return;
             }
-            user.data.mailPreferences.setNotificationsEnabled = setNotificationsEnabled;
+            user.data.mailPreferences.notificationsEnabled = notificationsEnabled;
             popupNotification("Settings updated", getTheme());
         });
     };
