@@ -152,3 +152,14 @@ export const isServiceAdmin = (context) => {
     });
     return isAdmin;
 };
+
+export const hideMail = (mail) => {
+    let data = mail.split("@");
+    if(data.length === 0) {
+        return mail;
+    }
+    let mailUsername = data[0];
+    let first = mailUsername.charAt(0);
+    let last = mailUsername.charAt(mailUsername.length - 1);
+    return first + "*****" + last + "@" + data[1];
+}

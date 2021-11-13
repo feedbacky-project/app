@@ -12,7 +12,7 @@ import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui
 import {UiCol, UiRow} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {UiViewBoxDangerBackground} from "ui/viewbox/UiViewBox";
-import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
+import {hideMail, popupError, popupNotification, popupWarning} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
 
 const SettingsSubroute = () => {
@@ -87,7 +87,7 @@ const SettingsSubroute = () => {
                                      actionDescription={<div>
                                          <strong>This is one-way road</strong> your account will be <strong>fully anonymized</strong> but your content on the page will be kept.
                                          <div>You won't be able to log-in to this account anymore.</div>
-                                         <div>Type <UiKeyboardInput>{user.data.email}</UiKeyboardInput> to continue.</div>
+                                         <div>Type uncensored <UiKeyboardInput>{hideMail(user.data.email)}</UiKeyboardInput> to continue.</div>
                                      </div>}/>
             <UiCol xs={{span: 12, order: 2}} lg={{span: 6, order: 1}}>
                 <UiFormLabel className={"mt-lg-0 mt-2"}>Username</UiFormLabel>
@@ -108,7 +108,7 @@ const SettingsSubroute = () => {
             </UiCol>
             <UiCol xs={{span: 12, order: 3}} lg={6}>
                 <UiFormLabel className={"mt-2"}>Email</UiFormLabel>
-                <UiFormControl rows={1} disabled value={user.data.email} id={"emailTextarea"} label={"Email"}/>
+                <UiFormControl rows={1} disabled value={hideMail(user.data.email)} id={"emailTextarea"} label={"Email"}/>
                 <UiFormText className={"text-right"} id={"remainingUsername"}>
                     Cannot Change
                 </UiFormText>
