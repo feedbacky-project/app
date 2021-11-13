@@ -32,6 +32,7 @@ export const IdeaCardTitle = styled.span`
 
 export const IdeaCardDescription = styled.small`
   letter-spacing: -.1pt;
+  word-spacing: -.1pt;
   word-break: break-word;
 `;
 
@@ -117,12 +118,12 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
         },
     }}>
         <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"} pinned={idea.pinned} darkMode={user.darkMode}>
-            <span className={"my-auto mr-3"}>
-                <VoteButton idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>
+            <span className={"my-sm-auto mr-sm-3 mr-2"}>
+                <VoteButton className={"pt-sm-1 pt-0 pl-sm-2 pl-0"} idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>
             </span>
             <CardLinkStyle as={Link} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                 <div>
-                    <div className={"d-inline"} style={{fontSize: `1.15em`}}>
+                    <div className={"d-inline"} style={{fontSize: `16px`}}>
                         {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}
                         {!idea.pinned || <UiClassicIcon as={PinIcon} className={"mr-1"}/>}
                         <IdeaCardTitle dangerouslySetInnerHTML={{__html: idea.title}}/>

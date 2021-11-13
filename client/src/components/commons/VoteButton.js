@@ -87,7 +87,7 @@ const ToUpvoteIcon = styled(FiChevronUp)`
   }
 `;
 
-const VoteButton = ({idea, onVote, animationRef}) => {
+const VoteButton = ({idea, onVote, animationRef, className = ""}) => {
     const {getTheme} = useContext(AppContext);
     const {ideaData} = useContext(IdeaContext);
     let color = getTheme();
@@ -122,12 +122,12 @@ const VoteButton = ({idea, onVote, animationRef}) => {
     };
 
     if (!ideaData.upvoted) {
-        return <ToUpvoteBtn label={"Upvote"} onClick={doVote} variant={""}>
+        return <ToUpvoteBtn className={className} label={"Upvote"} onClick={doVote} variant={""}>
             <ToUpvoteIcon className={"to-upvote"}/>
             <strong className={"d-block"}>{ideaData.votersAmount}</strong>
         </ToUpvoteBtn>
     } else {
-        return <VoteBtn label={"Downvote"} onClick={doVote} variant={""}>
+        return <VoteBtn className={className} label={"Downvote"} onClick={doVote} variant={""}>
             <FiChevronsUp className={"upvoted"} style={{color}}/>
             <strong className={"d-block"} style={{color: color}}>{ideaData.votersAmount}</strong>
         </VoteBtn>

@@ -74,7 +74,7 @@ const PageNavbar = ({selectedNode, goBackVisible = false}) => {
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
             {renderLogIn(onNotLoggedClick, context, data)}
-            <div className={"d-sm-flex d-block my-sm-0 my-2 order-sm-1 order-2"} style={{fontWeight: "500"}}>
+            <div className={"d-sm-flex d-block my-sm-0 my-2 order-sm-1 order-2"} style={{fontWeight: "500", whiteSpace: "nowrap"}}>
                 {selectedNode === "admin" &&
                 <SelectedRoute to={{pathname: "/ba/" + data.discriminator, state: {_boardData: data}}}
                                theme={context.getTheme()} border={selectedNode === "admin" ? context.getTheme().setAlpha(.75) : undefined} aria-label={"Admin Panel"}>
