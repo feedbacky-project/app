@@ -33,6 +33,14 @@ const InternalContainer = styled(CommentContainer)`
   border-radius: var(--border-radius);
   background-color: var(--internal);
   padding: .5rem 1rem;
+  //trick to move whole container 16 px left to align with other comments
+  transform: translateX(-16px);
+
+  //make container full width on mobile to make trick look legit
+  @media(max-width: 576px) {
+    width: 100vw;
+    border-radius: 0 !important;
+  }
 `;
 
 const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, onCommentLike, onSuspend}) => {

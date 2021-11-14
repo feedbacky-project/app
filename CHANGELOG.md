@@ -4,6 +4,7 @@
 * **[CHANGE]** Changed comment max chars limit to 1800
 * **[CHANGE]** Minor UI adjustments especially for mobile users
 * **[CHANGE]** Now hiding user email address client-side for privacy purposes e.g. mail@example.com -> m*****l@example.com
+* **[CHANGE]** Internal comments are now evenly aligned with other comments in ideas Discussion section
 * **[FIX]** Emotes in markdown containers are no longer transparent but fully visible
 * **[FIX]** Users couldn't edit their own ideas if they weren't board moderators
 * **[FIX]** When selecting tag in light mode it had transparent background
