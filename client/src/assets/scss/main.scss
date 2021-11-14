@@ -14,13 +14,15 @@ $pure-dark-half: hsla(0, 0%, 0%, .5);
   font-display: swap;
 }
 
-/* fixes scrollbar repositioning page */
 html {
+  //fixes chrome downscaling blur issue
+  image-rendering: -webkit-optimize-contrast;
+  //fixes scrollbar repositioning page
   overflow-x: hidden;
   margin-right: calc(-1 * (100vw - 100%));
 }
 
-/* fixes mobile minimum width */
+// fixes mobile minimum width
 body, .modal {
   min-width: 310px;
 }
