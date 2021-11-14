@@ -10,7 +10,7 @@ const StyledCard = styled.div`
   word-wrap: break-word;
   background-clip: border-box;
   box-shadow: var(--box-shadow);
-  border-radius: var(--border-radius) !important;
+  border-radius: var(--border-radius);
   background-color: var(--secondary);
 `;
 
