@@ -11,6 +11,7 @@
 * **[FIX]** Mail notifications toggle didn't set proper values client-side but did server-side
 * **[FIX]** Choosing tag filter and switching boards threw No ideas found error
 * **[FIX]** Chrome downscale blur for many images across the page should no longer occur
+* **[FIX]** On network error in idea Discussion section two errors were displayed: Network Error and No comments error
 
 ### 1.0.0.beta.7
 * **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))

@@ -69,7 +69,7 @@ const DiscussionBox = forwardRef((props, ref) => {
         </InfiniteScroll>
     };
     const renderNoDataImage = () => {
-        if (comments.loaded && comments.data.length === 0) {
+        if (comments.loaded && comments.data.length === 0 && !comments.error) {
             if (!ideaData.open) {
                 return <SvgNotice Component={UndrawNoData} title={"No comments here."}/>
             }
