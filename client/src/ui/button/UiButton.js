@@ -41,7 +41,7 @@ export const PageButton = styled(BasePageButton)`
   
   &:hover, &:active {
     color: white;
-    transform: var(--hover-transform-scale-sm);
+    background-color: ${props => props.theme.setAlpha(.3).toString()} !important;
   }
 `;
 
@@ -55,14 +55,14 @@ const UiButton = (props) => {
         if (tinycolor.readability(color, "#282828") < WCAG_AA_CONTRAST) {
             buttonColor = buttonColor.lighten(25);
         }
-        return <PageButton aria-label={label} style={{color: buttonColor, fontWeight: "bold", backgroundColor: buttonColor.clone().setAlpha(.1), style}}
+        return <PageButton theme={buttonColor.clone()} aria-label={label} style={{color: buttonColor, fontWeight: "bold",backgroundColor: buttonColor.clone().setAlpha(.1), style}}
                            ref={innerRef} {...otherProps}>{children}</PageButton>
     } else {
         if (tinycolor.readability(buttonColor, "#fff") < WCAG_AA_CONTRAST) {
             buttonColor = buttonColor.darken(10);
         }
     }
-    return <PageButton aria-label={label} style={{backgroundColor: buttonColor.clone().setAlpha(.1), color: buttonColor, fontWeight: "500", style}} ref={innerRef} {...otherProps}>{children}</PageButton>
+    return <PageButton theme={buttonColor.clone()} aria-label={label} style={{backgroundColor: buttonColor.clone().setAlpha(.1), color: buttonColor, fontWeight: "500", style}} ref={innerRef} {...otherProps}>{children}</PageButton>
 };
 
 UiButton.propTypes = {

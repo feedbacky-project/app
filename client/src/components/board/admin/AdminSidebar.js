@@ -18,7 +18,7 @@ const AdminSidebar = ({currentNode, reRouteTo}) => {
     const context = useContext(AppContext);
     const themeColor = context.getTheme();
 
-    return <UiCol xs={12} md={3} as={Sidebar}>
+    return <UiCol xs={12} md={3} as={Sidebar} theme={themeColor.toString()}>
         <ul>{renderSidebarRoutes(routes, themeColor, currentNode, reRouteTo)}</ul>
         <small className={"text-black-60"}>
             <div>

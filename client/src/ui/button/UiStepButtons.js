@@ -11,7 +11,7 @@ const UiNextStepButton = (props) => {
 
 const UiPreviousStepButton = (props) => {
     const {previousStep, ...otherProps} = props;
-    return <UiButton color={tinycolor("#0994f6")} className={"pl-1"} onClick={previousStep} label={"Go Back"} {...otherProps}><FaAngleLeft/> Back</UiButton>
+    return <UiButton color={tinycolor("#0994f6")} className={"pl-1 ml-2"} onClick={previousStep} label={"Go Back"} {...otherProps}><FaAngleLeft/> Back</UiButton>
 };
 
 export {UiNextStepButton};

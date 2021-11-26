@@ -17,9 +17,21 @@ const GoBackButton = styled(Link)`
   color: ${props => props.theme};
   
   &:hover {
-    transform: var(--hover-transform-scale-lg);
     color: ${props => props.theme};
     text-decoration: none;
+
+    @media(prefers-reduced-motion: no-preference) {
+      animation: Move 1s linear infinite;
+
+      @keyframes Move {
+        0%, 100% {
+          transform: translateX(0px);
+        }
+        50% {
+          transform: translateX(-5px);
+        }
+      }
+    }
   }
   
   @media(max-width: 768px) {

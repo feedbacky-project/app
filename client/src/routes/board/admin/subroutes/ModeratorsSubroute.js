@@ -21,7 +21,7 @@ const ClickableButton = styled.div`
   transition: var(--hover-transition);
   
   &:hover {
-    transform: var(--hover-transform-scale-sm);
+    background-color: ${props => props.theme} !important;
   }
 `;
 
@@ -105,7 +105,7 @@ const ModeratorsSubroute = () => {
                             <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={() => setModal({open: true, type: "inviteDelete", data: invited.id})}/>
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
-                            <ClickableButton onClick={() => {
+                            <ClickableButton theme={tinycolor("#0994f6").setAlpha(.5).toString()} onClick={() => {
                                 copy(getEnvVar("REACT_APP_SERVER_IP_ADDRESS") + "/moderator_invitation/" + invited.code);
                                 popupNotification("Copied", getTheme());
                             }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></ClickableButton>
@@ -132,10 +132,10 @@ const ModeratorsSubroute = () => {
             return;
         }
         if (mod.role.toLowerCase() === "moderator") {
-            return <ClickableButton as={UiBadge} color={tinycolor("#00c851")} className={"d-block my-1"}
+            return <ClickableButton as={UiBadge} color={tinycolor("#00c851")} theme={tinycolor("#00c851").setAlpha(.5).toString()} className={"d-block my-1"}
                                          onClick={() => setModal({open: true, type: "promote", data: mod.userId})}>Promote</ClickableButton>
         } else {
-            return <ClickableButton as={UiBadge} color={tinycolor("#ff3547")} className={"d-block my-1"}
+            return <ClickableButton as={UiBadge} color={tinycolor("#ff3547")} theme={tinycolor("#ff3547").setAlpha(.5).toString()} className={"d-block my-1"}
                                          onClick={() => setModal({open: true, type: "demote", data: mod.userId})}>Demote</ClickableButton>
         }
     };

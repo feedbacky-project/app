@@ -18,6 +18,7 @@ const MarkdownIcon = styled.div`
   border-radius: var(--border-radius);
   cursor: pointer;
   color: hsla(0, 0%, 0%, .6);
+  transition: var(--hover-transition);
 
   .dark & {
     color: hsla(0, 0%, 95%, .6);

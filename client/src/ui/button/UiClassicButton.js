@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
+import {AppContext} from "context";
 import PropTypes from "prop-types";
-import React from "react";
+import React, {useContext} from "react";
 import {PageButton} from "ui/button/UiButton";
 
 const ClassicButton = styled(PageButton)`
@@ -14,7 +15,8 @@ const ClassicButton = styled(PageButton)`
 
 const UiClassicButton = (props) => {
     const {children, label, innerRef, ...otherProps} = props;
-    return <ClassicButton aria-label={label} ref={innerRef} {...otherProps}>{children}</ClassicButton>
+    const {getTheme} = useContext(AppContext);
+    return <ClassicButton theme={getTheme().clone()} aria-label={label} ref={innerRef} {...otherProps}>{children}</ClassicButton>
 };
 
 UiClassicButton.propTypes = {

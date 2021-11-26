@@ -16,7 +16,7 @@ const ProfileSidebar = ({currentNode, reRouteTo}) => {
     if(data !== null) {
         theme = getTheme();
     }
-    return <UiCol xs={12} md={3} as={Sidebar}>
+    return <UiCol xs={12} md={3} as={Sidebar} theme={theme.toString()}>
         <ul>{renderSidebarRoutes(routes, theme, currentNode, reRouteTo)}</ul>
     </UiCol>
 };

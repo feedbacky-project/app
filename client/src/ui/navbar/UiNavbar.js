@@ -56,8 +56,7 @@ const NavbarOption = styled(Link)`
   font-weight: normal !important;
   
   &:hover {
-    color: var(--font-color);
-    transform: var(--hover-transform-scale-sm);
+    color: ${props => props.theme.toString()};
   }
 `;
 

@@ -33,7 +33,6 @@ const ShareIcon = styled.div`
   &:hover {
     color: ${props => props.theme};
     transition: var(--hover-transition);
-    transform: var(--hover-transform-scale-lg);
   }
 `;
 

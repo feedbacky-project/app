@@ -18,10 +18,10 @@ export const Sidebar = styled.div`
     line-height: 2rem;
 
     a {
-      transition: var(--hover-transition);
+      transition: var(--hover-transition) !important;
 
       &:hover {
-        transform: var(--hover-transform-scale-lg);
+        color: ${props => props.theme} !important;
       }
     }
   }
