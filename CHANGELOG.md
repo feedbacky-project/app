@@ -6,6 +6,7 @@
   * Minor UI adjustments especially for mobile users
   * Internal comments are now evenly aligned with other comments in ideas Discussion section
   * Update markdown buttons and forms design
+  * Loadable buttons have their spinners changed using new neat effect 
   * Various UI elements no longer use scale animation on hover but color adjustment
 * **[CHANGE]** Changed comment max chars limit to 1800
 * **[CHANGE]** Now hiding user email address client-side for privacy purposes e.g. mail@example.com -> m*****l@example.com
@@ -14,6 +15,7 @@
   * When selecting tag in light mode it had transparent background
   * Chrome downscale blur for many images across the page should no longer occur
   * Markdown images will now fit their true (not 100%) width to the container
+  * Board delete modal didn't use UiKeyboardInput element
   * Minor Light UI inconsistencies
 * **[FIX]** Users couldn't edit their own ideas if they weren't board moderators
 * **[FIX]** Mail notifications toggle didn't set proper values client-side but did server-side
