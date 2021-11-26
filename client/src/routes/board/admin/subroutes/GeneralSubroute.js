@@ -360,7 +360,7 @@ const GeneralSubroute = ({updateState}) => {
                                  actionDescription={<div>
                                      <strong>This is one-way road</strong> and your board and all the data <strong>will be permanently deleted.</strong>
                                      <div>Are you really sure?</div>
-                                     <div>Type <kbd>{boardData.name}</kbd> to continue.</div>
+                                     <div>Type <UiKeyboardInput>{boardData.name}</UiKeyboardInput> to continue.</div>
                                  </div>} confirmText={boardData.name} confirmFailMessage={"Type valid board name."}/>
         <UiViewBox title={"General Settings"} description={"Configure your board base settings here."}>
             {renderContent()}
