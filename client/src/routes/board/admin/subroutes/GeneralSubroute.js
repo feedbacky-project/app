@@ -37,7 +37,7 @@ const CustomOptions = styled.div`
   background-color: var(--tertiary) !important;
 
   .dark & {
-    background-color: var(--quatenary) !important;
+    background-color: var(--quaternary) !important;
   }
 `;
 
