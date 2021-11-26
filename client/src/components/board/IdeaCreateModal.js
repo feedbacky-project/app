@@ -15,10 +15,10 @@ import {formatRemainingCharacters, getBase64FromFile, popupError, popupNotificat
 const AttachmentButton = styled(UiClassicButton)`
   max-height: 36px;
   background-color: var(--secondary);
-  color: var(--font-color);
+  color: hsla(0, 0%, 0%, .6);
   .dark & {
     & * {
-      color: var(--font-color);
+      color: hsla(0, 0%, 95%, .6);
     }
   }
 `;

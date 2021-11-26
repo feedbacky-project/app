@@ -34,10 +34,10 @@ const ThemeSelector = styled.div`
 `;
 
 const CustomOptions = styled.div`
-  background-color: var(--background) !important;
-  
+  background-color: var(--tertiary) !important;
+
   .dark & {
-    background-color: var(--tertiary) !important;
+    background-color: var(--quatenary) !important;
   }
 `;
 

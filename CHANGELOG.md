@@ -1,10 +1,12 @@
 ### 1.0.0.beta.8
+* **[FEATURE]** Added strikethrough to markdown buttons
 * **[IMPROVEMENT]** Make log-in button more noticeable
 * **[IMPROVEMENT]** On network error display more friendly error messages with reload button
 * **[CHANGE]** Changed comment max chars limit to 1800
 * **[CHANGE]** Minor UI adjustments especially for mobile users
 * **[CHANGE]** Now hiding user email address client-side for privacy purposes e.g. mail@example.com -> m*****l@example.com
 * **[CHANGE]** Internal comments are now evenly aligned with other comments in ideas Discussion section
+* **[CHANGE]** Update markdown buttons and forms design
 * **[FIX]** Emotes in markdown containers are no longer transparent but fully visible
 * **[FIX]** Users couldn't edit their own ideas if they weren't board moderators
 * **[FIX]** When selecting tag in light mode it had transparent background
@@ -13,6 +15,7 @@
 * **[FIX]** Chrome downscale blur for many images across the page should no longer occur
 * **[FIX]** On network error in idea Discussion section two errors were displayed: Network Error and No comments error
 * **[FIX]** Markdown images will now fit their true (not 100%) width to the container
+* **[FIX]** Minor Light UI inconsistencies
 
 ### 1.0.0.beta.7
 * **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))

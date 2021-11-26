@@ -1,13 +1,12 @@
 import styled from "@emotion/styled";
 import TextInputActionModal from "components/commons/TextInputActionModal";
 import React, {useRef, useState} from "react";
-import {FaBold, FaImage, FaItalic, FaLink} from "react-icons/all";
+import {FaBold, FaImage, FaItalic, FaLink, FaStrikethrough} from "react-icons/all";
 import {UiFormControl} from "ui/form/UiFormControl";
 
 const MarkdownOptions = styled.div`
-  background-color: var(--secondary);
-  border-top-right-radius: var(--border-radius);
-  border-top-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
   padding: 0.375rem 0.75rem;
 `;
 
@@ -17,18 +16,50 @@ const MarkdownIcon = styled.div`
   height: 25px;
   text-align: center;
   border-radius: var(--border-radius);
-  border: 1px solid var(--disabled);
-  background-color: var(--tertiary);
   cursor: pointer;
-  
+  color: hsla(0, 0%, 0%, .6);
+
   .dark & {
-    background-color: var(--quaternary) !important;
+    color: hsla(0, 0%, 95%, .6);
+  }
+
+  &:hover {
+    background-color: var(--hover);
   }
 `;
 
 const FormControl = styled(UiFormControl)`
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  scrollbar-width: thin; /* firefox property */
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+    background: hsl(0, 0%, 94%);
+  }
+
+  .dark {
+    scrollbar-color: var(--hover) var(--tertiary); /* firefox property */
+
+    &::-webkit-scrollbar {
+      background: var(--tertiary);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--hover);
+    }
+  }
+`;
+
+const MarkdownForm = styled.form`
+    & > div {
+      background-color: var(--secondary);
+    }
+    &:focus-within > div {
+      background-color: var(--tertiary);
+    }
 `;
 
 const MarkdownOptionModal = styled.div`
@@ -62,22 +93,25 @@ const UiMarkdownFormControl = (props) => {
     };
     return <React.Fragment>
         <MarkdownOptionModal as={TextInputActionModal} size={"sm"} id={"linkInput"} isOpen={modal.open && modal.type === "link"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
-                              actionDescription={"Insert link, type link URL."} onAction={link => {
+                             actionDescription={"Insert link, type link URL."} onAction={link => {
             markdownInsert("[" + selection + "](" + link + ")", false);
             return Promise.resolve();
         }}/>
         <MarkdownOptionModal as={TextInputActionModal} className={"test"} size={"sm"} id={"imageInput"} isOpen={modal.open && modal.type === "image"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
-                              actionDescription={"Insert image, type image URL."} onAction={link => {
+                             actionDescription={"Insert image, type image URL."} onAction={link => {
             markdownInsert("![" + selection + "](" + link + ")", false);
             return Promise.resolve();
         }}/>
-        <MarkdownOptions as={CustomOptions}>
-            <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("**", true)}><FaBold/></MarkdownIcon>
-            <MarkdownIcon className={"mr-sm-4 mr-1"} onClick={() => markdownInsert("*", true)}><FaItalic/></MarkdownIcon>
-            <MarkdownIcon className={"mr-1"} onClick={() => setModal({open: true, type: "image"})}><FaImage/></MarkdownIcon>
-            <MarkdownIcon onClick={() => setModal({open: true, type: "link"})}><FaLink/></MarkdownIcon>
-        </MarkdownOptions>
-        <FormControl innerRef={ref} onSelect={() => setSelection(window.getSelection().toString())} {...otherProps}/>
+        <MarkdownForm>
+            <FormControl innerRef={ref} onSelect={() => setSelection(window.getSelection().toString())} {...otherProps}/>
+            <MarkdownOptions as={CustomOptions}>
+                <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("**", true)}><FaBold/></MarkdownIcon>
+                <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("*", true)}><FaItalic/></MarkdownIcon>
+                <MarkdownIcon className={"mr-sm-4 mr-1"} onClick={() => markdownInsert("~~", true)}><FaStrikethrough/></MarkdownIcon>
+                <MarkdownIcon className={"mr-1"} onClick={() => setModal({open: true, type: "image"})}><FaImage/></MarkdownIcon>
+                <MarkdownIcon onClick={() => setModal({open: true, type: "link"})}><FaLink/></MarkdownIcon>
+            </MarkdownOptions>
+        </MarkdownForm>
     </React.Fragment>
 };
 

@@ -31,7 +31,7 @@ const FormControl = styled.input`
   .dark & {
     color: hsla(0, 0%, 95%, .6) !important;
   }
-  .dark &:focus {
+  &:focus {
     background-color: var(--tertiary) !important;
   }
   
