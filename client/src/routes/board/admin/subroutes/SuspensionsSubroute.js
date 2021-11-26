@@ -36,7 +36,7 @@ const SuspensionSettings = () => {
             return <SvgNotice Component={UndrawNoData} title={"No suspensions yet."} description={"Lets hope nobody will never appear here."}/>
         }
         return boardData.suspendedUsers.map((suspendedUser, i) => {
-            return <div className={"d-inline-flex justify-content-center mr-2"} key={i}>
+            return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={i}>
                 <div className={"text-center"}>
                     <UiAvatar roundedCircle user={suspendedUser.user} size={35}/>
                     <UiElementDeleteButton id={"mod_del_" + i} tooltipName={"Unsuspend"}

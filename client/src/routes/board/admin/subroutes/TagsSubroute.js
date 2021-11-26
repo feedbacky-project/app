@@ -52,7 +52,7 @@ const TagsSubroute = () => {
             return <SvgNotice Component={UndrawNoData} title={"No tags yet."} description={"How about creating one?"}/>
         }
         return boardData.tags.map((tag, i) => {
-            return <div className={"d-inline-flex justify-content-center mr-2"} key={tag.id}>
+            return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={tag.id}>
                 <div className={"text-center"}>
                     <UiElementDeleteButton tooltipName={"Delete"} id={"tag-" + tag.id + "-del"} offsetX={"12px"}
                                            onClick={() => setModal({open: true, type: "delete", data: {id: tag.id, name: tag.name, color: tinycolor(tag.color)}})}/>

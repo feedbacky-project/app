@@ -56,7 +56,7 @@ const WebhooksSubroute = () => {
             return <SvgNotice Component={UndrawNoData} title={"No webhooks yet."} description={"How about creating one?"}/>
         }
         return webhooks.data.map((hook, i) => {
-            return <div className={"d-inline-flex justify-content-center mr-2"} key={hook.id}>
+            return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={hook.id}>
                 <div className={"text-center"}>
                     <WebhookIcon alt={"Webhook"} rounded src={getTypeIcon(hook)} height={40} width={40}/>
                     <UiElementDeleteButton id={"webhook_del_" + i} tooltipName={"Delete"}

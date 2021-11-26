@@ -99,7 +99,7 @@ const ModeratorsSubroute = () => {
                     <UiClickableTip id={"invited"} title={"Invited Moderators"} description={"Moderators that were invited and received invitation email."}/>
                 </div>
                 {invited.data.map((invited, i) => {
-                    return <div className={"d-inline-flex justify-content-center mr-2"} key={i}>
+                    return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={i}>
                         <div className={"text-center"}>
                             <UiAvatar roundedCircle user={invited.user} size={35}/>
                             <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={() => setModal({open: true, type: "inviteDelete", data: invited.id})}/>
