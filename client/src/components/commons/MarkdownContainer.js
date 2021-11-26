@@ -21,7 +21,8 @@ const MarkdownBox = styled.div`
     color: ${props => props.theme.clone().lighten(10).toHexString()} !important;
   }
   & img {
-    width: 100%;
+    max-width: 100%;
+    width: auto;
   }
 `;
 
