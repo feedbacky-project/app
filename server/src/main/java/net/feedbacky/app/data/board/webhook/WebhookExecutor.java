@@ -33,22 +33,24 @@ public class WebhookExecutor {
     }
   }
 
-  public CompletableFuture<String> executeWebhook(Webhook webhook, Webhook.Event event, Map<String, String> data) {
+  public void executeWebhook(Webhook webhook, Webhook.Event event, Map<String, String> data) {
     switch(webhook.getType()) {
       case CUSTOM_ENDPOINT:
-        return executeCustomEndpoint(webhook, event, data);
+        executeCustomEndpoint(webhook, event, data);
+        return;
       case DISCORD:
-        return executeDiscordEndpoint(webhook, event, data);
+        executeDiscordEndpoint(webhook, event, data);
+        return;
     }
-    return CompletableFuture.completedFuture(null);
+    return;
   }
 
-  private CompletableFuture<String> executeCustomEndpoint(Webhook webhook, Webhook.Event event, Map<String, String> data) {
+  private void executeCustomEndpoint(Webhook webhook, Webhook.Event event, Map<String, String> data) {
     //todo
-    return CompletableFuture.completedFuture(null);
+    return;
   }
 
-  private CompletableFuture<String> executeDiscordEndpoint(Webhook webhook, Webhook.Event event, Map<String, String> data) {
+  private void executeDiscordEndpoint(Webhook webhook, Webhook.Event event, Map<String, String> data) {
     WebhookClient client = WebhookClient.withUrl(webhook.getUrl());
     WebhookMessageBuilder builder = new WebhookMessageBuilder();
     Board board = webhook.getBoard();
@@ -111,27 +113,13 @@ public class WebhookExecutor {
         break;
     }
     builder.addEmbeds(embedBuilder.build());
-    String msgId = data.get(WebhookMapData.IDEA_DISCORD_MESSAGE_ID_METADATA.getName());
-    try {
-      if(msgId == null) {
-        return client.send(builder.build()).thenApply(res -> String.valueOf(res.getId()));
-      } else {
-        if(event == Webhook.Event.IDEA_DELETE) {
-          client.delete(msgId);
-          return CompletableFuture.completedFuture(null);
-        }
-        return client.edit(Long.parseLong(msgId), builder.build()).thenApply(res -> String.valueOf(res.getId()));
-      }
-    } catch(HttpException ignored) {
-      //suppress
-      return CompletableFuture.completedFuture(null);
-    }
+    client.send(builder.build());
+    return;
   }
 
   public enum WebhookMapData {
     USER_NAME("user_name"), USER_AVATAR("user_avatar"), USER_ID("user_id"), IDEA_NAME("idea_name"),
-    IDEA_DESCRIPTION("idea_description"), IDEA_LINK("idea_link"), IDEA_ID("idea_id"),
-    IDEA_DISCORD_MESSAGE_ID_METADATA("idea_discord_msg_id"), COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"),
+    IDEA_DESCRIPTION("idea_description"), IDEA_LINK("idea_link"), IDEA_ID("idea_id"), COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"),
     TAGS_CHANGED("tags_changed"), CHANGELOG_NAME("changelog_name"), CHANGELOG_DESCRIPTION("changelog_description");
 
     private final String name;

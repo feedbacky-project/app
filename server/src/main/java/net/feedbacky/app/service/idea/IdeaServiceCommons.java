@@ -5,7 +5,6 @@ import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
-import net.feedbacky.app.data.idea.IdeaMetadata;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
@@ -173,21 +172,7 @@ public class IdeaServiceCommons {
 
     FetchIdeaDto fetchDto = new FetchIdeaDto().from(idea).withUser(idea, user);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    final Idea finalIdea = idea;
-    for(Webhook webhook : board.getWebhooks()) {
-      webhookExecutor.executeWebhook(webhook, Webhook.Event.IDEA_CREATE, builder.build()).thenAccept(id -> {
-        if(id == null) {
-          return;
-        }
-        IdeaMetadata metadata = new IdeaMetadata();
-        metadata.setDataKey(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId()));
-        metadata.setDataValue(id);
-        metadata.setIdea(finalIdea);
-        finalIdea.getMetadata().add(metadata);
-        ideaRepository.save(finalIdea);
-      });
-    }
-
+    webhookExecutor.executeWebhooks(board, Webhook.Event.IDEA_CREATE, builder.build());
     return fetchDto;
   }
 

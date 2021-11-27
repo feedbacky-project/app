@@ -52,8 +52,7 @@ import java.util.Set;
 @NamedEntityGraph(name = "Idea.fetch", attributeNodes = {
         @NamedAttributeNode("creator"), @NamedAttributeNode("voters"),
         @NamedAttributeNode("comments"), @NamedAttributeNode("tags"),
-        @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers"),
-        @NamedAttributeNode("metadata")})
+        @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers")})
 public class Idea implements Serializable {
 
   @Id
@@ -92,8 +91,6 @@ public class Idea implements Serializable {
   private boolean edited = false;
   private boolean commentingRestricted = false;
   private boolean pinned = false;
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "idea")
-  private Set<IdeaMetadata> metadata = new HashSet<>();
 
   public void setVoters(Set<User> voters) {
     this.voters = voters;

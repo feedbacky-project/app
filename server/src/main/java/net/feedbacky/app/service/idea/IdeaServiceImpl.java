@@ -7,7 +7,6 @@ import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
-import net.feedbacky.app.data.idea.IdeaMetadata;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
@@ -234,10 +233,6 @@ public class IdeaServiceImpl implements IdeaService {
     if(dto.getOpen() != null) {
       idea.setStatus(Idea.IdeaStatus.toIdeaStatus(dto.getOpen()));
     }
-
-    if(dto.getDescription() != null && !idea.getDescription().equals(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())))) {
-      handleDescriptionUpdate(idea, user);
-    }
   }
 
   private void handleAttachmentUpdate(Idea idea, PatchIdeaDto dto) {
@@ -287,23 +282,6 @@ public class IdeaServiceImpl implements IdeaService {
     comments.add(comment);
     idea.setComments(comments);
     commentRepository.save(comment);
-  }
-
-  private void handleDescriptionUpdate(Idea idea, User user) {
-    for(Webhook webhook : idea.getBoard().getWebhooks()) {
-      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withWebhookUpdate(webhook, idea);
-      webhookExecutor.executeWebhook(webhook, Webhook.Event.IDEA_CREATE, builder.build()).thenAccept(id -> {
-        if(id == null) {
-          return;
-        }
-        IdeaMetadata metadata = new IdeaMetadata();
-        metadata.setDataKey(IdeaMetadata.MetadataValue.DISCORD_WEBHOOK_MESSAGE_ID.parseKey(webhook.getId()));
-        metadata.setDataValue(id);
-        metadata.setIdea(idea);
-        idea.getMetadata().add(metadata);
-        ideaRepository.save(idea);
-      });
-    }
   }
 
   @Override
