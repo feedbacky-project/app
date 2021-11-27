@@ -83,7 +83,7 @@ public class WebhookExecutor {
         embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Tags Changed", data.get(WebhookMapData.TAGS_CHANGED.getName())));
         break;
       case CHANGELOG_CREATE:
-        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Changelog Created", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName())))
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Description", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName())))
                 .setTitle(new WebhookEmbed.EmbedTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.CHANGELOG_NAME.getName(), "")),
                         MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator() + "/changelog"));
         break;
