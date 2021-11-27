@@ -66,7 +66,7 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
             </React.Fragment>}/>
             <br/>
             <div style={{position: "relative", maxWidth: 200}} role={"button"} tabIndex={0} onClick={logoUpload} onKeyPress={logoUpload}>
-                <img alt={"logo"} src={settings.logo || "https://cdn.feedbacky.net/static/img/logo.png"} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
+                <img alt={"logo"} src={settings.logo || "https://cdn.feedbacky.net/static/img/logo-16.png"} id={"boardLogo"} className={"mb-2"} width={200} height={200}/>
                 <UploadIconBox/>
             </div>
             <input hidden accept={"image/jpeg, image/png"} id={"logoInput"} type={"file"} name={"logo"} onChange={e => onLogoChange(e)}/>
