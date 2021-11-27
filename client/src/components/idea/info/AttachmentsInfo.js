@@ -17,7 +17,7 @@ const AttachmentsInfo = ({editor, onAttachmentUpdate}) => {
     const {user, getTheme} = useContext(AppContext);
     const {moderators} = useContext(BoardContext).data;
     const {ideaData, updateState} = useContext(IdeaContext);
-    const [modal, setModal] = useState({open: false, data: -1, dataUrl: "", uploaded: false});
+    const [modal, setModal] = useState({open: false, data: -1, dataUrl: "", uploaded: true});
     const onAttachmentUpload = (e) => {
         if (!validateImageWithWarning(e, "attachmentUpload", 1024)) {
             return;
