@@ -22,6 +22,7 @@
 * **[FIX]** Choosing tag filter and switching boards threw No ideas found error
 * **[FIX]** On network error in idea Discussion section two errors were displayed: Network Error and No comments error
 * **[FIX]** Attachments couldn't be deleted once uploaded
+* **[FIX]** Changelogs discord webhooks weren't published due to server-side error
 
 ### 1.0.0.beta.7
 * **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))
