@@ -1,6 +1,7 @@
 ### 1.0.0.beta.9
 * **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
 * **[FEATURE]** Added GitLab login support (requested by [AnonDev](https://app.feedbacky.net/i/more-oauth-providers.3194))
+* **[CHANGE]** Changelogs description length increased from 1800 chars to 2500
 * **[FIX]** Tag edit modal now updates values properly when editing multiple tags
 * **[FIX/REMOVE]** Brought back previous discord webhook library, current one contains some limitations and is no longer needed for current features
 

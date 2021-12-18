@@ -30,7 +30,7 @@ public class PostChangelogDto {
   @Length(min = 10, max = 70, message = "Title cannot be shorter than 10 or longer than 70 characters.")
   private String title;
   @NotNull(message = "Description cannot be empty.")
-  @Length(min = 20, max = 1800, message = "Description cannot be shorter than 20 or longer than 1800 characters.")
+  @Length(min = 20, max = 2500, message = "Description cannot be shorter than 20 or longer than 2500 characters.")
   private String description;
 
   public Changelog convertToEntity(Board board, User creator) {
