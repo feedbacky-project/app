@@ -1,4 +1,5 @@
 ### 1.0.0.beta.9
+* **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
 * **[FIX]** Tag edit modal now updates values properly when editing multiple tags
 
 ### 1.0.0.beta.8

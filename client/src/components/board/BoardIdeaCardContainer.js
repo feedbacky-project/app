@@ -13,7 +13,7 @@ import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {prepareFilterAndSortRequests} from "utils/basic-utils";
 
-const BoardIdeaCardContainer = ({id, searchQuery}) => {
+const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
     const {user} = useContext(AppContext);
     const [ideas, setIdeas] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [scrollTo, setScrollTo] = useState(null);
@@ -88,7 +88,7 @@ const BoardIdeaCardContainer = ({id, searchQuery}) => {
         <UiCol xs={{order: 12}} lg={{span: 8, order: 1}}>
             {loadIdeas()}
         </UiCol>
-        <BoardInfoCard onIdeaCreation={onIdeaCreation}/>
+        <BoardInfoCard onIdeaCreation={onIdeaCreation} setSearchQuery={setSearchQuery}/>
     </React.Fragment>
 };
 

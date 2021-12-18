@@ -14,7 +14,7 @@ export const BoardDescription = styled(MarkdownContainer)`
     color: var(--font-color) !important;
 `;
 
-const BoardInfoCard = ({onIdeaCreation}) => {
+const BoardInfoCard = ({onIdeaCreation, setSearchQuery}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const [open, setOpen] = useState(false);
@@ -36,7 +36,7 @@ const BoardInfoCard = ({onIdeaCreation}) => {
     };
 
     return <UiCol xs={{span: 12, order: 1}} lg={{span: 4, order: 12}}>
-        <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation}/>
+        <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation} setSearchQuery={setSearchQuery}/>
         <UiCard className={"my-2 text-left"}>
             <BoardDescription text={data.fullDescription}/>
             <UiHorizontalRule theme={getTheme().setAlpha(.1)} className={"pb-1"}/>

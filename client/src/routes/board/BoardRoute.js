@@ -49,7 +49,7 @@ const BoardRoute = () => {
             <UiRow className={"pb-4"}>
                 <BoardBanner/>
                 <BoardSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
-                <BoardIdeaCardContainer id={id} searchQuery={searchQuery}/>
+                <BoardIdeaCardContainer id={id} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
             </UiRow>
         </UiContainer>
     </BoardContextedRouteUtil>

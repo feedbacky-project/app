@@ -3,7 +3,7 @@ import axios from "axios";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import {FaRegImage} from "react-icons/fa";
+import {FaExternalLinkAlt, FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip, UiLabelledCheckbox} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
@@ -16,6 +16,7 @@ const AttachmentButton = styled(UiClassicButton)`
   max-height: 36px;
   background-color: var(--secondary);
   color: hsla(0, 0%, 0%, .6);
+
   .dark & {
     & * {
       color: hsla(0, 0%, 95%, .6);
@@ -37,15 +38,17 @@ const SelectableTag = styled.div`
   cursor: pointer;
 `;
 
-const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
+const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
     const {getTheme} = useContext(AppContext);
     const {discriminator, tags} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
+    const [similarIdeas, setSimilarIdeas] = useState(0);
     const [description, setDescription] = useState("");
     const [attachment, setAttachment] = useState(null);
     const [attachmentName, setAttachmentName] = useState("No Attachment");
     const applicableTags = tags.filter(tag => tag.publicUse);
     const [chosenTags, setChosenTags] = useState([]);
+    const [searchTimeout, setSearchTimeout] = useState(null);
 
     const handleSubmit = () => {
         const description = document.getElementById("descriptionTextarea").value;
@@ -104,6 +107,16 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             setAttachmentName(file.name);
         });
     };
+    const fetchSimilarIdeas = (text) => {
+        clearTimeout(searchTimeout);
+        if (text === "") {
+            return;
+        }
+        setSearchTimeout(setTimeout(() => axios.get("/boards/" + discriminator + "/ideas?query=" + text).then(res => {
+            const data = res.data.data;
+            setSimilarIdeas(data.length);
+        }), 500));
+    }
     return <UiDismissibleModal id={"ideaPost"} isOpen={isOpen} onHide={onHide} title={"Post Feedback"}
                                applyButton={<UiLoadableButton label={"Post Idea"} onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}>
         <div className={"mt-2 mb-1"}>
@@ -114,7 +127,9 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                     <UiFormControl minLength={10} maxLength={50} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
                                    onChange={e => {
                                        formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
-                                       setTitle(e.target.value.substring(0, 50));
+                                       const text = e.target.value.substring(0, 50);
+                                       setTitle(text);
+                                       fetchSimilarIdeas(text);
                                    }} label={"Idea title"}/>
                 </UiCol>
                 {renderAttachmentButton()}
@@ -122,6 +137,13 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingTitle"}>
                 50 Remaining
             </small>
+            {
+                similarIdeas <= 0 ||
+                <a href={"#search"} className={"small d-inline mt-1 ml-1 float-left text-black-75"} onClick={() => {
+                    onHide();
+                    setSearchQuery(title);
+                }}>· <FaExternalLinkAlt className={"align-baseline pt-1"}/> {similarIdeas} Similar Ideas</a>
+            }
             <small className={"d-inline mt-1 float-right text-black-60"}>
                 {attachmentName}
             </small>
@@ -135,13 +157,13 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                 Please keep under 1800 characters.
             </React.Fragment>} aria-label={"Idea description"}/>
             <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} defaultValue={description} id={"descriptionTextarea"} rows={5} maxRows={10}
-                           placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
-                           style={{resize: "none", overflow: "hidden"}}
-                           onChange={e => {
-                               e.target.value = e.target.value.substring(0, 1800);
-                               formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
-                               setDescription(e.target.value.substring(0, 1800));
-                           }}/>
+                                   placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
+                                   style={{resize: "none", overflow: "hidden"}}
+                                   onChange={e => {
+                                       e.target.value = e.target.value.substring(0, 1800);
+                                       formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
+                                       setDescription(e.target.value.substring(0, 1800));
+                                   }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 1800 Remaining
             </small>
@@ -167,8 +189,8 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation}) => {
                             setTimeout(() => setChosenTags(newTags), 0);
                         };
                         return <SelectableTag key={i} onClick={update} className={"d-inline-block"}>
-                                <UiLabelledCheckbox id={"applicableTag_" + tag.id} checked={chosenTags.includes(tag)} onChange={update}
-                                                   label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
+                            <UiLabelledCheckbox id={"applicableTag_" + tag.id} checked={chosenTags.includes(tag)} onChange={update}
+                                                label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
                         </SelectableTag>
                     })}
                     {/* for uneven amount of tags add a dummy div(s) for even flex stretch*/}
