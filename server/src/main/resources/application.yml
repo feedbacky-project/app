@@ -4,6 +4,8 @@ server:
   error:
     whitelabel:
       enabled: false
+  servlet:
+    contextPath: "/api"
 
 spring:
   main:
