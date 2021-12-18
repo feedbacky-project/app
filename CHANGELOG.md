@@ -1,3 +1,6 @@
+### 1.0.0.beta.9
+* **[FIX]** Tag edit modal now updates values properly when editing multiple tags
+
 ### 1.0.0.beta.8
 * **[FEATURE]** Added strikethrough to markdown buttons
 * **[IMPROVEMENT]** On network error display more friendly error messages with reload button

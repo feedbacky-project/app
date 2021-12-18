@@ -14,7 +14,7 @@ export const renderModal = (isOpen, onHide, title, handleSubmit, color, setColor
             <UiCol xs={12} className={"mt-2 mb-1"}>
                 <UiFormLabel>Tag Name</UiFormLabel>
                 <UiClickableTip id={"tagName"} title={"Tag Name"} description={"Descriptive and under 20 characters name of tag."}/>
-                <UiCountableFormControl label={"Type tag name"} id={"tagNameTextarea"} minLength={2} maxLength={15} placeholder={"Short and descriptive."}
+                <UiCountableFormControl key={tagData.id} label={"Type tag name"} id={"tagNameTextarea"} minLength={2} maxLength={15} placeholder={"Short and descriptive."}
                                         defaultValue={tagData.name} onChange={e => setTagData({...tagData, name: e.target.value})}/>
             </UiCol>
             <UiCol xs={12} sm={6} className={"mb-2"}>
@@ -25,13 +25,13 @@ export const renderModal = (isOpen, onHide, title, handleSubmit, color, setColor
                     <UiFormLabel>Ignore Roadmap</UiFormLabel>
                     <UiClickableTip id={"tagColor"} title={"Ignore Roadmap"} description={"Select if you don't want to include show tag and ideas with this tag in roadmap view."}/>
                     <br/>
-                    <UiLabelledCheckbox id={"roadmapIgnored"} label={"Roadmap Ignored"} checked={tagData.roadmapIgnored} onChange={() => setTagData({...tagData, roadmapIgnored: !tagData.roadmapIgnored})}/>
+                    <UiLabelledCheckbox key={tagData.id} id={"roadmapIgnored"} label={"Roadmap Ignored"} checked={tagData.roadmapIgnored} onChange={() => setTagData({...tagData, roadmapIgnored: !tagData.roadmapIgnored})}/>
                 </div>
                 <div className={"mt-2"}>
                     <UiFormLabel>Publicly Accessible</UiFormLabel>
                     <UiClickableTip id={"tagColor"} title={"Ignore Roadmap"} description={"Select if you want this tag to be selectable by users when they create new ideas."}/>
                     <br/>
-                    <UiLabelledCheckbox id={"publicUse"} label={"Public Use"} checked={tagData.publicUse} onChange={() => setTagData({...tagData, publicUse: !tagData.publicUse})}/>
+                    <UiLabelledCheckbox key={tagData.id} id={"publicUse"} label={"Public Use"} checked={tagData.publicUse} onChange={() => setTagData({...tagData, publicUse: !tagData.publicUse})}/>
                 </div>
             </UiCol>
         </UiRow>
