@@ -62,3 +62,24 @@ google:
     username: name
     avatar: picture
     email-verified: email_verified
+gitlab:
+  provider-data:
+    name: GitLab
+    oauth-link: https://gitlab.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=read_user%20email&state=
+    icon: https://static.plajer.xyz/svg/login-gitlab.svg
+    color: "#fca121"
+  environment-variables:
+    enabled: OAUTH_GITLAB_ENABLED
+    redirect-uri: OAUTH_GITLAB_REDIRECT_URI
+    client-id: OAUTH_GITLAB_CLIENT_ID
+    client-secret: OAUTH_GITLAB_CLIENT_SECRET
+  oauth:
+    token-url: https://gitlab.com/oauth/token
+    authorization-property: Bearer {TOKEN}
+    user-url: https://gitlab.com/api/v4/user
+  data-fields:
+    id: id
+    email: email
+    username: username
+    avatar: avatar_url
+    email-verified: null
