@@ -1,20 +1,15 @@
 package net.feedbacky.app.data.board.webhook;
 
-import club.minnced.discord.webhook.WebhookClient;
-import club.minnced.discord.webhook.exception.HttpException;
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.util.mailservice.MailService;
 
 import org.springframework.stereotype.Component;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Plajer
@@ -51,21 +46,21 @@ public class WebhookExecutor {
   }
 
   private void executeDiscordEndpoint(Webhook webhook, Webhook.Event event, Map<String, String> data) {
-    WebhookClient client = WebhookClient.withUrl(webhook.getUrl());
-    WebhookMessageBuilder builder = new WebhookMessageBuilder();
+    DiscordWebhook client = new DiscordWebhook(webhook.getUrl());
     Board board = webhook.getBoard();
-    builder.setAvatarUrl(board.getLogo());
-    builder.setUsername(board.getName());
+    client.setAvatarUrl(board.getLogo());
+    client.setUsername(board.getName());
     String url;
     if(event == Webhook.Event.IDEA_DELETE) {
       url = MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator();
     } else {
       url = data.get(WebhookMapData.IDEA_LINK.getName());
     }
-    WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder()
-            .setColor(Color.decode(board.getThemeColor()).getRGB())
-            .setTitle(new WebhookEmbed.EmbedTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.IDEA_NAME.getName(), "")), url))
-            .setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()).toInstant());
+    DiscordWebhook.EmbedObject embedBuilder = new DiscordWebhook.EmbedObject()
+            .setColor(Color.decode(board.getThemeColor()))
+            .setTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.IDEA_NAME.getName(), "")))
+            .setUrl(url);
+    embedBuilder.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
     switch(event) {
       case IDEA_CREATE:
@@ -73,48 +68,51 @@ public class WebhookExecutor {
       case IDEA_OPEN:
       case IDEA_CLOSE:
       case IDEA_EDIT:
-        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Description", data.get(WebhookMapData.IDEA_DESCRIPTION.getName())));
+        embedBuilder.addField("Description", data.get(WebhookMapData.IDEA_DESCRIPTION.getName()), true);
         break;
       case IDEA_COMMENT:
       case IDEA_COMMENT_DELETE:
-        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Comment", data.get(WebhookMapData.COMMENT_DESCRIPTION.getName())));
+        embedBuilder.addField("Comment", data.get(WebhookMapData.COMMENT_DESCRIPTION.getName()), true);
         break;
       case IDEA_TAG_CHANGE:
-        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Tags Changed", data.get(WebhookMapData.TAGS_CHANGED.getName())));
+        embedBuilder.addField("Tags Changed", data.get(WebhookMapData.TAGS_CHANGED.getName()), true);
         break;
       case CHANGELOG_CREATE:
-        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Description", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName())))
-                .setTitle(new WebhookEmbed.EmbedTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.CHANGELOG_NAME.getName(), "")),
-                        MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator() + "/changelog"));
+        embedBuilder.addField("Description", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName()), true)
+                .setTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.CHANGELOG_NAME.getName(), "")))
+                .setUrl(MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator() + "/changelog");
         break;
     }
     switch(event) {
       case IDEA_CREATE:
       case IDEA_COMMENT:
       case CHANGELOG_CREATE:
-        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Posted by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName())));
+        embedBuilder.setFooter("Posted by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName()));
         break;
       case IDEA_DELETE:
       case IDEA_COMMENT_DELETE:
-        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Deleted by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName())));
+        embedBuilder.setFooter("Deleted by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName()));
         break;
       case IDEA_EDIT:
       case IDEA_TAG_CHANGE:
-        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Edited by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName())));
+        embedBuilder.setFooter("Edited by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName()));
         break;
       case IDEA_OPEN:
-        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Opened by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName())));
+        embedBuilder.setFooter("Opened by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName()));
         break;
       case IDEA_CLOSE:
-        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Closed by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName())));
+        embedBuilder.setFooter("Closed by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName()));
         break;
       case SAMPLE_EVENT:
-        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Requested by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName())));
+        embedBuilder.setFooter("Requested by " + data.get(WebhookMapData.USER_NAME.getName()), data.get(WebhookMapData.USER_AVATAR.getName()));
         break;
     }
-    builder.addEmbeds(embedBuilder.build());
-    client.send(builder.build());
-    return;
+    client.addEmbed(embedBuilder);
+    try {
+      client.execute();
+    } catch(IOException ex) {
+      ex.printStackTrace();
+    }
   }
 
   public enum WebhookMapData {

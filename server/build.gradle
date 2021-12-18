@@ -79,7 +79,6 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     implementation "org.apache.commons:commons-text:1.8"
     implementation "com.mashape.unirest:unirest-java:1.4.9"
-    implementation 'club.minnced:discord-webhooks:0.7.2'
     implementation "javax.mail:mail:1.4.7"
     runtimeOnly "mysql:mysql-connector-java:8.0.20"
 }
