@@ -2,7 +2,6 @@ import axios from "axios";
 import {AppContext} from "context";
 import React, {useContext, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import {UiClickableTip} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -40,7 +39,6 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
                                applyButton={<UiLoadableButton label={"Update Changelog"} onClick={handleSubmit} className={"mx-0"}>Update Changelog</UiLoadableButton>}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>Title</UiFormLabel>
-            <UiClickableTip id={"ideaTitle"} title={"Writing a Title"} description={"Keep longer than 10 and shorter than 70 characters."}/>
             <UiCol xs={12} className={"d-inline-block px-0"}>
                 <UiCol xs={12} className={"pr-sm-0 pr-2 px-0 d-inline-block"}>
                     <UiFormControl minLength={10} maxLength={70} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
@@ -57,11 +55,6 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
         <br/>
         <div className={"my-2"}>
             <UiFormLabel>Description</UiFormLabel>
-            <UiClickableTip id={"ideaDescription"} title={"Writing a Description"} description={<React.Fragment>
-                Write a detailed description of your feedback suggestion.<br/>
-                Supports <strong>**basic markdown**</strong> <em>*elements*</em>.<br/>
-                Please keep under 1800 characters.
-            </React.Fragment>} aria-label={"Idea description"}/>
             <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} defaultValue={htmlDecodeEntities(changelog.description)} id={"descriptionTextarea"} rows={5} maxRows={10}
                                    placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
                                    style={{resize: "none", overflow: "hidden"}}
