@@ -1,0 +1,71 @@
+name: Bug Report
+description: Something isn't quite working well.
+labels: [bug]
+body:
+- type: markdown
+  attributes:
+    value: |
+      Make sure you have read the official [documentation](https://docs.feedbacky.net/). If you need further help installing Feedbacky you shoud join our [Discord server](https://discordapp.com/invite/6qCnKh5).
+
+- type: checkboxes
+  attributes:
+    label: Does your bug report already exists?
+    description: Please [search here](https://github.com/feedbacky-project/app/issues) to see if an issue already exists for your problem.
+    options:
+    - label: I confirm that an issue for my bug report doesn't already exists.
+      required: true
+       
+- type: textarea
+  id: description
+  attributes:
+    label: Description
+    description: Clearly describe the bug that you are experiencing.
+  validations:
+    required: true
+
+- type: textarea
+  id: steps
+  attributes:
+    label: Steps to Reproduce
+    description: Tell us how we could recreate your bug. The steps should be as much detailed as possible! 
+  validations:
+    required: true
+
+- type: textarea
+  id: logs
+  attributes:
+    label: Error Logs
+    description: |
+      Please paste any errors that you have encountered below.
+      
+      You may use this command:
+      `sudo docker logs feedbacky-server`
+    render: bash
+  validations:
+    required: false
+
+- type: textarea
+  id: behavior
+  attributes:
+    label: Expected Behavior
+    description: What did you expect to happen before encountering the issue?
+  validations:
+    required: true
+
+- type: input
+  id: feedbacky-version
+  attributes:
+    label: Feedbacky Version
+    description: The version of Feedbacky that you are installing. (latest is not a version)
+    placeholder: 1.0.0.beta.8
+  validations:
+    required: true
+
+- type: input
+  id: browser
+  attributes:
+    label: Browser
+    description: If you have encountered a bug while using or accessing your board, tell us which browser you were using. 
+    placeholder: Firefox, Chrome, Safari, etc..
+  validations:
+    required: false
