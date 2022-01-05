@@ -17,6 +17,10 @@ const CardStyle = styled(UiCard)`
   padding: 0 1rem;
   margin: .5rem 0;
   ${props => !props.pinned || (props.darkMode ? `border: 1px dashed var(--quaternary)` : `border: 1px dashed var(--disabled)`)};
+
+  &:hover em {
+    color: ${props => props.theme.toString()};
+  }
 `;
 
 export const CardLinkStyle = styled(UiCol)`
@@ -26,8 +30,10 @@ export const CardLinkStyle = styled(UiCol)`
   color: var(--font-color) !important;
 `;
 
-export const IdeaCardTitle = styled.span`
+export const IdeaCardTitle = styled.em`
   font-weight: 450;
+  font-style: normal;
+  transition: var(--hover-transition);
 `;
 
 export const IdeaCardDescription = styled.small`
@@ -117,7 +123,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             history.replace({pathname: location.pathname, state: null});
         },
     }}>
-        <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"} pinned={idea.pinned} darkMode={user.darkMode}>
+        <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"} pinned={idea.pinned} darkMode={user.darkMode} theme={getTheme()}>
             <span className={"my-sm-auto mr-sm-3 mr-2"}>
                 <VoteButton className={"pt-sm-1 pt-0 pl-sm-2 pl-0"} idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>
             </span>
