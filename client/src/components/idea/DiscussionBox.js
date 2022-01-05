@@ -20,7 +20,6 @@ const DiscussionBox = forwardRef((props, ref) => {
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
-    const [submitOpen, setSubmitOpen] = useState(false);
     const [page, setPage] = useState(0);
     const [modal, setModal] = useState({open: true, type: "", data: -1});
     const sorts = [
@@ -83,43 +82,15 @@ const DiscussionBox = forwardRef((props, ref) => {
         newComments[index] = data;
         setComments({...comments, data: newComments});
     };
-    const onCommentSubmit = (internal) => {
-        const textarea = document.getElementById("commentMessage");
-        const message = textarea.value;
-        const type = internal ? "INTERNAL" : "PUBLIC";
-        if (message.length < 10 || message.length > 1800) {
-            popupWarning("Message must be longer than 10 and shorter than 1800 characters");
-            return Promise.resolve();
+    const onCommentSubmit = (returnData) => {
+        if (user.localPreferences.comments.sort === "newest") {
+            const newData = comments.data;
+            newData.unshift(returnData);
+            setComments({...comments, data: newData});
+        } else {
+            setComments({...comments, data: [...comments.data, returnData]});
         }
-        return axios.post("/comments/", {
-            ideaId: ideaData.id,
-            description: message,
-            type,
-        }).then(res => {
-            if (res.status !== 200 && res.status !== 201) {
-                popupError();
-                return;
-            }
-            if (user.localPreferences.comments.sort === "newest") {
-                const newData = comments.data;
-                newData.unshift(res.data);
-                setComments({...comments, data: newData});
-            } else {
-                setComments({...comments, data: [...comments.data, res.data]});
-            }
-            setSubmitOpen(false);
-            document.getElementById("commentMessage").value = "";
-            updateBoardState({...data, commentsAmount: ideaData.commentsAmount + 1});
-        });
-    };
-    const onCommentBoxKeyUp = (e) => {
-        let chars = e.target.value.length;
-        if (chars > 0 && !submitOpen) {
-            setSubmitOpen(true);
-        }
-        if (chars <= 0 && submitOpen) {
-            setSubmitOpen(false);
-        }
+        updateBoardState({...data, commentsAmount: ideaData.commentsAmount + 1});
     };
     const onPreSuspend = commentData => setModal({open: true, type: "suspend", data: commentData.user.id});
     const onSuspend = () => {
@@ -210,7 +181,7 @@ const DiscussionBox = forwardRef((props, ref) => {
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>
-            <CommentWriteBox submitOpen={submitOpen} onCommentSubmit={onCommentSubmit} onCommentBoxKeyUp={onCommentBoxKeyUp}/>
+            <CommentWriteBox onCommentSubmit={onCommentSubmit}/>
             {renderNoDataImage()}
         </UiCol>
         <UiCol xs={12} sm={11} md={10} className={"px-0"}>

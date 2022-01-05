@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
+import axios from "axios";
 import {AppContext, BoardContext, IdeaContext} from "context";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiPrettyUsername} from "ui";
@@ -8,6 +9,7 @@ import {UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
+import {popupError, popupWarning} from "utils/basic-utils";
 
 const WriteBox = styled(UiCol)`
   display: inline-flex;
@@ -21,25 +23,57 @@ const UsernameBox = styled.small`
   font-weight: bold;
 `;
 
-const CommentWriteBox = ({submitOpen, onCommentSubmit, onCommentBoxKeyUp}) => {
+const CommentWriteBox = ({onCommentSubmit}) => {
     const {serviceData, user} = useContext(AppContext);
     const {onNotLoggedClick, data} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
     const isModerator = data.moderators.find(mod => mod.userId === user.data.id);
+    const [submitOpen, setSubmitOpen] = useState(false);
     if (!ideaData.open && !serviceData.closedIdeasCommenting) {
         return <React.Fragment/>;
     }
+    const onSubmit = (internal) => {
+        const textarea = document.getElementById("commentMessage");
+        const message = textarea.value;
+        const type = internal ? "INTERNAL" : "PUBLIC";
+        if (message.length < 10 || message.length > 1800) {
+            popupWarning("Message must be longer than 10 and shorter than 1800 characters");
+            return Promise.resolve();
+        }
+        return axios.post("/comments/", {
+            ideaId: ideaData.id,
+            description: message,
+            type,
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                popupError();
+                return;
+            }
+            setSubmitOpen(false);
+            document.getElementById("commentMessage").value = "";
+            onCommentSubmit(res.data);
+        });
+    };
+    const onCommentBoxKeyUp = (e) => {
+        let chars = e.target.value.length;
+        if (chars > 0 && !submitOpen) {
+            setSubmitOpen(true);
+        }
+        if (chars <= 0 && submitOpen) {
+            setSubmitOpen(false);
+        }
+    };
     const renderSubmitButton = () => {
         if (!submitOpen) {
             return <React.Fragment/>
         }
         return <div className={"mt-2"}>
-            <UiLoadableButton label={"Submit"} small onClick={() => onCommentSubmit(false)}>
+            <UiLoadableButton label={"Submit"} small onClick={() => onSubmit(false)}>
                 Submit
             </UiLoadableButton>
 
             {isModerator && <React.Fragment>
-                <UiLoadableButton label={"Submit Internal"} color={tinycolor("#0080FF")} small className={"ml-1"} onClick={() => onCommentSubmit(true)}>
+                <UiLoadableButton label={"Submit Internal"} color={tinycolor("#0080FF")} small className={"ml-1"} onClick={() => onSubmit(true)}>
                     Submit Internal
                 </UiLoadableButton>
                 <div className="d-inline-flex align-top"><UiClickableTip id={"internalTip"} title={"Internal Comments"} description={"Comments visible only for moderators of the project, hidden from public view."}/></div>
