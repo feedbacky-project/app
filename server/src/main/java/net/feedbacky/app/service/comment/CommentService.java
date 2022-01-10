@@ -3,6 +3,7 @@ package net.feedbacky.app.service.comment;
 import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.util.PaginableRequest;
 
@@ -23,13 +24,13 @@ public interface CommentService {
 
   ResponseEntity<FetchCommentDto> post(PostCommentDto dto);
 
-  FetchUserDto postLike(long id);
+  FetchCommentReactionDto postReaction(long id, String reactionId);
 
   FetchCommentDto patch(long id, PatchCommentDto dto);
 
   ResponseEntity delete(long id);
 
-  ResponseEntity deleteLike(long id);
+  ResponseEntity deleteReaction(long id, String reactionId);
 
   enum SortType {
     NEWEST, OLDEST

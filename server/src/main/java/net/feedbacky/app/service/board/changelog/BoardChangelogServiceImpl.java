@@ -1,16 +1,23 @@
 package net.feedbacky.app.service.board.changelog;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.controller.about.EmojiDataRegistry;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.Changelog;
+import net.feedbacky.app.data.board.changelog.reaction.ChangelogReaction;
 import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PatchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
+import net.feedbacky.app.data.board.dto.changelog.reaction.FetchChangelogReactionDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
+import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.comment.reaction.CommentReaction;
+import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -28,12 +35,14 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -48,13 +57,16 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   private final UserRepository userRepository;
   private final ChangelogRepository changelogRepository;
   private final WebhookExecutor webhookExecutor;
+  private final EmojiDataRegistry emojiDataRegistry;
 
   @Autowired
-  public BoardChangelogServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ChangelogRepository changelogRepository, WebhookExecutor webhookExecutor) {
+  public BoardChangelogServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ChangelogRepository changelogRepository,
+                                   WebhookExecutor webhookExecutor, EmojiDataRegistry emojiDataRegistry) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.changelogRepository = changelogRepository;
     this.webhookExecutor = webhookExecutor;
+    this.emojiDataRegistry = emojiDataRegistry;
   }
 
   @Override
@@ -100,6 +112,29 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   }
 
   @Override
+  public FetchChangelogReactionDto postReaction(long id, String reactionId) {
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    Changelog changelog = changelogRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog with id {0} not found.", id)));
+    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid reaction.");
+    }
+    if(changelog.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(reactionId))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already reacted.");
+    }
+    ChangelogReaction reaction = new ChangelogReaction();
+    reaction.setChangelog(changelog);
+    reaction.setReactionId(reactionId);
+    reaction.setUser(user);
+    changelog.getReactions().add(reaction);
+    changelogRepository.save(changelog);
+    reaction = changelog.getReactions().stream().filter(r -> r.getReactionId().equals(reactionId) && r.getUser().equals(user)).findFirst().get();
+    return new FetchChangelogReactionDto().from(reaction);
+  }
+
+  @Override
   public FetchChangelogDto patch(long id, PatchChangelogDto dto) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
@@ -124,4 +159,27 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
     changelogRepository.delete(changelog);
     return ResponseEntity.noContent().build();
   }
+
+  @Override
+  public ResponseEntity deleteReaction(long id, String reactionId) {
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    Changelog changelog = changelogRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog {0} not found.", id)));
+    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid reaction.");
+    }
+    Optional<ChangelogReaction> optional = changelog.getReactions().stream().filter(r -> r.getUser().equals(user) && r.getReactionId().equals(reactionId)).findFirst();
+    if(!optional.isPresent()) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet reacted.");
+    }
+    ChangelogReaction reaction = optional.get();
+    reaction.setChangelog(null);
+    changelog.getReactions().remove(reaction);
+    changelogRepository.save(changelog);
+    //no need to expose
+    return ResponseEntity.noContent(). build();
+  }
+
 }

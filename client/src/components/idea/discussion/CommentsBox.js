@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import MarkdownContainer from "components/commons/MarkdownContainer";
+import ReactionsBox from "components/commons/ReactionsBox";
 import parseComment from "components/idea/discussion/comment-parser";
 import CommentIcon from "components/idea/discussion/CommentIcon";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
-import {FaHeart, FaLowVision, FaPen, FaRegHeart, FaTrashAlt, FaUserLock} from "react-icons/all";
+import {FaLowVision, FaPen, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
@@ -14,17 +15,13 @@ import {UiFormControl} from "ui/form";
 import {UiAvatar} from "ui/image";
 import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
 
-const LikeContainer = styled.span`
-  cursor: pointer;
-`;
-
 const CommentContainer = styled.div`
   display: inline-flex;
   margin-bottom: .5rem;
   word-break: break-word;
   min-width: 55%;
-  
-  @media(max-width: 576px) {
+
+  @media (max-width: 576px) {
     width: 100%;
   }
 `;
@@ -37,13 +34,13 @@ const InternalContainer = styled(CommentContainer)`
   transform: translateX(-16px);
 
   //make container full width on mobile to make trick look legit
-  @media(max-width: 576px) {
+  @media (max-width: 576px) {
     width: 100vw;
     border-radius: 0 !important;
   }
 `;
 
-const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, onCommentLike, onSuspend}) => {
+const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, onCommentUnreact, onSuspend}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(data.description)});
@@ -104,13 +101,6 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
         }
         return <UiHoverableIcon as={FaUserLock} className={"text-black-60 ml-1"} onClick={() => onSuspend(data)}/>
     };
-    const renderLikes = () => {
-        const likes = data.likesAmount;
-        if (data.liked) {
-            return <LikeContainer onClick={() => onCommentUnlike(data)}><FaHeart className={"text-red move-top-1px"}/> {likes}</LikeContainer>
-        }
-        return <LikeContainer onClick={() => onCommentLike(data)}><FaRegHeart className={"move-top-1px"}/> {likes}</LikeContainer>
-    };
     const renderEditorMode = () => {
         return <React.Fragment>
             <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
@@ -124,7 +114,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
     };
     const renderDescription = () => {
         let CommentComponent;
-        if(data.viewType === "INTERNAL") {
+        if (data.viewType === "INTERNAL") {
             CommentComponent = InternalContainer;
         } else {
             CommentComponent = CommentContainer;
@@ -134,13 +124,14 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentUnlike, o
                 <UiAvatar roundedCircle className={"mr-3 mt-2"} size={30} user={data.user} style={{minWidth: "30px"}}/>
                 <div style={{width: "100%"}}>
                     {renderCommentUsername()}
+                    <small className={"text-black-60"}> · <TimeAgo datetime={data.creationDate}/></small>
+                    {!data.edited || <small className={"text-black-60"}> · edited</small>}
                     {renderEditButton()}
                     {renderDeletionButton()}
                     {renderSuspensionButton()}
                     <br/>
                     {editor.enabled ? renderEditorMode() : <MarkdownContainer text={data.description}/>}
-                    <small className={"text-black-60"}> {renderLikes(data)} · <TimeAgo datetime={data.creationDate}/></small>
-                    {!data.edited || <small className={"text-black-60"}> · edited</small>}
+                    <ReactionsBox parentObjectId={data.id} reactionsData={data.reactions} onReact={onCommentReact} onUnreact={onCommentUnreact}/>
                 </div>
             </CommentComponent>
             <br/>

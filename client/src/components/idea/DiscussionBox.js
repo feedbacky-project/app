@@ -1,5 +1,5 @@
-import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
+import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import DangerousActionModal from "components/commons/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
@@ -7,7 +7,6 @@ import CommentsBox from "components/idea/discussion/CommentsBox";
 import CommentWriteBox from "components/idea/discussion/CommentWriteBox";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
-import {FaFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
@@ -39,9 +38,9 @@ const DiscussionBox = forwardRef((props, ref) => {
         const currentPage = override ? 0 : page;
         return axios.get("/ideas/" + ideaData.id + "/comments?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.comments)).then(res => {
             if (override) {
-                setComments({...comments, data: res.data.data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
+                setComments({...comments, data: res.data.data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page, error: false});
             } else {
-                setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page});
+                setComments({...comments, data: comments.data.concat(res.data.data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, page, error: false});
             }
             setPage(currentPage + 1);
         }).catch(() => {
@@ -62,8 +61,9 @@ const DiscussionBox = forwardRef((props, ref) => {
             dataLength={comments.data.length}
             loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}>
             {comments.data.map(data => {
-                return <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentLike={onCommentLike}
-                             onCommentUnlike={onCommentUnlike} onSuspend={onPreSuspend}/>}
+                    return <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentReact={onCommentReact}
+                                        onCommentUnreact={onCommentUnreact} onSuspend={onPreSuspend}/>
+                }
             )}
         </InfiniteScroll>
     };
@@ -120,43 +120,41 @@ const DiscussionBox = forwardRef((props, ref) => {
             popupNotification("Comment deleted", getTheme());
         });
     };
-    const onCommentLike = (data) => {
+    const onCommentReact = (commentId, emoteId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
-            return;
+            return Promise.resolve();
         }
-        axios.post("/comments/" + data.id + "/likers", {}).then(res => {
+        return axios.post("/comments/" + commentId + "/reactions/" + emoteId, {}).then(res => {
             if (res.status !== 200) {
-                popupWarning("Failed to like comment");
+                popupWarning("Failed to add reaction");
                 return;
             }
             setComments({
                 ...comments, data: comments.data.map(comment => {
-                        if (comment.id === data.id) {
-                            comment.liked = true;
-                            comment.likesAmount++;
-                        }
-                        return comment;
+                    if (comment.id === commentId) {
+                        comment.reactions.push(res.data);
                     }
-                )
+                    return comment;
+                })
             });
         });
     };
-    const onCommentUnlike = (data) => {
+    const onCommentUnreact = (commentId, emoteId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
-            return;
+            return Promise.resolve();
         }
-        axios.delete("/comments/" + data.id + "/likers").then(res => {
+        return axios.delete("/comments/" + commentId + "/reactions/" + emoteId).then(res => {
             if (res.status !== 204) {
-                popupWarning("Failed to unlike comment");
+                popupWarning("Failed to remove reaction");
                 return;
             }
             setComments({
                 ...comments, data: comments.data.map(comment => {
-                    if (comment.id === data.id) {
-                        comment.liked = false;
-                        comment.likesAmount--;
+                    if (comment.id === commentId) {
+                        const reaction = comment.reactions.find(r => r.user.id === user.data.id && r.reactionId === emoteId);
+                        comment.reactions = comment.reactions.filter(r => r !== reaction);
                     }
                     return comment;
                 })

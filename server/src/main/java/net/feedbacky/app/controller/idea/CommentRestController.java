@@ -3,6 +3,7 @@ package net.feedbacky.app.controller.idea;
 import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.comment.CommentService;
 import net.feedbacky.app.util.PaginableRequest;
@@ -65,9 +66,9 @@ public class CommentRestController {
     return commentService.post(dto);
   }
 
-  @PostMapping("v1/comments/{id}/likers")
-  public FetchUserDto postLike(@PathVariable long id) {
-    return commentService.postLike(id);
+  @PostMapping("v1/comments/{id}/reactions/{reactionId}")
+  public FetchCommentReactionDto postReaction(@PathVariable long id, @PathVariable String reactionId) {
+    return commentService.postReaction(id, reactionId);
   }
 
   @PatchMapping("v1/comments/{id}")
@@ -80,9 +81,9 @@ public class CommentRestController {
     return commentService.delete(id);
   }
 
-  @DeleteMapping("v1/comments/{id}/likers")
-  public ResponseEntity deleteLike(@PathVariable long id) {
-    return commentService.deleteLike(id);
+  @DeleteMapping("v1/comments/{id}/reactions/{reactionId}")
+  public ResponseEntity deleteReaction(@PathVariable long id, @PathVariable String reactionId) {
+    return commentService.deleteReaction(id, reactionId);
   }
 
 }

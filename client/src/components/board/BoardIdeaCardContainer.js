@@ -60,9 +60,9 @@ const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
             const data = res.data.data;
             data.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
             if (override) {
-                setIdeas({...ideas, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
+                setIdeas({...ideas, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, error: false});
             } else {
-                setIdeas({...ideas, data: ideas.data.concat(data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
+                setIdeas({...ideas, data: ideas.data.concat(data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, error: false});
             }
             setPage(currentPage + 1);
         }).catch(() => setIdeas({...ideas, error: true}));

@@ -5,6 +5,7 @@ import axios from "axios";
 import BoardChangelogInfoCard from "components/changelog/BoardChangelogInfoCard";
 import BoardChangelogTitle from "components/changelog/BoardChangelogTitle";
 import MarkdownContainer from "components/commons/MarkdownContainer";
+import ReactionsBox from "components/commons/ReactionsBox";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
@@ -16,11 +17,11 @@ import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
-import {prepareFilterAndSortRequests} from "utils/basic-utils";
+import {popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
 
 const BoardChangelogBox = ({searchQuery}) => {
     const {user} = useContext(AppContext);
-    const {data: boardData} = useContext(BoardContext);
+    const {data: boardData, onNotLoggedClick} = useContext(BoardContext);
     const [changelog, setChangelog] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [page, setPage] = useState(0);
     useEffect(() => {
@@ -33,9 +34,9 @@ const BoardChangelogBox = ({searchQuery}) => {
         return axios.get("/boards/" + boardData.discriminator + "/changelog?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog) + withQuery).then(res => {
             const data = res.data.data;
             if (override) {
-                setChangelog({...changelog, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
+                setChangelog({...changelog, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, error: false});
             } else {
-                setChangelog({...changelog, data: changelog.data.concat(data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages});
+                setChangelog({...changelog, data: changelog.data.concat(data), loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, error: false});
             }
             setPage(currentPage + 1);
         }).catch(() => setChangelog({...changelog, error: true}));
@@ -53,6 +54,47 @@ const BoardChangelogBox = ({searchQuery}) => {
       let newData = changelog.data;
       newData = newData.filter(changelog => changelog.id !== data.id);
       setChangelog({...changelog, data: newData});
+    };
+    const onChangelogReact = (changelogId, emoteId) => {
+        if (!user.loggedIn) {
+            onNotLoggedClick();
+            return Promise.resolve();
+        }
+        return axios.post("/changelog/" + changelogId + "/reactions/" + emoteId, {}).then(res => {
+            if (res.status !== 200) {
+                popupWarning("Failed to add reaction");
+                return;
+            }
+            setChangelog({
+                ...changelog, data: changelog.data.map(element => {
+                    if (element.id === changelogId) {
+                        element.reactions.push(res.data);
+                    }
+                    return element;
+                })
+            });
+        });
+    };
+    const onChangelogUnreact = (changelogId, emoteId) => {
+        if (!user.loggedIn) {
+            onNotLoggedClick();
+            return Promise.resolve();
+        }
+        return axios.delete("/changelog/" + changelogId + "/reactions/" + emoteId).then(res => {
+            if (res.status !== 204) {
+                popupWarning("Failed to remove reaction");
+                return;
+            }
+            setChangelog({
+                ...changelog, data: changelog.data.map(element => {
+                    if (element.id === changelogId) {
+                        const reaction = element.reactions.find(r => r.user.id === user.data.id && r.reactionId === emoteId);
+                        element.reactions = element.reactions.filter(r => r !== reaction);
+                    }
+                    return element;
+                })
+            });
+        });
     };
     const loadChangelogs = () => {
         if (changelog.error) {
@@ -78,6 +120,7 @@ const BoardChangelogBox = ({searchQuery}) => {
                     <UiViewBoxBackground className={"d-inline-block p-4"}>
                         <BoardChangelogTitle data={element} onChangelogDelete={onChangelogDelete} onChangelogUpdate={onChangelogUpdate}/>
                         <MarkdownContainer className={"my-2"} text={element.description}/>
+                        <ReactionsBox parentObjectId={element.id} reactionsData={element.reactions} onReact={onChangelogReact} onUnreact={onChangelogUnreact}/>
                     </UiViewBoxBackground>
                 </UiCol>
             })}

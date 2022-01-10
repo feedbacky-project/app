@@ -3,12 +3,14 @@ package net.feedbacky.app.data.idea.dto.comment;
 import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.idea.comment.Comment;
-import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
 import com.google.errorprone.annotations.CheckReturnValue;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -24,8 +26,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
   private boolean special;
   private String specialType;
   private String viewType;
-  private int likesAmount;
-  private boolean liked;
+  private List<FetchCommentReactionDto> reactions;
   private boolean edited;
   private Date creationDate;
 
@@ -41,15 +42,9 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.special = entity.isSpecial();
     this.specialType = entity.getSpecialType().name();
     this.viewType = entity.getViewType().name();
-    this.likesAmount = entity.getLikers().size();
-    this.liked = false;
+    this.reactions = entity.getReactions().stream().map(r -> new FetchCommentReactionDto().from(r)).collect(Collectors.toList());
     this.edited = entity.isEdited();
     this.creationDate = entity.getCreationDate();
-    return this;
-  }
-
-  public FetchCommentDto withUser(Comment entity, User user) {
-    this.liked = entity.getLikers().contains(user);
     return this;
   }
 

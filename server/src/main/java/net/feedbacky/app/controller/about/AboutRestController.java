@@ -1,4 +1,4 @@
-package net.feedbacky.app.controller;
+package net.feedbacky.app.controller.about;
 
 import net.feedbacky.app.FeedbackyApplication;
 import net.feedbacky.app.data.AboutFeedbackyData;
@@ -27,13 +27,15 @@ import java.util.stream.Collectors;
 public class AboutRestController {
 
   private final LoginProviderRegistry loginProviderRegistry;
+  private final EmojiDataRegistry emojiDataRegistry;
   private final UserRepository userRepository;
   private AboutFeedbackyData aboutFeedbackyData = null;
   private boolean developmentMode = false;
 
   @Autowired
-  public AboutRestController(ApplicationContext context, LoginProviderRegistry loginProviderRegistry, UserRepository userRepository) {
+  public AboutRestController(ApplicationContext context, LoginProviderRegistry loginProviderRegistry, EmojiDataRegistry emojiDataRegistry, UserRepository userRepository) {
     this.loginProviderRegistry = loginProviderRegistry;
+    this.emojiDataRegistry = emojiDataRegistry;
     this.userRepository = userRepository;
     this.developmentMode = (boolean) context.getBean("isDevelopmentMode");
   }
@@ -47,7 +49,7 @@ public class AboutRestController {
       boolean mailLoginEnabled = Boolean.parseBoolean(System.getenv("SETTINGS_MAIL_LOGIN_ENABLED"));
       List<FetchUserDto> admins = userRepository.findByServiceStaffTrue().stream().map(user -> new FetchUserDto().from(user)).collect(Collectors.toList());
       List<LoginProvider.ProviderData> providers = loginProviderRegistry.getProviders().stream().filter(LoginProvider::isEnabled).map(LoginProvider::getProviderData).collect(Collectors.toList());
-      data = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, providers, admins, closedIdeasCommenting, mailLoginEnabled, developmentMode);
+      data = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, providers, admins, emojiDataRegistry.getEmojis(), closedIdeasCommenting, mailLoginEnabled, developmentMode);
       //only cache when there is at least 1 service admin registered (for first installation purposes)
       if(!admins.isEmpty()) {
         this.aboutFeedbackyData = data;

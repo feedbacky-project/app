@@ -6,12 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.changelog.reaction.ChangelogReaction;
 import net.feedbacky.app.data.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,9 +22,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -55,5 +60,7 @@ public class Changelog {
   private User creator;
   @CreationTimestamp
   private Date creationDate;
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "changelog")
+  private Set<ChangelogReaction> reactions = new HashSet<>();
 
 }

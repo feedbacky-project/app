@@ -1,15 +1,18 @@
 package net.feedbacky.app.service.comment;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.controller.about.EmojiDataRegistry;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.comment.reaction.CommentReaction;
 import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.idea.subscribe.NotificationEvent;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.user.User;
@@ -44,6 +47,7 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -61,15 +65,18 @@ public class CommentServiceImpl implements CommentService {
   private final UserRepository userRepository;
   private final SubscriptionExecutor subscriptionExecutor;
   private final WebhookExecutor webhookExecutor;
+  private final EmojiDataRegistry emojiDataRegistry;
   private final boolean closedIdeasCommenting = Boolean.parseBoolean(System.getenv("SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS"));
 
   @Autowired
-  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor, WebhookExecutor webhookExecutor) {
+  public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor,
+                            WebhookExecutor webhookExecutor, EmojiDataRegistry emojiDataRegistry) {
     this.commentRepository = commentRepository;
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
     this.subscriptionExecutor = subscriptionExecutor;
     this.webhookExecutor = webhookExecutor;
+    this.emojiDataRegistry = emojiDataRegistry;
   }
 
   @Override
@@ -90,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
       comments = comments.stream().filter(comment -> comment.getViewType() != Comment.ViewType.INTERNAL).collect(Collectors.toList());
     }
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
-            comments.stream().map(comment -> new FetchCommentDto().from(comment).withUser(comment, finalUser)).collect(Collectors.toList()));
+            comments.stream().map(comment -> new FetchCommentDto().from(comment)).collect(Collectors.toList()));
   }
 
   @Override
@@ -107,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
     if(comment.getViewType() == Comment.ViewType.INTERNAL && !isModerator) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to view this comment.");
     }
-    return new FetchCommentDto().from(comment).withUser(comment, finalUser);
+    return new FetchCommentDto().from(comment);
   }
 
   @Override
@@ -130,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
     comment.setId(null);
     comment.setIdea(idea);
     comment.setCreator(user);
-    comment.setLikers(new HashSet<>());
+    comment.setReactions(new HashSet<>());
     comment.setSpecial(false);
     comment.setSpecialType(Comment.SpecialType.LEGACY);
     comment.setViewType(Comment.ViewType.valueOf(dto.getType().toUpperCase()));
@@ -157,25 +164,33 @@ public class CommentServiceImpl implements CommentService {
                 comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
       }
     }
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchCommentDto().from(comment).withUser(comment, user));
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchCommentDto().from(comment));
   }
 
   @Override
-  public FetchUserDto postLike(long id) {
+  public FetchCommentReactionDto postReaction(long id, String reactionId) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Comment comment = commentRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(comment.isSpecial()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't like this comment.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't react to this comment.");
     }
-    if(comment.getLikers().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already liked.");
+    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid reaction.");
     }
-    comment.getLikers().add(user);
+    if(comment.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(reactionId))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already reacted.");
+    }
+    CommentReaction reaction = new CommentReaction();
+    reaction.setComment(comment);
+    reaction.setReactionId(reactionId);
+    reaction.setUser(user);
+    comment.getReactions().add(reaction);
     commentRepository.save(comment);
-    return new FetchUserDto().from(user);
+    reaction = comment.getReactions().stream().filter(r -> r.getReactionId().equals(reactionId) && r.getUser().equals(user)).findFirst().get();
+    return new FetchCommentReactionDto().from(reaction);
   }
 
   @Override
@@ -202,7 +217,7 @@ public class CommentServiceImpl implements CommentService {
 
     comment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(comment.getDescription())));
     commentRepository.save(comment);
-    return new FetchCommentDto().from(comment).withUser(comment, user);
+    return new FetchCommentDto().from(comment);
   }
 
   @Override
@@ -228,21 +243,27 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public ResponseEntity deleteLike(long id) {
+  public ResponseEntity deleteReaction(long id, String reactionId) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Comment comment = commentRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(comment.isSpecial()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't unlike this comment.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't react to this comment.");
     }
-    if(!comment.getLikers().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet liked.");
+    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid reaction.");
     }
-    comment.getLikers().remove(user);
+    Optional<CommentReaction> optional = comment.getReactions().stream().filter(r -> r.getUser().equals(user) && r.getReactionId().equals(reactionId)).findFirst();
+    if(!optional.isPresent()) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet reacted.");
+    }
+    CommentReaction reaction = optional.get();
+    reaction.setComment(null);
+    comment.getReactions().remove(reaction);
     commentRepository.save(comment);
     //no need to expose
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.noContent(). build();
   }
 }

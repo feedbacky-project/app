@@ -1,0 +1,18 @@
+like:
+  path: "https://cdn.feedbacky.net/static/svg/reactions/twemoji-like.svg"
+  name: "Like"
+tada:
+  path: "https://cdn.feedbacky.net/static/svg/reactions/twemoji-tada.svg"
+  name: "Tada"
+fire:
+  path: "https://cdn.feedbacky.net/static/svg/reactions/twemoji-fire.svg"
+  name: "Fire"
+sunglasses:
+  path: "https://cdn.feedbacky.net/static/svg/reactions/twemoji-sunglasses.svg"
+  name: "Cool"
+surprised:
+  path: "https://cdn.feedbacky.net/static/svg/reactions/twemoji-surprised.svg"
+  name: "Surprised"
+flushed:
+  path: "https://cdn.feedbacky.net/static/svg/reactions/twemoji-flushed.svg"
+  name: "Flushed"

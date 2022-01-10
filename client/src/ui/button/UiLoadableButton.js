@@ -31,7 +31,7 @@ const UiLoadableButton = (props) => {
         onClick().finally(() => setLoading(false));
     }} {...otherProps}>{loading ? <React.Fragment>
         <Loadable size={"sm"} color={user.darkMode ? darkModeColor : lightModeColor}/>
-        <span style={{color: "transparent"}}>{children}</span>
+        <span style={{visibility: "hidden"}}>{children}</span>
     </React.Fragment> : children}</Top>
 };
 

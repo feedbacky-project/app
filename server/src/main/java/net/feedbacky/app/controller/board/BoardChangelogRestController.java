@@ -3,10 +3,8 @@ package net.feedbacky.app.controller.board;
 import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PatchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
-import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
-import net.feedbacky.app.data.board.dto.social.PostSocialLinkDto;
+import net.feedbacky.app.data.board.dto.changelog.reaction.FetchChangelogReactionDto;
 import net.feedbacky.app.service.board.changelog.BoardChangelogService;
-import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestParamsParser;
 
@@ -64,6 +62,11 @@ public class BoardChangelogRestController {
     return boardChangelogService.post(discriminator, dto);
   }
 
+  @PostMapping("v1/changelog/{id}/reactions/{reactionId}")
+  public FetchChangelogReactionDto postReaction(@PathVariable long id, @PathVariable String reactionId) {
+    return boardChangelogService.postReaction(id, reactionId);
+  }
+
   @PatchMapping("v1/changelog/{id}")
   public FetchChangelogDto patch(@PathVariable long id, @Valid @RequestBody PatchChangelogDto dto) {
     return boardChangelogService.patch(id, dto);
@@ -73,5 +76,11 @@ public class BoardChangelogRestController {
   public ResponseEntity delete(@PathVariable long id) {
     return boardChangelogService.delete(id);
   }
+
+  @DeleteMapping("v1/changelog/{id}/reactions/{reactionId}")
+  public ResponseEntity deleteReaction(@PathVariable long id, @PathVariable String reactionId) {
+    return boardChangelogService.deleteReaction(id, reactionId);
+  }
+
 
 }
