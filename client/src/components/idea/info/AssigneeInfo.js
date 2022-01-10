@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {IdeaContext} from "context";
 import React, {useContext} from "react";
-import {UiClickableTip, UiPrettyUsername} from "ui";
+import {UiPrettyUsername} from "ui";
 import {UiAvatar} from "ui/image";
 
 const Assignee = styled(UiAvatar)`

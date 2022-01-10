@@ -36,6 +36,7 @@ const ProfileRoute = () => {
             return;
         }
         onThemeChange();
+        /*eslint-disable-next-line*/
     }, [defaultTheme]);
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setLoginModalOpen(true)}
                                     errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>

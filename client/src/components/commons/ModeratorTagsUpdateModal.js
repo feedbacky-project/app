@@ -30,6 +30,7 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const {ideaData} = useContext(IdeaContext);
     const [tags, setTags] = useState(ideaData.tags);
     const allTags = boardData.tags;
+    /*eslint-disable-next-line*/
     useEffect(() => setTags(ideaData.tags), [onHide]);
 
     return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}

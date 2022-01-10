@@ -23,6 +23,7 @@ const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
     const {data: boardData} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
     const [assignee, setAssignee] = useState(ideaData.assignee);
+    /*eslint-disable-next-line*/
     useEffect(() => setAssignee(ideaData.assignee), [onHide]);
 
     const toggleAssignee = (newAssignee) => {

@@ -1,6 +1,5 @@
 import axios from "axios";
 import BoardBanner from "components/board/BoardBanner";
-import BoardSearchBar from "components/board/BoardSearchBar";
 import BoardChangelogBox from "components/changelog/BoardChangelogBox";
 import BoardChangelogSearchBar from "components/changelog/BoardChangelogSearchBar";
 import PageNavbar from "components/commons/PageNavbar";
@@ -52,7 +51,7 @@ const ChangelogRoute = () => {
         // eslint-disable-next-line
     }, [user.session]);
 
-    if(board.loaded && !board.data.changelogEnabled) {
+    if (board.loaded && !board.data.changelogEnabled) {
         history.push("/b/" + id);
         return <React.Fragment/>
     }

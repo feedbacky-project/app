@@ -9,13 +9,10 @@ import ReactionsBox from "components/commons/ReactionsBox";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaRegFrown} from "react-icons/all";
 import InfiniteScroll from "react-infinite-scroll-component";
-import TimeAgo from "timeago-react/esm/timeago-react";
-import {UiLoadingSpinner, UiPrettyUsername} from "ui";
+import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
-import {UiAvatar} from "ui/image";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 import {popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
 
@@ -51,9 +48,9 @@ const BoardChangelogBox = ({searchQuery}) => {
         setChangelog({...changelog, data: newChangelogs});
     };
     const onChangelogDelete = (data) => {
-      let newData = changelog.data;
-      newData = newData.filter(changelog => changelog.id !== data.id);
-      setChangelog({...changelog, data: newData});
+        let newData = changelog.data;
+        newData = newData.filter(changelog => changelog.id !== data.id);
+        setChangelog({...changelog, data: newData});
     };
     const onChangelogReact = (changelogId, emoteId) => {
         if (!user.loggedIn) {

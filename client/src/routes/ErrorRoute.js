@@ -15,6 +15,7 @@ const ErrorRoute = ({Icon, message, notes = "", crash = false, onBackButtonClick
     const {hardResetData} = useContext(AppContext);
     useEffect(() => {
         setTimeout(() => document.title = message, 100);
+        /*eslint-disable-next-line*/
     }, []);
     return <UiContainer>
         <UiRow centered verticallyCentered>

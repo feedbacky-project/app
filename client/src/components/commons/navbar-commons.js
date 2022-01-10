@@ -3,7 +3,7 @@ import React from "react";
 import {FaAngleDown, FaUserCog} from "react-icons/all";
 import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
-import {UiButton, UiClassicButton} from "ui/button";
+import {UiButton} from "ui/button";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {UiAvatar} from "ui/image";
 import {isServiceAdmin} from "utils/basic-utils";
@@ -25,7 +25,7 @@ const OptionsButton = styled.div`
   box-shadow: none;
   color: white;
   line-height: 1.65rem;
-  
+
   &:hover, &:focus {
     color: white;
     background-color: transparent;

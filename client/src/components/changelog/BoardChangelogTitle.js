@@ -5,7 +5,6 @@ import {DropdownOption, IconToggle} from "components/commons/ModeratorActionsBut
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
 import {FaEdit, FaTrash} from "react-icons/all";
-import {UiPrettyUsername} from "ui";
 import {UiDropdown} from "ui/dropdown";
 import {UiAvatar} from "ui/image";
 import {popupError, popupNotification} from "utils/basic-utils";
@@ -26,7 +25,7 @@ const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
         });
     };
     const renderContent = () => {
-        if(!isModerator) {
+        if (!isModerator) {
             return <React.Fragment/>
         }
         let color = getTheme();

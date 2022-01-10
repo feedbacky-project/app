@@ -1,6 +1,5 @@
 import {BoardDescription} from "components/board/BoardInfoCard";
 import ChangelogCreateModal from "components/changelog/ChangelogCreateModal";
-import MarkdownContainer from "components/commons/MarkdownContainer";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from 'react';
 import {FaPencilAlt} from "react-icons/fa";

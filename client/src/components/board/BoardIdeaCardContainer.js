@@ -6,7 +6,6 @@ import IdeaCard from "components/board/IdeaCard";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
-import {FaRegFrown} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
