@@ -6,6 +6,7 @@
 * **[IMPROVEMENT]** Minor performance improvements for re-render of every comment while writing and posting new comment
 * **[CHANGE]** Changelogs description length increased from 1800 chars to 2500
 * **[FIX]** Tag edit modal now updates values properly when editing multiple tags
+* **[FIX]** Don't mark freshly edited comments (within 5 minutes) with (edited) badge client-side
 * **[FIX]** Reload button for failed with load comments/changelogs/ideas is now working properly
 * **[FIX/REMOVE]** Broughtgit back previous discord webhook library, current one contains some limitations and is no longer needed for current features
 

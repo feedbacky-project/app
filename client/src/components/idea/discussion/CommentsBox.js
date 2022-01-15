@@ -60,7 +60,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                 return;
             }
             setEditor({enabled: false, value: htmlDecodeEntities(res.data.description)});
-            onCommentUpdate({...data, description: res.data.description, edited: true});
+            onCommentUpdate({...data, ...res.data});
             popupNotification("Comment edited", getTheme());
         });
     };
