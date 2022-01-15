@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import TextInputActionModal from "components/commons/TextInputActionModal";
+import TextInputActionModal from "components/commons/modal/TextInputActionModal";
 import React, {useRef, useState} from "react";
 import {FaBold, FaImage, FaItalic, FaLink, FaStrikethrough} from "react-icons/all";
 import {UiFormControl} from "ui/form/UiFormControl";

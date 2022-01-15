@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
-import DangerousActionModal from "components/commons/DangerousActionModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import SafeAnchor from "components/commons/SafeAnchor";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import ModeratorInviteModal from "components/board/admin/ModeratorInviteModal";
-import DangerousActionModal from "components/commons/DangerousActionModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import {AppContext, BoardContext, PageNodesContext} from "context";
 import copy from "copy-text-to-clipboard";
 import React, {useContext, useEffect, useState} from 'react';

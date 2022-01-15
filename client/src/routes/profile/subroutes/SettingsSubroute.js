@@ -1,5 +1,5 @@
 import axios from "axios";
-import ConfirmationActionModal from "components/commons/ConfirmationActionModal";
+import ConfirmationActionModal from "components/commons/modal/ConfirmationActionModal";
 import ComponentLoader from "components/ComponentLoader";
 import AvatarSelectionModal from "components/profile/AvatarSelectionModal";
 import {AppContext, PageNodesContext} from "context";

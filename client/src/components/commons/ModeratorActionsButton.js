@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import DangerousActionModal from "components/commons/DangerousActionModal";
-import ModeratorAssignUpdateModal from "components/commons/ModeratorAssignUpdateModal";
-import ModeratorTagsUpdateModal from "components/commons/ModeratorTagsUpdateModal";
-import ModeratorVotesResetModal from "components/commons/ModeratorVotesResetModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
+import ModeratorAssignUpdateModal from "components/commons/modal/ModeratorAssignUpdateModal";
+import ModeratorTagsUpdateModal from "components/commons/modal/ModeratorTagsUpdateModal";
+import ModeratorVotesResetModal from "components/commons/modal/ModeratorVotesResetModal";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from 'react';

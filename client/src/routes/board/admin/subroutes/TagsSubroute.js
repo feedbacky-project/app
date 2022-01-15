@@ -3,7 +3,7 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import TagCreateModal from "components/board/admin/TagCreateModal";
 import TagEditModal from "components/board/admin/TagEditModal";
-import DangerousActionModal from "components/commons/DangerousActionModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {AppContext, BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';

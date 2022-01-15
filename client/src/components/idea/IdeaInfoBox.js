@@ -1,5 +1,5 @@
 import axios from "axios";
-import DangerousActionModal from "components/commons/DangerousActionModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import VoteButton from "components/commons/VoteButton";
 import AssigneeInfo from "components/idea/info/AssigneeInfo";

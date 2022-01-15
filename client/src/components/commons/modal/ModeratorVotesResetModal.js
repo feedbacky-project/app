@@ -1,4 +1,4 @@
-import {QuestionIcon} from "components/commons/DangerousActionModal";
+import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
 import React from "react";
 import {FaExclamation} from "react-icons/all";
 import tinycolor from "tinycolor2";

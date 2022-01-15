@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
-import DangerousActionModal from "components/commons/DangerousActionModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
+import WebhookUpdateModal from "components/commons/modal/WebhookUpdateModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
 import {AppContext, BoardContext, PageNodesContext} from "context";
@@ -21,6 +22,7 @@ const EventsContainer = styled.div`
   overflow-y: scroll;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
+
   &::-webkit-scrollbar {
     width: 0;
     background: transparent; /* Chrome/Safari/Webkit */
@@ -30,6 +32,7 @@ const EventsContainer = styled.div`
 const WebhookIcon = styled(UiImage)`
   padding: .5rem;
   background-color: hsl(213, 7%, 24%);
+  cursor: pointer;
 `;
 
 const WebhooksSubroute = () => {
@@ -37,7 +40,7 @@ const WebhooksSubroute = () => {
     const {data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
-    const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
+    const [modal, setModal] = useState({open: false, type: "", data: -1, dataName: ""});
     useEffect(() => setCurrentNode("webhooks"), [setCurrentNode]);
     useTitle(boardData.name + " | Webhooks");
     useEffect(() => {
@@ -58,9 +61,9 @@ const WebhooksSubroute = () => {
         return webhooks.data.map((hook, i) => {
             return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={hook.id}>
                 <div className={"text-center"}>
-                    <WebhookIcon alt={"Webhook"} rounded src={getTypeIcon(hook)} height={40} width={40}/>
+                    <WebhookIcon alt={"Webhook"} rounded src={getTypeIcon(hook)} height={40} width={40} onClick={() => onWebhookEdit(hook)}/>
                     <UiElementDeleteButton id={"webhook_del_" + i} tooltipName={"Delete"}
-                                           onClick={() => setModal({open: true, data: hook.id, dataName: prettifyEnum(hook.type) + " #" + hook.id})}/>
+                                           onClick={() => setModal({open: true, type: "delete", data: hook.id, dataName: prettifyEnum(hook.type) + " #" + hook.id})}/>
                     <br/>
                     <small className={"text-truncate text-center d-block"}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
                     <EventsContainer>{renderEvents(hook)}</EventsContainer>
@@ -97,6 +100,12 @@ const WebhooksSubroute = () => {
     const renderEvents = (hook) => {
         return hook.events.map(event => <div key={hook.id + event}><UiBadge className={"d-block my-1"}>{prettifyEnum(event)}</UiBadge></div>);
     };
+    const onWebhookUpdate = (webhook) => {
+        const newWebhooks = [...webhooks.data];
+        const index = newWebhooks.findIndex(c => c.id === webhook.id);
+        newWebhooks[index] = webhook;
+        setWebhooks({...webhooks, data: newWebhooks});
+    };
     const onWebhookDelete = () => {
         return axios.delete("/webhooks/" + modal.data).then(res => {
             if (res.status !== 204) {
@@ -108,9 +117,13 @@ const WebhooksSubroute = () => {
             popupNotification("Webhook deleted", getTheme());
         });
     };
+    const onWebhookEdit = (webhook) => {
+        setModal({open: true, type: "edit", data: webhook, dataName: ""});
+    };
     return <UiCol xs={12} md={9}>
-        <DangerousActionModal id={"webhookDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onWebhookDelete}
+        <DangerousActionModal id={"webhookDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "delete"} onAction={onWebhookDelete}
                               actionDescription={<div>Webhook <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u> and won't receive any future data.</div>}/>
+        <WebhookUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "edit"} webhook={modal.data} onWebhookUpdate={onWebhookUpdate}/>
         <UiViewBox title={"Webhooks"} description={"Edit webhooks to integrate with other apps here."}>
             {renderContent()}
         </UiViewBox>

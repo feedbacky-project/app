@@ -2,11 +2,12 @@
 * **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
 * **[FEATURE]** Added GitLab login support (requested by [AnonDev](https://app.feedbacky.net/i/more-oauth-providers.3194))
 * **[FEATURE]** Comments and changelogs can now be reacted with emotes (requested by [Matou0014](https://app.feedbacky.net/i/comments-reaction.3219))
+* **[FEAUTRE]** Existing webhooks can now be edited (requested by [Matou0014](https://app.feedbacky.net/i/edit-webhooks.3932))
 * **[IMPROVEMENT]** Minor performance improvements for re-render of every comment while writing and posting new comment
 * **[CHANGE]** Changelogs description length increased from 1800 chars to 2500
 * **[FIX]** Tag edit modal now updates values properly when editing multiple tags
 * **[FIX]** Reload button for failed with load comments/changelogs/ideas is now working properly
-* **[FIX/REMOVE]** Brought back previous discord webhook library, current one contains some limitations and is no longer needed for current features
+* **[FIX/REMOVE]** Broughtgit back previous discord webhook library, current one contains some limitations and is no longer needed for current features
 
 ### 1.0.0.beta.8
 * **[FEATURE]** Added strikethrough to markdown buttons

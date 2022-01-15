@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 export const Icon = styled.div`
-  height: .7em;
-  width: .7em;
+  height: .75em;
+  width: .75em;
   cursor: pointer;
   
   @media (max-width: 768px) {
@@ -14,6 +14,9 @@ export const HoverableIcon = styled(Icon)`
   transition: var(--hover-transition);
   
   &:hover {
-    transform: var(--hover-transform-scale-lg);
+    color: hsl(0, 0%, 0%) !important;
+  }
+  .dark &:hover {
+    color: hsl(0, 0%, 95%) !important;
   }
 `;

@@ -37,7 +37,7 @@ const NotificationsInfo = () => {
     };
     return <React.Fragment>
         <div className={"my-1 text-black-75"}>
-            Subscribe
+            Notifications
             <UiClickableTip id={"subTip"} title={"Subscribe"} description={"Subscribe idea to receive mail notifications, configure settings at profile page."}/>
         </div>
         {renderButton()}

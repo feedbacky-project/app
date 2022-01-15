@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import TextInputActionModal from "components/commons/TextInputActionModal";
+import TextInputActionModal from "components/commons/modal/TextInputActionModal";
 import {AppContext} from "context";
 import React, {useContext, useState} from 'react';
 import {ModalDialog} from "react-bootstrap";

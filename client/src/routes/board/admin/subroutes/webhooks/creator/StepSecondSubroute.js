@@ -4,11 +4,11 @@ import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
 import {UiCol, UiRow} from "ui/grid";
 
-const events = ["IDEA_CREATE", "IDEA_DELETE", "IDEA_COMMENT", "IDEA_COMMENT_DELETE", "IDEA_EDIT", "IDEA_TAG_CHANGE", "IDEA_OPEN", "IDEA_CLOSE",
+export const WEBHOOK_EVENT_LIST = ["IDEA_CREATE", "IDEA_DELETE", "IDEA_COMMENT", "IDEA_COMMENT_DELETE", "IDEA_EDIT", "IDEA_TAG_CHANGE", "IDEA_OPEN", "IDEA_CLOSE",
     "CHANGELOG_CREATE"];
-const eventNames = ["Idea Post Create", "Idea Post Delete", "Idea Comment Post", "Idea Comment Delete", "Idea Post Edited", "Idea Tag Change", "Idea State Open", "Idea State Close",
+export const WEBHOOK_EVENT_NAMES_LIST = ["Idea Post Create", "Idea Post Delete", "Idea Comment Post", "Idea Comment Delete", "Idea Post Edited", "Idea Tag Change", "Idea State Open", "Idea State Close",
     "Changelog Post"];
-const eventIcons = ["idea_create.svg", "idea_delete.svg", "idea_comment.svg", "idea_comment_delete.svg", "idea_edit.svg", "idea_tag_change.svg", "idea_open.svg", "idea_close.svg",
+export const WEBHOOK_EVENT_ICONS_LIST = ["idea_create.svg", "idea_delete.svg", "idea_comment.svg", "idea_comment_delete.svg", "idea_edit.svg", "idea_tag_change.svg", "idea_open.svg", "idea_close.svg",
     "changelog_create.svg"];
 
 const StepSecondSubroute = ({updateSettings, settings}) => {
@@ -20,9 +20,9 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
         }
     };
     const renderCards = () => {
-        return events.map((item, i) => {
-            let name = eventNames[i];
-            return <SetupCard key={i} icon={<img alt={item} src={"https://cdn.feedbacky.net/static/svg/webhooks/" + eventIcons[i]} style={{width: "2.5rem", height: "2.5rem"}}/>}
+        return WEBHOOK_EVENT_LIST.map((item, i) => {
+            let name = WEBHOOK_EVENT_NAMES_LIST[i];
+            return <SetupCard key={i} icon={<img alt={item} src={"https://cdn.feedbacky.net/static/svg/webhooks/" + WEBHOOK_EVENT_ICONS_LIST[i]} style={{width: "2.5rem", height: "2.5rem"}}/>}
                               text={name} onClick={() => onChoose(item)} className={"m-2"} chosen={settings.listenedEvents.includes(item)}/>
         });
     };

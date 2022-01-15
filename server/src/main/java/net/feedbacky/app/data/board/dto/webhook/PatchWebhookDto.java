@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.URL;
 
+import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -27,6 +29,7 @@ public class PatchWebhookDto {
   private String url;
   @EnumValue(enumClazz = Webhook.Type.class, message = "Type must be valid webhook type.")
   private String type;
+  @NotNull(message = "Events cannot be empty.")
   private List<String> events;
 
 }

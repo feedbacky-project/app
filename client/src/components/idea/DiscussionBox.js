@@ -1,7 +1,7 @@
 import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
-import DangerousActionModal from "components/commons/DangerousActionModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import CommentsBox from "components/idea/discussion/CommentsBox";
 import CommentWriteBox from "components/idea/discussion/CommentWriteBox";

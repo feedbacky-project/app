@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import DangerousActionModal from "components/commons/DangerousActionModal";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import SafeAnchor from "components/commons/SafeAnchor";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useState} from "react";

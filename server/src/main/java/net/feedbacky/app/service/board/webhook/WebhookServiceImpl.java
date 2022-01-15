@@ -30,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,11 +93,22 @@ public class WebhookServiceImpl implements WebhookService {
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Webhook webhook = webhookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Webhook with id {0} not found.", id)));
+    if(!dto.getUrl().equals(webhook.getUrl()) && webhookRepository.findByUrl(dto.getUrl()).isPresent()) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Webhook with that URL already exists.");
+    }
     Board board = webhook.getBoard();
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
-    ModelMapper mapper = new ModelMapper();
-    mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-    mapper.map(dto, webhook);
+    webhook.setUrl(dto.getUrl());
+    List<Webhook.Event> webhookEvents = new ArrayList<>();
+    for(String event : dto.getEvents()) {
+      try {
+        webhookEvents.add(Webhook.Event.valueOf(event));
+      } catch(Exception ex) {
+        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid webhook event '" + event + "'.");
+      }
+    }
+    webhook.setEvents(webhookEvents);
+    webhookRepository.save(webhook);
     return new FetchWebhookDto().from(webhook);
   }
 

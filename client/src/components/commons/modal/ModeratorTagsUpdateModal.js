@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import {QuestionIcon} from "components/commons/DangerousActionModal";
+import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamation} from "react-icons/all";

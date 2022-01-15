@@ -1,5 +1,5 @@
 import BoardBanner from "components/board/BoardBanner";
-import {QuestionIcon} from "components/commons/DangerousActionModal";
+import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
 import PageNavbar from "components/commons/PageNavbar";
 import ProfileNavbar from "components/profile/ProfileNavbar";
 import {AppContext, IdeaContext} from "context";
