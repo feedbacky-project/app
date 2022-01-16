@@ -59,7 +59,7 @@ public class Comment implements Serializable {
   private SpecialType specialType;
   private boolean edited;
   private ViewType viewType = ViewType.PUBLIC;
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "comment")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true)
   private Set<CommentReaction> reactions = new HashSet<>();
   @CreationTimestamp
   private Date creationDate;

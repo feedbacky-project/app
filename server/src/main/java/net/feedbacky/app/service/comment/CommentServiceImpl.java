@@ -261,6 +261,7 @@ public class CommentServiceImpl implements CommentService {
     }
     CommentReaction reaction = optional.get();
     comment.getReactions().remove(reaction);
+    reaction.setComment(null);
     commentRepository.save(comment);
     //no need to expose
     return ResponseEntity.noContent(). build();

@@ -60,7 +60,7 @@ public class Changelog {
   private User creator;
   @CreationTimestamp
   private Date creationDate;
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "changelog")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "changelog", orphanRemoval = true)
   private Set<ChangelogReaction> reactions = new HashSet<>();
 
 }

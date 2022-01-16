@@ -176,6 +176,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
     }
     ChangelogReaction reaction = optional.get();
     changelog.getReactions().remove(reaction);
+    reaction.setChangelog(null);
     changelogRepository.save(changelog);
     //no need to expose
     return ResponseEntity.noContent(). build();
