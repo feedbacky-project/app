@@ -14,6 +14,7 @@ import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.util.mailservice.MailService;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
@@ -95,5 +96,9 @@ public class Board implements Serializable {
   private boolean roadmapEnabled = true;
   private boolean changelogEnabled = true;
   private Date lastChangelogUpdate;
+
+  public String toViewLink() {
+    return MailService.HOST_ADDRESS + "/b/" + discriminator;
+  }
 
 }

@@ -46,6 +46,8 @@ public class WebhookDataBuilder {
   }
 
   public WebhookDataBuilder withChangelog(Changelog changelog) {
+    //substitute idea link with changelog link
+    data.put(WebhookExecutor.WebhookMapData.IDEA_LINK.getName(), changelog.getBoard().toViewLink() + "/changelog");
     data.put(WebhookExecutor.WebhookMapData.CHANGELOG_NAME.getName(), changelog.getTitle());
     data.put(WebhookExecutor.WebhookMapData.CHANGELOG_DESCRIPTION.getName(), changelog.getDescription());
     return this;
