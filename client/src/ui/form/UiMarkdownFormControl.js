@@ -73,7 +73,7 @@ const UiMarkdownFormControl = (props) => {
     const ref = useRef(null);
     const {CustomOptions, ...otherProps} = props;
     const [modal, setModal] = useState({open: false, type: ""});
-    const [selection, setSelection] = useState(null)
+    const [selection, setSelection] = useState("");
     const markdownInsert = (text, between) => {
         const form = ref.current;
         const scrollPos = form.scrollTop;
@@ -104,6 +104,7 @@ const UiMarkdownFormControl = (props) => {
             return Promise.resolve();
         }}/>
         <MarkdownForm>
+            {/* fixme window.getSelection().toString() broken on Firefox */}
             <FormControl innerRef={ref} onSelect={() => setSelection(window.getSelection().toString())} {...otherProps}/>
             <MarkdownOptions as={CustomOptions}>
                 <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("**", true)}><FaBold/></MarkdownIcon>

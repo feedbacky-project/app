@@ -3,6 +3,7 @@
 * **[FIX]** Changelog webhooks didn't work properly
 * **[FIX]** Add background for non chosen and chosen reactions based on theme color to be visible in changelogs all the time
 * **[FIX]** Changelog titles could overflow the page
+* **[FIX]** Default markdown buttons interaction when no selection was made was to show `null` as a selection
 
 ### 1.0.0.beta.9
 * **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
