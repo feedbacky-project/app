@@ -260,7 +260,6 @@ public class CommentServiceImpl implements CommentService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet reacted.");
     }
     CommentReaction reaction = optional.get();
-    reaction.setComment(null);
     comment.getReactions().remove(reaction);
     commentRepository.save(comment);
     //no need to expose

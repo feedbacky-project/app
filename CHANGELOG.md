@@ -1,3 +1,6 @@
+### 1.0.0.beta.10
+* **[FIX]** Comment and changelogs reactions are no longer left with null values in database, they're properly removed
+
 ### 1.0.0.beta.9
 * **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
 * **[FEATURE]** Added GitLab login support (requested by [AnonDev](https://app.feedbacky.net/i/more-oauth-providers.3194))

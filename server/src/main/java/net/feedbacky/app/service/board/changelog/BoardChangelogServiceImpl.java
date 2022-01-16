@@ -175,7 +175,6 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet reacted.");
     }
     ChangelogReaction reaction = optional.get();
-    reaction.setChangelog(null);
     changelog.getReactions().remove(reaction);
     changelogRepository.save(changelog);
     //no need to expose
