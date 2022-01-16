@@ -43,6 +43,7 @@ const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
                 <h3>Are you sure?</h3>
                 <div>
                     Choose assignee to add or remove and click Update to confirm.
+                    <br/>
                     {boardData.moderators.map((mod, i) => {
                         const chosen = assignee == null ? false : assignee.id === mod.user.id;
                         return <div key={i} className={"d-inline-flex justify-content-center mr-2 mt-1"}>
