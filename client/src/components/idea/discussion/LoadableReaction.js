@@ -18,8 +18,8 @@ const DefaultReaction = styled.div`
   position: relative;
   margin-top: .25rem;
   cursor: pointer;
-  border: 1px solid var(--secondary);
-  background-color: var(--secondary);
+  border: 1px solid ${props => props.theme.setAlpha(.1).toString()};
+  background-color: ${props => props.theme.setAlpha(.1).toString()};
   display: inline-block;
   padding: .05rem .3rem;
   margin-right: .25rem;
@@ -32,16 +32,16 @@ const DefaultReaction = styled.div`
   }
   
   &:hover {
-    background-color: var(--quaternary);
+    background-color: ${props => props.theme.setAlpha(.2).toString()};
   }
 `;
 
 const SelectedReaction = styled(DefaultReaction)`
   border: 1px solid ${props => props.theme.setAlpha(.7).toString()};
-  background-color: ${props => props.theme.setAlpha(.1).toString()};
+  background-color: ${props => props.theme.setAlpha(.2).toString()};
 
   &:hover {
-    background-color: ${props => props.theme.setAlpha(.2).toString()};
+    background-color: ${props => props.theme.setAlpha(.3).toString()};
   }
 `;
 

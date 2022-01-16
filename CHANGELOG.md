@@ -1,6 +1,7 @@
 ### 1.0.0.beta.10
 * **[FIX]** Comment and changelogs reactions are no longer left with null values in database, they're properly removed
 * **[FIX]** Changelog webhooks didn't work properly
+* **[FIX]** Add background for non chosen and chosen reactions based on theme color to be visible in changelogs all the time
 
 ### 1.0.0.beta.9
 * **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
