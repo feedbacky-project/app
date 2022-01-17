@@ -1,24 +1,24 @@
 ### 1.0.0.beta.10
-* **[FIX]** Comment and changelogs reactions are no longer left with null values in database, they're properly removed
+* **[FIX]** Comment and changelogs reactions are no longer left with null values in a database, they're properly removed
 * **[FIX]** Changelog webhooks didn't work properly
 * **[FIX]** Add background for non chosen and chosen reactions based on theme color to be visible in changelogs all the time
 * **[FIX]** Changelog titles could overflow the page
 * **[FIX]** Default markdown buttons interaction when no selection was made was to show `null` as a selection
 * **[FIX]** Moderator assign modal UI fix
-* **[FIX]** Form control placeholder text transparency (not working as intented on Chrome)
+* **[FIX]** Form control placeholder text transparency (not working as intended on Chrome)
 * **[FIX]** Setup cards UI fix (for Chrome)
 
 ### 1.0.0.beta.9
 * **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
 * **[FEATURE]** Added GitLab login support (requested by [AnonDev](https://app.feedbacky.net/i/more-oauth-providers.3194))
 * **[FEATURE]** Comments and changelogs can now be reacted with emotes (requested by [Matou0014](https://app.feedbacky.net/i/comments-reaction.3219))
-* **[FEAUTRE]** Existing webhooks can now be edited (requested by [Matou0014](https://app.feedbacky.net/i/edit-webhooks.3932))
+* **[FEATURE]** Existing webhooks can now be edited (requested by [Matou0014](https://app.feedbacky.net/i/edit-webhooks.3932))
 * **[IMPROVEMENT]** Minor performance improvements for re-render of every comment while writing and posting new comment
 * **[CHANGE]** Changelogs description length increased from 1800 chars to 2500
 * **[FIX]** Tag edit modal now updates values properly when editing multiple tags
 * **[FIX]** Don't mark freshly edited comments (within 5 minutes) with (edited) badge client-side
 * **[FIX]** Reload button for failed with load comments/changelogs/ideas is now working properly
-* **[FIX/REMOVE]** Broughtgit back previous discord webhook library, current one contains some limitations and is no longer needed for current features
+* **[FIX/REMOVE]** Brought back previous discord webhook library, current one contains some limitations and is no longer needed for current features
 
 ### 1.0.0.beta.8
 * **[FEATURE]** Added strikethrough to markdown buttons
