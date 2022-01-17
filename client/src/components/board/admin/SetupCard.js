@@ -15,6 +15,7 @@ const OptionCard = styled(UiCard)`
 export const SetupCardIcon = styled.div`
   height: 1.5rem !important;
   width: 1.5rem !important;
+  margin-top: .6rem;
 `;
 
 const SetupCard = ({icon, chosen = false, text, onClick, className = ""}) => {
@@ -27,8 +28,8 @@ const SetupCard = ({icon, chosen = false, text, onClick, className = ""}) => {
     }
     return <OptionCard className={className} bodyClassName={"text-center"} onClick={onClick} style={style}>
         {icon}
-        <br className={"my-3"}/>
-        <strong style={{fontSize: "1.25rem"}}>{text}</strong>
+        <br/>
+        <div className={"font-weight-bold"} style={{fontSize: "1.25rem", marginTop: ".6rem"}}>{text}</div>
     </OptionCard>
 };
 
