@@ -5,6 +5,7 @@
 * **[FIX]** Changelog titles could overflow the page
 * **[FIX]** Default markdown buttons interaction when no selection was made was to show `null` as a selection
 * **[FIX]** Moderator assign modal UI fix
+* **[FIX]** Form control placeholder text transparency (not working as intented on Chrome)
 
 ### 1.0.0.beta.9
 * **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))

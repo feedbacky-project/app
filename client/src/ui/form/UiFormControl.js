@@ -40,6 +40,7 @@ const FormControl = styled.input`
   }
   &::placeholder {
     font-size: 15px;
+    opacity: .55;
     color: hsla(0, 0%, 0%, .9);
   }
   .dark &::placeholder {
