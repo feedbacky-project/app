@@ -1,0 +1,45 @@
+server:
+  compression:
+    enabled: true
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: "off"
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  session:
+    jdbc:
+      initialize-schema: "always"
+  jpa:
+    database-platform: "net.feedbacky.app.config.MySQLCustomDialect"
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: "update"
+  cache:
+    cache-names:
+      - buckets
+    caffeine:
+      spec: "maximumSize=1000000,expireAfterAccess=3600s"
+  jmx:
+    enabled: false
+  aop:
+    auto: false
+
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: buckets
+      url: .*
+      rate-limits:
+        - bandwidths:
+            - capacity: 10
+              time: 1
+              unit: seconds
+      http-response-body: '{"status": 429, "errors": ["Too Many Requests"]}'

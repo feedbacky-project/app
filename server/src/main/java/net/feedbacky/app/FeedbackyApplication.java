@@ -32,7 +32,13 @@ public class FeedbackyApplication {
     if(!FeedbackyApplication.devMode && !new StartupValidator().validateStartup()) {
       return;
     }
-    SpringApplication.run(FeedbackyApplication.class, args);
+    SpringApplication app = new SpringApplication(FeedbackyApplication.class);
+    if(FeedbackyApplication.devMode) {
+      app.setAdditionalProfiles("dev");
+    } else {
+      app.setAdditionalProfiles("prod");
+    }
+    app.run(args);
   }
 
   @Bean
