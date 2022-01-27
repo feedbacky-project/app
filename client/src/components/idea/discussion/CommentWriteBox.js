@@ -24,12 +24,12 @@ const UsernameBox = styled.small`
 `;
 
 const CommentWriteBox = ({onCommentSubmit}) => {
-    const {serviceData, user} = useContext(AppContext);
+    const {user} = useContext(AppContext);
     const {onNotLoggedClick, data} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
     const isModerator = data.moderators.find(mod => mod.userId === user.data.id);
     const [submitOpen, setSubmitOpen] = useState(false);
-    if (!ideaData.open && !serviceData.closedIdeasCommenting) {
+    if (!ideaData.open && !data.closedIdeasCommentingEnabled) {
         return <React.Fragment/>;
     }
     const onSubmit = (internal) => {

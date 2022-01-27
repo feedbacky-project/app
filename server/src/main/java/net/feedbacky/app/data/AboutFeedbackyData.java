@@ -21,7 +21,6 @@ public class AboutFeedbackyData {
   private List<LoginProvider.ProviderData> loginProviders;
   private List<FetchUserDto> serviceAdmins;
   private List<EmojiDataRegistry.EmojiData> emojisData;
-  private boolean closedIdeasCommenting;
   private boolean mailLoginEnabled;
   private boolean developmentMode;
 

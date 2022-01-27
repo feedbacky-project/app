@@ -30,6 +30,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   private boolean anonymousAllowed;
   private boolean roadmapEnabled;
   private boolean changelogEnabled;
+  private boolean closedIdeasCommentingEnabled;
   private Date creationDate;
   private Date lastChangelogUpdate;
 
@@ -68,6 +69,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.anonymousAllowed = entity.isAnonymousAllowed();
     this.roadmapEnabled = entity.isRoadmapEnabled();
     this.changelogEnabled = entity.isChangelogEnabled();
+    this.closedIdeasCommentingEnabled = entity.isClosedIdeasCommentingEnabled();
     this.creationDate = entity.getCreationDate();
     this.lastChangelogUpdate = entity.getLastChangelogUpdate();
     this.socialLinks = entity.getSocialLinks().stream().map(link -> new FetchSocialLinkDto().from(link)).collect(Collectors.toList());

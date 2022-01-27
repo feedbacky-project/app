@@ -45,11 +45,10 @@ public class AboutRestController {
     AboutFeedbackyData data;
     //lazy init to make sure all login providers are registered before
     if(this.aboutFeedbackyData == null) {
-      boolean closedIdeasCommenting = Boolean.parseBoolean(System.getenv("SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS"));
       boolean mailLoginEnabled = Boolean.parseBoolean(System.getenv("SETTINGS_MAIL_LOGIN_ENABLED"));
       List<FetchUserDto> admins = userRepository.findByServiceStaffTrue().stream().map(user -> new FetchUserDto().from(user)).collect(Collectors.toList());
       List<LoginProvider.ProviderData> providers = loginProviderRegistry.getProviders().stream().filter(LoginProvider::isEnabled).map(LoginProvider::getProviderData).collect(Collectors.toList());
-      data = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, providers, admins, emojiDataRegistry.getEmojis(), closedIdeasCommenting, mailLoginEnabled, developmentMode);
+      data = new AboutFeedbackyData(FeedbackyApplication.BACKEND_VERSION, providers, admins, emojiDataRegistry.getEmojis(), mailLoginEnabled, developmentMode);
       //only cache when there is at least 1 service admin registered (for first installation purposes)
       if(!admins.isEmpty()) {
         this.aboutFeedbackyData = data;

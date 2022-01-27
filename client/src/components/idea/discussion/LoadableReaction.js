@@ -22,6 +22,7 @@ const DefaultReaction = styled.div`
   display: inline-block;
   padding: .05rem .3rem;
   margin-right: .25rem;
+  margin-top: .25rem;
   border-radius: var(--border-radius);
   color: hsla(0, 0%, 0%, .6);
   transition: var(--hover-transition);

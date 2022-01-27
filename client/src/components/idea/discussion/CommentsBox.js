@@ -131,7 +131,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                     {renderSuspensionButton()}
                     <br/>
                     {editor.enabled ? renderEditorMode() : <MarkdownContainer text={data.description}/>}
-                    <ReactionsBox className={"mt-1"} parentObjectId={data.id} reactionsData={data.reactions} onReact={onCommentReact} onUnreact={onCommentUnreact}/>
+                    <ReactionsBox parentObjectId={data.id} reactionsData={data.reactions} onReact={onCommentReact} onUnreact={onCommentUnreact}/>
                 </div>
             </CommentComponent>
             <br/>

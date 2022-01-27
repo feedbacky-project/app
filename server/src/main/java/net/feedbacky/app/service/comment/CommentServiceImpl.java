@@ -66,7 +66,6 @@ public class CommentServiceImpl implements CommentService {
   private final SubscriptionExecutor subscriptionExecutor;
   private final WebhookExecutor webhookExecutor;
   private final EmojiDataRegistry emojiDataRegistry;
-  private final boolean closedIdeasCommenting = Boolean.parseBoolean(System.getenv("SETTINGS_ALLOW_COMMENTING_CLOSED_IDEAS"));
 
   @Autowired
   public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor,
@@ -130,7 +129,7 @@ public class CommentServiceImpl implements CommentService {
     if(!isModerator && (Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL || idea.isCommentingRestricted())) {
       throw new InsufficientPermissionsException();
     }
-    if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !closedIdeasCommenting) {
+    if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !idea.getBoard().isClosedIdeasCommentingEnabled()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea already closed.");
     }
     Comment comment = new Comment();

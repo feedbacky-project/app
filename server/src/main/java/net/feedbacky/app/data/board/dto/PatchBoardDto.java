@@ -38,5 +38,6 @@ public class PatchBoardDto {
   private boolean anonymousAllowed;
   private boolean roadmapEnabled;
   private boolean changelogEnabled;
+  private boolean closedIdeasCommentingEnabled;
 
 }

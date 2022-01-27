@@ -27,7 +27,7 @@ const ThemeSelector = styled.div`
   margin-right: 4px;
   margin-top: 4px;
   transition: var(--hover-transition);
-  
+
   &:hover {
     transform: var(--hover-transform-scale-lg);
   }
@@ -43,7 +43,7 @@ const CustomOptions = styled.div`
 
 export const ApiKeyIcon = styled(FaEyeSlash)`
   color: hsl(210, 100%, 50%);
-  
+
   .dark & {
     color: hsl(210, 100%, 60%);
   }
@@ -60,6 +60,7 @@ const GeneralSubroute = ({updateState}) => {
     const [anonymousVoting, setAnonymousVoting] = useState(boardData.anonymousAllowed);
     const [roadmapEnabled, setRoadmapEnabled] = useState(boardData.roadmapEnabled);
     const [changelogEnabled, setChangelogEnabled] = useState(boardData.changelogEnabled);
+    const [closedCommentingEnabled, setClosedCommentingEnabled] = useState(boardData.closedIdeasCommentingEnabled);
     const [apiKeyBlurred, setApiKeyBlurred] = useState(true);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, type: ""});
@@ -181,7 +182,7 @@ const GeneralSubroute = ({updateState}) => {
             </UiRow>
             <UiRow noGutters className={"m-0 p-0 px-4 my-2 mb-4"}>
                 <UiCol sm={9} xs={12}>
-                    <h4 className={"mb-1"}>Roadmaps Enabled</h4>
+                    <h4 className={"mb-1"}>Roadmaps Module</h4>
                     <span className={"text-black-60"} style={{fontSize: ".9em"}}>
                         Utilize roadmaps for your short-term and long-term goals.
                     </span>
@@ -198,7 +199,7 @@ const GeneralSubroute = ({updateState}) => {
             </UiRow>
             <UiRow noGutters className={"m-0 p-0 px-4 my-2 mb-4"}>
                 <UiCol sm={9} xs={12}>
-                    <h4 className={"mb-1"}>Changelogs Enabled</h4>
+                    <h4 className={"mb-1"}>Changelogs Module</h4>
                     <span className={"text-black-60"} style={{fontSize: ".9em"}}>
                         Utilize changelogs to record all notable changes of your project.
                     </span>
@@ -210,6 +211,23 @@ const GeneralSubroute = ({updateState}) => {
                     }, () => {
                         setChangelogEnabled(false);
                         return onChangesSave(anonymousVoting, roadmapEnabled, false);
+                    })}
+                </UiCol>
+            </UiRow>
+            <UiRow noGutters className={"m-0 p-0 px-4 my-2 mb-4"}>
+                <UiCol sm={9} xs={12}>
+                    <h4 className={"mb-1"}>Closed Ideas Commenting</h4>
+                    <span className={"text-black-60"} style={{fontSize: ".9em"}}>
+                        Allow every user to comment ideas which where already closed.
+                    </span>
+                </UiCol>
+                <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
+                    {conditionalButton(closedCommentingEnabled, () => {
+                        setClosedCommentingEnabled(true);
+                        return onChangesSave(anonymousVoting, roadmapEnabled, changelogEnabled, true);
+                    }, () => {
+                        setClosedCommentingEnabled(false);
+                        return onChangesSave(anonymousVoting, roadmapEnabled, changelogEnabled, false);
                     })}
                 </UiCol>
             </UiRow>
@@ -303,7 +321,8 @@ const GeneralSubroute = ({updateState}) => {
             popupNotification("API key regenerated.", getTheme());
         });
     };
-    const onChangesSave = (anonymousAllowed = boardData.anonymousAllowed, roadmapEnabled = boardData.roadmapEnabled, changelogEnabled = boardData.changelogEnabled) => {
+    const onChangesSave = (anonymousAllowed = boardData.anonymousAllowed, roadmapEnabled = boardData.roadmapEnabled, changelogEnabled = boardData.changelogEnabled,
+                           closedIdeasCommentingEnabled = boardData.closedIdeasCommentingEnabled) => {
         const banner = bannerInput;
         const logo = logoInput;
         const name = document.getElementById("boardTextarea").value;
@@ -311,7 +330,7 @@ const GeneralSubroute = ({updateState}) => {
         const fullDescription = document.getElementById("fullDescrTextarea").value;
         const themeColor = getTheme(false).toHexString();
         return axios.patch("/boards/" + boardData.discriminator, {
-            name, shortDescription, fullDescription, themeColor, banner, logo, anonymousAllowed, roadmapEnabled, changelogEnabled
+            name, shortDescription, fullDescription, themeColor, banner, logo, anonymousAllowed, roadmapEnabled, changelogEnabled, closedIdeasCommentingEnabled
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
@@ -325,7 +344,7 @@ const GeneralSubroute = ({updateState}) => {
                 fullDescription: data.fullDescription, themeColor: data.themeColor,
                 banner: data.banner || boardData.banner, logo: data.logo || boardData.logo,
                 anonymousAllowed: data.anonymousAllowed, roadmapEnabled: data.roadmapEnabled,
-                changelogEnabled: data.changelogEnabled
+                changelogEnabled: data.changelogEnabled, closedIdeasCommentingEnabled: data.closedIdeasCommentingEnabled
             });
         });
     };
