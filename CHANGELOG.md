@@ -1,4 +1,5 @@
 ### 1.0.0.beta.10
+* **[CHANGE]** Distinguish non selected reactions even better (removed borders)
 * **[FIX]** Comment and changelogs reactions are no longer left with null values in a database, they're properly removed
 * **[FIX]** Changelog webhooks didn't work properly
 * **[FIX]** Add background for non chosen and chosen reactions based on theme color to be visible in changelogs all the time
