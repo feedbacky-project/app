@@ -13,6 +13,8 @@ const IconOverlay = styled.div`
   margin-right: 1rem;
   color: ${props => props.theme};
   background-color: ${props => props.theme};
+  margin-top: auto;
+  margin-bottom: auto;
 `;
 
 const Icon = styled.div`
