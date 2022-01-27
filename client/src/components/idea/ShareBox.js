@@ -36,21 +36,28 @@ const ShareIcon = styled.div`
   }
 `;
 
-const ShareBox = ({bodyClassName = null}) => {
+const ShareBox = ({locationHref = window.location.href, bodyClassName = null}) => {
     const {getTheme} = useContext(AppContext);
     const {data} = useContext(BoardContext);
 
+    //workaround for already set query values
+    const shareHref = () => {
+        if(locationHref.includes("?")) {
+            return locationHref + "&source=share";
+        }
+        return locationHref + "?source=share";
+    }
     const copyLink = () => {
-        copy(window.location.href + "?source=share");
+        copy(shareHref());
         popupNotification("Copied to clipboard", getTheme());
     };
     return <UiCard bodyClassName={bodyClassName || "px-2 py-1"}>
-        <SafeAnchor url={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(window.location.href + "?source=share")}>
+        <SafeAnchor url={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(shareHref())}>
             <UiTooltip id={"share-facebook"} text={"Share on Facebook"}>
                 <ShareIcon as={FaFacebookSquare} theme={getTheme().toHexString()}/>
             </UiTooltip>
         </SafeAnchor>
-        <SafeAnchor url={"https://twitter.com/intent/tweet?url=" + encodeURI(window.location.href + "?source=share") + "&text=Check%20this%20idea%20at%20" + encodeURI(data.name)}>
+        <SafeAnchor url={"https://twitter.com/intent/tweet?url=" + encodeURI(shareHref()) + "&text=Check%20this%20out%20at%20" + encodeURI(data.name)}>
             <UiTooltip id={"share-twitter"} text={"Share on Twitter"}>
                 <ShareIcon as={FaTwitterSquare} theme={getTheme().toHexString()}/>
             </UiTooltip>

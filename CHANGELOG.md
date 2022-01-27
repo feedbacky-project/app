@@ -1,5 +1,6 @@
 ### 1.0.0.beta.10
 * **[FEATURE]** Implement light/dark mode text visibility indicator when choosing theme color for board/tags
+  * **[FEATURE]** Changelogs can now be shared with share box links
 * **[IMPROVEMENT]** Center moderative comments icon for mobile users when it's longer than 1 line
 * **[CHANGE]** Distinguish non selected reactions even better (removed borders)
 * **[FIX]** Comment and changelogs reactions are no longer left with null values in a database, they're properly removed

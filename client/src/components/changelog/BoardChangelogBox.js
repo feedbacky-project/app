@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {ReactComponent as UndrawNoIdeas} from "assets/svg/undraw/no_ideas.svg";
@@ -7,24 +8,68 @@ import BoardChangelogTitle from "components/changelog/BoardChangelogTitle";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import ReactionsBox from "components/commons/ReactionsBox";
 import {SvgNotice} from "components/commons/SvgNotice";
+import {ShareBox} from "components/idea/ShareBox";
 import {AppContext, BoardContext} from "context";
+import qs from "querystringify";
 import React, {useContext, useEffect, useState} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import {useLocation} from "react-router-dom";
 import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
 import {popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
 
+const ShareBoxOverlay = styled.div`
+  display: inline-block;
+  float: right;
+  border-radius: var(--border-radius);
+  border: 1px dashed ${props => props.theme};
+`;
+
 const BoardChangelogBox = ({searchQuery}) => {
-    const {user} = useContext(AppContext);
+    const {user, getTheme} = useContext(AppContext);
     const {data: boardData, onNotLoggedClick} = useContext(BoardContext);
     const [changelog, setChangelog] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [page, setPage] = useState(0);
+    const location = useLocation();
+    const [scrollTo, setScrollTo] = useState(null);
     useEffect(() => {
-        onLoadRequest(true);
+        onLoadRequest(true).then(() => {
+            const qsData = qs.parse(location.search);
+            if (qsData.changelogId == null) {
+                return;
+            }
+            setScrollTo(qsData.changelogId);
+        });
         // eslint-disable-next-line
     }, [user.session, searchQuery, user.localPreferences.changelog]);
+    useEffect(() => {
+        if (scrollTo == null) {
+            return;
+        }
+        setTimeout(function () {
+            //kudos to https://stackoverflow.com/a/22480938/10156191
+            const element = document.getElementById("changelogc_" + scrollTo);
+            var rect = element.getBoundingClientRect();
+            var elemTop = rect.top;
+            var elemBottom = rect.bottom;
+
+            // Only completely visible elements return true:
+            var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+
+            if (!isVisible) {
+                window.scrollTo({
+                    top: element.scrollHeight + Math.abs(element.clientHeight),
+                    behavior: "smooth",
+                });
+            }
+            setTimeout(function () {
+                element.classList.add("upvote-animation");
+                setScrollTo(null);
+            }, 200);
+        }, 500);
+    }, [scrollTo]);
     const onLoadRequest = (override = false) => {
         const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
         const currentPage = override ? 0 : page;
@@ -113,11 +158,16 @@ const BoardChangelogBox = ({searchQuery}) => {
             dataLength={changelog.data.length}
             loader={<UiCol className={"text-center mt-5 pt-5"}><UiLoadingSpinner/></UiCol>}>
             {changelog.data.map(element => {
-                return <UiCol xs={12} className={"my-2 px-0"} key={element.id}>
+                return <UiCol xs={12} className={"my-2 px-0"} key={element.id} id={"changelogc_" + element.id}>
                     <UiViewBoxBackground className={"d-inline-block p-4"}>
                         <BoardChangelogTitle data={element} onChangelogDelete={onChangelogDelete} onChangelogUpdate={onChangelogUpdate}/>
                         <MarkdownContainer className={"my-2"} text={element.description}/>
-                        <ReactionsBox parentObjectId={element.id} reactionsData={element.reactions} onReact={onChangelogReact} onUnreact={onChangelogUnreact}/>
+                        <div>
+                            <ReactionsBox className={"d-inline-block mt-1"} parentObjectId={element.id} reactionsData={element.reactions} onReact={onChangelogReact} onUnreact={onChangelogUnreact}/>
+                            <ShareBoxOverlay theme={getTheme().setAlpha(.2).toString()}>
+                                <ShareBox locationHref={window.location.href + "?changelogId=" + element.id} bodyClassName={"p-1"}/>
+                            </ShareBoxOverlay>
+                        </div>
                     </UiViewBoxBackground>
                 </UiCol>
             })}

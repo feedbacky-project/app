@@ -25,7 +25,7 @@ const AddReaction = styled(MdOutlineAddReaction)`
   }
 `
 
-const ReactionsBox = ({parentObjectId, reactionsData, onReact, onUnreact}) => {
+const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact, onUnreact}) => {
     const {serviceData, user} = useContext(AppContext);
     const onReaction = (emoteId) => {
         let reactions = reactionsData.filter(r => r.reactionId === emoteId) || [];
@@ -37,7 +37,7 @@ const ReactionsBox = ({parentObjectId, reactionsData, onReact, onUnreact}) => {
         }
     };
     let moreReactionsToAdd = false;
-    return <div>
+    return <div className={className}>
         {serviceData.emojisData.map(emote => {
             let reactions = reactionsData.filter(r => r.reactionId === emote.id) || [];
             let selected = reactions.find(r => r.user.id === user.data.id) !== undefined;

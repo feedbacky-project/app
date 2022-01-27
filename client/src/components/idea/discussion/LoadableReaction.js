@@ -16,7 +16,6 @@ const Loadable = styled(UiLoadingSpinner)`
 
 const DefaultReaction = styled.div`
   position: relative;
-  margin-top: .25rem;
   cursor: pointer;
   border: 1px solid transparent;
   background-color: ${props => props.theme.setAlpha(.1).toString()};
