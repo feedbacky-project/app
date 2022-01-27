@@ -1,4 +1,5 @@
 ### 1.0.0.beta.10
+* **[FEATURE]** Implement light/dark mode text visibility indicator when choosing theme color for board/tags
 * **[CHANGE]** Distinguish non selected reactions even better (removed borders)
 * **[FIX]** Comment and changelogs reactions are no longer left with null values in a database, they're properly removed
 * **[FIX]** Changelog webhooks didn't work properly
