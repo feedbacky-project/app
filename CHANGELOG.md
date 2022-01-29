@@ -1,3 +1,6 @@
+### 1.0.0.RC.1
+* **[FEATURE]** Reactions will now display who reacted
+
 ### 1.0.0.beta.10
 * **[FEATURE]** Implement light/dark mode text visibility indicator when choosing theme color for board/tags
 * **[FEATURE]** Changelogs can now be shared with share box links (requested by [Matou0014](https://app.feedbacky.net/i/changelog-options.2942))

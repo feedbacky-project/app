@@ -3,6 +3,7 @@ import LoadableReaction from "components/idea/discussion/LoadableReaction";
 import {AppContext} from "context";
 import React, {useContext} from "react";
 import {MdOutlineAddReaction} from "react-icons/all";
+import {UiTooltip} from "ui";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 
 const AddReaction = styled(MdOutlineAddReaction)`
@@ -45,9 +46,27 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
                 moreReactionsToAdd = true;
                 return <React.Fragment/>
             }
+            let whoReacted = "";
+            let i = 0;
+            reactions.forEach(r => {
+                if(i >= 3) {
+                    return;
+                }
+                whoReacted += r.user.username + ", ";
+                i++;
+            });
+            whoReacted = whoReacted.substring(0, whoReacted.length - 2);
+            if(i >= 3) {
+                whoReacted += " and " + (reactions.length - i) + " more";
+            }
+            whoReacted += " reacted with " + emote.name;
             return <LoadableReaction isSelected={selected} onReact={() => onReaction(emote.id)}>
-                <img className={"align-middle move-top-1px mr-2"} alt={emote.name} src={emote.path} width={14} height={14}/>
-                <span>{reactions.length}</span>
+                <UiTooltip id={parentObjectId + emote.id} text={whoReacted}>
+                        <span>
+                        <img className={"align-middle move-top-1px mr-2"} alt={emote.name} src={emote.path} width={14} height={14}/>
+                        <span>{reactions.length}</span>
+                        </span>
+                </UiTooltip>
             </LoadableReaction>
         })}
         {
