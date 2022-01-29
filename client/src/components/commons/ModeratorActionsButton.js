@@ -4,10 +4,11 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import ModeratorAssignUpdateModal from "components/commons/modal/ModeratorAssignUpdateModal";
 import ModeratorTagsUpdateModal from "components/commons/modal/ModeratorTagsUpdateModal";
 import ModeratorVotesResetModal from "components/commons/modal/ModeratorVotesResetModal";
+import TitleEditModal from "components/commons/modal/TitleEditModal";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from 'react';
-import {FaCog, FaComment, FaCommentSlash, FaLink, FaUnlink, FaUserCheck, FaUserLock} from "react-icons/all";
+import {FaCog, FaComment, FaCommentSlash, FaICursor, FaLink, FaUnlink, FaUserCheck, FaUserLock} from "react-icons/all";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
@@ -83,6 +84,19 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             updateBoardState({...boardData, suspendedUsers: boardData.suspendedUsers.concat(res.data)});
         });
     };
+    const onTitleEdit = (title) => {
+        return axios.patch("/ideas/" + ideaData.id, {
+            title
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                popupError();
+                return;
+            }
+            updateState({...ideaData, ...res.data});
+            popupNotification("Title updated", getTheme());
+            onStateChange("discussion");
+        });
+    }
     const onTagsManage = (appliedTags) => {
         let data = [];
         boardData.tags.forEach(tag => {
@@ -161,6 +175,10 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
         <ModeratorTagsUpdateModal onHide={hide} isOpen={modal.open && modal.type === "tags"} onAction={onTagsManage}/>
         <ModeratorAssignUpdateModal onHide={hide} isOpen={modal.open && modal.type === "assign"} onAction={onModeratorAssign}/>
         <ModeratorVotesResetModal onHide={hide} isOpen={modal.open && modal.type === "votes_reset"} onAction={onVotesReset}/>
+        <TitleEditModal onHide={hide} isOpen={modal.open && modal.type === "title_edit"} onAction={onTitleEdit}/>
+        <DropdownOption onClick={() => {
+            setModal({open: true, type: "title_edit"})
+        }} as={"span"}><FaICursor className={"mr-1 move-top-2px"} style={{color}}/> Edit Title</DropdownOption>
         <DropdownOption onClick={() => {
             setModal({open: true, type: "tags"})
         }} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Change Tags</DropdownOption>

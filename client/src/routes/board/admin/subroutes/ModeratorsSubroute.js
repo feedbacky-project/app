@@ -68,8 +68,8 @@ const ModeratorsSubroute = () => {
                     <li>Post Internal Comments</li>
                     <li>Delete Comments</li>
                     <li>Enable and Disable Commenting</li>
-                    <li>Suspend Users</li>
-                    <li>Assign Users to Ideas</li>
+                    <li>Suspend Users, Assign Mods to Ideas</li>
+                    <li>Edit Ideas' Titles</li>
                 </ul>
             </UiCol>
         </React.Fragment>

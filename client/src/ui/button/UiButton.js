@@ -19,7 +19,12 @@ export const BasePageButton = styled.button`
   line-height: 1.5;
   border-radius: var(--border-radius);
   transition: var(--hover-transition);
-  
+
+  ${props => props.tiny === true &&
+          `
+      padding: .15rem .25rem !important;
+      font-size: .75rem !important;
+    `}
   ${props => props.small === true &&
     `
       padding: .25rem .5rem !important;

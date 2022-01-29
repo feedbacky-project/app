@@ -35,7 +35,6 @@ const isValidHttpUrl = (string) => {
     return url.protocol === "http:" || url.protocol === "https:";
 }
 
-//todo finishme
 const WebhookUpdateModal = ({isOpen, onHide, webhook, onWebhookUpdate}) => {
     const {getTheme} = useContext(AppContext);
     const [chosenEvents, setChosenEvents] = useState([]);

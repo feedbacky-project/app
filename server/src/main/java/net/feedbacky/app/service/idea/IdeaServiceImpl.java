@@ -163,6 +163,7 @@ public class IdeaServiceImpl implements IdeaService {
       throw new InsufficientPermissionsException();
     }
 
+    handleTitleUpdate(idea, dto, user);
     handleStatusUpdate(idea, dto, user);
     handleAttachmentUpdate(idea, dto);
     handleAssigneeUpdate(idea, dto, user);
@@ -170,6 +171,33 @@ public class IdeaServiceImpl implements IdeaService {
     idea.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(idea.getDescription())));
     ideaRepository.save(idea);
     return new FetchIdeaDto().from(idea).withUser(idea, user);
+  }
+
+  private void handleTitleUpdate(Idea idea, PatchIdeaDto dto, User user) {
+    if(dto.getTitle() == null) {
+      return;
+    }
+    //title edit is only for moderators
+    if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+      throw new InsufficientPermissionsException();
+    }
+    String oldTitle = idea.getTitle();
+    idea.setTitle(dto.getTitle());
+    CommentBuilder commentBuilder = new CommentBuilder()
+            .of(idea)
+            .by(user)
+            .type(Comment.SpecialType.IDEA_TITLE_CHANGE)
+            .message(user.convertToSpecialCommentMention() + " has edited title of the idea. "
+                    + CommentBuilder.convertToDiffViewMode("View Diff", oldTitle, dto.getTitle()));
+    Webhook.Event event = Webhook.Event.IDEA_EDIT;
+    Comment comment = commentBuilder.build();
+    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
+    webhookExecutor.executeWebhooks(idea.getBoard(), event, builder.build());
+
+    Set<Comment> comments = idea.getComments();
+    comments.add(comment);
+    idea.setComments(comments);
+    commentRepository.save(comment);
   }
 
   private void handleStatusUpdate(Idea idea, PatchIdeaDto dto, User user) {

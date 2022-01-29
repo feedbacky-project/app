@@ -2,6 +2,7 @@
 * **[FEATURE]** Implement light/dark mode text visibility indicator when choosing theme color for board/tags
 * **[FEATURE]** Changelogs can now be shared with share box links (requested by [Matou0014](https://app.feedbacky.net/i/changelog-options.2942))
 * **[FEATURE]** Boards can now configure whether users can comment closed ideas or not (requested at [Feedbacky](https://app.feedbacky.net/i/commenting-closed-ideas.3361))
+* **[FEATURE]** Ideas' titles can now be edited by moderators (requested by [srnyx](https://app.feedbacky.net/i/ability-for-mods-to-change-idea-titles.3011))
 * **[IMPROVEMENT]** Center moderative comments icon for mobile users when it's longer than 1 line
 * **[CHANGE]** Distinguish non selected reactions even better (removed borders)
 * **[FIX]** Comment and changelogs reactions are no longer left with null values in a database, they're properly removed
