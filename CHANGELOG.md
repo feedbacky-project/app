@@ -1,7 +1,7 @@
-### 1.0.0.RC.1
+### 1.0.0.RC.0
 * **[FEATURE]** Reactions will now display who reacted
 
-### 1.0.0.beta.10
+### 1.0.0.beta.10 (30.01.2022)
 * **[FEATURE]** Implement light/dark mode text visibility indicator when choosing theme color for board/tags
 * **[FEATURE]** Changelogs can now be shared with share box links (requested by [Matou0014](https://app.feedbacky.net/i/changelog-options.2942))
 * **[FEATURE]** Boards can now configure whether users can comment closed ideas or not (requested at [Feedbacky](https://app.feedbacky.net/i/commenting-closed-ideas.3361))
