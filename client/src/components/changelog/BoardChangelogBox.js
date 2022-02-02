@@ -18,7 +18,7 @@ import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
-import {popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
+import {popupWarning, prepareFilterAndSortRequests, scrollIntoViewAndPop} from "utils/basic-utils";
 
 const ShareBoxOverlay = styled.div`
   display: inline-block;
@@ -49,25 +49,7 @@ const BoardChangelogBox = ({searchQuery}) => {
             return;
         }
         setTimeout(function () {
-            //kudos to https://stackoverflow.com/a/22480938/10156191
-            const element = document.getElementById("changelogc_" + scrollTo);
-            var rect = element.getBoundingClientRect();
-            var elemTop = rect.top;
-            var elemBottom = rect.bottom;
-
-            // Only completely visible elements return true:
-            var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
-
-            if (!isVisible) {
-                window.scrollTo({
-                    top: element.scrollHeight + Math.abs(element.clientHeight),
-                    behavior: "smooth",
-                });
-            }
-            setTimeout(function () {
-                element.classList.add("upvote-animation");
-                setScrollTo(null);
-            }, 200);
+            scrollIntoViewAndPop("changelogc_" + scrollTo).then(() => setScrollTo(null));
         }, 500);
     }, [scrollTo]);
     const onLoadRequest = (override = false) => {

@@ -3,6 +3,27 @@ import Snackbar from "utils/snackbar";
 import tinycolor from "tinycolor2";
 import {getEnvVar} from "utils/env-vars";
 
+export const scrollIntoViewAndPop = (id) => {
+    //kudos to https://stackoverflow.com/a/22480938/10156191
+    const element = document.getElementById(id);
+    let rect = element.getBoundingClientRect();
+
+    // Only completely visible elements return true:
+    let isVisible = (rect.top >= 0) && (rect.bottom <= window.innerHeight);
+
+    if (!isVisible) {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+        });
+    }
+    return new Promise(resolve => setTimeout(function () {
+        element.classList.add("upvote-animation");
+        resolve();
+    }, 200));
+}
+
 export const getDefaultAvatar = (username) => {
     const avatar = getEnvVar("REACT_APP_DEFAULT_USER_AVATAR");
     return avatar.replace("%nick%", username);
