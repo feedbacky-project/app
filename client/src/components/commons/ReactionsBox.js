@@ -56,7 +56,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
                 i++;
             });
             whoReacted = whoReacted.substring(0, whoReacted.length - 2);
-            if(i >= 3) {
+            if(i > 3) {
                 whoReacted += " and " + (reactions.length - i) + " more";
             }
             whoReacted += " reacted with " + emote.name;

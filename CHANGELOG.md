@@ -1,6 +1,7 @@
 ### 1.0.0.RC.0
 * **[FEATURE]** Reactions will now display who reacted
 * **[FIX]** Scroll into view is now working properly even on mobile
+* **[FIX]** `and 0 more` message fix for posts with exactly 3 reactions
 
 ### 1.0.0.beta.10 (30.01.2022)
 * **[FEATURE]** Implement light/dark mode text visibility indicator when choosing theme color for board/tags
