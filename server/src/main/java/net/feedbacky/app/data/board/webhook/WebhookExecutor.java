@@ -68,18 +68,17 @@ public class WebhookExecutor {
       case IDEA_OPEN:
       case IDEA_CLOSE:
       case IDEA_EDIT:
-        embedBuilder.addField("Title", data.get(WebhookMapData.IDEA_TITLE.getName()), true);
-        embedBuilder.addField("Description", data.get(WebhookMapData.IDEA_DESCRIPTION.getName()), true);
+        embedBuilder.setDescription("`**Title**`\n" + data.get(WebhookMapData.IDEA_TITLE.getName()) + "\n`**Description**`\n" + data.get(WebhookMapData.IDEA_DESCRIPTION.getName()));
         break;
       case IDEA_COMMENT:
       case IDEA_COMMENT_DELETE:
-        embedBuilder.addField("Comment", data.get(WebhookMapData.COMMENT_DESCRIPTION.getName()), true);
+        embedBuilder.setDescription("`**Comment**`\n" + data.get(WebhookMapData.COMMENT_DESCRIPTION.getName()));
         break;
       case IDEA_TAG_CHANGE:
-        embedBuilder.addField("Tags Changed", data.get(WebhookMapData.TAGS_CHANGED.getName()), true);
+        embedBuilder.setDescription("`**Tags Changed**`\n" + data.get(WebhookMapData.TAGS_CHANGED.getName()));
         break;
       case CHANGELOG_CREATE:
-        embedBuilder.addField("Description", data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName()), true)
+        embedBuilder.setDescription("`**Description**`\n" + data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName()))
                 .setTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.CHANGELOG_NAME.getName(), "")))
                 .setUrl(MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator() + "/changelog");
         break;
