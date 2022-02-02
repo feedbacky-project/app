@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
   push:
     branches:
-    - development
+    - master
     paths:
     - client/*
     - proxy/*
