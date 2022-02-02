@@ -4,6 +4,7 @@ import React, {useContext} from "react";
 
 const StyledElement = styled.div`
   display: inline-block;
+  vertical-align: middle;
 `;
 
 //thanks to https://codepen.io/avstorm/pen/deRvMy
