@@ -6,9 +6,9 @@ on:
     branches:
     - development
     paths:
-    - client/*
-    - proxy/*
-    - server/*
+    - client/**
+    - proxy/**
+    - server/**
 
 jobs:
   DevBuildDocker:
