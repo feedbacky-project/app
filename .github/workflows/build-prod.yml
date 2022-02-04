@@ -6,9 +6,9 @@ on:
     branches:
     - master
     paths:
-    - client/*
-    - proxy/*
-    - server/*
+    - client/**
+    - proxy/**
+    - server/**
 
 jobs:
   BuildDocker:
