@@ -4,6 +4,7 @@ import React from "react";
 import Modal from "react-bootstrap/Modal";
 
 const StyledModal = styled(Modal)`
+  transition: var(--hover-transition);
   .modal-content {
     background-color: var(--background);
     box-shadow: var(--box-shadow) !important;

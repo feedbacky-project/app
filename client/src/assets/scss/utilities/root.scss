@@ -1,3 +1,9 @@
+@media(prefers-reduced-motion: reduce) {
+  :root {
+    --hover-transition: all .1ms ease-in-out;
+  }
+}
+
 :root {
   --font-size: 0.9375rem;
   --box-shadow: none;

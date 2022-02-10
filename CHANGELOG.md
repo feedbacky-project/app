@@ -1,3 +1,6 @@
+### 1.0.0.RC.1
+* **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
+
 ### 1.0.0.RC.0
 * **[FEATURE]** Reactions will now display who reacted
 * **[FIX]** Scroll into view is now working properly even on mobile
