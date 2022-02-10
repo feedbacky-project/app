@@ -128,6 +128,8 @@ const App = ({appearanceSettings}) => {
             changedTheme = (appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
         }
         setTheme(changedTheme);
+        let metaThemeColor = document.querySelector("meta[name=theme-color]");
+        metaThemeColor.setAttribute("content", changedTheme);
     };
     if (serviceData.error) {
         return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"} onBackButtonClick={() => window.location.reload()}/></BrowserRouter>

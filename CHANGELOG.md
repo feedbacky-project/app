@@ -1,4 +1,5 @@
 ### 1.0.0.RC.1
+* **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
 * **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
 
 ### 1.0.0.RC.0
