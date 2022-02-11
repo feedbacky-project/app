@@ -2,8 +2,9 @@ package net.feedbacky.app.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.feedbacky.app.controller.about.EmojiDataRegistry;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
-import net.feedbacky.app.oauth.provider.AbstractLoginProvider;
+import net.feedbacky.app.login.LoginProvider;
 
 import java.util.List;
 
@@ -17,8 +18,10 @@ import java.util.List;
 public class AboutFeedbackyData {
 
   private String serverVersion;
-  private List<AbstractLoginProvider> loginProviders;
+  private List<LoginProvider.ProviderData> loginProviders;
   private List<FetchUserDto> serviceAdmins;
-  private boolean closedIdeasCommenting;
+  private List<EmojiDataRegistry.EmojiData> emojisData;
+  private boolean mailLoginEnabled;
+  private boolean developmentMode;
 
 }

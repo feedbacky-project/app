@@ -1,4 +1,8 @@
 FROM gradle:6.5.0-jdk8 AS cache
+LABEL org.label-schema.name = "Feedbacky Server"
+LABEL org.label-schema.description = "Server side of Feedbacky Project made in Java with Spring Boot"
+LABEL org.label-schema.vcs-url = "https://github.com/Plajer/feedbacky-project/tree/master/server"
+
 RUN mkdir -p /home/gradle/cache_home
 ENV GRADLE_USER_HOME /home/gradle/cache_home
 COPY build.gradle /home/gradle/java-code/

@@ -19,8 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatchMailPreferences {
 
-  private boolean notifyFromModeratorsComments;
-  private boolean notifyFromTagsChange;
-  private boolean notifyFromStatusChange;
+  private boolean notificationsEnabled;
 
 }

@@ -1,8 +1,8 @@
+import AppAppearance from "AppAppearance";
+import 'assets/scss/main.scss';
+import ErrorBoundary from "ErrorBoundary";
 import React from 'react';
 import {render} from 'react-dom';
-import 'index.scss';
-import App from 'components/app/app.js';
 import {BrowserRouter} from "react-router-dom";
-import ErrorBoundary from "components/util/error-boundary";
 
-render(<BrowserRouter><ErrorBoundary><App /></ErrorBoundary></BrowserRouter>, document.getElementById('root'));
+render(<BrowserRouter><ErrorBoundary><AppAppearance/></ErrorBoundary></BrowserRouter>, document.getElementById('root'));

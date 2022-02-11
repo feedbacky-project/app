@@ -10,7 +10,6 @@ import net.feedbacky.app.data.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
-import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotNull;
 
@@ -33,9 +32,15 @@ public class PostTagDto {
   private String color;
   @NotNull(message = "Please specify if tag should be ignored in roadmap.")
   private Boolean roadmapIgnored;
+  @NotNull(message = "Please specify if tag can be used publicly.")
+  private Boolean publicUse;
 
   public Tag convertToEntity(Board board) {
-    Tag tag = new ModelMapper().map(this, Tag.class);
+    Tag tag = new Tag();
+    tag.setName(name);
+    tag.setColor(color);
+    tag.setRoadmapIgnored(roadmapIgnored);
+    tag.setPublicUse(publicUse);
     tag.setBoard(board);
     return tag;
   }

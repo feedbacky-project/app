@@ -6,7 +6,8 @@
     <link rel="icon" type="image/png" href="/logo192.png" sizes="196x196">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="author" content="Plajer"/>
-    <meta name="keywords" content="user feedback, feedback software"/>
+    <meta name="keywords" content="user feedback, feedback software, feedback system, feedback solution"/>
+    <meta name="description" content="Self-hosted feedback collecting software instance."/>
     <meta name="theme-color" content="#0994f6"/>
     <meta name="msapplication-TileColor" content="#0994f6"/>
     <link rel="apple-touch-icon" href="logo192.png"/>
@@ -15,11 +16,11 @@
 
     <style>
         .bg-main {
-            background-color: #f8f9fa;
+            background-color: hsl(210, 12%, 91%);
         }
 
         .dark {
-            background-color: #202328;
+            background-color: hsl(217, 11%, 14%);
         }
 
         .vertical-center {
@@ -30,48 +31,100 @@
             align-items: center;
         }
 
-        html {
-            overflow-x: hidden;
-            margin-right: calc(-1 * (100vw - 100%));
+        @media(prefers-reduced-motion: reduce) {
+            .load-spinner {
+                -webkit-animation: spinner-animation 2.8s linear infinite !important;
+                animation: spinner-animation 2.8s linear infinite !important;
+            }
+
+            .load-spinner circle {
+                -webkit-animation: dash 2.8s linear infinite !important;
+                animation: dash 2.8s linear infinite !important;
+            }
         }
 
         .load-spinner {
             width: 40px;
             height: 40px;
-            margin: 100px auto;
-            background-color: #0994f6;
 
             border-radius: 100%;
-            -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
-            animation: sk-scaleout 1.0s infinite ease-in-out;
+            -webkit-animation: spinner-animation 1.4s linear infinite;
+            animation: spinner-animation 1.4s linear infinite;
         }
 
-        .dark .load-spinner {
-            background-color: #f2f2f2;
-        }
-
-        @-webkit-keyframes sk-scaleout {
+        @-webkit-keyframes spinner-animation {
             0% {
-                -webkit-transform: scale(0)
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
             }
             100% {
-                -webkit-transform: scale(1.0);
-                opacity: 0;
+                -webkit-transform: rotate(270deg);
+                transform: rotate(270deg);
             }
         }
 
-        @keyframes sk-scaleout {
-            0% {
-                -webkit-transform: scale(0);
-                transform: scale(0);
+        @keyframes spinner-animation {
+            00% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
             }
             100% {
-                -webkit-transform: scale(1.0);
-                transform: scale(1.0);
-                opacity: 0;
+                -webkit-transform: rotate(270deg);
+                transform: rotate(270deg);
+            }
+        }
+
+        .dark .load-spinner.default-color circle {
+            stroke: hsl(0, 0%, 95%);
+        }
+
+        .load-spinner.default-color circle {
+            stroke: hsl(217, 89%, 61%);
+        }
+
+        .load-spinner circle {
+            stroke-dasharray: 187;
+            stroke-dashoffset: 0;
+            -webkit-transform-origin: center;
+            -ms-transform-origin: center;
+            transform-origin: center;
+            -webkit-animation: dash 1.4s ease-in-out infinite;
+            animation: dash 1.4s ease-in-out infinite;
+        }
+
+        @-webkit-keyframes dash {
+            0% {
+                stroke-dashoffset: 187;
+            }
+            50% {
+                stroke-dashoffset: 46.75;
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+            }
+            100% {
+                stroke-dashoffset: 187;
+                -webkit-transform: rotate(450deg);
+                transform: rotate(450deg);
+            }
+        }
+
+        @keyframes dash {
+            0% {
+                stroke-dashoffset: 187;
+            }
+            50% {
+                stroke-dashoffset: 46.75;
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+            }
+            100% {
+                stroke-dashoffset: 187;
+                -webkit-transform: rotate(450deg);
+                transform: rotate(450deg);
             }
         }
     </style>
+    <script src="%PUBLIC_URL%/env-config.js"></script>
 </head>
 <body class="bg-main">
 <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -80,7 +133,7 @@
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
+        for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0) == ' ') {
                 c = c.substring(1);
@@ -91,14 +144,17 @@
         }
         return null;
     }
-    if (getCookie("prefs_darkMode") === 'true' ||
-        (getCookie("prefs_darkMode") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+
+    if (getCookie("prefs_appearance") === 'dark' ||
+        (getCookie("prefs_appearance") == null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add("dark");
     }
 </script>
 <div id="root">
     <div class="vertical-center">
-        <div class="load-spinner"></div>
+        <svg class="load-spinner default-color" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" style="margin: 100px auto">
+            <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+        </svg>
     </div>
 </div>
 </body>

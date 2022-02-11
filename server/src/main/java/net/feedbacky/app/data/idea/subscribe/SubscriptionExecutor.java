@@ -2,15 +2,13 @@ package net.feedbacky.app.data.idea.subscribe;
 
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.user.User;
-import net.feedbacky.app.util.mailservice.MailHandler;
-import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
-import net.feedbacky.app.util.mailservice.MailService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Plajer
@@ -20,96 +18,37 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class SubscriptionExecutor {
 
-  private final MailHandler mailHandler;
+  private Map<User, List<NotificationEvent>> notificationBuffer = new HashMap<>();
 
-  @Autowired
-  public SubscriptionExecutor(MailHandler mailHandler) {
-    this.mailHandler = mailHandler;
-  }
-
-  public void notifySubscribers(Idea idea, Event event, Map<String, String> data) {
+  public void notifySubscribers(Idea idea, NotificationEvent event) {
     for(User user : idea.getSubscribers()) {
-      boolean shouldNotify = false;
-      switch(event) {
-        case IDEA_BY_MODERATOR_COMMENT:
-          shouldNotify = user.getMailPreferences().isNotifyFromModeratorsComments();
-          break;
-        case IDEA_STATUS_CHANGE:
-          shouldNotify = user.getMailPreferences().isNotifyFromStatusChange();
-          break;
-        case IDEA_TAGS_CHANGE:
-          shouldNotify = user.getMailPreferences().isNotifyFromTagsChange();
-          break;
-        default:
-          break;
-      }
-      if(!shouldNotify) {
+      if(!user.getMailPreferences().isNotificationsEnabled()) {
         continue;
       }
-      doNotifySubscriber(user, idea, event, data);
+      //do not notify creator of idea if he made any changes to the idea
+      if(user.equals(event.getSource()) && idea.getCreator().equals(event.getSource())) {
+        continue;
+      }
+      doNotifySubscriber(user, event);
     }
   }
 
-  private void doNotifySubscriber(User user, Idea idea, Event event, Map<String, String> data) {
-    String subject;
-    String text;
-    String html;
-    MailService.EmailTemplate template;
-    String status;
-    switch(event) {
-      case IDEA_BY_MODERATOR_COMMENT:
-        template = MailService.EmailTemplate.SUBSCRIBE_COMMENT;
-        subject = template.getSubject();
-        text = template.getLegacyText();
-        status = data.get(SubscriptionMapData.COMMENT_DESCRIPTION.getName());
-        data.put("status", status);
-        html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_COMMENT, null, user, null), idea, data);
-        break;
-      case IDEA_STATUS_CHANGE:
-        template = MailService.EmailTemplate.SUBSCRIBE_STATUS_CHANGE;
-        subject = template.getSubject();
-        text = template.getLegacyText();
-        status = "Idea status changed to " + data.get(SubscriptionMapData.NEW_STATUS.getName());
-        data.put("status", status);
-        html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_STATUS_CHANGE, null, user, null), idea, data);
-        break;
-      case IDEA_TAGS_CHANGE:
-        template = MailService.EmailTemplate.SUBSCRIBE_TAGS_CHANGE;
-        subject = template.getSubject();
-        text = template.getLegacyText();
-        status = data.get(SubscriptionMapData.TAGS_CHANGED.getName());
-        data.put("status", status);
-        html = MailPlaceholderParser.parseSubscribeStatusPlaceholder(MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(),
-                MailService.EmailTemplate.SUBSCRIBE_TAGS_CHANGE, null, user, null), idea, data);
-        break;
-      default:
-        return;
-    }
-    CompletableFuture.runAsync(() -> mailHandler.getMailService().send(user.getEmail(), subject, text, html));
+  private void doNotifySubscriber(User user, NotificationEvent event) {
+    List<NotificationEvent> incomingNotifications = notificationBuffer.getOrDefault(user, new ArrayList<>());
+    incomingNotifications.add(event);
+    notificationBuffer.put(user, incomingNotifications);
+  }
+
+  public Map<User, List<NotificationEvent>> getNotificationBuffer() {
+    return notificationBuffer;
+  }
+
+  public void emptyNotificationBuffer() {
+    notificationBuffer.clear();
   }
 
   public enum Event {
     IDEA_BY_MODERATOR_COMMENT, IDEA_STATUS_CHANGE, IDEA_TAGS_CHANGE
-  }
-
-  public enum SubscriptionMapData {
-    USER_NAME("user_name"), USER_AVATAR("user_avatar"), USER_ID("user_id"), IDEA_NAME("idea_name"),
-    IDEA_DESCRIPTION("idea_description"), IDEA_LINK("idea_link"), IDEA_ID("idea_id"),
-    COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"), COMMENT_USER_NAME("comment_user_name"),
-    COMMENT_USER_AVATAR("comment_user_avatar"),
-    NEW_STATUS("new_status"), TAGS_CHANGED("tags_changed");
-
-    private final String name;
-
-    SubscriptionMapData(String name) {
-      this.name = name;
-    }
-
-    public String getName() {
-      return name;
-    }
   }
 
 }

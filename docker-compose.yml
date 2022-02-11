@@ -3,31 +3,27 @@ version: '3.3'
 services:
   feedbacky-client:
     container_name: feedbacky-client
-    build:
-      context: client
-      dockerfile: ./Dockerfile
-      args:
-        - REACT_APP_SERVER_IP_ADDRESS=${REACT_APP_SERVER_IP_ADDRESS}
-        - REACT_APP_SERVICE_NAME=${REACT_APP_SERVICE_NAME}
-        - REACT_APP_DEFAULT_USER_AVATAR=${REACT_APP_DEFAULT_USER_AVATAR}
+    environment:
+      - REACT_APP_SERVER_IP_ADDRESS=${REACT_APP_SERVER_IP_ADDRESS}
+      - REACT_APP_SERVICE_NAME=${REACT_APP_SERVICE_NAME}
+      - REACT_APP_DEFAULT_USER_AVATAR=${REACT_APP_DEFAULT_USER_AVATAR}
     ports:
       - '${CLIENT_APP_PORT}:80'
     links:
       - feedbacky-server
     volumes:
       - feedbacky-data:/storage-data
+    image: plajer/feedbacky-proxy
     restart: always
   feedbacky-server:
     container_name: feedbacky-server
-    build:
-      context: server
-      dockerfile: ./Dockerfile
     ports:
       - '${SERVER_APP_PORT}:8080'
     volumes:
       - feedbacky-data:/storage-data
     env_file:
       - .env
+    image: plajer/feedbacky-server
     restart: always
 
 volumes:

@@ -6,7 +6,6 @@ import net.feedbacky.app.data.board.dto.PostBoardDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagDto;
 import net.feedbacky.app.data.tag.dto.PostTagDto;
-import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import java.util.List;
  * <p>
  * Created at 11.10.2019
  */
-public interface BoardService extends FeedbackyService {
+public interface BoardService {
 
   PaginableRequest<List<FetchBoardDto>> getAll(int page, int pageSize);
 
@@ -32,12 +31,12 @@ public interface BoardService extends FeedbackyService {
 
   List<FetchTagDto> getAllTags(String discriminator);
 
-  FetchTagDto getTagByName(String discriminator, String name);
+  FetchTagDto getTagById(String discriminator, long id);
 
   ResponseEntity<FetchTagDto> postTag(String discriminator, PostTagDto dto);
 
-  FetchTagDto patchTag(String discriminator, String name, PatchTagDto dto);
+  FetchTagDto patchTag(String discriminator, long id, PatchTagDto dto);
 
-  ResponseEntity deleteTag(String discriminator, String name);
+  ResponseEntity deleteTag(String discriminator, long id);
 
 }

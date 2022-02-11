@@ -12,6 +12,9 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Plajer
  * <p>
@@ -34,5 +37,6 @@ public class PostIdeaDto {
   private String description;
   @Base64(maximumKbSize = 1024, mimeType = {"image/png", "image/jpeg"}, message = "Attachment must be a valid image with maximum size of 1 MB.", allowEmpty = true)
   private String attachment;
+  private List<Long> tags = new ArrayList<>();
 
 }

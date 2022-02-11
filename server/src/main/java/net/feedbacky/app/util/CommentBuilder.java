@@ -38,4 +38,8 @@ public class CommentBuilder {
     return comment;
   }
 
+  public static String convertToDiffViewMode(String placeholder, String oldText, String newText) {
+    return "{data_diff_view;" + placeholder + ";" + oldText + ";" + newText + "}";
+  }
+
 }

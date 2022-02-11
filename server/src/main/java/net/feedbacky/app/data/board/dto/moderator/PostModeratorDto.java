@@ -10,8 +10,6 @@ import net.feedbacky.app.data.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.modelmapper.ModelMapper;
-
 import javax.validation.constraints.NotNull;
 
 /**
@@ -33,7 +31,8 @@ public class PostModeratorDto {
   private Moderator.Role role;
 
   public Moderator convertToEntity(User user, Board board) {
-    Moderator moderator = new ModelMapper().map(this, Moderator.class);
+    Moderator moderator = new Moderator();
+    moderator.setRole(role);
     moderator.setBoard(board);
     moderator.setUser(user);
     return moderator;

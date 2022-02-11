@@ -10,9 +10,6 @@ import net.feedbacky.app.data.board.Board;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.apache.commons.text.StringEscapeUtils;
-import org.modelmapper.ModelMapper;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -53,10 +50,14 @@ public class PostBoardDto {
   @Base64(maximumKbSize = 650, mimeType = {"image/png", "image/jpeg"}, message = "Banner must be a valid image with maximum size of 650kb.", allowEmpty = true)
   private String banner;
 
+  //ommits logo and banner fields because they must be urls
   public Board convertToEntity() {
-    Board board = new ModelMapper().map(this, Board.class);
-    //sanitize
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
+    Board board = new Board();
+    board.setName(name);
+    board.setDiscriminator(discriminator);
+    board.setShortDescription(shortDescription);
+    board.setFullDescription(fullDescription);
+    board.setThemeColor(themeColor);
     board.setIdeas(new HashSet<>());
     board.setCreationDate(creationDate);
     return board;

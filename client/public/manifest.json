@@ -1,7 +1,8 @@
 {
   "short_name": "Feedback",
   "name": "Feedback Page",
-  "keywords": ["user feedback", "feedback software"],
+  "keywords": ["user feedback", "feedback software", "feedback system", "feedback solution"],
+  "description": "Self-hosted feedback collecting software instance.",
   "author": "Plajer",
   "icons": [
     {

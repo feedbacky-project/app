@@ -6,11 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.Board;
-import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
-import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
 import net.feedbacky.app.data.user.User;
-
-import org.modelmapper.ModelMapper;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,9 +44,5 @@ public class SuspendedUser implements Serializable {
   @JoinColumn(name = "user_id")
   private User user;
   private Date suspensionEndDate;
-
-  public FetchSuspendedUserDto convertToDto() {
-    return new ModelMapper().map(this, FetchSuspendedUserDto.class);
-  }
 
 }

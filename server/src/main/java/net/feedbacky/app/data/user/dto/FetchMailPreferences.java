@@ -1,9 +1,8 @@
 package net.feedbacky.app.data.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import net.feedbacky.app.data.FetchResponseDto;
+import net.feedbacky.app.data.user.MailPreferences;
 
 /**
  * @author Plajer
@@ -11,13 +10,17 @@ import lombok.Setter;
  * Created at 03.05.2020
  */
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class FetchMailPreferences {
+public class FetchMailPreferences implements FetchResponseDto<FetchMailPreferences, MailPreferences> {
 
-  private boolean notifyFromModeratorsComments;
-  private boolean notifyFromTagsChange;
-  private boolean notifyFromStatusChange;
+  private boolean notificationsEnabled;
+
+  @Override
+  public FetchMailPreferences from(MailPreferences entity) {
+    if(entity == null) {
+      return null;
+    }
+    this.notificationsEnabled = entity.isNotificationsEnabled();
+    return this;
+  }
 
 }

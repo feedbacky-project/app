@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.feedbacky.app.util.Constants;
 import net.feedbacky.app.util.imagecompress.ImageCompressor;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class ObjectStorage {
   @Autowired
   public ObjectStorage(ImageCompressor imageCompressor) {
     this.imageCompressor = imageCompressor;
+  }
+
+  public byte[] getImageFromUrl(String url) throws IOException {
+    String path = url.replace(Constants.IMAGE_HOST, "");
+    File file = new File(path);
+    return IOUtils.toByteArray(file.toURI());
   }
 
   public String storeImage(String encoded, ImageType type) {

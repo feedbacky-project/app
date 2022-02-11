@@ -5,11 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
 
-import org.modelmapper.ModelMapper;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,16 +36,7 @@ public class ConnectedAccount implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
-  private AccountType type;
-  @Column(name = "data", columnDefinition = "text", length = 355)
-  private String data;
-
-  public FetchConnectedAccount convertToDto() {
-    return new ModelMapper().map(this, FetchConnectedAccount.class);
-  }
-
-  public enum AccountType {
-    DISCORD, GITHUB, GOOGLE
-  }
+  private String provider;
+  private String accountId;
 
 }

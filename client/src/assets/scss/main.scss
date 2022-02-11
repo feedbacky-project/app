@@ -1,0 +1,61 @@
+$pure-dark-half: hsla(0, 0%, 0%, .5);
+
+@import "utilities/root";
+@import "utilities/colors";
+@import "utilities/snackbars";
+
+@import "commons/override-variables";
+@import "commons/align-utils";
+@import "commons/font-face";
+@import "commons/bootstrap-imports";
+
+@font-face {
+  font-family: 'Roboto', sans-serif;
+  font-display: swap;
+}
+
+html {
+  //fixes chrome downscaling blur issue
+  image-rendering: -webkit-optimize-contrast;
+  //fixes scrollbar repositioning page
+  overflow-x: hidden;
+  margin-right: calc(-1 * (100vw - 100%));
+}
+
+// fixes mobile minimum width
+body, .modal {
+  min-width: 310px;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+  margin: 0;
+
+  background-color: var(--background);
+  color: var(--font-color);
+}
+
+@keyframes pulse {
+  from, to {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+}
+
+.upvote-animation {
+  animation-duration: 1s;
+  animation-name: pulse;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.rounded-top-0 {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

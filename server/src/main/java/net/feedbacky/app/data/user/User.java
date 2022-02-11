@@ -6,17 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.moderator.Moderator;
-import net.feedbacky.app.data.user.dto.FetchUserDto;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.modelmapper.ModelMapper;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,7 +28,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -39,6 +41,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NamedEntityGraph(name = "User.fetch", attributeNodes = {@NamedAttributeNode("permissions"), @NamedAttributeNode("mailPreferences")})
+@NamedEntityGraph(name = "User.fetchConnections", attributeNodes = {@NamedAttributeNode("connectedAccounts")})
 public class User implements Serializable {
 
   @Id
@@ -46,46 +50,25 @@ public class User implements Serializable {
   @EqualsAndHashCode.Include private Long id;
 
   private String username;
+  @Column(length = 355) /* increase default length for google avatars */
   private String avatar;
   private String email;
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<Moderator> permissions = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
   private Set<ConnectedAccount> connectedAccounts = new HashSet<>();
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @LazyToOne(LazyToOneOption.NO_PROXY)
   private MailPreferences mailPreferences;
   @CreationTimestamp
   private Date creationDate;
   private boolean serviceStaff = false;
-
-  public FetchUserRequest convertToDto() {
-    FetchUserDto dto = new ModelMapper().map(this, FetchUserDto.class);
-    dto.setMailPreferences(mailPreferences.convertToDto());
-    dto.setPermissions(permissions.stream().map(Moderator::convertToUserPermissionDto).collect(Collectors.toList()));
-    return new FetchUserRequest(dto);
-  }
+  private boolean fake = false;
+  private String token = "";
 
   public String convertToSpecialCommentMention() {
     return "{data_user;" + id + ";" + username + "}";
-  }
-
-  //a way to avoid convertToDto(boolean) as it doesn't explain this does
-  public static class FetchUserRequest {
-
-    private final FetchUserDto dto;
-
-    public FetchUserRequest(FetchUserDto dto) {
-      this.dto = dto;
-    }
-
-    public FetchUserDto exposeSensitiveData(boolean expose) {
-      if(!expose) {
-        dto.setEmail(null);
-      }
-      return dto;
-    }
-
   }
 
 }

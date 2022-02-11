@@ -1,3 +1,227 @@
+### 1.0.0.RC.1
+* **[FEATURE]** Display toast messages when page is loading for too long
+* **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
+* **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
+
+### 1.0.0.RC.0
+* **[FEATURE]** Reactions will now display who reacted
+* **[FIX]** Scroll into view is now working properly even on mobile
+* **[FIX]** `and 0 more` message fix for posts with exactly 3 reactions
+* **[FIX]** Use `description` not `fields` field for Discord webhooks as they allow more characters
+
+### 1.0.0.beta.10 (30.01.2022)
+* **[FEATURE]** Implement light/dark mode text visibility indicator when choosing theme color for board/tags
+* **[FEATURE]** Changelogs can now be shared with share box links (requested by [Matou0014](https://app.feedbacky.net/i/changelog-options.2942))
+* **[FEATURE]** Boards can now configure whether users can comment closed ideas or not (requested at [Feedbacky](https://app.feedbacky.net/i/commenting-closed-ideas.3361))
+* **[FEATURE]** Ideas' titles can now be edited by moderators (requested by [srnyx](https://app.feedbacky.net/i/ability-for-mods-to-change-idea-titles.3011))
+* **[IMPROVEMENT]** Center moderative comments icon for mobile users when it's longer than 1 line
+* **[CHANGE]** Distinguish non selected reactions even better (removed borders)
+* **[FIX]** Comment and changelogs reactions are no longer left with null values in a database, they're properly removed
+* **[FIX]** Changelog webhooks didn't work properly
+* **[FIX]** Add background for non chosen and chosen reactions based on theme color to be visible in changelogs all the time
+* **[FIX]** Changelog titles could overflow the page
+* **[FIX]** Default markdown buttons interaction when no selection was made was to show `null` as a selection
+* **[FIX]** Moderator assign modal UI fix
+* **[FIX]** Form control placeholder text transparency (not working as intended on Chrome)
+* **[FIX]** Setup cards UI fix (for Chrome)
+
+### 1.0.0.beta.9
+* **[FEATURE]** You can now check for similar ideas when writing new one in a modal (requested at [Feedbacky](https://app.feedbacky.net/i/show-similar-ideas-when-writing-new-idea.3297))
+* **[FEATURE]** Added GitLab login support (requested by [AnonDev](https://app.feedbacky.net/i/more-oauth-providers.3194))
+* **[FEATURE]** Comments and changelogs can now be reacted with emotes (requested by [Matou0014](https://app.feedbacky.net/i/comments-reaction.3219))
+* **[FEATURE]** Existing webhooks can now be edited (requested by [Matou0014](https://app.feedbacky.net/i/edit-webhooks.3932))
+* **[IMPROVEMENT]** Minor performance improvements for re-render of every comment while writing and posting new comment
+* **[CHANGE]** Changelogs description length increased from 1800 chars to 2500
+* **[FIX]** Tag edit modal now updates values properly when editing multiple tags
+* **[FIX]** Don't mark freshly edited comments (within 5 minutes) with (edited) badge client-side
+* **[FIX]** Reload button for failed with load comments/changelogs/ideas is now working properly
+* **[FIX/REMOVE]** Brought back previous discord webhook library, current one contains some limitations and is no longer needed for current features
+
+### 1.0.0.beta.8
+* **[FEATURE]** Added strikethrough to markdown buttons
+* **[IMPROVEMENT]** On network error display more friendly error messages with reload button
+* **[IMPROVEMENT/CHANGE]** Major and minor UI changes:
+  * Make log-in button more noticeable
+  * Minor UI adjustments especially for mobile users
+  * Internal comments are now evenly aligned with other comments in ideas Discussion section
+  * Update markdown buttons and forms design
+  * Loadable buttons have their spinners changed using new neat effect 
+  * Various UI elements no longer use scale animation on hover but color adjustment
+* **[CHANGE]** Changed comment max chars limit to 1800
+* **[CHANGE]** Now hiding user email address client-side for privacy purposes e.g. mail@example.com -> m*****l@example.com
+* **[FIX]** Minor UI fixes:
+  * Emotes in markdown containers are no longer transparent but fully visible
+  * When selecting tag in light mode it had transparent background
+  * Chrome downscale blur for many images across the page should no longer occur
+  * Markdown images will now fit their true (not 100%) width to the container
+  * Board delete modal didn't use UiKeyboardInput element
+  * Minor Light UI inconsistencies
+* **[FIX]** Users couldn't edit their own ideas if they weren't board moderators
+* **[FIX]** Mail notifications toggle didn't set proper values client-side but did server-side
+* **[FIX]** Choosing tag filter and switching boards threw No ideas found error
+* **[FIX]** On network error in idea Discussion section two errors were displayed: Network Error and No comments error
+* **[FIX]** Attachments couldn't be deleted once uploaded
+* **[FIX]** Changelogs discord webhooks weren't published due to server-side error
+
+### 1.0.0.beta.7
+* **[FEATURE]** Users can now be assigned to ideas (requested by [Matou0014](https://app.feedbacky.net/i/assignable-ideas.2876))
+* **[FEATURE]** Idea votes can now be reset (all votes or anonymous ones) (requested at [Feedbacky](https://app.feedbacky.net/i/more-moderation-options.2662))
+* **[FEATURE]** Search box now searches by description containing the input as well
+* **[FEATURE]** Added search box to changelogs section
+* **[IMPROVEMENT]** Search box now respects filters and sort values
+* **[FIX]** Improper date parsing didn't show new changelog notification bubble
+* **[FIX]** Reset tag update modal to default values after canceling action
+* **[FIX]** Suspensions no longer worked
+
+### 1.0.0.beta.6
+* **[CHANGE]** Mail unsubscribe tokens are now longer
+* **[FIX]** Editing changelogs crashed the app
+* **[FIX]** After editing changelog once again changelog title in modal was missing
+* **[FIX]** Accents and unicode symbols were replaced by html entity tags in various places (reported by [Matou0014](https://app.feedbacky.net/i/symbols-and-accents-gets-replaced-by-tags.2844))
+* **[FIX]** Ideas filtered through Tags filtering or accessed via roadmap had all boolean values set to true (Database issue)
+    
+    Fixes `* Ideas retrieved via roadmap API route contains every boolean set to true even if they're not when user is not logged in.
+  When logged in only some of them are true.`
+* **[FIX]** Editing own comments crashed the app
+* **[FIX]** Discord webhook didn't execute properly when idea or changelog title contained special characters (reported by [ANONYMANONYM](https://app.feedbacky.net/i/changelogs-are-not-sent-to-webhook.3220)) 
+
+### 1.0.0.beta.5
+* **[FEATURE]** Added small notification bubble if there is new unseen changelog posted
+* **[IMPROVEMENT]** Improved navbar sections (Feedback, Changelog, Roadmap) for mobile users (requested at [Feedbacky](https://app.feedbacky.net/i/extended-navbar-on-mobile.3585))
+* **[IMPROVEMENT]** Aligned all tag elements inside Filtering dropdown to be exactly same in width
+* **[FIX]** 0 wasn't displayed as a badge in Filtering dropdown elements 
+
+### 1.0.0.beta.4
+* **[FEATURE]** Allow logging in via email address (requested by [ANONYMANONYM](https://app.feedbacky.net/i/add-option-to-login-just-with-email.2508))
+* **[FEATURE]** Ideas can now be pinned and unpinned (requested by [Matou0014](https://app.feedbacky.net/i/pinnable-ideas.2875))
+* **[FEATURE]** You can now upload attachment while editing idea (if not previously attached) (requested by [Matou0014](https://app.feedbacky.net/i/send-multiple-attachements.2680))
+* **[IMPROVEMENT]** While changing idea state (open/close/pin etc.) comments will be refetched to contain latest changes in idea
+* **[CHANGE]** Increase login cookie time from 14 days to 30
+* **[FIX]** Logging out from profile page crashed the app
+* **[FIX]** Warning and error toasts are now dark mode aware (will apply lighter color)
+
+### 1.0.0.beta.3
+* **[IMPROVEMENT]** Trend score received an improvement, now it includes subscribers and comments amount and it's should be 1.0 by default
+to be seen at the top of ideas list
+* **[FIX]** Inconsistency between sidebar and navbar theme colors in Profile Page
+
+### 1.0.0.beta.2
+* **[IMPROVEMENT]** Improve mails design and extended support for mail clients
+* **[FIX]** Snackbars background color was shorter than the whole snackbar
+* **[FIX]** Snackbars undo button was outside the snackbar
+* **[FIX]** Default user avatar link replaced from /generator.php?name=xyz to /generator/xyz so different avatars won't be displayed if another query string is added
+eg. ?name=Plajer?size=32 (broken, outputs Plajer?size=32)
+
+### 1.0.0.beta.1
+* **[IMPROVEMENT]** Snackbars are updated to look like other parts of the UI (transparent background, bold full color text)
+* **[IMPROVEMENT]** Migrator is now using batch entry updates for better performance
+* **[FIX]** Show confidential board data (API keys) only to admins and owners of the board not moderators
+* **[FIX]** Profile page light theme color when switching from Dark to Light mode didn't change properly
+* **[FIX]** Board creator navbar crashed the app when leaving the creator page while using it
+* **[FIX]** Ensure error in tab title is properly set when error page shows up
+* **[FIX]** Social links container in board banner will no longer show on mobile if it's empty - empty whitespace was there before
+
+** **TODO** **
+* Make migrator more stable
+
+** **KNOWN BUGS** **
+* Theme gets set to the default theme while switching between light and dark themes in Appearance settings
+
+### 1.0.0.alpha.7 (July 12, 2021)
+* **[FEATURE]** Changelogs can now be edited
+* **[FEATURE]** User settings page is now directly tied to previous board so users won't leave currently viewed board
+* **[IMPROVEMENT]** Increase tap target of mobile navbar Feedback/Roadmap/Changelog buttons (Mobile Friendly improvement from Google Lighthouse)
+* **[CHANGE]** Removed dark mode CSS variables, they'll now override light mode variables when dark mode is enabled
+* **[FIX]** Color picker in light mode had dark background
+* **[REMOVE]** Roboto Light unused font is no longer included in CSS and won't be loaded anymore
+
+### 1.0.0.alpha.6
+* **[FEATURE]** Changelogs and roadmaps can now be disabled
+* **[FEATURE]** You can now share ideas using Share Box (share to Facebook, Twitter or copy link) (requested at [Feedbacky](https://app.feedbacky.net/i/share-buttons.2612))
+* **[IMPROVEMENT]** Links are now colored based on current page theme (requested at [Feedbacky](https://app.feedbacky.net/i/make-links-color-from-theme-color.3213))
+* **[IMPROVEMENT]** Changelogs can now be deleted
+* **[IMPROVEMENT]** Align public tags evenly in idea create modal (requested by [srnyx](https://app.feedbacky.net/i/align-tags-better.2933))
+* **[FIX]** Changelogs webhook title wasn't displayed correctly
+* **[FIX]** Height of some forms was set improperly
+* **[FIX]** Tags weren't updated in comments once renamed (reported and fixed by [Matou0014](https://app.feedbacky.net/i/tag-name-not-updated-if-renamed.3197))
+* **[FIX]** Idea description while writing new idea in modal should persist now after leaving the modal (reported at [Feedbacky](https://app.feedbacky.net/i/persist-idea-description-while-writing.3214))
+
+### 1.0.0.alpha.5
+* **[FEATURE]** Allow users to edit their comments (requested by [Matou0014](https://app.feedbacky.net/i/edit-comments.2681))
+* **[FEATURE]** Added changelogs feature (still working on it) (requested at [Feedbacky](https://app.feedbacky.net/i/changelogs.1343))
+* **[FEATURE]** Added simple markdown buttons (bold, italics, image, link) for some larger text areas
+* **[CHANGE]** Markdown is now stripped at idea card descriptions to display clearer text (suggested by Matou0014)
+* **[FIX]** Fixed javascript URI schemes and XSS vulnerability via markdown links (reported by [Mattx8y](https://app.feedbacky.net/i/disable-javascript-uri-schemes-in-markdown.2795))
+
+### 1.0.0.alpha.4
+* **[FEATURE]** Page routes now includes browser changeable tab titles instead of hardcoded one
+* **[FEATURE]** Ideas can be filtered by tags now (requested at [Feedbacky](https://app.feedbacky.net/i/more-moderation-options.2662))
+* **[FEATURE]** Ideas commenting can be now restricted to moderators only
+* **[IMPROVEMENT]** User will no longer receive notification emails if they made any changes to their own ideas
+* **[CHANGE/CONTROVERSIAL]** Edited light mode UI, now shadowless with improved UI elements
+* **[CHANGE]** Increased social links amount by 1 (because moved Roadmap icon to navbar)
+* **[CHANGE]** Changed navbar UI for future categories feature implementation
+* **[CHANGE]** Unified Web Content Accessibility Guidelines color contrast checking for various UI elements
+* **[CHANGE]** Filters and sorts will be now reset after each page visit (requested by [yeah idk](https://app.feedbacky.net/i/reseting-the-filtering-and-sorting-types.2006))
+* **[CHANGE]** Default sort for comments is now Newest
+* **[CHANGE]** Default theme color is now blue-ish to look like Feedbacky theme colors not green
+* **[FIX]** Google users couldn't log-in for the first time if their avatar URL length exceeded 255 characters
+* **[FIX]** Moderators couldn't be removed
+
+### 1.0.0.alpha.3
+* **[FEATURE]** Added anonymous voting feature, toggleable in board admin panel (requested at [Feedbacky](https://app.feedbacky.net/i/anonymous-voting.730))
+* **[FEATURE]** Added administrator role that can do everything that owner can without ability to delete board
+(Partially implements request by [Matou0014](https://app.feedbacky.net/i/add-the-possibility-to-promote-users.2296))
+* **[FEATURE]** Anonymous users (both by disabled accounts or anonymous voting) will use anonymous nicknames provided via custom nicknames file,
+better to see random nicknames than Anonymous multiple times
+* **[FEATURE]** Added API keys and Public API (backported from Cloud Service fork)
+* **[CHANGE]** Dropped Tags, Webhooks and Moderators quotas, they should be unlimited using self-hosted version (requested by [Matou0014](https://app.feedbacky.net/i/increase-quota-for-tags.2643))
+
+### 1.0.0.alpha.2
+* **[IMPROVEMENT]** Added clearly visible Log In text in the log-in button
+* **[IMPROVEMENT]** Creators Finish button do show loading spinners now
+* **[CHANGE]** Appearance profile route can be viewed while not logged in
+* **[CHANGE]** Replaced toast notifications with snackbar notifications
+* **[CHANGE]** Idea closed comment icon is now Lock icon not Circle X
+* **[CHANGE]** Made server-side API error messages more user friendly
+
+### 1.0.0.alpha.1
+* **[FEATURE]** Added MAINTENANCE.md inside client folder to describe file structure and naming for future code maintenance and contributors
+* **[FEATURE]** Added reduced motion accessibility feature - if requested all non-essential animations (upvote, loaders, settings) won't display (prefers-reduced-motion: reduce)
+* **[FEATURE]** Added ability to show amount of opened/closed and all ideas in the filter selection ([this suggestion](https://app.feedbacky.net/i/show-amount-of-open-closed-and-total-ideas.191))
+* **[FEATURE]** Added search bar to search ideas by specific title (requested by [eartharoid](https://app.feedbacky.net/i/add-a-search-feature.2313))
+* **[FEATURE]** Added self assignable tags that everyone can set when creating new idea (requested by [VentureKraft](https://app.feedbacky.net/i/self-assignable-tags.982))
+* **[IMPROVEMENT]** Buttons all over the page now respect dark mode and use color and background depending on the chosen color mode
+* **[IMPROVEMENT]** Webhook and social links creator pages are now inside board admin panel not on a separate pages
+* **[IMPROVEMENT]** Updated colors at profile page to meet AAA color contrast
+* **[IMPROVEMENT]** Made some changes towards easier keyboard accessibility (brought back links outlines, tabbing performance improved)
+* **[IMPROVEMENT]** Smaller UI changes such as:
+    * Page loading spinner now uses board theme color where applicable
+    * Badges background on dark mode has now 10% alpha value instead 20%
+    * Text shadows (were applicable) now have 4px instead of 3px size
+    * Borders in webhooks creator cards now display properly
+    * Moderative comment icons on dark mode are no longer full color and have transparent background
+    * Removed brightness filter on board banner in dark mode
+    * Changed moderator actions (close/open idea, change tags) icon to animated cog icon
+    * Made more page elements board theme color dependant
+    * Other either quality-of-life improvements or glitches fixes
+* **[IMPROVEMENT]** Social links URLs are now clickable for the whole button not only the icon (reported by Tigerpanzer)
+* **[IMPROVEMENT]** Removed sweetalert2 modals and replaced them with bootstrap alternatives so every modal is now in bootstrap
+* **[IMPROVEMENT]** Added meta description tag and updated other meta tags for SEO purposes
+* **[IMPROVEMENT]** Improved server-side performance and some requests are now returned faster
+* **[IMPROVEMENT]** Replaced infinite scroller library and fixed some known issues with the old library while loading paginated content
+* **[IMPROVEMENT / IN PROGRESS]** Slowly turning away from bootstrap making CSS code base smaller
+* **[CHANGE / CONTROVERSIAL]** Dark mode is now shadowless, every UI element won't have shadow now, previously only forms didn't
+* **[CHANGE / CONTROVERSIAL]** Not upvoted ideas buttons are now in gray color
+* **[CHANGE]** Dark/light mode is no longer toggeable in navbar, you can change it at Settings > Appearance now
+* **[CHANGE]** Replaced previous color palette in theme color selector with more contrast safe colors (to pass AA and/or AAA color contrast standards)
+* **[FIX]** Social links are now properly updated without the need to reload when added/deleted in board admin panel
+* **[FIX]** Theme selection modal in board admin panel didn't work properly
+* **[FIX]** Suspensions feature wouldn't work when day or month number didn't have 2 digits (like 2020-1-1 instead of 2020-01-01)
+* **[FIX]** When creating new webhook only created webhook will receive sample event not every hook at the board
+* **[FIX]** Webhook messages contained user data tag instead of username in tag change webhook messages
+* **[FIX]** Migrator fixes, no more issues with version detection 
+
 ### 0.5.0-beta (December 31, 2020)
 * **[FEATURE]** Added feature to suspend users you don't want to see at your board.
 Feature located under `Suspensions` tab in Admin Panel

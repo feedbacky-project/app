@@ -10,12 +10,15 @@ import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.request.InternalRequestValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.text.MessageFormat;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -36,31 +39,34 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
   @Override
   public FetchUserDto postSubscribe(long id) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(idea.getSubscribers().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is already subscribed by you.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already subscribed.");
     }
-    idea.getSubscribers().add(user);
+    Set<User> subscribers = idea.getSubscribers();
+    subscribers.add(user);
+    idea.setSubscribers(subscribers);
     ideaRepository.save(idea);
-    //no need to expose
-    return user.convertToDto().exposeSensitiveData(false);
+    return new FetchUserDto().from(user);
   }
 
   @Override
   public ResponseEntity deleteSubscribe(long id) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Idea idea = ideaRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Idea with id " + id + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(!idea.getSubscribers().contains(user)) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea with id " + id + " is not subscribed by you.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet subscribed.");
     }
-    idea.getSubscribers().remove(user);
+    Set<User> subscribers = idea.getSubscribers();
+    subscribers.remove(user);
+    idea.setSubscribers(subscribers);
     ideaRepository.save(idea);
     //no need to expose
     return ResponseEntity.noContent().build();

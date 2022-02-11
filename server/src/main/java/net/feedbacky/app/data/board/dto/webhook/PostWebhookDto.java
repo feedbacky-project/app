@@ -4,18 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.feedbacky.app.annotation.enumvalue.EnumValue;
-import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.webhook.Webhook;
+import net.feedbacky.app.exception.FeedbackyRestException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.URL;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 
 import javax.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,14 +39,18 @@ public class PostWebhookDto {
   private List<String> events;
 
   public Webhook convertToEntity(Board board) {
-    for (String event : events) {
+    List<Webhook.Event> webhookEvents = new ArrayList<>();
+    for(String event : events) {
       try {
-        Webhook.Event.valueOf(event);
-      } catch (Exception ex) {
+        webhookEvents.add(Webhook.Event.valueOf(event));
+      } catch(Exception ex) {
         throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid webhook event '" + event + "'.");
       }
     }
-    Webhook webhook = new ModelMapper().map(this, Webhook.class);
+    Webhook webhook = new Webhook();
+    webhook.setUrl(url);
+    webhook.setType(Webhook.Type.valueOf(type));
+    webhook.setEvents(webhookEvents);
     webhook.setBoard(board);
     return webhook;
   }

@@ -1,0 +1,71 @@
+.snackbar-container {
+  transition: all 500ms ease;
+  transition-property: top, right, bottom, left, opacity;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  min-height: 14px;
+  background-color: #343a40;
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 22px;
+  bottom: -100px;
+  top: -100px;
+  opacity: 0;
+  z-index: 9999;
+
+  color: var(--font-color);
+  box-shadow: var(--box-shadow);
+}
+
+.dark .snackbar-container {
+  background-color: var(--secondary);
+}
+
+.snackbar-container .action {
+  background: inherit;
+  display: inline-block;
+  border: none;
+  font-size: inherit;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, .4);
+  margin: 0 0 0 18px;
+  padding: 0 6px;
+  border-radius: var(--border-radius);
+  min-width: min-content;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .snackbar-container {
+    min-width: 150px;
+    max-width: 568px;
+    display: inline-flex;
+    border-radius: var(--border-radius);
+    margin: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .snackbar-container {
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+}
+
+.snackbar-pos.bottom-center {
+  top: auto !important;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 640px) {
+  .snackbar-pos.bottom-center {
+    left: 0;
+    transform: none;
+  }
+}

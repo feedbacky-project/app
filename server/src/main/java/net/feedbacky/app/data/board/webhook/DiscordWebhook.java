@@ -75,7 +75,7 @@ class DiscordWebhook {
       for (EmbedObject embed : this.embeds) {
         JSONObject jsonEmbed = new JSONObject();
 
-        jsonEmbed.put("title", embed.getTitle());
+        jsonEmbed.put("title", StringEscapeUtils.escapeJson(embed.getTitle()));
         jsonEmbed.put("description", StringEscapeUtils.escapeJson(embed.getDescription()));
         jsonEmbed.put("url", embed.getUrl());
         if(embed.getTimestamp() != null) {

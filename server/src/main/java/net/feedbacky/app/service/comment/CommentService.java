@@ -3,8 +3,8 @@ package net.feedbacky.app.service.comment;
 import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
-import net.feedbacky.app.service.FeedbackyService;
 import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * Created at 14.10.2019
  */
-public interface CommentService extends FeedbackyService {
+public interface CommentService {
 
   PaginableRequest<List<FetchCommentDto>> getAllForIdea(long ideaId, int page, int pageSize, SortType sortType);
 
@@ -24,13 +24,13 @@ public interface CommentService extends FeedbackyService {
 
   ResponseEntity<FetchCommentDto> post(PostCommentDto dto);
 
-  FetchUserDto postLike(long id);
+  FetchCommentReactionDto postReaction(long id, String reactionId);
 
   FetchCommentDto patch(long id, PatchCommentDto dto);
 
   ResponseEntity delete(long id);
 
-  ResponseEntity deleteLike(long id);
+  ResponseEntity deleteReaction(long id, String reactionId);
 
   enum SortType {
     NEWEST, OLDEST

@@ -2,14 +2,16 @@ package net.feedbacky.app.controller.idea;
 
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
+import net.feedbacky.app.data.idea.dto.PatchVotersDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
+import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.util.PaginableRequest;
+import net.feedbacky.app.util.RequestParamsParser;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,29 +47,19 @@ public class IdeaRestController {
   }
 
   @GetMapping("v1/boards/{discriminator}/ideas")
-  public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
-    //todo can it be shorter
-    int page = 0;
-    if(requestParams.containsKey("page") && NumberUtils.isDigits(requestParams.get("page"))) {
-      page = Integer.parseInt(requestParams.get("page"));
-      if(page < 0) {
-        page = 0;
-      }
-    }
-    int pageSize = 20;
-    if(requestParams.containsKey("pageSize") && NumberUtils.isDigits(requestParams.get("pageSize"))) {
-      pageSize = Integer.parseInt(requestParams.get("pageSize"));
-      if(pageSize < 1) {
-        pageSize = 1;
-      }
-    }
-    if(requestParams.containsKey("query")) {
-      return ideaService.getAllIdeasContaining(discriminator, page, pageSize, requestParams.get("query"));
-    }
+  public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
+                                                          @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
+    RequestParamsParser parser = new RequestParamsParser(requestParams);
     IdeaService.FilterType filterType = IdeaService.FilterType.OPENED;
     if(requestParams.containsKey("filter")) {
       try {
-        filterType = IdeaService.FilterType.valueOf(requestParams.get("filter").toUpperCase());
+        String filterName = requestParams.get("filter").toUpperCase();
+        String[] filterData = filterName.split(":");
+        if(filterData.length == 2 && filterData[0].equals("TAG")) {
+          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.TAG, Long.parseLong(filterData[1]));
+        } else {
+          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.valueOf(requestParams.get("filter").toUpperCase()), null);
+        }
       } catch(Exception ignoredInvalid) {
       }
     }
@@ -77,12 +70,15 @@ public class IdeaRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    return ideaService.getAllIdeas(discriminator, page, pageSize, filterType, sortType);
+    if(requestParams.containsKey("query")) {
+      return ideaService.getAllIdeasContaining(discriminator, parser.getPage(), parser.getPageSize(), requestParams.get("query"), filterType, sortType, anonymousId);
+    }
+    return ideaService.getAllIdeas(discriminator, parser.getPage(), parser.getPageSize(), filterType, sortType, anonymousId);
   }
 
   @GetMapping("v1/ideas/{id}")
-  public FetchIdeaDto getOne(@PathVariable long id) {
-    return ideaService.getOne(id);
+  public FetchIdeaDto getOne(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
+    return ideaService.getOne(id, anonymousId);
   }
 
   @PostMapping("v1/ideas/")
@@ -101,18 +97,23 @@ public class IdeaRestController {
   }
 
   @GetMapping("v1/ideas/{id}/voters")
-  public List<FetchUserDto> getAllVoters(@PathVariable long id) {
+  public List<FetchSimpleUserDto> getAllVoters(@PathVariable long id) {
     return ideaService.getAllVoters(id);
   }
 
+  @PatchMapping("v1/ideas/{id}/voters")
+  public List<FetchSimpleUserDto> patchVoters(@PathVariable long id, @Valid @RequestBody PatchVotersDto dto) {
+    return ideaService.patchVoters(id, dto);
+  }
+
   @PostMapping("v1/ideas/{id}/voters")
-  public FetchUserDto postUpvote(@PathVariable long id) {
-    return ideaService.postUpvote(id);
+  public FetchUserDto postUpvote(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
+    return ideaService.postUpvote(id, anonymousId);
   }
 
   @DeleteMapping("v1/ideas/{id}/voters")
-  public ResponseEntity deleteUpvote(@PathVariable long id) {
-    return ideaService.deleteUpvote(id);
+  public ResponseEntity deleteUpvote(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
+    return ideaService.deleteUpvote(id, anonymousId);
   }
 
   @PatchMapping("v1/ideas/{id}/tags")

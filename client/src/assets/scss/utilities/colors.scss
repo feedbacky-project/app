@@ -1,0 +1,36 @@
+.text-black-60 {
+  color: hsla(0, 0%, 0%, .6);
+}
+.dark .text-black-60 {
+  color: hsla(0, 0%, 95%, .6) !important;
+}
+
+.text-black-75 {
+  color: hsla(0, 0%, 0%, .75);
+}
+.dark .text-black-75 {
+  color: hsla(0, 0%, 95%, .75) !important;
+}
+
+.text-red {
+  color: hsl(355, 67%, 48%) !important;
+}
+.dark .text-red {
+  color: hsl(2, 95%, 66%) !important;
+}
+
+.text-blue {
+  color: hsl(211, 79%, 43%);
+}
+.dark .text-blue {
+  color: hsl(210, 100%, 60%);
+}
+
+.text-blurred {
+  color: transparent;
+  text-shadow: 0 0 5px hsl(355, 100%, 60%);
+  user-select: none;
+}
+.dark .text-blurred {
+  text-shadow: 0 0 5px hsl(2, 95%, 66%) !important;
+}

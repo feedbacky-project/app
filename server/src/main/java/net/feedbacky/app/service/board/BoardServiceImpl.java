@@ -12,6 +12,7 @@ import net.feedbacky.app.data.tag.dto.PatchTagDto;
 import net.feedbacky.app.data.tag.dto.PostTagDto;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InsufficientPermissionsException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -21,11 +22,15 @@ import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.PaginableRequest;
-import net.feedbacky.app.util.RequestValidator;
+import net.feedbacky.app.util.request.InternalRequestValidator;
+import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
-import net.feedbacky.app.util.mailservice.MailPlaceholderParser;
 import net.feedbacky.app.util.mailservice.MailService;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
+import net.feedbacky.app.util.request.ServiceValidator;
+
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
@@ -38,6 +43,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,27 +76,36 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public PaginableRequest<List<FetchBoardDto>> getAll(int page, int pageSize) {
-    Page<Board> pageData = boardRepository.findAll(PageRequest.of(page, pageSize));
+    Page<Board> pageData = boardRepository.findAll(PageRequest.of(page, pageSize), EntityGraphs.named("Board.fetch"));
     List<Board> boards = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
+    //no confidential data for paginated requests
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
-            boards.stream().map(Board::convertToDto).collect(Collectors.toList()));
+            boards.stream().map(board -> new FetchBoardDto().from(board)).collect(Collectors.toList()));
   }
 
   @Override
   public FetchBoardDto getOne(String discriminator) {
-    Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    return board.convertToDto();
+    User user = null;
+    if(SecurityContextHolder.getContext().getAuthentication() instanceof UserAuthenticationToken) {
+      UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
+    }
+    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.named("Board.fetch"))
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    final User finalUser = user;
+    boolean allowConfidential = board.getCreator().equals(user)
+            || board.getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser) && mod.getRole() == Moderator.Role.ADMINISTRATOR);
+    return new FetchBoardDto().from(board).withConfidentialData(board, allowConfidential);
   }
 
   @Override
   public ResponseEntity<FetchBoardDto> post(PostBoardDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token."));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     if(!user.isServiceStaff()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "You don't have permission to create boards.");
+      throw new InsufficientPermissionsException();
     }
     if(boardRepository.findByDiscriminator(dto.getDiscriminator()).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Board with that discriminator already exists.");
@@ -109,12 +124,12 @@ public class BoardServiceImpl implements BoardService {
     //after save board id is set, so now we can set banners and logos that require board id
     String logoUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getLogo()), ObjectStorage.ImageType.PROJECT_LOGO);
     if(logoUrl.equals("")) {
-      throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board logo due to server side error.");
+      throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Server-side error while uploading logo.");
     }
     board.setLogo(logoUrl);
     String bannerUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getBanner()), ObjectStorage.ImageType.PROJECT_BANNER);
     if(bannerUrl.equals("")) {
-      throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board banner due to server side error.");
+      throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Server-side error while uploading banner.");
     }
     board.setBanner(bannerUrl);
     board = boardRepository.save(board);
@@ -125,19 +140,17 @@ public class BoardServiceImpl implements BoardService {
     node.setUser(user);
     user.getPermissions().add(node);
     userRepository.save(user);
-    return ResponseEntity.status(HttpStatus.CREATED).body(board.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchBoardDto().from(board).withConfidentialData(board, true));
   }
 
   @Override
   public FetchBoardDto patch(String discriminator, PatchBoardDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to patch board with discriminator " + discriminator + ".");
-    }
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
 
     //convert and update base64 images
     if(dto.getBanner() != null) {
@@ -145,7 +158,7 @@ public class BoardServiceImpl implements BoardService {
       objectStorage.deleteImage(board.getBanner());
       String bannerUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getBanner()), ObjectStorage.ImageType.PROJECT_BANNER);
       if(bannerUrl.equals("")) {
-        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board banner due to server side error.");
+        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Server-side error while uploading banner.");
       }
       dto.setBanner(bannerUrl);
     }
@@ -154,7 +167,7 @@ public class BoardServiceImpl implements BoardService {
       objectStorage.deleteImage(board.getLogo());
       String logoUrl = objectStorage.storeImage(Base64Util.extractBase64Data(dto.getLogo()), ObjectStorage.ImageType.PROJECT_LOGO);
       if(logoUrl.equals("")) {
-        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to handle board logo due to server side error.");
+        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Server-side error while uploading logo.");
       }
       dto.setLogo(logoUrl);
     }
@@ -162,30 +175,28 @@ public class BoardServiceImpl implements BoardService {
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, board);
 
-    //sanitize
-    board.setShortDescription(StringEscapeUtils.escapeHtml4(board.getShortDescription()));
-    board.setFullDescription(StringEscapeUtils.escapeHtml4(board.getFullDescription()));
+    //unsanitize and sanitize again
+    //by doing this we ensure that content user sends is raw and then its sanitized once not sent sanitized and sanitized once again
+    board.setShortDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(board.getShortDescription())));
+    board.setFullDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(board.getFullDescription())));
 
     boardRepository.save(board);
-    return board.convertToDto();
+    return new FetchBoardDto().from(board).withConfidentialData(board, true);
   }
 
   @Override
   public ResponseEntity delete(String discriminator) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to delete board with discriminator " + discriminator + ".");
-    }
-
-    MailService.EmailTemplate template = MailService.EmailTemplate.BOARD_DELETED;
-    String subject = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getSubject(), template, board, user, null);
-    String text = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getLegacyText(), template, board, user, null);
-    String html = MailPlaceholderParser.parseAllAvailablePlaceholders(template.getHtml(), template, board, user, null);
-    mailHandler.getMailService().send(board.getCreator().getEmail(), subject, text, html);
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    ServiceValidator.isPermitted(board, Moderator.Role.OWNER, user);
+    new MailBuilder()
+            .withRecipient(board.getCreator())
+            .withEventBoard(board)
+            .withTemplate(MailService.EmailTemplate.BOARD_DELETED)
+            .sendMail(mailHandler.getMailService()).sync();
 
     board.getModerators().forEach(moderator -> {
       User modUser = moderator.getUser();
@@ -202,74 +213,65 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public List<FetchTagDto> getAllTags(String discriminator) {
-    Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    return board.getTags().stream().map(Tag::convertToDto).collect(Collectors.toList());
+    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("tags"))
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    return board.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
   }
 
   @Override
-  public FetchTagDto getTagByName(String discriminator, String name) {
+  public FetchTagDto getTagById(String discriminator, long id) {
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    Tag tag = tagRepository.findByBoardAndName(board, name)
-            .orElseThrow(() -> new ResourceNotFoundException("Tag with name " + name + " does not exist."));
-    return tag.convertToDto();
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    Tag tag = tagRepository.findByBoardAndId(board, id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with id {0} not found.", id)));
+    return new FetchTagDto().from(tag);
   }
 
   @Override
   public ResponseEntity<FetchTagDto> postTag(String discriminator, PostTagDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to post new tags to board with discriminator " + discriminator + ".");
-    }
-    if(board.getTags().size() >= 10) {
-      throw new FeedbackyRestException(HttpStatus.FORBIDDEN, "Cannot add more than 10 tags to the board.");
-    }
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     if(tagRepository.findByBoardAndName(board, dto.getName()).isPresent()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "This tag already exists in the board.");
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Tag with this name already exists.");
     }
     Tag tag = dto.convertToEntity(board);
     tagRepository.save(tag);
-    return ResponseEntity.status(HttpStatus.CREATED).body(tag.convertToDto());
+    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchTagDto().from(tag));
   }
 
   @Override
-  public FetchTagDto patchTag(String discriminator, String name, PatchTagDto dto) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+  public FetchTagDto patchTag(String discriminator, long id, PatchTagDto dto) {
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to patch tags to board with discriminator " + discriminator + ".");
-    }
-    Tag tag = tagRepository.findByBoardAndName(board, name)
-            .orElseThrow(() -> new ResourceNotFoundException("Tag with name " + name + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
+    Tag tag = tagRepository.findByBoardAndId(board, id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with id {0} not found.", id)));
 
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, tag);
 
     tagRepository.save(tag);
-    return tag.convertToDto();
+    return new FetchTagDto().from(tag);
   }
 
   @Override
-  public ResponseEntity deleteTag(String discriminator, String name) {
-    UserAuthenticationToken auth = RequestValidator.getContextAuthentication();
+  public ResponseEntity deleteTag(String discriminator, long id) {
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Board board = boardRepository.findByDiscriminator(discriminator)
-            .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " does not exist."));
-    if(!hasPermission(board, Moderator.Role.OWNER, user)) {
-      throw new InvalidAuthenticationException("No permission to patch tags to board with discriminator " + discriminator + ".");
-    }
-    Tag tag = tagRepository.findByBoardAndName(board, name)
-            .orElseThrow(() -> new ResourceNotFoundException("Tag with name " + name + " does not exist."));
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
+    Tag tag = tagRepository.findByBoardAndId(board, id)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Tag with id {0} not found.", id)));
     board.getIdeas().forEach(idea -> {
       idea.getTags().remove(tag);
       ideaRepository.save(idea);

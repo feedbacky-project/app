@@ -3,6 +3,7 @@ package net.feedbacky.app.data.board.dto.suspended;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import net.feedbacky.app.annotation.date.DateTimestamp;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.suspended.SuspendedUser;
@@ -10,9 +11,10 @@ import net.feedbacky.app.data.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.modelmapper.ModelMapper;
-
 import javax.validation.constraints.NotNull;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * @author Plajer
@@ -32,8 +34,11 @@ public class PostSuspendedUserDto {
   @DateTimestamp
   private String suspensionEndDate;
 
+  @SneakyThrows
   public SuspendedUser convertToEntity(User user, Board board) {
-    SuspendedUser suspendedUser = new ModelMapper().map(this, SuspendedUser.class);
+    SuspendedUser suspendedUser = new SuspendedUser();
+    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    suspendedUser.setSuspensionEndDate(formatter.parse(suspensionEndDate));
     suspendedUser.setBoard(board);
     suspendedUser.setUser(user);
     return suspendedUser;

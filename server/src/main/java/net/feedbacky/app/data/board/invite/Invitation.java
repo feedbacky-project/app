@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.feedbacky.app.data.board.Board;
-import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.user.User;
-
-import org.modelmapper.ModelMapper;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,11 +42,5 @@ public class Invitation implements Serializable {
   @JoinColumn(name = "user_id")
   private User user;
   private String code;
-
-  public FetchInviteDto convertToDto() {
-    FetchInviteDto dto = new ModelMapper().map(this, FetchInviteDto.class);
-    dto.setUser(user.convertToDto().exposeSensitiveData(false).convertToSimpleDto());
-    return dto;
-  }
 
 }

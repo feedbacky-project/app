@@ -1,0 +1,40 @@
+server:
+  compression:
+    enabled: true
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    contextPath: "/api"
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: "off"
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  session:
+    jdbc:
+      initialize-schema: "always"
+  jpa:
+    database-platform: "net.feedbacky.app.config.MySQLCustomDialect"
+    show-sql: false
+    generate-ddl: true
+    properties:
+      hibernate:
+        generate_statistics: false
+        format-sql: false
+    hibernate:
+      ddl-auto: "update"
+  jmx:
+    enabled: false
+  aop:
+    auto: false
+
+logging:
+  level:
+    org:
+      hibernate:
+        stat: "debug"
