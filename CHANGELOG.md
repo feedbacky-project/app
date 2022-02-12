@@ -3,6 +3,7 @@
 * **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
 * **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
 * **[CHANGE/BREAKING]** Overhauled environment variables and moved them into docker-compose.yml file
+* **[FIX]** Reset idea create modal description when posting new idea
 
 ### 1.0.0.RC.0
 * **[FEATURE]** Reactions will now display who reacted

@@ -51,7 +51,6 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
     const [searchTimeout, setSearchTimeout] = useState(null);
 
     const handleSubmit = () => {
-        const description = document.getElementById("descriptionTextarea").value;
         if (title.length < 10) {
             popupWarning("Title should be at least 10 characters long");
             return Promise.resolve();
@@ -75,6 +74,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             }
             popupNotification("Idea posted", getTheme());
             setTitle("");
+            setDescription("");
             onHide();
             onIdeaCreation(res.data);
         });
