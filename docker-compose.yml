@@ -11,7 +11,7 @@ services:
       # Domain or IP address where Feedbacky is hosted, CLIENT_APP_PORT is required here if you don't use port 80 (web port) or domain
       REACT_APP_SERVER_IP_ADDRESS: http://example.com
       # Name of your self hosted Feedbacky service
-      REACT_APP_SERVICE_NAME: Feedbacky
+      REACT_APP_SERVICE_NAME: "Feedbacky"
       # Link to default user avatar image, use %nick% placeholder to replace with User nickname
       REACT_APP_DEFAULT_USER_AVATAR: https://static.plajer.xyz/avatar/generator/%nick%
 
@@ -46,7 +46,7 @@ services:
 
       # >>       MAIL SENDING FEATURE VARIABLES CONFIGURATION (optional)      <<
       # Name of mail sender
-      MAIL_SENDER: Feedbacky <no-reply@feedbacky.net>
+      MAIL_SENDER: "Feedbacky <no-reply@feedbacky.net>"
       # Currently available mail services:
       # * mailgun - https://www.mailgun.com/ (credit card required to set up account) (5k mails for 3 months, then $0.80 per 1k mails)
       # * sendgrid - https://sendgrid.com/ (100 mails per day)
