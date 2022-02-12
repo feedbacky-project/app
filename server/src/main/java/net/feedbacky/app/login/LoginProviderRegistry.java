@@ -44,7 +44,6 @@ public class LoginProviderRegistry {
   private LoginProvider getDataFromMap(Map.Entry<String, Map<String, Map<String, String>>> entry) {
     Map<String, Map<String, String>> internalData = entry.getValue();
     Map<String, String> environmentVariablesMap = internalData.get("environment-variables");
-    boolean enabled = Boolean.parseBoolean(LoginProvider.EnvironmentVariables.readEnvVariable(environmentVariablesMap.get("enabled"), "false"));
     LoginProvider.EnvironmentVariables environmentVariables = new LoginProvider.EnvironmentVariables(
             environmentVariablesMap.get("redirect-uri"),
             environmentVariablesMap.get("client-id"),
@@ -55,7 +54,7 @@ public class LoginProviderRegistry {
     oauthLink = StringUtils.replace(oauthLink, "{CLIENT_ID}", LoginProvider.EnvironmentVariables.readEnvVariable(environmentVariables.getClientId(), ""));
     oauthLink = StringUtils.replace(oauthLink, "{CLIENT_SECRET}", LoginProvider.EnvironmentVariables.readEnvVariable(environmentVariables.getClientSecret(), ""));
     oauthLink = StringUtils.replace(oauthLink, "{REDIRECT_URI}", URLEncoder.encode(
-            LoginProvider.EnvironmentVariables.readEnvVariable(environmentVariables.getRedirectUri()), "UTF-8"));
+            LoginProvider.EnvironmentVariables.readEnvVariable(environmentVariables.getRedirectUri(), ""), "UTF-8"));
     LoginProvider.ProviderData providerData = new LoginProvider.ProviderData(
             providerDataMap.get("name"),
             oauthLink,
@@ -77,7 +76,13 @@ public class LoginProviderRegistry {
             oauthDetailsMap.get("user-url"),
             dataFields
     );
-    return new LoginProvider(entry.getKey(), providerData, enabled, oauthDetails, environmentVariables);
+    return new LoginProvider(entry.getKey(), providerData, isIntegrationEnabled(environmentVariables), oauthDetails, environmentVariables);
+  }
+
+  private boolean isIntegrationEnabled(LoginProvider.EnvironmentVariables env) {
+    return !LoginProvider.EnvironmentVariables.readEnvVariable(env.getClientId(), "").equals("")
+            && !LoginProvider.EnvironmentVariables.readEnvVariable(env.getClientSecret(), "").equals("")
+            && !LoginProvider.EnvironmentVariables.readEnvVariable(env.getRedirectUri(), "").equals("");
   }
 
   public List<LoginProvider> getProviders() {

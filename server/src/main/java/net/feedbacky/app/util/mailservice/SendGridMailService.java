@@ -24,8 +24,8 @@ import java.util.logging.Logger;
  */
 public class SendGridMailService implements MailService {
 
-  private static final String apiKey = System.getenv("MAIL_SENDGRID_API_KEY");
-  private static final String baseUrl = System.getenv("MAIL_SENDGRID_API_BASE_URL");
+  private static final String apiKey = System.getenv("MAIL_SERVICE_API_KEY");
+  private static final String baseUrl = System.getenv("MAIL_SERVICE_API_BASE_URL");
   private static final String mailSender = System.getenv("MAIL_SENDER");
 
   @Override

@@ -13,8 +13,8 @@ import java.util.logging.Logger;
  */
 public class MailgunMailService implements MailService {
 
-  private static final String apiKey = System.getenv("MAIL_MAILGUN_API_KEY");
-  private static final String baseUrl = System.getenv("MAIL_MAILGUN_API_BASE_URL");
+  private static final String apiKey = System.getenv("MAIL_SERVICE_API_KEY");
+  private static final String baseUrl = System.getenv("MAIL_SERVICE_API_BASE_URL");
   private static final String mailSender = System.getenv("MAIL_SENDER");
 
   @Override
