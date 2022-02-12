@@ -1,9 +1,10 @@
 ### 1.0.0.RC.1
 * **[FEATURE]** Display toast messages when page is loading for too long
+* **[FEATURE]** Display all voters in a modal when clicking `+X more` text (requested at [Feedbacky](https://app.feedbacky.net/i/show-modal-with-all-voters.4046))
 * **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
 * **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
 * **[CHANGE/BREAKING]** Overhauled environment variables and moved them into docker-compose.yml file
-* **[FIX]** Reset idea create modal description when posting new idea
+* **[FIX]** Reset idea create modal description when posting new idea (reported at [Feedbacky](https://app.feedbacky.net/i/reset-description-field-on-new-idea.4045))
 
 ### 1.0.0.RC.0
 * **[FEATURE]** Reactions will now display who reacted

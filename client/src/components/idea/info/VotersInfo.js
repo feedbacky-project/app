@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
+import VotersViewModal from "components/idea/info/VotersViewModal";
 import {IdeaContext} from "context";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {FaRegFrown} from "react-icons/all";
 import {UiLoadingSpinner, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
@@ -10,6 +11,7 @@ const MoreVotersText = styled.span`
   margin-left: 10px;
   font-size: 13px;
   display: inline;
+  cursor: pointer;
 `;
 
 const LoadingVoter = styled(UiLoadingSpinner)`
@@ -28,6 +30,7 @@ const Voter = styled(UiAvatar)`
 `;
 
 const VotersInfo = ({data}) => {
+    const [open, setOpen] = useState(false);
     const {votersAmount} = useContext(IdeaContext).ideaData;
     const renderVoters = () => {
         if (!data.loaded) {
@@ -64,9 +67,10 @@ const VotersInfo = ({data}) => {
         if (amount <= 5) {
             return;
         }
-        return <MoreVotersText> + {amount - 5} more</MoreVotersText>
+        return <MoreVotersText onClick={() => setOpen(true)}> + {amount - 5} more</MoreVotersText>
     };
     return <React.Fragment>
+        <VotersViewModal votersData={data.data} isOpen={open} onHide={() => setOpen(false)}/>
         <div className={"text-black-75"}>Voters ({votersAmount} votes)</div>
         {renderVoters()}
     </React.Fragment>
