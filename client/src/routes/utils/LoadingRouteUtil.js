@@ -14,7 +14,7 @@ const LoadingRouteUtil = () => {
             } else if (number % 5 === 1) {
                 message = "You shouldn't see this unless API is down or slow to respond.";
             } else if (number % 5 === 2) {
-                message = "Did you know that Feedbacky was initially made for a private needs?";
+                message = "Did you know that Feedbacky was initially made for private needs?";
             } else if (number % 5 === 3) {
                 message = "Did you know that you can access hidden UI test page at /-/ui-test";
             } else if (number % 5 === 4) {
