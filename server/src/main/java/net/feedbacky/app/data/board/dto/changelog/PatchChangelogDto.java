@@ -21,7 +21,7 @@ public class PatchChangelogDto {
 
   @Size(min = 10, max = 70, message = "Name must be longer than 10 and shorter than 70 characters.")
   private String title;
-  @Size(min = 20, max = 1800, message = "Short description must be longer than 20 and shorter than 1800 characters.")
+  @Size(min = 20, max = 2500, message = "Short description must be longer than 20 and shorter than 2500 characters.")
   private String description;
 
 }

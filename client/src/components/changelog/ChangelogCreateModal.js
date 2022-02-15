@@ -64,7 +64,7 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
                                    onChange={e => {
                                        e.target.value = e.target.value.substring(0, 2500);
                                        formatRemainingCharacters("remainingDescription", "descriptionTextarea", 2500);
-                                       setDescription(e.target.value.substring(0, 1800));
+                                       setDescription(e.target.value.substring(0, 2500));
                                    }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 2500 Remaining

@@ -56,11 +56,11 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
         <div className={"my-2"}>
             <UiFormLabel>Description</UiFormLabel>
             <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} defaultValue={htmlDecodeEntities(changelog.description)} id={"descriptionTextarea"} rows={5} maxRows={10}
-                                   placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
+                                   placeholder={"Detailed and meaningful description."} minLength={10} maxLength={2500} required
                                    style={{resize: "none", overflow: "hidden"}}
                                    onChange={e => {
-                                       e.target.value = e.target.value.substring(0, 1800);
-                                       formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
+                                       e.target.value = e.target.value.substring(0, 2500);
+                                       formatRemainingCharacters("remainingDescription", "descriptionTextarea", 2500);
                                    }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 1800 Remaining
