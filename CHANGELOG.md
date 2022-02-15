@@ -4,6 +4,7 @@
 * **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
 * **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
 * **[FIX]** Reset idea create modal description when posting new idea (reported at [Feedbacky](https://app.feedbacky.net/i/reset-description-field-on-new-idea.4045))
+* **[FIX]** `and X more` message didn't appear properly
 
 ### 1.0.0.RC.0
 * **[FEATURE]** Reactions will now display who reacted

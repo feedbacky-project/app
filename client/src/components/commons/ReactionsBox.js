@@ -50,6 +50,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
             let i = 0;
             reactions.forEach(r => {
                 if(i >= 3) {
+                    i++;
                     return;
                 }
                 whoReacted += r.user.username + ", ";
@@ -57,7 +58,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
             });
             whoReacted = whoReacted.substring(0, whoReacted.length - 2);
             if(i > 3) {
-                whoReacted += " and " + (reactions.length - i) + " more";
+                whoReacted += " and " + (reactions.length - 3) + " more";
             }
             whoReacted += " reacted with " + emote.name;
             return <LoadableReaction isSelected={selected} onReact={() => onReaction(emote.id)}>
