@@ -12,9 +12,9 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
     const {getTheme} = useContext(AppContext);
     const {discriminator} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
 
     const handleSubmit = () => {
-        const description = document.getElementById("descriptionTextarea").value;
         if (title.length < 10) {
             popupWarning("Title should be at least 10 characters long");
             return Promise.resolve();
@@ -32,6 +32,7 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
             }
             popupNotification("Changelog posted", getTheme());
             setTitle("");
+            setDescription("");
             onHide();
             onChangelogCreation(res.data);
         });
@@ -57,12 +58,13 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
         <br/>
         <div className={"my-2"}>
             <UiFormLabel>Description</UiFormLabel>
-            <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} id={"descriptionTextarea"} rows={5} maxRows={10}
+            <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} id={"descriptionTextarea"} rows={5} maxRows={10} defaultValue={description}
                                    placeholder={"Detailed and meaningful description."} minLength={10} maxLength={2500} required
                                    style={{resize: "none", overflow: "hidden"}}
                                    onChange={e => {
                                        e.target.value = e.target.value.substring(0, 2500);
                                        formatRemainingCharacters("remainingDescription", "descriptionTextarea", 2500);
+                                       setDescription(e.target.value.substring(0, 1800));
                                    }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 2500 Remaining
