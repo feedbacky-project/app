@@ -30,8 +30,8 @@ public class WebhookDataBuilder {
     data.put(WebhookExecutor.WebhookMapData.IDEA_NAME.getName(), idea.getTitle());
     data.put(WebhookExecutor.WebhookMapData.IDEA_TITLE.getName(), StringEscapeUtils.unescapeHtml4(idea.getTitle()));
     data.put(WebhookExecutor.WebhookMapData.IDEA_DESCRIPTION.getName(), StringEscapeUtils.unescapeHtml4(idea.getDescription()));
-    data.put(WebhookExecutor.WebhookMapData.IDEA_LINK.getName(), idea.toViewLink());
     data.put(WebhookExecutor.WebhookMapData.IDEA_ID.getName(), String.valueOf(idea.getId()));
+    data.put(WebhookExecutor.WebhookMapData.VIEW_LINK.getName(), idea.toViewLink());
     return this;
   }
 
@@ -48,7 +48,8 @@ public class WebhookDataBuilder {
 
   public WebhookDataBuilder withChangelog(Changelog changelog) {
     //substitute idea link with changelog link
-    data.put(WebhookExecutor.WebhookMapData.IDEA_LINK.getName(), changelog.getBoard().toViewLink() + "/changelog");
+    data.put(WebhookExecutor.WebhookMapData.VIEW_LINK.getName(), changelog.getBoard().toViewLink() + "/changelog?changelogId=" + changelog.getId());
+    data.put(WebhookExecutor.WebhookMapData.CHANGELOG_ID.getName(), String.valueOf(changelog.getId()));
     data.put(WebhookExecutor.WebhookMapData.CHANGELOG_NAME.getName(), changelog.getTitle());
     data.put(WebhookExecutor.WebhookMapData.CHANGELOG_DESCRIPTION.getName(), changelog.getDescription());
     return this;

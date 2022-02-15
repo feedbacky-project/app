@@ -54,7 +54,7 @@ public class WebhookExecutor {
     if(event == Webhook.Event.IDEA_DELETE) {
       url = MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator();
     } else {
-      url = data.get(WebhookMapData.IDEA_LINK.getName());
+      url = data.get(WebhookMapData.VIEW_LINK.getName());
     }
     DiscordWebhook.EmbedObject embedBuilder = new DiscordWebhook.EmbedObject()
             .setColor(Color.decode(board.getThemeColor()))
@@ -80,7 +80,7 @@ public class WebhookExecutor {
       case CHANGELOG_CREATE:
         embedBuilder.setDescription("**`Description`**\n" + data.get(WebhookMapData.CHANGELOG_DESCRIPTION.getName()))
                 .setTitle(event.getFormattedMessage(data.getOrDefault(WebhookMapData.CHANGELOG_NAME.getName(), "")))
-                .setUrl(MailService.HOST_ADDRESS + "/b/" + board.getDiscriminator() + "/changelog");
+                .setUrl(data.get(WebhookMapData.VIEW_LINK.getName()));
         break;
     }
     switch(event) {
@@ -117,8 +117,8 @@ public class WebhookExecutor {
 
   public enum WebhookMapData {
     USER_NAME("user_name"), USER_AVATAR("user_avatar"), USER_ID("user_id"), IDEA_NAME("idea_name"), IDEA_TITLE("idea_title"),
-    IDEA_DESCRIPTION("idea_description"), IDEA_LINK("idea_link"), IDEA_ID("idea_id"), COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"),
-    TAGS_CHANGED("tags_changed"), CHANGELOG_NAME("changelog_name"), CHANGELOG_DESCRIPTION("changelog_description");
+    IDEA_DESCRIPTION("idea_description"), VIEW_LINK("view_link"), IDEA_ID("idea_id"), COMMENT_DESCRIPTION("comment_description"), COMMENT_ID("comment_id"),
+    TAGS_CHANGED("tags_changed"), CHANGELOG_ID("changelog_id"), CHANGELOG_NAME("changelog_name"), CHANGELOG_DESCRIPTION("changelog_description");
 
     private final String name;
 

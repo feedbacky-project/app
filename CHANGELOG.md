@@ -3,6 +3,7 @@
 * **[FEATURE]** Display all voters in a modal when clicking `+X more` text (requested at [Feedbacky](https://app.feedbacky.net/i/show-modal-with-all-voters.4046))
 * **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
 * **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
+* **[IMPROVEMENT]** Webhooks will now assign changelog id to link to use latest scroll to changelog feature
 * **[FIX]** Reset idea create modal description when posting new idea (reported at [Feedbacky](https://app.feedbacky.net/i/reset-description-field-on-new-idea.4045))
 * **[FIX]** `and X more` message didn't appear properly
 * **[FIX]** Changelog create modal didn't preserve description on close (reported at [Feedbacky](https://app.feedbacky.net/i/changelog-create-modal-issue.4075))
