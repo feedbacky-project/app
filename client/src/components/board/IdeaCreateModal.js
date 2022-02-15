@@ -75,6 +75,10 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             popupNotification("Idea posted", getTheme());
             setTitle("");
             setDescription("");
+            setAttachment(null);
+            setAttachmentName("No Attachment");
+            setChosenTags([]);
+            setSimilarIdeas(0);
             onHide();
             onIdeaCreation(res.data);
         });

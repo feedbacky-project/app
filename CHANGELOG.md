@@ -7,6 +7,7 @@
 * **[FIX]** Reset idea create modal description when posting new idea (reported at [Feedbacky](https://app.feedbacky.net/i/reset-description-field-on-new-idea.4045))
 * **[FIX]** `and X more` message didn't appear properly
 * **[FIX]** Changelog create modal didn't preserve description on close (reported at [Feedbacky](https://app.feedbacky.net/i/changelog-create-modal-issue.4075))
+* **[FIX]** Idea create modal didn't reset chosen tags and added attachment values (reported by [Tigerpanzer_02](https://app.feedbacky.net/i/new-idea-does-not-clear-previosly-used-values.4060))
 
 ### 1.0.0.RC.0
 * **[FEATURE]** Reactions will now display who reacted
