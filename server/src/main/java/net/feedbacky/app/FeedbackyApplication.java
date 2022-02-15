@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 public class FeedbackyApplication {
 
-  public static final String BACKEND_VERSION = "1.0.0.RC.0";
+  public static final String BACKEND_VERSION = "1.0.0.RC.1";
   private static boolean devMode = false;
 
   public static void main(String[] args) {
