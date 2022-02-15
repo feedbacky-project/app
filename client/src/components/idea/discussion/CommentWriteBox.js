@@ -6,7 +6,7 @@ import TextareaAutosize from "react-autosize-textarea";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiPrettyUsername} from "ui";
 import {UiLoadableButton} from "ui/button";
-import {UiFormControl} from "ui/form";
+import {UiFormControl, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {popupError, popupWarning} from "utils/basic-utils";
@@ -93,7 +93,7 @@ const CommentWriteBox = ({onCommentSubmit}) => {
           return <UiFormControl disabled className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Commenting restricted to moderators only."}
                                 style={{overflow: "hidden"}} label={"Commenting restricted"}/>;
       }
-      return <UiFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
+      return <UiMarkdownFormControl as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
                             style={{overflow: "hidden"}} onChange={onChange} label={"Write a comment"} onClick={onClick}/>;
     };
     return <WriteBox xs={10}>

@@ -1,6 +1,6 @@
 import axios from "axios";
-import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import VoteButton from "components/commons/VoteButton";
 import AssigneeInfo from "components/idea/info/AssigneeInfo";
 import AttachmentsInfo from "components/idea/info/AttachmentsInfo";
@@ -14,7 +14,7 @@ import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState}
 import TextareaAutosize from "react-autosize-textarea";
 import {useHistory} from "react-router-dom";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
-import {UiFormControl} from "ui/form";
+import {UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
 
@@ -84,12 +84,12 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
-                           placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
-                           style={{resize: "none", overflow: "hidden"}} defaultValue={editor.value}/>
+            <UiMarkdownFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
+                                   placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
+                                   style={{resize: "none", overflow: "hidden"}} defaultValue={editor.value}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} small onClick={onEditApply}>Save</UiLoadableButton>
-                <UiCancelButton small onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
+                <UiCancelButton className={"ml-1"} small onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
             </div>
         </React.Fragment>
     };
