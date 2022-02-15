@@ -46,7 +46,15 @@ const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
         </InfiniteScroll>
     };
     const onIdeaCreation = (data) => {
-        setIdeas({...ideas, data: [data, ...ideas.data]});
+        let index = 0;
+        ideas.data.forEach(i => {
+            if(i.pinned) {
+                index++;
+            }
+        });
+        //splice does modify already but we need to update state as well
+        ideas.data.splice(index, 0, data);
+        setIdeas({...ideas, data: ideas.data});
         setScrollTo(data.id);
     };
     const onIdeaDelete = (id) => {

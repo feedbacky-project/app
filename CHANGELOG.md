@@ -4,6 +4,7 @@
 * **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
 * **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
 * **[IMPROVEMENT]** Webhooks will now assign changelog id to link to use latest scroll to changelog feature
+  * **[CHANGE]** Newly created idea will now display under pinned ones as it should (reported by [Tigerpanzer_02](https://app.feedbacky.net/i/new-ideas-get-added-over-pinned-idea.4059))
 * **[FIX]** Reset idea create modal description when posting new idea (reported at [Feedbacky](https://app.feedbacky.net/i/reset-description-field-on-new-idea.4045))
 * **[FIX]** `and X more` message didn't appear properly
 * **[FIX]** Changelog create modal didn't preserve description on close (reported at [Feedbacky](https://app.feedbacky.net/i/changelog-create-modal-issue.4075))
