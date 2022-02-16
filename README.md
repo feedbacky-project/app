@@ -1,6 +1,8 @@
 <!-- TOP -->
 <div id="top"></div>
 
+<p align="center">(<a href="#bottom">Go to bottom</a>)</p>
+
 <!-- BRAND -->
 <br />
 <div align="center">
@@ -29,22 +31,14 @@
     <p>Collect feedback from people easily and improve your business with Free and Open Source <img src="https://feedbacky.net/img/logo.webp" height="14px" widht="14px"></a></img> <b>Feedbacky</b> software.</p>
    <img src="https://1643634701-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FcPPCzsC9ZnbWPO53tirc%2Fuploads%2FfpLcoDSOfZtPs6HYnML3%2Fimage.png?alt=media&token=cc24cd1a-744e-44b8-b218-ad1c95fb7c27" alt="A Feedbacky board" height="" widht=""></img>
 </div>
-
 <!-- GETTING STARTED -->
 <br />
 <h2>Getting Started</h2>
 
-<!-- CONTRIBUTORS -->
-<h2>Contributors</h2>
+<p align="center">(<a href="#top">Go back to top</a>)</p>
 
-<!-- SPONSORS -->
-<h2>Sponsors</h2>
-
-<!-- LICENSE -->
-<h2>License</h2>
-
-<!-- ATTRIBUTION -->
-<h2>Attribution</h2>
+<!-- TOP -->
+<div id="bottom"></div>
 
 <!-- MARKDOWN LINKS -->
 [dockerShield]: https://img.shields.io/static/v1?style=for-the-badge&logoColor=white&logo=Docker&label=&message=DOCKER%20HUB&color=0db7ed
@@ -55,5 +49,5 @@
 [licenseURL]: https://github.com/feedbacky-project/app/blob/master/LICENSE.txt
 [contribShield]: https://img.shields.io/github/contributors/feedbacky-project/app.svg?style=for-the-badge&labelColor=ecf0f1&color=007bff
 [contribURL]: https://github.com/feedbacky-project/app/graphs/contributors
-[discordShield]: https://img.shields.io/badge/dynamic/json?style=for-the-badge&logoColor=white&logo=Discord&labelColor=5865F2&label=&color=5865F2&suffix=%20ONLINE&query=approximate_member_count&url=https://discord.com/api/invites/6qCnKh5?with_counts=true&link=
+[discordShield]: https://img.shields.io/badge/dynamic/json?style=for-the-badge&logoColor=white&logo=Discord&labelColor=5865F2&label=&color=5865F2&suffix=%20MEMBERS&query=approximate_member_count&url=https://discord.com/api/invites/6qCnKh5?with_counts=true&link=
 [discordURL]: https://discord.com/invite/6qCnKh5?
