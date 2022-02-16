@@ -1,3 +1,6 @@
+### 1.0.0.RC.2
+* **[FEATURE]** Board and account deletion modals now contain checkboxes to agree that you delete board/account (requested by [Matou0014](https://app.feedbacky.net/i/hardened-board-deletion.4089))
+
 ### 1.0.0.RC.1
 * **[FEATURE]** Display toast messages when page is loading for too long
 * **[FEATURE]** Display all voters in a modal when clicking `+X more` text (requested at [Feedbacky](https://app.feedbacky.net/i/show-modal-with-all-voters.4046))
