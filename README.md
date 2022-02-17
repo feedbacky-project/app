@@ -119,21 +119,17 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 <br />
 <div id="sponsors">
 <h2>Sponsors</h2>
-    <p><i>Want to sponsor Feedbacky? Contact us using the options available at https://plajer.xyz/.</i></p>
-  <table>
+  <table>   
     <tr>
-        <td>Company</td>
-        <td>About</td>
-    </tr>   
-    <tr>
-      <td><a href="https://billing.senior-host.com/link.php?id=1"><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="16px" width="16px"><b>Senior Hosting</b></a></td>
-      <td>Affordable, high-performance Virtual Private Servers (VPS) and Minecraft/Discord bot hosting. <br><i>Get 10% off using code FEEDBACKY.</i></td>
+      <td><a href="https://billing.senior-host.com/link.php?id=1"><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="19px" width="19px"><b> Senior Hosting </b></a></td>
+      <td>Affordable, high-performance VPS with Minecraft/Discord bot hosting. <br><i>Get 10% off using code FEEDBACKY.</i></td>
     </tr>
     <tr>
-      <td><a href="https://plugily.xyz/?source=Feedbacky"><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="16px" width="16px"><b>Plugily Projects</b></a></td>
+      <td><a href="https://plugily.xyz/?source=Feedbacky"><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="19px" width="19px"><b> Plugily Projects </b></a></td>
       <td>Creating a better future by developing something beneficial for everyone.</td>
     </tr>
-  </table>   
+  </table>
+    <p><i>Become a Feedbacky <a href=""> sponsor</a>.</i></p>
 </div>
 
 <!--- Legal ---->
