@@ -1,7 +1,7 @@
 <!--- Bottom Scroll ---->
 <div id="bottom">
     <p align="center">
-        (<a href="#star">Go to bottom</a>)
+        (<a href="#legal">Go to bottom</a>)
     </p>
 </div>
 
