@@ -119,17 +119,21 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 <br />
 <div id="sponsors">
 <h2>Sponsors</h2>
+    <p><i>Want to sponsor Feedbacky? Contact us using the options available at https://plajer.xyz/.</i></p>
   <table>
+    <tr>
+        <td>Company</td>
+        <td>About</td>
+    </tr>   
     <tr>
       <td><a href=""><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="19px" width="19px"><b> Senior Hosting</b></a></td>
       <td>Affordable, high-performance Virtual Private Servers (VPS) and Minecraft/Discord bot hosting. <br><i>Get 10% off using code FEEDBACKY.</i></td>
     </tr>
     <tr>
-      <td><a href=""><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="19px" width="19px"><b> Plugily Projects</b></a></td>
+      <td><a href=""><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="16" width="19px"><b> Plugily Projects</b></a></td>
       <td>Creating a better future by developing something beneficial for everyone.</td>
     </tr>
-  </table>
- <p><i>Want to sponsor Feedbacky? Contact us using the options available at https://plajer.xyz/.</i></p>    
+  </table>   
 </div>
 
 <!--- Legal ---->
