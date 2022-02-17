@@ -1,6 +1,7 @@
 import axios from "axios";
 import ConfirmationActionModal from "components/commons/modal/ConfirmationActionModal";
 import ComponentLoader from "components/ComponentLoader";
+import AccountDeleteModal from "components/profile/AccountDeleteModal";
 import AvatarSelectionModal from "components/profile/AvatarSelectionModal";
 import {AppContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
@@ -82,13 +83,7 @@ const SettingsSubroute = () => {
                     setAvatar(av);
                 }}/>
             } loader={<React.Fragment/>}/>
-            <ConfirmationActionModal id={"accDel"} isOpen={modal.open && modal.type === "anonymize"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Deactivate"} onAction={onAccountDeactivation}
-                                     confirmText={user.data.email} confirmFailMessage={"Type your email properly."}
-                                     actionDescription={<div>
-                                         <strong>This is one-way road</strong> your account will be <strong>fully anonymized</strong> but your content on the page will be kept.
-                                         <div>You won't be able to log-in to this account anymore.</div>
-                                         <div>Type uncensored <UiKeyboardInput>{hideMail(user.data.email)}</UiKeyboardInput> to continue.</div>
-                                     </div>}/>
+            <AccountDeleteModal isOpen={modal.open && modal.type === "anonymize"} user={user} onHide={() => setModal({...modal, open: false})} onAction={onAccountDeactivation}/>
             <UiCol xs={{span: 12, order: 2}} lg={{span: 6, order: 1}}>
                 <UiFormLabel className={"mt-lg-0 mt-2"}>Username</UiFormLabel>
                 <UiCountableFormControl id={"usernameTextarea"} className={"bg-light"} defaultValue={user.data.username} minLength={4} maxLength={20} placeholder={"Name of your account."}

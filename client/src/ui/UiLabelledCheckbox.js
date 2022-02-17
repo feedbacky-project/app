@@ -89,7 +89,7 @@ const UiLabelledCheckbox = (props) => {
                 <polyline points="1 9 7 14 15 4"/>
             </svg>
         </StyledLabel>
-        <div className={"d-inline-block align-top"}>{label}</div>
+        <div className={"d-inline-block align-top"}>{label || props.children}</div>
     </StyledElement>
 };
 

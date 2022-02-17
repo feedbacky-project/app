@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import axios from "axios";
+import BoardDeleteModal from "components/board/admin/BoardDeleteModal";
 import ThemeSelectionModal from "components/board/admin/ThemeSelectionModal";
 import {Banner} from "components/board/BoardBanner";
 import ColorPickerContainer from "components/commons/ColorPickerContainer";
-import ConfirmationActionModal from "components/commons/modal/ConfirmationActionModal";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import UploadIconBox from "components/commons/UploadIconBox";
 import {AppContext, BoardContext, PageNodesContext} from "context";
@@ -375,12 +375,7 @@ const GeneralSubroute = ({updateState}) => {
                               actionDescription={<div>You won't be able to use Public Feedbacky API anymore.</div>} actionButtonName={"Disable"}/>
         <DangerousActionModal id={"apiEnable"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "apiEnable"} onAction={onApiKeyEnable}
                               actionDescription={<div>Once you activate API key you can disable or regenerate it later. You'll get access to Public Feedbacky API with it.</div>} actionButtonName={"Enable"}/>
-        <ConfirmationActionModal id={"boardDel"} actionButtonName={"Delete Now"} isOpen={modal.open && modal.type === "delete"} onAction={onBoardDelete} onHide={() => setModal({...modal, open: false})}
-                                 actionDescription={<div>
-                                     <strong>This is one-way road</strong> and your board and all the data <strong>will be permanently deleted.</strong>
-                                     <div>Are you really sure?</div>
-                                     <div>Type <UiKeyboardInput>{boardData.name}</UiKeyboardInput> to continue.</div>
-                                 </div>} confirmText={boardData.name} confirmFailMessage={"Type valid board name."}/>
+        <BoardDeleteModal isOpen={modal.open && modal.type === "delete"} onAction={onBoardDelete} onHide={() => setModal({...modal, open: false})} boardData={boardData}/>
         <UiViewBox title={"General Settings"} description={"Configure your board base settings here."}>
             {renderContent()}
         </UiViewBox>
