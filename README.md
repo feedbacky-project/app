@@ -1,7 +1,7 @@
 <!--- Bottom Scroll ---->
 <div id="bottom">
     <p align="center">
-        (<a href="#bottom">Go to bottom</a>)
+        (<a href="#star">Go to bottom</a>)
     </p>
 </div>
 
@@ -27,16 +27,6 @@
   </div>
 </div>
 
-<!--- Slogan ---->
-<br />
-<div id="slogan">
-  <div align="center">
-    <h1>Understand your users' needs.</h1>
-      <p>Collect feedback from people easily while also improving your bussiness with <img src="https://feedbacky.net/img/logo.webp" height="16px" width="16px"><b> Feedbacky</b>, a free and open source software.</p>
-      <img src="https://feedbacky.net/img/features/v1/board.webp" alt="The looks of a board.">        
-  </div>
-</div>
-
 <!--- Links ---->
 <!---
 Section inspired by https://github.com/othneildrew/Best-README-Template!
@@ -44,19 +34,38 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 <div id="links">
   <div align="center">
   <br />
-    <a href="https://docs.feedbacky.net/"><strong>See the documentation »</strong></a>
+    <a href="https://docs.feedbacky.net/"><b>Documentation »</b></a>
   <br />
   <br />
     <a href="https://app.feedbacky.net/b/feedbacky-demo">Demo Board</a>
     ·
-    <a href="https://github.com/feedbacky-project/app/issues/new?assignees=&labels=bug&template=bug_report.yml">Report a Bug</a>
+    <a href="https://github.com/feedbacky-project/app/issues/new?assignees=&labels=bug&template=bug_report.yml">Bug Report</a>
     ·
-    <a href="https://app.feedbacky.net/b/feedbacky-official">Request a Feature</a>
+    <a href="https://app.feedbacky.net/b/feedbacky-official">Feedback</a>
+    ·
+    <a href="https://status.feedbacky.net">Status</a>
   </div>
 </div>
 
-<!--- Getting Started ---->
+<!--- Slogan ---->
 <br />
+<div id="slogan">
+  <div align="center">
+    <h1>Understand your users' needs.</h1>
+      <p>Collect feedback from people easily while also improving your bussiness with <img src="https://feedbacky.net/img/logo.webp" height="16px" width="16px"><b> Feedbacky</b>, a free and open source software.</p>     
+      <img src="https://feedbacky.net/img/features/v1/board.webp" alt="The looks of a board.">      
+  </div>
+</div>
+
+<!--- Star ---->
+<br />
+<div id="star">
+    <div align="center">
+        <p>Consider leaving a ⭐️ if you enjoy Feedbacky!</p>
+    </div>
+</div>
+
+<!--- Getting Started ---->
 <div id="gettingstarted">
 <h2>Getting Started</h2>
   <p>Interested in having your own Feedbacky instance? Awesome! There are 2 ways in which you can do so;</p>
@@ -74,17 +83,16 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 <div id="cases">
 <h2>Case Studies</h2>
   <p>See how Feedbacky helps others with their products.</p>
-    <h3><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="19px" width="19px"> <b>Arceon</b></h3>
+    <h3><img src="https://static.plajer.xyz/feedbacky/img/projects/logos/arceon.png" height="19px" width="19px"> <b>Arceon</b></h3>
     <p>Arcaniax Brennian uses Feedbacky to <b>improve their Arceon Minecraft plugin</b>;</p>
     <blockquote>
     I use Feedbacky for feedback on existing tools and also new tool ideas for my Patreon exclusive plugin called Arceon which features a lot of building tools.
     </blockquote>
     <list>
-      <li>
-        <a href="">Official board</a>
-      </li>
-    </list>
-    <br>
+        <ul>
+            <li><a href="">Official board</a></li>
+        </ul>         
+    </list>        
   <p><i>See more <a href="">case studies</a>.</i></p>
 </div>
   
@@ -98,36 +106,46 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
     
   <h3>Contributing</h3>
   <p>We encourage everyone to contribute, thuss making Feedbacky better with the help of our community. Follow our <a href="/CONTRIBUTING.md">Contributing guidelines</a> if you are interested!</a></p>
-  <h3>Additional Resources</h3>
-  <list>
-    <li>
-      <a href="https://status.feedbacky.net">Status</a>
-     </li>
-  </list>
-</div>  
+</div>
   
 <!--- Donating ---->
 <br />
 <div id="donating">
 <h2>Donating</h2>
-  <p>Consider supporting the development of Feedbacky by <a href="">donating</a>, funds helps pay for hosting.</p>
+  <p>Consider supporting the development of Feedbacky by making a <a href="">donation</a>!</p>
 </div>
-  
+
 <!--- Sponsors ---->
 <br />
 <div id="sponsors">
 <h2>Sponsors</h2>
   <table>
     <tr>
-      <td><h4><a href=""><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="19px" width="19px"><b> Senior Hosting</b></a></h4></td>
+      <td><a href=""><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="19px" width="19px"><b> Senior Hosting</b></a></td>
       <td>Affordable, high-performance Virtual Private Servers (VPS) and Minecraft/Discord bot hosting. <br><i>Get 10% off using code FEEDBACKY.</i></td>
     </tr>
     <tr>
-      <td><h4><a href=""><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="19px" width="19px"><b> Plugily Projects</b></a></h4></td>
+      <td><a href=""><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="19px" width="19px"><b> Plugily Projects</b></a></td>
       <td>Creating a better future by developing something beneficial for everyone.</td>
     </tr>
   </table>
- <p>Interested in sponsoring Feedbacky? Use one of the contact options available at https://plajer.xyz/.</p>    
+ <p><i>Want to sponsor Feedbacky? Contact us using the options available at https://plajer.xyz/.</i></p>    
+</div>
+
+<!--- Legal ---->
+<br />
+<div id="legal">
+<h2>Legal</h2>
+    <h3>Attributions</h3>
+    <list>
+        <ul>
+            <li>Icons found at <code>/src/views/admin/subviews/webhook/steps/StepSecond.jsx</code> by <a href="https://www.flaticon.com/authors/prosymbols">Prosymbols</a> at <a href="https://www.flaticon.com/">Flaticon</a>.</li>
+            <li>Some SVG illustrations are provided by <a href="https://undraw.co/">unDraw</a>.</li>
+            <li>Design system used in project is provided by <a href="https://getbootstrap.com/">Bootstrap</a>.</li>
+        </ul> 
+    </list>
+    <h3>License</h3>
+    <p>Feedbacky is free and open source software under the <a href="/LICENSE.md">MIT License</a>.</p>
 </div>
 
 <!--- Back to top ---->
