@@ -38,6 +38,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
         }
     };
     let moreReactionsToAdd = false;
+    let i = 0;
     return <div className={className}>
         {serviceData.emojisData.map(emote => {
             let reactions = reactionsData.filter(r => r.reactionId === emote.id) || [];
@@ -72,15 +73,20 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
         })}
         {
             moreReactionsToAdd &&
-            <UiDropdown label={"Reactions"} className={"d-inline-block"} toggleClassName={"p-0"} toggle={<AddReaction/>}>
+            <UiDropdown label={"Reactions"} className={"d-inline-block"} toggleClassName={"p-0"} toggle={<AddReaction/>} style={{minWidth: "6.5rem"}}>
+                <div className={"font-weight-bold text-center small mb-2"}>Pick a Reaction</div>
                 {serviceData.emojisData.map(emote => {
                     let reactions = reactionsData.filter(r => r.reactionId === emote.id) || [];
                     if (reactions.length !== 0) {
                         return <React.Fragment/>
                     }
-                    return <UiDropdownElement className={"d-inline"} onClick={() => onReaction(emote.id)}>
-                        <img className={"align-middle move-top-1px"} alt={emote.name} src={emote.path} width={14} height={14}/>
-                    </UiDropdownElement>
+                    i++;
+                    return <React.Fragment>
+                        <UiDropdownElement className={"d-inline"} onClick={() => onReaction(emote.id)}>
+                            <img className={"align-middle move-top-1px"} alt={emote.name} src={emote.path} width={14} height={14}/>
+                        </UiDropdownElement>
+                        {i === 3 && <div className={"py-1"}/>}
+                    </React.Fragment>
                 })}
             </UiDropdown>
         }
