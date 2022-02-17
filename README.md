@@ -5,7 +5,7 @@
     </p>
 </div>
 
-<!--- Bradning ---->
+<!--- Branding ---->
 <div id="branding">
     <div align="center">
         <a href="https://feedbacky.net">
