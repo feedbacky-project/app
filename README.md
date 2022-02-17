@@ -145,7 +145,8 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
         </ul> 
     </list>
     <h3>License</h3>
-    <p>Feedbacky is free and open source software under the <a href="/LICENSE.md">MIT License</a>.</p>
+    <p><b>© 2022 Plajer</b></p>
+    <p>Feedbacky is distributed under the <a href="/LICENSE.md">MIT License</a>.</p>
 </div>
 
 <!--- Back to top ---->
