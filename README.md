@@ -126,11 +126,11 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
         <td>About</td>
     </tr>   
     <tr>
-      <td><a href=""><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="16px" width="16px"><b> Senior Hosting</b></a></td>
+      <td><a href=""><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="16px" width="16px"><b> Senior Hosting </b></a></td>
       <td>Affordable, high-performance Virtual Private Servers (VPS) and Minecraft/Discord bot hosting. <br><i>Get 10% off using code FEEDBACKY.</i></td>
     </tr>
     <tr>
-      <td><a href=""><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="16px" width="16px"><b> Plugily Projects</b></a></td>
+      <td><a href=""><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="16px" width="16px"><b> Plugily Projects </b></a></td>
       <td>Creating a better future by developing something beneficial for everyone.</td>
     </tr>
   </table>   
