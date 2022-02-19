@@ -23,7 +23,7 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
             popupWarning("Description should be at least 20 characters long");
             return Promise.resolve();
         }
-        return axios.post("/boards/" + discriminator + "/changelog/", {
+        return axios.post("/boards/" + discriminator + "/changelogs", {
             title, description
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {

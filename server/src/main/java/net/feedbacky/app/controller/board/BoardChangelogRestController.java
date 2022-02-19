@@ -41,7 +41,7 @@ public class BoardChangelogRestController {
     this.boardChangelogService = boardChangelogService;
   }
 
-  @GetMapping("v1/boards/{discriminator}/changelog")
+  @GetMapping("v1/boards/{discriminator}/changelogs")
   public PaginableRequest<List<FetchChangelogDto>> getAll(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
     RequestParamsParser parser = new RequestParamsParser(requestParams);
     BoardChangelogService.SortType sortType = BoardChangelogService.SortType.NEWEST;
@@ -57,27 +57,27 @@ public class BoardChangelogRestController {
     return boardChangelogService.getAll(discriminator, parser.getPage(), parser.getPageSize(), sortType);
   }
 
-  @PostMapping("v1/boards/{discriminator}/changelog")
+  @PostMapping("v1/boards/{discriminator}/changelogs")
   public ResponseEntity<FetchChangelogDto> post(@PathVariable String discriminator, @Valid @RequestBody PostChangelogDto dto) {
     return boardChangelogService.post(discriminator, dto);
   }
 
-  @PostMapping("v1/changelog/{id}/reactions/{reactionId}")
+  @PostMapping("v1/changelogs/{id}/reactions/{reactionId}")
   public FetchChangelogReactionDto postReaction(@PathVariable long id, @PathVariable String reactionId) {
     return boardChangelogService.postReaction(id, reactionId);
   }
 
-  @PatchMapping("v1/changelog/{id}")
+  @PatchMapping("v1/changelogs/{id}")
   public FetchChangelogDto patch(@PathVariable long id, @Valid @RequestBody PatchChangelogDto dto) {
     return boardChangelogService.patch(id, dto);
   }
 
-  @DeleteMapping("v1/changelog/{id}")
+  @DeleteMapping("v1/changelogs/{id}")
   public ResponseEntity delete(@PathVariable long id) {
     return boardChangelogService.delete(id);
   }
 
-  @DeleteMapping("v1/changelog/{id}/reactions/{reactionId}")
+  @DeleteMapping("v1/changelogs/{id}/reactions/{reactionId}")
   public ResponseEntity deleteReaction(@PathVariable long id, @PathVariable String reactionId) {
     return boardChangelogService.deleteReaction(id, reactionId);
   }

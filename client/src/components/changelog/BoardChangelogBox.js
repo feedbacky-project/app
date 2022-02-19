@@ -55,7 +55,7 @@ const BoardChangelogBox = ({searchQuery}) => {
     const onLoadRequest = (override = false) => {
         const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
         const currentPage = override ? 0 : page;
-        return axios.get("/boards/" + boardData.discriminator + "/changelog?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog) + withQuery).then(res => {
+        return axios.get("/boards/" + boardData.discriminator + "/changelogs?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog) + withQuery).then(res => {
             const data = res.data.data;
             if (override) {
                 setChangelog({...changelog, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, error: false});
@@ -84,7 +84,7 @@ const BoardChangelogBox = ({searchQuery}) => {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.post("/changelog/" + changelogId + "/reactions/" + emoteId, {}).then(res => {
+        return axios.post("/changelogs/" + changelogId + "/reactions/" + emoteId, {}).then(res => {
             if (res.status !== 200) {
                 popupWarning("Failed to add reaction");
                 return;
@@ -104,7 +104,7 @@ const BoardChangelogBox = ({searchQuery}) => {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.delete("/changelog/" + changelogId + "/reactions/" + emoteId).then(res => {
+        return axios.delete("/changelogs/" + changelogId + "/reactions/" + emoteId).then(res => {
             if (res.status !== 204) {
                 popupWarning("Failed to remove reaction");
                 return;

@@ -15,7 +15,7 @@ const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
     const [modal, setModal] = useState({open: false, type: ""});
     const isModerator = boardData.moderators.find(mod => mod.userId === user.data.id);
     const doChangelogDelete = () => {
-        return axios.delete("/changelog/" + data.id).then(res => {
+        return axios.delete("/changelogs/" + data.id).then(res => {
             if (res.status !== 204) {
                 popupError();
                 return;

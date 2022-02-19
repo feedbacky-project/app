@@ -22,7 +22,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
             popupWarning("Description should be at least 20 characters long");
             return Promise.resolve();
         }
-        return axios.patch("/changelog/" + changelog.id, {
+        return axios.patch("/changelogs/" + changelog.id, {
             title, description
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
