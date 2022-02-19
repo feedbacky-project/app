@@ -65,7 +65,7 @@ export const popupWarning = (content = "Something unexpected happened") => {
     if(document.body.classList.contains("dark")) {
         color = tinycolor("hsl(48, 100%, 50%)");
     } else {
-        color = tinycolor("hsl(27, 99%, 50%)");
+        color = tinycolor("hsl(20, 99%, 50%)");
     }
     popup(content, color, {showAction: false, duration: 6000});
 };
