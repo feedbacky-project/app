@@ -41,7 +41,7 @@ const FormControl = styled(UiFormControl)`
     background: hsl(0, 0%, 94%);
   }
 
-  .dark {
+  .dark & {
     scrollbar-color: var(--hover) var(--tertiary); /* firefox property */
 
     &::-webkit-scrollbar {

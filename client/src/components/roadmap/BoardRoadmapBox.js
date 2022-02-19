@@ -20,7 +20,7 @@ const RoadmapContainer = styled.div`
     background: hsl(0, 0%, 94%);
   }
   
-  .dark {
+  .dark & {
     scrollbar-color: var(--hover) var(--tertiary); /* firefox property */
     &::-webkit-scrollbar {
       background: var(--tertiary);
@@ -48,11 +48,11 @@ export const BoardRoadmapBox = ({roadmapData}) => {
                     <UiBadge style={{fontSize: "1rem"}} className={"align-middle"} color={tinycolor(element.tag.color)}>{element.ideas.data.length}</UiBadge>
                 </div>
             </h3>
-            <UiViewBoxBackground as={RoadmapContainer}>
+            <RoadmapContainer as={UiViewBoxBackground}>
                 {element.ideas.data.map(idea => {
                     return <SimpleIdeaCard key={idea.id} ideaData={idea}/>
                 })}
-            </UiViewBoxBackground>
+            </RoadmapContainer>
         </UiCol>
     });
 };
