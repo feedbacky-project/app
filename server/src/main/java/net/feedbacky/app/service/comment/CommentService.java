@@ -4,6 +4,7 @@ import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.PostCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.util.PaginableRequest;
 
@@ -24,7 +25,7 @@ public interface CommentService {
 
   ResponseEntity<FetchCommentDto> post(PostCommentDto dto);
 
-  FetchCommentReactionDto postReaction(long id, String reactionId);
+  FetchCommentReactionDto postReaction(long id, PostCommentReactionDto dto);
 
   FetchCommentDto patch(long id, PatchCommentDto dto);
 

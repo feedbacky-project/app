@@ -120,12 +120,12 @@ const DiscussionBox = forwardRef((props, ref) => {
             popupNotification("Comment deleted", getTheme());
         });
     };
-    const onCommentReact = (commentId, emoteId) => {
+    const onCommentReact = (commentId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.post("/comments/" + commentId + "/reactions/" + emoteId, {}).then(res => {
+        return axios.post("/comments/" + commentId + "/reactions", {reactionId}).then(res => {
             if (res.status !== 200) {
                 popupWarning("Failed to add reaction");
                 return;
@@ -140,12 +140,12 @@ const DiscussionBox = forwardRef((props, ref) => {
             });
         });
     };
-    const onCommentUnreact = (commentId, emoteId) => {
+    const onCommentUnreact = (commentId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.delete("/comments/" + commentId + "/reactions/" + emoteId).then(res => {
+        return axios.delete("/comments/" + commentId + "/reactions/" + reactionId).then(res => {
             if (res.status !== 204) {
                 popupWarning("Failed to remove reaction");
                 return;
@@ -153,7 +153,7 @@ const DiscussionBox = forwardRef((props, ref) => {
             setComments({
                 ...comments, data: comments.data.map(comment => {
                     if (comment.id === commentId) {
-                        const reaction = comment.reactions.find(r => r.user.id === user.data.id && r.reactionId === emoteId);
+                        const reaction = comment.reactions.find(r => r.user.id === user.data.id && r.reactionId === reactionId);
                         comment.reactions = comment.reactions.filter(r => r !== reaction);
                     }
                     return comment;

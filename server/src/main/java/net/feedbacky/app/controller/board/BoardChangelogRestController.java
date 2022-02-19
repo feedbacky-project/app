@@ -4,6 +4,7 @@ import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PatchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.reaction.FetchChangelogReactionDto;
+import net.feedbacky.app.data.board.dto.changelog.reaction.PostChangelogReactionDto;
 import net.feedbacky.app.service.board.changelog.BoardChangelogService;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestParamsParser;
@@ -62,9 +63,9 @@ public class BoardChangelogRestController {
     return boardChangelogService.post(discriminator, dto);
   }
 
-  @PostMapping("v1/changelogs/{id}/reactions/{reactionId}")
-  public FetchChangelogReactionDto postReaction(@PathVariable long id, @PathVariable String reactionId) {
-    return boardChangelogService.postReaction(id, reactionId);
+  @PostMapping("v1/changelogs/{id}/reactions")
+  public FetchChangelogReactionDto postReaction(@PathVariable long id, @Valid @RequestBody PostChangelogReactionDto dto) {
+    return boardChangelogService.postReaction(id, dto);
   }
 
   @PatchMapping("v1/changelogs/{id}")

@@ -9,6 +9,7 @@ import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PatchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.reaction.FetchChangelogReactionDto;
+import net.feedbacky.app.data.board.dto.changelog.reaction.PostChangelogReactionDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
@@ -112,25 +113,25 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   }
 
   @Override
-  public FetchChangelogReactionDto postReaction(long id, String reactionId) {
+  public FetchChangelogReactionDto postReaction(long id, PostChangelogReactionDto dto) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
     Changelog changelog = changelogRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog with id {0} not found.", id)));
-    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {
+    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(dto.getReactionId()))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid reaction.");
     }
-    if(changelog.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(reactionId))) {
+    if(changelog.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(dto.getReactionId()))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already reacted.");
     }
     ChangelogReaction reaction = new ChangelogReaction();
     reaction.setChangelog(changelog);
-    reaction.setReactionId(reactionId);
+    reaction.setReactionId(dto.getReactionId());
     reaction.setUser(user);
     changelog.getReactions().add(reaction);
     changelogRepository.save(changelog);
-    reaction = changelog.getReactions().stream().filter(r -> r.getReactionId().equals(reactionId) && r.getUser().equals(user)).findFirst().get();
+    reaction = changelog.getReactions().stream().filter(r -> r.getReactionId().equals(dto.getReactionId()) && r.getUser().equals(user)).findFirst().get();
     return new FetchChangelogReactionDto().from(reaction);
   }
 

@@ -79,12 +79,12 @@ const BoardChangelogBox = ({searchQuery}) => {
         newData = newData.filter(changelog => changelog.id !== data.id);
         setChangelog({...changelog, data: newData});
     };
-    const onChangelogReact = (changelogId, emoteId) => {
+    const onChangelogReact = (changelogId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.post("/changelogs/" + changelogId + "/reactions/" + emoteId, {}).then(res => {
+        return axios.post("/changelogs/" + changelogId + "/reactions", {reactionId}).then(res => {
             if (res.status !== 200) {
                 popupWarning("Failed to add reaction");
                 return;
@@ -99,12 +99,12 @@ const BoardChangelogBox = ({searchQuery}) => {
             });
         });
     };
-    const onChangelogUnreact = (changelogId, emoteId) => {
+    const onChangelogUnreact = (changelogId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.delete("/changelogs/" + changelogId + "/reactions/" + emoteId).then(res => {
+        return axios.delete("/changelogs/" + changelogId + "/reactions/" + reactionId).then(res => {
             if (res.status !== 204) {
                 popupWarning("Failed to remove reaction");
                 return;
@@ -112,7 +112,7 @@ const BoardChangelogBox = ({searchQuery}) => {
             setChangelog({
                 ...changelog, data: changelog.data.map(element => {
                     if (element.id === changelogId) {
-                        const reaction = element.reactions.find(r => r.user.id === user.data.id && r.reactionId === emoteId);
+                        const reaction = element.reactions.find(r => r.user.id === user.data.id && r.reactionId === reactionId);
                         element.reactions = element.reactions.filter(r => r !== reaction);
                     }
                     return element;

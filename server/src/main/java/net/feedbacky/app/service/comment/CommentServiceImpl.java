@@ -13,10 +13,10 @@ import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.PostCommentReactionDto;
 import net.feedbacky.app.data.idea.subscribe.NotificationEvent;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.user.User;
-import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InsufficientPermissionsException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -167,7 +167,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public FetchCommentReactionDto postReaction(long id, String reactionId) {
+  public FetchCommentReactionDto postReaction(long id, PostCommentReactionDto dto) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
@@ -176,19 +176,19 @@ public class CommentServiceImpl implements CommentService {
     if(comment.isSpecial()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't react to this comment.");
     }
-    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {
+    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(dto.getReactionId()))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid reaction.");
     }
-    if(comment.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(reactionId))) {
+    if(comment.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(dto.getReactionId()))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already reacted.");
     }
     CommentReaction reaction = new CommentReaction();
     reaction.setComment(comment);
-    reaction.setReactionId(reactionId);
+    reaction.setReactionId(dto.getReactionId());
     reaction.setUser(user);
     comment.getReactions().add(reaction);
     commentRepository.save(comment);
-    reaction = comment.getReactions().stream().filter(r -> r.getReactionId().equals(reactionId) && r.getUser().equals(user)).findFirst().get();
+    reaction = comment.getReactions().stream().filter(r -> r.getReactionId().equals(dto.getReactionId()) && r.getUser().equals(user)).findFirst().get();
     return new FetchCommentReactionDto().from(reaction);
   }
 
@@ -263,6 +263,6 @@ public class CommentServiceImpl implements CommentService {
     reaction.setComment(null);
     commentRepository.save(comment);
     //no need to expose
-    return ResponseEntity.noContent(). build();
+    return ResponseEntity.noContent().build();
   }
 }
