@@ -1,5 +1,6 @@
 ### 1.0.0.RC.2
 * **[FEATURE]** Board and account deletion modals now contain checkboxes to agree that you delete board/account (requested by [Matou0014](https://app.feedbacky.net/i/hardened-board-deletion.4089))
+* **[IMPROVEMENT]** Reduced server-side service memory footprint by ~45%
 
 ### 1.0.0.RC.1
 * **[FEATURE]** Display toast messages when page is loading for too long

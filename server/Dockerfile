@@ -15,7 +15,7 @@ COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle bootJar --no-daemon -i --stacktrace
 
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk8-openj9:alpine-slim
 EXPOSE 8080
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/feedbacky-server.jar
