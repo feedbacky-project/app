@@ -27,12 +27,12 @@ public class IdeaSubscriptionRestController {
     this.subscriptionService = subscriptionService;
   }
 
-  @PostMapping("v1/ideas/{id}/subscribe")
+  @PostMapping("v1/ideas/{id}/subscribers")
   public FetchUserDto postSubscribe(@PathVariable long id) {
     return subscriptionService.postSubscribe(id);
   }
 
-  @DeleteMapping("v1/ideas/{id}/subscribe")
+  @DeleteMapping("v1/ideas/{id}/subscribers")
   public ResponseEntity deleteSubscribe(@PathVariable long id) {
     return subscriptionService.deleteSubscribe(id);
   }

@@ -18,7 +18,7 @@ const NotificationsInfo = () => {
         const request = ideaData.subscribed ? "DELETE" : "POST";
         return axios({
             method: request,
-            url: "/ideas/" + ideaData.id + "/subscribe"
+            url: "/ideas/" + ideaData.id + "/subscribers"
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
