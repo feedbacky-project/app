@@ -80,6 +80,7 @@ public class StartupMigrator {
     } catch(IOException e) {
       logger.log(Level.WARNING, "Failed to get version file contents! Migrator will not run.");
       e.printStackTrace();
+      return;
     }
     if(version == FILE_VERSION) {
       return;
