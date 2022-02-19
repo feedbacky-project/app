@@ -73,7 +73,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
         })}
         {
             moreReactionsToAdd &&
-            <UiDropdown label={"Reactions"} className={"d-inline-block"} toggleClassName={"p-0"} toggle={<AddReaction/>} style={{minWidth: "6.5rem"}}>
+            <UiDropdown label={"Reactions"} className={"d-inline-block"} toggleClassName={"p-0"} toggle={<AddReaction/>} menuStyle={{minWidth: "6rem"}}>
                 <div className={"font-weight-bold text-center small mb-2"}>Pick a Reaction</div>
                 {serviceData.emojisData.map(emote => {
                     let reactions = reactionsData.filter(r => r.reactionId === emote.id) || [];
