@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import axios from "axios";
+import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
@@ -50,8 +51,18 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
     const {ideaData} = useContext(IdeaContext);
     const isModerator = data.moderators.find(mod => mod.userId === user.data.id);
     const [submitOpen, setSubmitOpen] = useState(false);
+    const [warningOpen, setWarningOpen] = useState(false);
     if (!ideaData.open && !data.closedIdeasCommentingEnabled) {
         return <React.Fragment/>;
+    }
+    const onPreSubmit = () => {
+        if(replyTo == null) {
+            return onSubmit(false);
+        }
+        if(replyTo.viewType === "INTERNAL") {
+            setWarningOpen(true);
+            return Promise.resolve();
+        }
     }
     const onSubmit = (internal) => {
         const textarea = document.getElementById("commentMessage");
@@ -91,7 +102,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
             return <React.Fragment/>
         }
         return <div className={"mt-2"}>
-            <UiLoadableButton label={"Submit"} small onClick={() => onSubmit(false)}>
+            <UiLoadableButton label={"Submit"} small onClick={() => onPreSubmit()}>
                 Submit
             </UiLoadableButton>
 
@@ -130,6 +141,11 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
         </div>
     };
     return <React.Fragment>
+        <DangerousActionModal id={"postInternalBreak"} onHide={() => setWarningOpen(false)} isOpen={warningOpen}
+                              onAction={() => onSubmit(false)} size={"md"}
+                              actionDescription={<div>You're about to reply publicly to an <span className={"text-blue"}>internal comment</span>. This internal comment existence will be visible in comments history once you reply publicly.
+                                  <div className={"mt-2"}/>
+                                  All data about internal comment will be hidden.</div>} actionButtonName={"Post"}/>
         <WriteBox xs={10}>
             <div className={"text-center mr-3 pt-2"}>
                 {avatar}
