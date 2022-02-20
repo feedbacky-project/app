@@ -7,7 +7,7 @@ import CommentIcon from "components/idea/discussion/CommentIcon";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
-import {FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} from "react-icons/all";
+import {FaEyeSlash, FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiCancelButton, UiClassicButton, UiLoadableButton} from "ui/button";
@@ -66,9 +66,31 @@ const ReplyButton = styled(UiClassicButton)`
 const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, onCommentUnreact, onSuspend, onReply, comments, parentData = null, stepSize = 0}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
-    const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(data.description)});
+    const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(data.description || "")});
     //smaller step size for mobile
     const stepRemSize = window.matchMedia("only screen and (max-width: 760px)").matches ? 1.75 : 2.75;
+    const renderRepliesRecursive = () => {
+        return comments.map(c => {
+            if (c.replyTo != null && c.replyTo === data.id) {
+                return <CommentsBox key={c.id} data={c} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentDelete} onCommentReact={onCommentReact}
+                                    onCommentUnreact={onCommentUnreact} onSuspend={onSuspend} comments={comments} onReply={onReply}
+                                    parentData={data} stepSize={stepSize >= 3 ? 3 : stepSize + 1}/>
+            }
+            return <React.Fragment key={c.id}/>
+        });
+    };
+
+    //internal comment with limited visibility is used for comment history purposes
+    if(data.viewType === "INTERNAL" && data.user == null && data.replyTo != null) {
+        return <React.Fragment>
+            <div className={"text-black-60 mb-2"} style={{paddingLeft: stepRemSize * stepSize + "rem"}}>
+                <div style={{backgroundColor: "var(--tertiary)", borderRadius: "var(--border-radius)", display: "inline-block", padding: ".25rem .5rem"}}>
+                    <FaEyeSlash className={"text-blue move-top-1px"}/> Comment details hidden
+                </div>
+            </div>
+            {renderRepliesRecursive()}
+        </React.Fragment>
+    }
 
     const onEditApply = () => {
         let description = editor.value;
@@ -129,6 +151,9 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         return <UiHoverableIcon as={FaUserLock} className={"text-black-60 ml-1"} onClick={() => onSuspend(data)}/>
     };
     const renderReplyButton = () => {
+        if(!user.loggedIn) {
+            return <React.Fragment/>
+        }
         return <ReplyButton label={"Reply"} tiny onClick={() => onReply(data)}><FaReply className={"move-top-1px"}/> Reply</ReplyButton>
     };
     const renderEditorMode = () => {
@@ -145,6 +170,14 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     const renderReplyData = () => {
         if (parentData == null) {
             return <React.Fragment/>
+        }
+        //limited visibility
+        if(parentData.viewType === "INTERNAL" && parentData.user == null && parentData.replyTo != null) {
+            return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small text-black-60"}>
+                <FaReply className={"move-top-1px"}/>
+                <FaEyeSlash className={"move-top-1px mx-1 text-blue"}/>
+                <span>Details hidden</span>
+            </div>
         }
         return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small text-black-60"}>
             <FaReply className={"move-top-1px"}/>
@@ -182,16 +215,6 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             <br/>
             {renderRepliesRecursive()}
         </React.Fragment>
-    };
-    const renderRepliesRecursive = () => {
-        return comments.map(c => {
-            if (c.replyTo != null && c.replyTo === data.id) {
-                return <CommentsBox key={c.id} data={c} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentDelete} onCommentReact={onCommentReact}
-                                    onCommentUnreact={onCommentUnreact} onSuspend={onSuspend} comments={comments} onReply={onReply}
-                                    parentData={data} stepSize={stepSize >= 3 ? 3 : stepSize + 1}/>
-            }
-            return <React.Fragment key={c.id}/>
-        });
     };
     if (!data.special) {
         return renderDescription();

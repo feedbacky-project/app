@@ -20,7 +20,7 @@ const ReplyMarkdownOptions = styled.div`
 const ReplyBox = styled.div`
   border-bottom-right-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
-  background-color: vaR(--tertiary);
+  background-color: var(--tertiary);
   font-size: small;
   padding: .25rem .5rem;
 `;
@@ -61,12 +61,12 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
             popupWarning("Message must be longer than 10 and shorter than 1800 characters");
             return Promise.resolve();
         }
-        const replyTo = replyTo == null ? null : replyTo.id;
+        const reply = replyTo != null ? replyTo.id : null;
         return axios.post("/comments/", {
             ideaId: ideaData.id,
             description: message,
             type,
-            replyTo
+            replyTo: reply
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 popupError();

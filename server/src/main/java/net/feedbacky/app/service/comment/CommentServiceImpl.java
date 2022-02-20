@@ -92,11 +92,14 @@ public class CommentServiceImpl implements CommentService {
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     final User finalUser = user;
     boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
-    if(!isModerator) {
-      comments = comments.stream().filter(comment -> comment.getViewType() != Comment.ViewType.INTERNAL).collect(Collectors.toList());
-    }
-    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
-            comments.stream().map(comment -> new FetchCommentDto().from(comment)).collect(Collectors.toList()));
+    List<FetchCommentDto> returnData = comments.stream().map(c -> {
+      FetchCommentDto dto = new FetchCommentDto().from(c);
+      if(!isModerator && c.getViewType() == Comment.ViewType.INTERNAL) {
+        dto = dto.asInternalInvisible();
+      }
+      return dto;
+    }).collect(Collectors.toList());
+    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), returnData);
   }
 
   @Override
