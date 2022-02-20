@@ -61,11 +61,12 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
             popupWarning("Message must be longer than 10 and shorter than 1800 characters");
             return Promise.resolve();
         }
+        const replyTo = replyTo == null ? null : replyTo.id;
         return axios.post("/comments/", {
             ideaId: ideaData.id,
             description: message,
             type,
-            replyTo: replyTo.id
+            replyTo
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 popupError();
