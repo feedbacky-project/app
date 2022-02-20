@@ -24,7 +24,7 @@ const VotersViewModal = ({votersData, isOpen, onHide}) => {
         <UiRow className={"mt-2 mb-1"}>
             <UiFormLabel className={"col-12"}>All Voters ({votersData.length - anonymousVoters} Registered, {anonymousVoters} Anonymous)</UiFormLabel>
             {votersData.map(voter => {
-                return <UiCol xs={6}>
+                return <UiCol key={voter} xs={6}>
                     <UiAvatar size={16} user={voter} roundedCircle className={"mr-1"}/>
                     <UiPrettyUsername user={voter} truncate={20}/>
                     {voter.fake && <UiTooltip id={voter.id + "_voter"} text={"Anonymous Voter"}>

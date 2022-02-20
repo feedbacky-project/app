@@ -7,13 +7,13 @@ import CommentIcon from "components/idea/discussion/CommentIcon";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
-import {FaLowVision, FaPen, FaTrashAlt, FaUserLock} from "react-icons/all";
+import {FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
-import {UiCancelButton, UiLoadableButton} from "ui/button";
+import {UiCancelButton, UiClassicButton, UiLoadableButton} from "ui/button";
 import {UiFormControl} from "ui/form";
 import {UiAvatar} from "ui/image";
-import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
+import {htmlDecodeEntities, popupError, popupNotification, truncateText} from "utils/basic-utils";
 
 const CommentContainer = styled.div`
   display: inline-flex;
@@ -40,10 +40,35 @@ const InternalContainer = styled(CommentContainer)`
   }
 `;
 
-const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, onCommentUnreact, onSuspend}) => {
+const ReplyButton = styled(UiClassicButton)`
+  display: inline-block;
+  font-size: small;
+  margin-right: .25rem;
+  transform: translateY(-1px);
+
+  background-color: hsla(0, 0%, 0%, .05);
+  color: hsla(0, 0%, 0%, .6);
+
+  .dark & {
+    background-color: hsla(0, 0%, 95%, .05);
+    color: hsla(0, 0%, 95%, .6);
+  }
+
+  &:hover {
+    background-color: hsla(0, 0%, 0%, .2) !important;
+  }
+
+  .dark &:hover {
+    background-color: hsla(0, 0%, 95%, .2) !important;
+  }
+`;
+
+const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, onCommentUnreact, onSuspend, onReply, comments, parentData = null, stepSize = 0}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(data.description)});
+    //smaller step size for mobile
+    const stepRemSize = window.matchMedia("only screen and (max-width: 760px)").matches ? 1.75 : 2.75;
 
     const onEditApply = () => {
         let description = editor.value;
@@ -73,7 +98,9 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                 </UiTooltip>
             </React.Fragment>
         }
-        return <small style={{fontWeight: "bold"}}><UiPrettyUsername user={data.user}/></small>
+        return <React.Fragment>
+            <small style={{fontWeight: "bold"}}><UiPrettyUsername user={data.user}/></small>
+        </React.Fragment>
     };
     const renderEditButton = () => {
         if (data.user.id !== user.data.id) {
@@ -101,6 +128,9 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         }
         return <UiHoverableIcon as={FaUserLock} className={"text-black-60 ml-1"} onClick={() => onSuspend(data)}/>
     };
+    const renderReplyButton = () => {
+        return <ReplyButton label={"Reply"} tiny onClick={() => onReply(data)}><FaReply className={"move-top-1px"}/> Reply</ReplyButton>
+    };
     const renderEditorMode = () => {
         return <React.Fragment>
             <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
@@ -111,7 +141,17 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                 <UiCancelButton className={"ml-1"} small onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
             </div>
         </React.Fragment>
-    };
+    }
+    const renderReplyData = () => {
+        if (parentData == null) {
+            return <React.Fragment/>
+        }
+        return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small text-black-60"}>
+            <FaReply className={"move-top-1px"}/>
+            <UiAvatar roundedCircle className={"ml-2 mr-1 move-top-1px"} size={16} user={parentData.user} style={{minWidth: "16px"}}/>
+            <UiPrettyUsername user={parentData.user}/> {truncateText(parentData.description, 45)}
+        </div>
+    }
     const renderDescription = () => {
         let CommentComponent;
         if (data.viewType === "INTERNAL") {
@@ -119,8 +159,10 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         } else {
             CommentComponent = CommentContainer;
         }
+        const replyStyle = (data.replyTo != null && parentData != null) ? {paddingLeft: (stepRemSize * stepSize) + "rem"} : {};
         return <React.Fragment>
-            <CommentComponent>
+            {renderReplyData()}
+            <CommentComponent style={replyStyle}>
                 <UiAvatar roundedCircle className={"mr-3 mt-2"} size={30} user={data.user} style={{minWidth: "30px"}}/>
                 <div style={{width: "100%"}}>
                     {renderCommentUsername()}
@@ -131,11 +173,25 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                     {renderSuspensionButton()}
                     <br/>
                     {editor.enabled ? renderEditorMode() : <MarkdownContainer text={data.description}/>}
-                    <ReactionsBox parentObjectId={data.id} reactionsData={data.reactions} onReact={onCommentReact} onUnreact={onCommentUnreact}/>
+                    <div className={"mt-1"}>
+                        {renderReplyButton()}
+                        <ReactionsBox className={"d-inline-block"} parentObjectId={data.id} reactionsData={data.reactions} onReact={onCommentReact} onUnreact={onCommentUnreact}/>
+                    </div>
                 </div>
             </CommentComponent>
             <br/>
+            {renderRepliesRecursive()}
         </React.Fragment>
+    };
+    const renderRepliesRecursive = () => {
+        return comments.map(c => {
+            if (c.replyTo != null && c.replyTo === data.id) {
+                return <CommentsBox key={c.id} data={c} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentDelete} onCommentReact={onCommentReact}
+                                    onCommentUnreact={onCommentUnreact} onSuspend={onSuspend} comments={comments} onReply={onReply}
+                                    parentData={data} stepSize={stepSize >= 3 ? 3 : stepSize + 1}/>
+            }
+            return <React.Fragment key={c.id}/>
+        });
     };
     if (!data.special) {
         return renderDescription();

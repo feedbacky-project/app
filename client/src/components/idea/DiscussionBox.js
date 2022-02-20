@@ -12,7 +12,7 @@ import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
-import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests, scrollIntoViewAndPop} from "utils/basic-utils";
 
 const DiscussionBox = forwardRef((props, ref) => {
     const {user, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
@@ -21,6 +21,7 @@ const DiscussionBox = forwardRef((props, ref) => {
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [page, setPage] = useState(0);
     const [modal, setModal] = useState({open: true, type: "", data: -1});
+    const [replyTo, setReplyTo] = useState(null);
     const sorts = [
         {newest: "Newest"},
         {oldest: "Oldest"}
@@ -61,8 +62,11 @@ const DiscussionBox = forwardRef((props, ref) => {
             dataLength={comments.data.length}
             loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}>
             {comments.data.map(data => {
+                    if (data.replyTo != null) {
+                        return <React.Fragment key={data.id}/>
+                    }
                     return <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentReact={onCommentReact}
-                                        onCommentUnreact={onCommentUnreact} onSuspend={onPreSuspend}/>
+                                        onCommentUnreact={onCommentUnreact} onSuspend={onPreSuspend} onReply={onReply} comments={comments.data}/>
                 }
             )}
         </InfiniteScroll>
@@ -76,6 +80,10 @@ const DiscussionBox = forwardRef((props, ref) => {
         }
         return <React.Fragment/>
     };
+    const onReply = (data) => {
+        setTimeout(() => scrollIntoViewAndPop("replyBox"), 100);
+        setReplyTo(data);
+    }
     const onCommentUpdate = (data) => {
         const newComments = [...comments.data];
         const index = newComments.findIndex(c => c.id === data.id);
@@ -179,7 +187,7 @@ const DiscussionBox = forwardRef((props, ref) => {
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>
-            <CommentWriteBox onCommentSubmit={onCommentSubmit}/>
+            <CommentWriteBox onCommentSubmit={onCommentSubmit} replyTo={replyTo} setReplyTo={setReplyTo}/>
             {renderNoDataImage()}
         </UiCol>
         <UiCol xs={12} sm={11} md={10} className={"px-0"}>

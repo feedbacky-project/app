@@ -144,8 +144,9 @@ public class CommentServiceImpl implements CommentService {
     if(dto.getReplyTo() != null) {
       Comment repliedComment = commentRepository.findById(dto.getReplyTo())
               .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Reply comment with id {0} not found.", dto.getReplyTo())));
-      //todo mail notification
       comment.setReplyTo(repliedComment);
+      subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.COMMENT_REPLY, user,
+              comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
     }
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {

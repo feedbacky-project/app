@@ -26,12 +26,20 @@ public class MailNotificationBuilder {
 
   public static final MailService.EmailTemplate MAIL_TEMPLATE = MailService.EmailTemplate.SUBSCRIBE_NOTIFICATION;
   public static final String IDEA_COMMENT_TEMPLATE = "mail_templates/notification/idea_comment.template.html";
+  public static final String COMMENT_REPLY_TEMPLATE = "mail_templates/notification/comment_reply.template.html";
   public static final String IDEA_STATE_CHANGE_TEMPLATE = "mail_templates/notification/idea_state_change.template.html";
   private String rawHtml = "";
   private int notificationsAmount = 0;
 
   public MailNotificationBuilder withIdeaCommentedByModerator(Comment comment) {
     String bonusHtml = FileResourceUtils.readFileContents(IDEA_COMMENT_TEMPLATE);
+    bonusHtml = parsePlaceholders(bonusHtml, comment.getDescription(), comment.getIdea().getBoard(), comment.getIdea(), comment.getCreator());
+    insertNewNotification(bonusHtml);
+    return this;
+  }
+
+  public MailNotificationBuilder withCommentReplied(Comment comment) {
+    String bonusHtml = FileResourceUtils.readFileContents(COMMENT_REPLY_TEMPLATE);
     bonusHtml = parsePlaceholders(bonusHtml, comment.getDescription(), comment.getIdea().getBoard(), comment.getIdea(), comment.getCreator());
     insertNewNotification(bonusHtml);
     return this;

@@ -45,7 +45,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
             let selected = reactions.find(r => r.user.id === user.data.id) !== undefined;
             if (reactions.length === 0) {
                 moreReactionsToAdd = true;
-                return <React.Fragment/>
+                return <React.Fragment key={emote.id}/>
             }
             let whoReacted = "";
             let i = 0;
@@ -62,7 +62,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
                 whoReacted += " and " + (reactions.length - 3) + " more";
             }
             whoReacted += " reacted with " + emote.name;
-            return <LoadableReaction isSelected={selected} onReact={() => onReaction(emote.id)}>
+            return <LoadableReaction key={emote.id} isSelected={selected} onReact={() => onReaction(emote.id)}>
                 <UiTooltip id={parentObjectId + emote.id} text={whoReacted}>
                         <span>
                         <img className={"align-middle move-top-1px mr-2"} alt={emote.name} src={emote.path} width={14} height={14}/>
@@ -78,10 +78,10 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
                 {serviceData.emojisData.map(emote => {
                     let reactions = reactionsData.filter(r => r.reactionId === emote.id) || [];
                     if (reactions.length !== 0) {
-                        return <React.Fragment/>
+                        return <React.Fragment key={"reaction_" + emote.id}/>
                     }
                     i++;
-                    return <React.Fragment>
+                    return <React.Fragment key={"reaction_" + emote.id}>
                         <UiDropdownElement className={"d-inline"} onClick={() => onReaction(emote.id)}>
                             <img className={"align-middle move-top-1px"} alt={emote.name} src={emote.path} width={14} height={14}/>
                         </UiDropdownElement>
