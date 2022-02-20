@@ -56,13 +56,11 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
         return <React.Fragment/>;
     }
     const onPreSubmit = () => {
-        if(replyTo == null) {
-            return onSubmit(false);
-        }
-        if(replyTo.viewType === "INTERNAL") {
+        if(replyTo != null && replyTo.viewType === "INTERNAL") {
             setWarningOpen(true);
             return Promise.resolve();
         }
+        return onSubmit(false);
     }
     const onSubmit = (internal) => {
         const textarea = document.getElementById("commentMessage");
@@ -102,7 +100,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
             return <React.Fragment/>
         }
         return <div className={"mt-2"}>
-            <UiLoadableButton label={"Submit"} small onClick={() => onPreSubmit()}>
+            <UiLoadableButton label={"Submit"} small onClick={onPreSubmit}>
                 Submit
             </UiLoadableButton>
 
