@@ -60,10 +60,10 @@ const DiffViewButton = styled.div`
 const parseDiffView = (data, index) => {
     return <DiffViewButton>
         <UiClickableTip id={data[1] + index} title={"Diff View"} description={<React.Fragment>
-            <strong>From:</strong>
+            <strong>From: </strong>
             <UiKeyboardInput>{data[2]}</UiKeyboardInput>
             <br/>
-            <strong>To:</strong>
+            <strong>To: </strong>
             <UiKeyboardInput>{data[3]}</UiKeyboardInput>
         </React.Fragment>} icon={<UiButton tiny={true} label={"View Diff"}>{data[1]}</UiButton>}/>
     </DiffViewButton>
