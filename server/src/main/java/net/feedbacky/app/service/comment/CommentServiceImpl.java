@@ -141,6 +141,12 @@ public class CommentServiceImpl implements CommentService {
     comment.setSpecialType(Comment.SpecialType.LEGACY);
     comment.setViewType(Comment.ViewType.valueOf(dto.getType().toUpperCase()));
     comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
+    if(dto.getReplyTo() != null) {
+      Comment repliedComment = commentRepository.findById(dto.getReplyTo())
+              .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Reply comment with id {0} not found.", dto.getReplyTo())));
+      //todo mail notification
+      comment.setReplyTo(repliedComment);
+    }
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't post duplicated comments.");

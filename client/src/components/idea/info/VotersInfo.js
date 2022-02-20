@@ -67,7 +67,7 @@ const VotersInfo = ({data}) => {
         if (amount <= 5) {
             return;
         }
-        return <MoreVotersText onClick={() => setOpen(true)}> + {amount - 5} more</MoreVotersText>
+        return <MoreVotersText className={"text-black-75"} onClick={() => setOpen(true)}> + {amount - 5} more</MoreVotersText>
     };
     return <React.Fragment>
         <VotersViewModal votersData={data.data} isOpen={open} onHide={() => setOpen(false)}/>

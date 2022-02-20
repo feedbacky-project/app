@@ -28,6 +28,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
   private String viewType;
   private List<FetchCommentReactionDto> reactions;
   private boolean edited;
+  private Long replyTo;
   private Date creationDate;
 
   @Override
@@ -44,6 +45,9 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.viewType = entity.getViewType().name();
     this.reactions = entity.getReactions().stream().map(r -> new FetchCommentReactionDto().from(r)).collect(Collectors.toList());
     this.edited = entity.isEdited();
+    if(entity.getReplyTo() != null) {
+      this.replyTo = entity.getReplyTo().getId();
+    }
     this.creationDate = entity.getCreationDate();
     return this;
   }
