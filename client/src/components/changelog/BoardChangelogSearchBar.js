@@ -6,7 +6,7 @@ import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 
 const BoardChangelogSearchBar = ({searchQuery, setSearchQuery}) => {
-    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {user, getTheme, onLocalPreferencesUpdate} = useContext(AppContext);
     const queryRef = React.useRef();
     if (searchQuery === "" && queryRef.current) {
         queryRef.current.value = "";
@@ -30,7 +30,8 @@ const BoardChangelogSearchBar = ({searchQuery, setSearchQuery}) => {
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline"} currentValue={sortCurrentValue} values={sortValues}/>
         </UiCol>
         <UiCol sm={4}>
-            <UiFormControl label={"Search Ideas"} as={SearchBar} innerRef={queryRef} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery} placeholder={"Search"} onInput={() => {
+            <UiFormControl label={"Search Ideas"} as={SearchBar} innerRef={queryRef} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery}
+                           placeholder={"Search"} fill={getTheme().setAlpha(.5).toString()} onInput={() => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
             }} aria-label={"Search bar"}/>
