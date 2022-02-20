@@ -63,6 +63,13 @@ const ReplyButton = styled(UiClassicButton)`
   }
 `;
 
+const HiddenContent = styled.div`
+  display: inline-block;
+  background-color: var(--tertiary);
+  border-radius: var(--border-radius);
+  padding: .25rem .5rem;
+`;
+
 const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, onCommentUnreact, onSuspend, onReply, comments, parentData = null, stepSize = 0}) => {
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
@@ -84,9 +91,9 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     if(data.viewType === "INTERNAL" && data.user == null && data.replyTo != null) {
         return <React.Fragment>
             <div className={"text-black-60 mb-2"} style={{paddingLeft: stepRemSize * stepSize + "rem"}}>
-                <div style={{backgroundColor: "var(--tertiary)", borderRadius: "var(--border-radius)", display: "inline-block", padding: ".25rem .5rem"}}>
-                    <FaEyeSlash className={"text-blue move-top-1px"}/> Comment details hidden
-                </div>
+                <HiddenContent>
+                    <FaEyeSlash className={"move-top-1px"} style={{color: "var(--font-color)"}}/> Comment details hidden
+                </HiddenContent>
             </div>
             {renderRepliesRecursive()}
         </React.Fragment>
@@ -175,7 +182,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         if(parentData.viewType === "INTERNAL" && parentData.user == null && parentData.replyTo != null) {
             return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small text-black-60"}>
                 <FaReply className={"move-top-1px"}/>
-                <FaEyeSlash className={"move-top-1px mx-1 text-blue"}/>
+                <FaEyeSlash className={"move-top-1px mx-1"} style={{color: "var(--font-color)"}}/>
                 <span>Details hidden</span>
             </div>
         }
