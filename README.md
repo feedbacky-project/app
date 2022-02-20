@@ -139,7 +139,6 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
     <h3>Attributions</h3>
     <list>
         <ul>
-            <li>Icons found at <code>/src/views/admin/subviews/webhook/steps/StepSecond.jsx</code> by <a href="https://www.flaticon.com/authors/prosymbols">Prosymbols</a> at <a href="https://www.flaticon.com/">Flaticon</a>.</li>
             <li>Some SVG illustrations are provided by <a href="https://undraw.co/">unDraw</a>.</li>
             <li>Design system used in project is provided by <a href="https://getbootstrap.com/">Bootstrap</a>.</li>
         </ul> 
