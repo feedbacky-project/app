@@ -82,6 +82,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
                 return;
             }
             setSubmitOpen(false);
+            setReplyTo(null);
             document.getElementById("commentMessage").value = "";
             onCommentSubmit(res.data);
         });
