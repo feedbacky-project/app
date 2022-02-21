@@ -11,7 +11,7 @@ import {FaCommentSlash, FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} fro
 import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiCancelButton, UiClassicButton, UiLoadableButton} from "ui/button";
-import {UiFormControl} from "ui/form";
+import {UiMarkdownFormControl} from "ui/form";
 import {UiAvatar} from "ui/image";
 import {htmlDecodeEntities, popupError, popupNotification, truncateText} from "utils/basic-utils";
 
@@ -146,7 +146,10 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         if (data.user.id !== user.data.id) {
             return;
         }
-        return <UiHoverableIcon as={FaPen} className={"text-black-60 ml-1"} onClick={() => setEditor({...editor, enabled: !editor.enabled})}/>
+        return <UiHoverableIcon as={FaPen} className={"text-black-60 ml-1"} onClick={() => {
+            setEditor({...editor, enabled: !editor.enabled});
+            setTimeout(() => document.getElementById("editorBox").focus(), 200);
+        }}/>
     };
     const renderDeletionButton = () => {
         const moderator = boardData.moderators.find(mod => mod.userId === user.data.id);
@@ -176,9 +179,9 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <UiFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
-                           placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
-                           style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={editor.value}/>
+            <UiMarkdownFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
+                                   placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
+                                   style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={editor.value}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} small onClick={onEditApply}>Save</UiLoadableButton>
                 <UiCancelButton className={"ml-1"} small onClick={() => setEditor({...editor, enabled: false})}>Cancel</UiCancelButton>
