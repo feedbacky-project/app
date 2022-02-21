@@ -242,11 +242,12 @@ public class CommentServiceImpl implements CommentService {
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     Idea idea = comment.getIdea();
     webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
-    commentRepository.delete(comment);
+    comment.setViewType(Comment.ViewType.DELETED);
+    comment.setCreator(null);
+    comment.setDescription("");
+    commentRepository.save(comment);
     //to force trend score update
-    Set<Comment> comments = idea.getComments();
-    comments.remove(comment);
-    idea.setComments(comments);
+    idea.setComments(idea.getComments());
     ideaRepository.save(idea);
     return ResponseEntity.noContent().build();
   }

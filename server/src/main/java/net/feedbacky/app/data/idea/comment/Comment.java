@@ -74,7 +74,7 @@ public class Comment implements Serializable {
   }
 
   public enum ViewType {
-    PUBLIC, INTERNAL
+    PUBLIC, INTERNAL, DELETED
   }
 
 }

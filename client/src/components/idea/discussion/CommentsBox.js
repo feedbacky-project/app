@@ -7,7 +7,7 @@ import CommentIcon from "components/idea/discussion/CommentIcon";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
-import {FaEyeSlash, FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} from "react-icons/all";
+import {FaCommentSlash, FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
 import {UiCancelButton, UiClassicButton, UiLoadableButton} from "ui/button";
@@ -87,12 +87,23 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         });
     };
 
-    //internal comment with limited visibility is used for comment history purposes
-    if(data.viewType === "INTERNAL" && data.user == null && data.replyTo != null) {
+    //deleted comment is used for comment history purposes
+    if (data.viewType === "DELETED") {
         return <React.Fragment>
             <div className={"text-black-60 mb-2"} style={{paddingLeft: stepRemSize * stepSize + "rem"}}>
                 <HiddenContent>
-                    <FaEyeSlash className={"move-top-1px"} style={{color: "var(--font-color)"}}/> Comment details hidden
+                    <FaCommentSlash className={"move-top-1px"} style={{color: "var(--font-color)"}}/> Comment deleted
+                </HiddenContent>
+            </div>
+            {renderRepliesRecursive()}
+        </React.Fragment>
+    }
+    //internal comment with limited visibility is used for comment history purposes
+    if (data.viewType === "INTERNAL" && data.user == null && data.replyTo != null) {
+        return <React.Fragment>
+            <div className={"text-black-60 mb-2"} style={{paddingLeft: stepRemSize * stepSize + "rem"}}>
+                <HiddenContent>
+                    <FaLowVision className={"move-top-1px"} style={{color: "var(--font-color)"}}/> Comment details hidden
                 </HiddenContent>
             </div>
             {renderRepliesRecursive()}
@@ -158,10 +169,10 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         return <UiHoverableIcon as={FaUserLock} className={"text-black-60 ml-1"} onClick={() => onSuspend(data)}/>
     };
     const renderReplyButton = () => {
-        if(!user.loggedIn) {
+        if (!user.loggedIn) {
             return <React.Fragment/>
         }
-        return <ReplyButton label={"Reply"} tiny ><FaReply className={"move-top-1px"} /> Reply</ReplyButton>
+        return <ReplyButton label={"Reply"} tiny><FaReply className={"move-top-1px"}/> Reply</ReplyButton>
     };
     const renderEditorMode = () => {
         return <React.Fragment>
@@ -178,11 +189,19 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         if (parentData == null) {
             return <React.Fragment/>
         }
-        //limited visibility
-        if(parentData.viewType === "INTERNAL" && parentData.user == null && parentData.replyTo != null) {
+        //deleted comment is used for comment history purposes
+        if (parentData.viewType === "DELETED") {
             return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small text-black-60"}>
                 <FaReply className={"move-top-1px"}/>
-                <FaEyeSlash className={"move-top-1px mx-1"} style={{color: "var(--font-color)"}}/>
+                <FaCommentSlash className={"move-top-1px mx-1"} style={{color: "var(--font-color)"}}/>
+                <span>Comment deleted</span>
+            </div>
+        }
+        //limited visibility
+        if (parentData.viewType === "INTERNAL" && parentData.user == null && parentData.replyTo != null) {
+            return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small text-black-60"}>
+                <FaReply className={"move-top-1px"}/>
+                <FaLowVision className={"move-top-1px mx-1"} style={{color: "var(--font-color)"}}/>
                 <span>Details hidden</span>
             </div>
         }
