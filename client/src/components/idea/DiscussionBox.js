@@ -81,7 +81,11 @@ const DiscussionBox = forwardRef((props, ref) => {
         return <React.Fragment/>
     };
     const onReply = (data) => {
-        setTimeout(() => scrollIntoViewAndPop("replyBox"), 100);
+        setTimeout(() => {
+            scrollIntoViewAndPop("replyBox");
+            //time for animation to scroll into the element
+            setTimeout(() => document.getElementById("commentMessage").focus(), 200);
+        }, 100);
         setReplyTo(data);
     }
     const onCommentUpdate = (data) => {
