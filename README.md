@@ -52,7 +52,7 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 <div id="slogan">
   <div align="center">
     <h1>Understand your users' needs.</h1>
-      <p>Collect feedback from people easily while also improving your bussiness with <img src="https://feedbacky.net/img/logo.webp" height="16px" width="16px"><b> Feedbacky</b>, a free and open source software.</p>     
+      <p>Collect feedback from people easily while also improving your business with <img src="https://feedbacky.net/img/logo.webp" height="16px" width="16px"><b> Feedbacky</b>, a free and open source software.</p>     
       <img src="https://feedbacky.net/img/features/v1/board.webp" alt="The looks of a board.">      
   </div>
 </div>
@@ -105,7 +105,7 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
   [![DiscordInvite][discordBanner]][discordInvite]
     
   <h3>Contributing</h3>
-  <p>We encourage everyone to contribute, thuss making Feedbacky better with the help of our community. Follow our <a href="/CONTRIBUTING.md">Contributing guidelines</a> if you are interested!</a></p>
+  <p>We encourage everyone to contribute, thus making Feedbacky better with the help of our community. Follow our <a href="/CONTRIBUTING.md">Contributing guidelines</a> if you are interested!</a></p>
 </div>
   
 <!--- Donating ---->
