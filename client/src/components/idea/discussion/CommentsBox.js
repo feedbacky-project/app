@@ -46,20 +46,20 @@ const ReplyButton = styled(UiClassicButton)`
   margin-right: .25rem;
   transform: translateY(-1px);
 
-  background-color: hsla(0, 0%, 0%, .05);
+  background-color: hsla(0, 0%, 0%, .025);
   color: hsla(0, 0%, 0%, .6);
 
   .dark & {
-    background-color: hsla(0, 0%, 95%, .05);
+    background-color: hsla(0, 0%, 95%, .025);
     color: hsla(0, 0%, 95%, .6);
   }
 
   &:hover {
-    background-color: hsla(0, 0%, 0%, .2) !important;
+    background-color: hsla(0, 0%, 0%, .15) !important;
   }
 
   .dark &:hover {
-    background-color: hsla(0, 0%, 95%, .2) !important;
+    background-color: hsla(0, 0%, 95%, .15) !important;
   }
 `;
 
@@ -161,7 +161,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         if(!user.loggedIn) {
             return <React.Fragment/>
         }
-        return <ReplyButton label={"Reply"} tiny onClick={() => onReply(data)}><FaReply className={"move-top-1px"}/> Reply</ReplyButton>
+        return <ReplyButton label={"Reply"} tiny ><FaReply className={"move-top-1px"} /> Reply</ReplyButton>
     };
     const renderEditorMode = () => {
         return <React.Fragment>
@@ -187,7 +187,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             </div>
         }
         return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small"}>
-            <FaReply className={"move-top-1px"}/>
+            <FaReply className={"move-top-1px text-black-60"}/>
             <UiAvatar roundedCircle className={"ml-2 mr-1 move-top-1px"} size={16} user={parentData.user} style={{minWidth: "16px"}}/>
             <UiPrettyUsername user={parentData.user}/>
             <span className={"text-black-60 ml-1"}>{truncateText(parentData.description, 45)}</span>
