@@ -69,7 +69,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
                 onMailLogin(email);
                 return Promise.resolve();
             }}/>
-            <UiClassicButton label={"Mail Log-in"} className={"mx-1"} style={{color: "#fff", backgroundColor: "#74c23d"}} onClick={() => setMailModalOpen(true)}>
+            <UiClassicButton label={"Mail Log-in"} className={"m-1"} style={{color: "#fff", backgroundColor: "#74c23d"}} onClick={() => setMailModalOpen(true)}>
                 <img alt={"Mail"} src={"https://static.plajer.xyz/svg/login-mail.svg"} width={16} height={16}/>
             </UiClassicButton>
         </React.Fragment>
@@ -85,7 +85,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
                 {serviceData.loginProviders.map((data, i) => {
                     let provider = data;
                     return <a key={i} href={provider.oauthLink + redirectUrl} tabIndex={-1}>
-                        <UiClassicButton label={provider.name + " Log-in"} className={"mx-1"} style={{color: "#fff", backgroundColor: provider.color}}>
+                        <UiClassicButton label={provider.name + " Log-in"} className={"m-1"} style={{color: "#fff", backgroundColor: provider.color}}>
                             <img alt={provider.name} src={provider.icon} width={16} height={16}/>
                         </UiClassicButton>
                     </a>
