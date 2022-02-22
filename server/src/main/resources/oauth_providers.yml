@@ -83,3 +83,24 @@ gitlab:
     username: username
     avatar: avatar_url
     email-verified: null
+twitch:
+  provider-data:
+    name: Twitch
+    oauth-link: https://id.twitch.tv/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI]&response_type=code&scope=user:read:email&state=
+    icon: https://static.plajer.xyz/svg/login-twitch.svg
+    color: "#9146ff"
+  environment-variables:
+    enabled: OAUTH_TWITCH_ENABLED
+    redirect-uri: OAUTH_TWITCH_REDIRECT_URI
+    client-id: OAUTH_TWITCH_CLIENT_ID
+    client-secret: OAUTH_TWITCH_CLIENT_SECRET
+  oauth:
+    token-url: https://id.twitch.tv/oauth2/token
+    authorization-property: Bearer {TOKEN}
+    user-url: https://api.twitch.tv/kranek/user
+  data-fields:
+    id: _id
+    email: email
+    username: name
+    avatar: logo
+    email-verified: email_verified
