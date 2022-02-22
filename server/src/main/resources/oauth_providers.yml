@@ -97,7 +97,7 @@ twitch:
   oauth:
     token-url: https://id.twitch.tv/oauth2/token
     authorization-property: Bearer {TOKEN}
-    user-url: https://api.twitch.tv/kranek/user
+    user-url: https://api.twitch.tv/kraken/user
   data-fields:
     id: _id
     email: email
