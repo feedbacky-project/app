@@ -175,7 +175,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         if (!user.loggedIn) {
             return <React.Fragment/>
         }
-        return <ReplyButton label={"Reply"} tiny><FaReply className={"move-top-1px"}/> Reply</ReplyButton>
+        return <ReplyButton label={"Reply"} tiny onClick={() => onReply(data)}><FaReply className={"move-top-1px"}/> Reply</ReplyButton>
     };
     const renderEditorMode = () => {
         return <React.Fragment>
