@@ -218,11 +218,11 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                 <span>Details hidden</span>
             </div>
         }
-        return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem"}} className={"small"}>
-            <FaReply className={"move-top-1px text-black-60"}/>
-            <UiAvatar roundedCircle className={"ml-2 mr-1 move-top-1px"} size={16} user={parentData.user} style={{minWidth: "16px"}}/>
+        return <div style={{paddingLeft: (stepRemSize * stepSize) + "rem", display: "flex"}} className={"small"}>
+            <FaReply className={"text-black-60 my-auto"} style={{flexShrink: 0}}/>
+            <UiAvatar roundedCircle className={"ml-2 mr-1"} size={16} user={parentData.user} style={{minWidth: "16px"}}/>
             <UiPrettyUsername user={parentData.user}/>
-            <span className={"text-black-60 ml-1"}>{truncateText(parentData.description, 45)}</span>
+            <div className={"text-black-60 ml-1"} style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{truncateText(parentData.description, 50)}</div>
         </div>
     }
     const renderDescription = () => {
