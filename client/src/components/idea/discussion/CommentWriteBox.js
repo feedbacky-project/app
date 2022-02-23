@@ -19,16 +19,18 @@ const ReplyMarkdownOptions = styled.div`
 `;
 
 const ReplyBox = styled.div`
+  display: flex;
   border-bottom-right-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
   background-color: var(--tertiary);
-  font-size: small;
+  font-size: 80%;
   padding: .25rem .5rem;
 `;
 
 const ReplyCancelButton = styled(FaTimes)`
-  float: right;
-  margin-top: .25rem;
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
   color: ${props => props.theme};
   cursor: pointer;
 `;

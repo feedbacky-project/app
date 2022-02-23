@@ -6,6 +6,14 @@ import {MdOutlineAddReaction} from "react-icons/all";
 import {UiTooltip} from "ui";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 
+const ReactionTitle = styled.div`
+  color: var(--font-color);
+  font-size: 80%;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: .5em;
+`
+
 const AddReaction = styled(MdOutlineAddReaction)`
   cursor: pointer;
   //proper alignment
@@ -74,7 +82,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
         {
             moreReactionsToAdd &&
             <UiDropdown label={"Reactions"} className={"d-inline-block"} toggleClassName={"p-0"} toggle={<AddReaction/>} menuStyle={{minWidth: "6.5rem"}}>
-                <div className={"font-weight-bold text-center small mb-2"}>Pick a Reaction</div>
+                <ReactionTitle>Pick a Reaction</ReactionTitle>
                 {serviceData.emojisData.map(emote => {
                     let reactions = reactionsData.filter(r => r.reactionId === emote.id) || [];
                     if (reactions.length !== 0) {

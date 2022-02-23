@@ -42,7 +42,7 @@ const InternalContainer = styled(CommentContainer)`
 
 const ReplyButton = styled(UiClassicButton)`
   display: inline-block;
-  font-size: small;
+  font-size: 80%;
   margin-right: .25rem;
   transform: translateY(-1px);
 
