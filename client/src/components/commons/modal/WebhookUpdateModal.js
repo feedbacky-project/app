@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import {AppContext} from "context";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {WEBHOOK_EVENT_LIST} from "routes/board/admin/subroutes/webhooks/creator/StepSecondSubroute";
-import {UiBadge, UiLabelledCheckbox} from "ui";
+import {UiBadge, UiLabelledCheckbox, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -36,13 +36,12 @@ const isValidHttpUrl = (string) => {
 }
 
 const WebhookUpdateModal = ({isOpen, onHide, webhook, onWebhookUpdate}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const [chosenEvents, setChosenEvents] = useState([]);
-    useEffect(() => {
-        setChosenEvents(webhook.events || []);
-    }, [webhook.events]);
+    const ref = useRef();
+    useEffect(() => setChosenEvents(webhook.events || []), [webhook.events]);
 
-    const handleSubmit = () => {
+    const onUpdate = () => {
         const url = document.getElementById("urlTextarea").value;
         if (url.length < 10 || !isValidHttpUrl(url)) {
             popupWarning("URL is invalid");
@@ -64,14 +63,14 @@ const WebhookUpdateModal = ({isOpen, onHide, webhook, onWebhookUpdate}) => {
             onWebhookUpdate(res.data);
         });
     };
-
-    return <UiDismissibleModal id={"webhookUpdate"} isOpen={isOpen} onHide={onHide} title={"Update Webhook"}
-                               applyButton={<UiLoadableButton label={"Update"} onClick={handleSubmit} className={"mx-0"}>Update</UiLoadableButton>}>
+    const applyButton = <UiLoadableButton label={"Update"} onClick={onUpdate} className={"mx-0"}>Update</UiLoadableButton>;
+    return <UiDismissibleModal id={"webhookUpdate"} isOpen={isOpen} onHide={onHide} title={"Update Webhook"} applyButton={applyButton} onEntered={() => ref.current && ref.current.focus()}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>URL</UiFormLabel>
             <UiCol xs={12} className={"d-inline-block px-0"}>
                 <UiCol xs={12} className={"pr-sm-0 pr-2 px-0 d-inline-block"}>
-                    <UiFormControl minLength={0} maxLength={250} rows={1} type={"text"} defaultValue={webhook.url} placeholder={"Brief and descriptive title."} id={"urlTextarea"} label={"Webhook URL"}/>
+                    <UiFormControl minLength={0} maxLength={250} rows={1} type={"text"} defaultValue={webhook.url} placeholder={"Brief and descriptive title."}
+                                   id={"urlTextarea"} label={"Webhook URL"} innerRef={ref}/>
                 </UiCol>
             </UiCol>
         </div>

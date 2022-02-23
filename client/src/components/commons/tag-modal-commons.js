@@ -8,9 +8,8 @@ import {UiCol, UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
 
 export const renderModal = (isOpen, onHide, title, handleSubmit, color, setColor, tagData = {name: "", roadmapIgnored: false, publicUse: false}, setTagData, ref) => {
-    return <UiDismissibleModal id={"tagCreate"} isOpen={isOpen} onHide={onHide} title={title}
-                               applyButton={<UiLoadableButton label={"Save"} onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}
-                               onEntered={() => ref.current && ref.current.focus()}>
+    const applyButton = <UiLoadableButton label={"Save"} onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>;
+    return <UiDismissibleModal id={"tagCreate"} isOpen={isOpen} onHide={onHide} title={title} applyButton={applyButton} onEntered={() => ref.current && ref.current.focus()}>
         <UiRow>
             <UiCol xs={12} className={"mt-2 mb-1"}>
                 <UiFormLabel>Tag Name</UiFormLabel>

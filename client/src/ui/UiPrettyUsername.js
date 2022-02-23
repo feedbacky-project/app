@@ -30,6 +30,7 @@ const UiPrettyUsername = (props) => {
     const {suspendedUsers, moderators} = useContext(BoardContext).data;
     const isSuspended = suspendedUsers.find(suspended => suspended.user.id === user.id);
     let username = user.username;
+
     if (truncate > 0) {
         username = truncateText(username, truncate);
     }

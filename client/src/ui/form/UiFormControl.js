@@ -50,6 +50,7 @@ const FormControl = styled.input`
 
 const UiFormControl = (props) => {
     const {label, innerRef, ...otherProps} = props;
+
     return <FormControl ref={innerRef} required aria-label={label} {...otherProps}/>
 };
 

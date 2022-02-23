@@ -3,7 +3,7 @@ import {AppContext, BoardContext} from "context";
 import React, {useContext} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
 import tinycolor from "tinycolor2";
-import {UiBadge} from "ui";
+import {UiBadge, UiThemeContext} from "ui";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -26,9 +26,11 @@ export const SearchBar = styled(TextareaAutosize)`
 `;
 
 const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
-    const {user, getTheme, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {tags, allIdeas, openedIdeas, closedIdeas} = useContext(BoardContext).data;
     const queryRef = React.useRef();
+
     if (searchQuery === "" && queryRef.current) {
         queryRef.current.value = "";
     }
@@ -69,6 +71,10 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
         const value = Object.values(val)[0];
         return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, sort: key}})}>{value}</UiDropdownElement>
     });
+    const onInput = () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
+    };
     return <React.Fragment>
         <UiCol sm={8} className={"my-1"}>
             <span className={"align-middle"}>Filtering</span> {" "}
@@ -78,10 +84,7 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
         </UiCol>
         <UiCol sm={4}>
             <UiFormControl label={"Search Ideas"} as={SearchBar} innerRef={queryRef} maxLength={40} rows={1} maxRows={1} defaultValue={searchQuery}
-                           placeholder={"Search"} fill={getTheme().setAlpha(.5).toString()} onInput={() => {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
-            }} aria-label={"Search bar"}/>
+                           placeholder={"Search"} fill={getTheme().setAlpha(.5).toString()} onInput={onInput} aria-label={"Search bar"}/>
         </UiCol>
     </React.Fragment>
 };

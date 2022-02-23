@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
@@ -8,14 +9,26 @@ import CommentWriteBox from "components/idea/discussion/CommentWriteBox";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
 import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests, scrollIntoView} from "utils/basic-utils";
 
+const DiscussionTitle = styled.div`
+  display: inline-block;
+  margin-right: .25em;
+  vertical-align: middle;
+  color: hsla(0, 0%, 0%, .75);
+
+  .dark & {
+    color: hsla(0, 0%, 95%, .75);
+  }
+`;
+
 const DiscussionBox = forwardRef((props, ref) => {
-    const {user, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
+    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
@@ -35,6 +48,7 @@ const DiscussionBox = forwardRef((props, ref) => {
         onLoadRequest(true);
         // eslint-disable-next-line
     }, [user.localPreferences]);
+
     const onLoadRequest = (override) => {
         const currentPage = override ? 0 : page;
         return axios.get("/ideas/" + ideaData.id + "/comments?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.comments)).then(res => {
@@ -187,7 +201,7 @@ const DiscussionBox = forwardRef((props, ref) => {
         <DangerousActionModal id={"commentDel"} onHide={() => setModal({...modal, open: false, type: ""})} isOpen={modal.open && modal.type === "delete"} onAction={onCommentDelete}
                               actionDescription={<div>Comment will be permanently <u>deleted</u>.</div>}/>
         <div className={"pb-1"}>
-            <div className={"d-inline-block text-black-75 mr-1 align-middle"}>Discussion ({ideaData.commentsAmount} comments)</div>
+            <DiscussionTitle>Discussion ({ideaData.commentsAmount} comments)</DiscussionTitle>
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>

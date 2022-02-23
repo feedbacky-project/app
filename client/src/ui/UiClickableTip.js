@@ -20,7 +20,7 @@ const PopoverBody = styled(Popover.Content)`
 const PopoverHeader = styled(Popover.Title)`
   text-align: center;
   font-weight: 450;
-  
+
   .dark & {
     background-color: var(--tertiary);
   }
@@ -28,18 +28,14 @@ const PopoverHeader = styled(Popover.Title)`
 
 const UiClickableTip = (props) => {
     const {id, title, description, icon = <UiHoverableIcon as={FaQuestionCircle} className={"text-black-60 align-top ml-1"}/>} = props;
-    return <OverlayTrigger
-        trigger={"click"} placement={"top"} rootClose={true} rootCloseEvent={"click"}
-        overlay={
-            <PopoverBox id={id}>
-                <PopoverHeader>{title}</PopoverHeader>
-                <PopoverBody>
-                    {description}
-                </PopoverBody>
-            </PopoverBox>
-        }>
-        {icon}
-    </OverlayTrigger>
+
+    const overlay = <PopoverBox id={id}>
+        <PopoverHeader>{title}</PopoverHeader>
+        <PopoverBody>
+            {description}
+        </PopoverBody>
+    </PopoverBox>;
+    return <OverlayTrigger trigger={"click"} placement={"top"} rootClose={true} rootCloseEvent={"click"} overlay={overlay}>{icon}</OverlayTrigger>
 };
 
 export {UiClickableTip};

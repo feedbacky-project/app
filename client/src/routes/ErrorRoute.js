@@ -17,6 +17,7 @@ const ErrorRoute = ({Icon, message, notes = "", crash = false, onBackButtonClick
         setTimeout(() => document.title = message, 100);
         /*eslint-disable-next-line*/
     }, []);
+
     return <UiContainer>
         <UiRow centered verticallyCentered>
             <UiCol className={"text-md-left justify-content-center text-center d-sm-flex d-block"}>

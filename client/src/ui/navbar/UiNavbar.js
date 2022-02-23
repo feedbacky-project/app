@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
 import React, {useContext} from 'react';
 import {Link} from "react-router-dom";
 import {UiContainer, UiRow} from "ui/grid";
+import {UiThemeContext} from "ui/index";
 
 const StyledNavbar = styled.div`
   background-color: var(--tertiary);
@@ -28,6 +28,7 @@ const Brand = styled(Link)`
   font-size: 1.15rem;
   display: inline-block;
   padding: .25rem 0;
+
   &:hover {
     color: ${props => props.theme};
   }
@@ -37,9 +38,9 @@ const NavbarSelectedOption = styled(Link)`
   &:hover {
     color: ${props => props.theme.toString()};
   }
-  
+
   color: ${props => props.theme.toString()};
-  margin-bottom: -4px; 
+  margin-bottom: -4px;
   padding-top: .5rem;
   padding-left: .4rem;
   padding-right: .4rem;
@@ -54,7 +55,7 @@ const NavbarOption = styled(Link)`
   padding-right: .4rem;
   transition: var(--hover-transition);
   font-weight: normal !important;
-  
+
   &:hover {
     color: ${props => props.theme.toString()};
   }
@@ -62,11 +63,12 @@ const NavbarOption = styled(Link)`
 
 const UiNavbar = (props) => {
     const {children, innerRef, ...otherProps} = props;
-    const context = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
+
     return <StyledNavbar role={"navigation"} ref={innerRef} {...otherProps}>
         {children}
         <UiContainer>
-            <UiRow style={{paddingTop: "0.1rem", borderBottom: "2px solid " + context.getTheme().setAlpha(.1), margin: 0}}/>
+            <UiRow style={{paddingTop: "0.1rem", borderBottom: "2px solid " + getTheme().setAlpha(.1), margin: 0}}/>
         </UiContainer>
     </StyledNavbar>
 };

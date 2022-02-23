@@ -13,6 +13,7 @@ const LoginRoute = ({onLogin}) => {
     const location = useLocation();
     const [data, setData] = useState({loaded: false, error: false, status: 0});
     useTitle("Logging in...");
+
     const logIn = () => {
         if (data.loaded) {
             return;
@@ -33,7 +34,6 @@ const LoginRoute = ({onLogin}) => {
             onLogin(response.token);
         }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
     };
-
     if (data.error && data.status !== 403) {
         return <ErrorRoute message={"Unknown Login Error"} Icon={FaTimes}/>
     } else if (data.error && data.status === 403) {

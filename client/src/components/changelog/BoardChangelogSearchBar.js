@@ -1,13 +1,16 @@
 import {SearchBar} from "components/board/BoardSearchBar";
 import {AppContext} from "context";
 import React, {useContext} from 'react';
+import {UiThemeContext} from "ui";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 
 const BoardChangelogSearchBar = ({searchQuery, setSearchQuery}) => {
-    const {user, getTheme, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const queryRef = React.useRef();
+
     if (searchQuery === "" && queryRef.current) {
         queryRef.current.value = "";
     }

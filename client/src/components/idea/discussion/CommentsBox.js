@@ -9,7 +9,7 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaCommentSlash, FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
-import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiTooltip} from "ui";
+import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiThemeContext, UiTooltip} from "ui";
 import {UiCancelButton, UiClassicButton, UiLoadableButton} from "ui/button";
 import {UiMarkdownFormControl} from "ui/form";
 import {UiAvatar} from "ui/image";
@@ -71,7 +71,8 @@ const HiddenContent = styled.div`
 `;
 
 const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, onCommentUnreact, onSuspend, onReply, comments, parentData = null, stepSize = 0}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData} = useContext(BoardContext);
     const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(data.description || "")});
     const editorRef = useRef();
@@ -87,6 +88,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         }
 
     }, [editor]);
+
     const renderRepliesRecursive = () => {
         return comments.map(c => {
             if (c.replyTo != null && c.replyTo === data.id) {
@@ -97,7 +99,6 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             return <React.Fragment key={c.id}/>
         });
     };
-
     //deleted comment is used for comment history purposes
     if (data.viewType === "DELETED") {
         return <React.Fragment>
@@ -189,8 +190,8 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <UiMarkdownFormControl innerRef={editorRef} as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
-                                   placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
+            <UiMarkdownFormControl innerRef={editorRef} as={TextareaAutosize} id={"editorBox"} rows={4} maxRows={12} placeholder={"Write a description..."}
+                                   required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
                                    style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={editor.value}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} small onClick={onEditApply}>Save</UiLoadableButton>

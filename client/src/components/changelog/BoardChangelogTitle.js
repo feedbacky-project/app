@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import axios from "axios";
 import ChangelogUpdateModal from "components/changelog/ChangelogUpdateModal";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
@@ -5,15 +6,25 @@ import {DropdownOption, IconToggle} from "components/commons/ModeratorActionsBut
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
 import {FaEdit, FaTrash} from "react-icons/all";
+import {UiThemeContext} from "ui";
 import {UiDropdown} from "ui/dropdown";
 import {UiAvatar} from "ui/image";
 import {popupError, popupNotification} from "utils/basic-utils";
 
+const ChangelogTitle = styled.div`
+  display: inline;
+  font-size: 1.6em;
+  font-weight: bold;
+  word-break: break-word;
+`;
+
 const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData} = useContext(BoardContext);
     const [modal, setModal] = useState({open: false, type: ""});
     const isModerator = boardData.moderators.find(mod => mod.userId === user.data.id);
+
     const doChangelogDelete = () => {
         return axios.delete("/changelogs/" + data.id).then(res => {
             if (res.status !== 204) {
@@ -42,7 +53,7 @@ const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
     };
     const dateStr = new Date(data.creationDate).toLocaleString("default", {month: "short", year: "numeric", day: "numeric"});
     return <React.Fragment>
-        <div style={{fontSize: "1.6em", fontWeight: "bold", display: "inline", wordBreak: "break-word"}}>{data.title}</div>
+        <ChangelogTitle>{data.title}</ChangelogTitle>
         {renderContent()}
         <div className={"d-sm-inline-block d-block float-sm-right small text-black-60 text-sm-right text-left"}>
             {dateStr}

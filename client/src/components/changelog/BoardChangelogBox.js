@@ -14,7 +14,7 @@ import qs from "querystringify";
 import React, {useContext, useEffect, useState} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useLocation} from "react-router-dom";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
@@ -28,7 +28,8 @@ const ShareBoxOverlay = styled.div`
 `;
 
 const BoardChangelogBox = ({searchQuery}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData, onNotLoggedClick} = useContext(BoardContext);
     const [changelog, setChangelog] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [page, setPage] = useState(0);
@@ -52,6 +53,7 @@ const BoardChangelogBox = ({searchQuery}) => {
             scrollIntoView("changelogc_" + scrollTo).then(() => setScrollTo(null));
         }, 500);
     }, [scrollTo]);
+
     const onLoadRequest = (override = false) => {
         const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
         const currentPage = override ? 0 : page;

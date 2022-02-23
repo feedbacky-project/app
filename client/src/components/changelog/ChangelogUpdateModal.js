@@ -2,6 +2,7 @@ import axios from "axios";
 import {AppContext} from "context";
 import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
+import {UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -9,7 +10,7 @@ import {UiDismissibleModal} from "ui/modal";
 import {formatRemainingCharacters, htmlDecodeEntities, popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const [title, setTitle] = useState(changelog.title);
     const ref = useRef();
 
@@ -35,18 +36,23 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
             onChangelogUpdate(res.data);
         });
     };
-
+    const applyButton = <UiLoadableButton label={"Update Changelog"} onClick={handleSubmit} className={"mx-0"}>Update Changelog</UiLoadableButton>;
+    const onTitleChange = e => {
+        formatRemainingCharacters("remainingTitle", "titleTextarea", 70);
+        setTitle(e.target.value.substring(0, 70));
+    }
+    const onDescriptionChange = e => {
+        e.target.value = e.target.value.substring(0, 2500);
+        formatRemainingCharacters("remainingDescription", "descriptionTextarea", 2500);
+    };
     return <UiDismissibleModal id={"changelogPost"} isOpen={isOpen} onHide={onHide} title={"Update Changelog"} onEntered={() => ref.current && ref.current.focus()}
-                               applyButton={<UiLoadableButton label={"Update Changelog"} onClick={handleSubmit} className={"mx-0"}>Update Changelog</UiLoadableButton>}>
+                               applyButton={applyButton}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>Title</UiFormLabel>
             <UiCol xs={12} className={"d-inline-block px-0"}>
                 <UiCol xs={12} className={"pr-sm-0 pr-2 px-0 d-inline-block"}>
                     <UiFormControl minLength={10} maxLength={70} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
-                                   onChange={e => {
-                                       formatRemainingCharacters("remainingTitle", "titleTextarea", 70);
-                                       setTitle(e.target.value.substring(0, 70));
-                                   }} label={"Idea title"} innerRef={ref}/>
+                                   onChange={onTitleChange} label={"Idea title"} innerRef={ref}/>
                 </UiCol>
             </UiCol>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingTitle"}>
@@ -59,10 +65,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
             <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} defaultValue={htmlDecodeEntities(changelog.description)} id={"descriptionTextarea"} rows={5} maxRows={10}
                                    placeholder={"Detailed and meaningful description."} minLength={10} maxLength={2500} required
                                    style={{resize: "none", overflow: "hidden"}}
-                                   onChange={e => {
-                                       e.target.value = e.target.value.substring(0, 2500);
-                                       formatRemainingCharacters("remainingDescription", "descriptionTextarea", 2500);
-                                   }}/>
+                                   onChange={onDescriptionChange}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 {2500 - changelog.description.length} Remaining
             </small>

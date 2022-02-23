@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from 'react';
 import {UiCol, UiRow} from "ui/grid";
+import {UiThemeContext} from "ui/index";
 import {UiCard} from "ui/UiCard";
 
 const ViewBox = styled(UiCard)`
@@ -40,11 +40,11 @@ export const UiViewBoxBackground = styled(UiCol)`
   background-color: var(--secondary);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  
+
   input:not(:disabled), textarea:not(:disabled) {
     background-color: var(--tertiary) !important;
   }
-  
+
   .dark & {
     input:not(:disabled), textarea:not(:disabled) {
       background-color: var(--quaternary) !important;
@@ -54,7 +54,7 @@ export const UiViewBoxBackground = styled(UiCol)`
 
 export const UiViewBoxDangerBackground = styled(UiViewBoxBackground)`
   border: hsla(355, 100%, 60%, .4) 1px solid;
-  
+
   .dark & {
     box-shadow: none;
     border: hsla(2, 100%, 60%, .3) 1px solid;
@@ -62,8 +62,9 @@ export const UiViewBoxDangerBackground = styled(UiViewBoxBackground)`
 `;
 
 const UiViewBox = (props) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {theme = getTheme(), title, description, children} = props;
+
     return <React.Fragment>
         <ViewBox style={{color: theme, backgroundColor: theme.clone().setAlpha(.1)}} bodyClassName={"p-0"}>
             <h3 className={"mb-0"}>{title}</h3>

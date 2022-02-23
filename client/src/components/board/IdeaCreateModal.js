@@ -5,7 +5,7 @@ import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {FaExternalLinkAlt, FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiLabelledCheckbox} from "ui";
+import {UiBadge, UiLabelledCheckbox, UiThemeContext} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -39,7 +39,7 @@ const SelectableTag = styled.div`
 `;
 
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {discriminator, tags} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
     const [similarIdeas, setSimilarIdeas] = useState(0);
@@ -51,7 +51,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
     const [searchTimeout, setSearchTimeout] = useState(null);
     const descriptionRef = useRef();
 
-    const handleSubmit = () => {
+    const onCreate = () => {
         if (title.length < 10) {
             popupWarning("Title should be at least 10 characters long");
             return Promise.resolve();
@@ -84,7 +84,6 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             onIdeaCreation(res.data);
         });
     };
-
     const renderAttachmentButton = () => {
         return <div className={"float-right"}>
             <UiCol xs={"auto"} className={"d-inline-block px-0"}>
@@ -101,7 +100,6 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             }}/> : ""}
         </div>
     };
-
     const onAttachmentUpload = (e) => {
         if (!validateImageWithWarning(e, "attachmentUpload", 1024)) {
             return;
@@ -122,20 +120,26 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             setSimilarIdeas(data.length);
         }), 500));
     }
+    const applyButton = <UiLoadableButton label={"Post Idea"} onClick={onCreate} className={"mx-0"}>Post Idea</UiLoadableButton>;
+    const onTitleChange = e => {
+        formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
+        const text = e.target.value.substring(0, 50);
+        setTitle(text);
+        fetchSimilarIdeas(text);
+    };
+    const onDescriptionChange = e => {
+        e.target.value = e.target.value.substring(0, 1800);
+        formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
+        setDescription(e.target.value.substring(0, 1800));
+    };
     return <UiDismissibleModal id={"ideaPost"} isOpen={isOpen} onHide={onHide} title={"Post Feedback"}
-                               applyButton={<UiLoadableButton label={"Post Idea"} onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}
-                               onEntered={() => descriptionRef.current && descriptionRef.current.focus()}>
+                               applyButton={applyButton} onEntered={() => descriptionRef.current && descriptionRef.current.focus()}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>Title</UiFormLabel>
             <UiCol xs={12} className={"d-inline-block px-0"}>
                 <UiCol xs={10} className={"pr-sm-0 pr-2 px-0 d-inline-block"}>
                     <UiFormControl innerRef={descriptionRef} minLength={10} maxLength={50} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
-                                   onChange={e => {
-                                       formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
-                                       const text = e.target.value.substring(0, 50);
-                                       setTitle(text);
-                                       fetchSimilarIdeas(text);
-                                   }} label={"Idea title"}/>
+                                   onChange={onTitleChange} label={"Idea title"}/>
                 </UiCol>
                 {renderAttachmentButton()}
             </UiCol>
@@ -159,11 +163,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             <UiMarkdownFormControl label={"Write description"} as={TextareaAutosize} defaultValue={description} id={"descriptionTextarea"} rows={5} maxRows={10}
                                    placeholder={"Detailed and meaningful description."} minLength={10} maxLength={1800} required
                                    style={{resize: "none", overflow: "hidden"}}
-                                   onChange={e => {
-                                       e.target.value = e.target.value.substring(0, 1800);
-                                       formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
-                                       setDescription(e.target.value.substring(0, 1800));
-                                   }}/>
+                                   onChange={onDescriptionChange}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 1800 Remaining
             </small>

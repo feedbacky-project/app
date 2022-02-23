@@ -21,6 +21,15 @@ const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
         onLoadRequest(true);
         // eslint-disable-next-line
     }, [id, searchQuery, user.session, user.localPreferences.ideas]);
+    useEffect(() => {
+        if (scrollTo == null) {
+            return;
+        }
+        setTimeout(function () {
+            scrollIntoView("ideac_" + scrollTo).then(() => setScrollTo(null));
+        }, 500);
+    }, [scrollTo]);
+
     const loadIdeas = () => {
         if (ideas.error) {
             return <div className={"text-center"}>
@@ -74,14 +83,6 @@ const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
             setPage(currentPage + 1);
         }).catch(() => setIdeas({...ideas, error: true}));
     };
-    useEffect(() => {
-        if (scrollTo == null) {
-            return;
-        }
-        setTimeout(function () {
-            scrollIntoView("ideac_" + scrollTo).then(() => setScrollTo(null));
-        }, 500);
-    }, [scrollTo]);
 
     return <React.Fragment>
         <UiCol xs={{order: 12}} lg={{span: 8, order: 1}}>

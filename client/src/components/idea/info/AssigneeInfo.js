@@ -16,6 +16,7 @@ const AssigneeUsername = styled.small`
 
 const AssigneeInfo = () => {
     const {ideaData} = useContext(IdeaContext);
+
     if (ideaData.assignee == null) {
         return <React.Fragment/>
     }

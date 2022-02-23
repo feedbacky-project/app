@@ -7,17 +7,15 @@ import {UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
 
 const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
-    return <UiDismissibleModal id={"assigneeUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
-                               applyButton={
-                                   <React.Fragment>
-                                       <UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction("ALL").then(onHide)}>
-                                           <FaExclamation className={"move-top-1px"}/> Reset All
-                                       </UiLoadableButton>
-                                       <UiLoadableButton label={"Update"} className={"ml-1"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction("ANONYMOUS").then(onHide)}>
-                                           <FaExclamation className={"move-top-1px"}/> Reset Anonymous
-                                       </UiLoadableButton>
-                                   </React.Fragment>
-                               }>
+    const applyButton = <React.Fragment>
+        <UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction("ALL").then(onHide)}>
+            <FaExclamation className={"move-top-1px"}/> Reset All
+        </UiLoadableButton>
+        <UiLoadableButton label={"Update"} className={"ml-1"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction("ANONYMOUS").then(onHide)}>
+            <FaExclamation className={"move-top-1px"}/> Reset Anonymous
+        </UiLoadableButton>
+    </React.Fragment>;
+    return <UiDismissibleModal id={"assigneeUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
                 <QuestionIcon/>

@@ -3,6 +3,7 @@ import {AppContext} from "context";
 import md5 from "md5";
 import PropTypes from "prop-types";
 import React, {useContext} from 'react';
+import {UiThemeContext} from "ui";
 import {UiCol, UiRow} from "ui/grid";
 import {UiImage} from "ui/image";
 import {UiDismissibleModal} from "ui/modal";
@@ -22,7 +23,9 @@ const SelectableAvatar = styled(UiImage)`
 `;
 
 const AvatarSelectionModal = ({isOpen, onHide, connectedAccounts, onAvatarChoose}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
+
     if (connectedAccounts.error) {
         return <React.Fragment/>
     }

@@ -20,6 +20,7 @@ const DropdownItem = styled(Dropdown.Item)`
 
 const UiDropdownElement = (props) => {
     const {children, ...otherProps} = props;
+
     return <DropdownItem {...otherProps}>{children}</DropdownItem>
 };
 

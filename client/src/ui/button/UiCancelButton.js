@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
 import {BasePageButton} from "ui/button/UiButton";
+import {UiThemeContext} from "ui/index";
 
 const CancelButton = styled(BasePageButton)`
   color: hsla(0, 0%, 0%, .6);
@@ -27,7 +28,8 @@ const CancelButton = styled(BasePageButton)`
 
 const UiCancelButton = (props) => {
     const {children, innerRef, ...otherProps} = props;
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
+
     return <CancelButton theme={getTheme()} aria-label={"Cancel"} ref={innerRef} {...otherProps}>{children}</CancelButton>
 };
 

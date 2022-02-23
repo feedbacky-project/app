@@ -11,6 +11,7 @@ const TitleInfo = ({setModal, editor, setEditor, onStateChange}) => {
     const {ideaData} = useContext(IdeaContext);
     const {data} = useContext(BoardContext);
     const {user} = useContext(AppContext);
+
     const renderDeletionButton = () => {
         //if moderator, then moderator actions component can handle that
         if (ideaData.user.id !== user.data.id || data.moderators.find(mod => mod.userId === user.data.id)) {

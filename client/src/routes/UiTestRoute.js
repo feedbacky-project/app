@@ -8,7 +8,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {FaCogs} from "react-icons/all";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiHorizontalRule, UiKeyboardInput, UiLoadingSpinner, UiPrettyUsername, UiProgressBar} from "ui";
+import {UiBadge, UiClickableTip, UiHorizontalRule, UiKeyboardInput, UiLoadingSpinner, UiPrettyUsername, UiProgressBar, UiThemeContext} from "ui";
 import {UiButton, UiCancelButton, UiClassicButton, UiElementDeleteButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCountableFormControl, UiFormControl} from "ui/form";
@@ -21,10 +21,11 @@ import {popupNotification} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
 
 const UiTestRoute = () => {
-    const context = useContext(AppContext);
+    const {user, onAppearanceToggle} = useContext(AppContext);
+    const {onThemeChange} = useContext(UiThemeContext);
     useEffect(() => {
             document.getElementById("loadable").click();
-            context.onThemeChange("#8e44ad");
+            onThemeChange("#8e44ad");
         }, //eslint-disable-next-line
         []);
     useTitle("UI Debug");
@@ -32,12 +33,12 @@ const UiTestRoute = () => {
     const themes = ["#c0392b", "#9b59b6", "#16a085", "#2980b9"];
     const [modal, setModal] = useState({open: false});
     const getCustomTheme = () => customTheme.clone();
-    return <BoardContextedRouteUtil board={{
-        data: {
-            name: "Test Board", discriminator: "test", shortDescription: "UI test Feedbacky", logo: "https://cdn.feedbacky.net/static/img/logo.png",
-            banner: "https://cdn.feedbacky.net/static/img/main_banner_dark.png", socialLinks: [], suspendedUsers: [], moderators: [{userId: context.user.data.id, user: context.user.data, role: "MODERATOR"}]
-        }, loaded: true, error: false
-    }} setBoard={() => void 0}>
+
+    const data = {
+        name: "Test Board", discriminator: "test", shortDescription: "UI test Feedbacky", logo: "https://cdn.feedbacky.net/static/img/logo.png",
+        banner: "https://cdn.feedbacky.net/static/img/main_banner_dark.png", socialLinks: [], suspendedUsers: [], moderators: [{userId: user.data.id, user: user.data, role: "MODERATOR"}]
+    };
+    return <BoardContextedRouteUtil board={{data: data, loaded: true, error: false}} setBoard={() => void 0}>
         <IdeaContext.Provider value={{ideaData: {}, loaded: true, error: false, updateState: () => void 0}}>
             <ProfileNavbar/>
             <UiNavbar>
@@ -55,8 +56,8 @@ const UiTestRoute = () => {
             <div style={{position: "fixed", zIndex: 1000, left: "15px", top: "50%", width: 150, borderRadius: "var(--border-radius)", backgroundColor: "#2d2d2d"}}>
                 <UiContainer className={"py-2 justify-content-center"}>
                     <div style={{textAlign: "center", marginBottom: ".5rem", color: "white"}}>Debug Card</div>
-                    <UiButton label={"Dark Mode"} small className={"my-1"} onClick={() => context.onAppearanceToggle()}>Dark Mode</UiButton>
-                    <UiButton label={"Random Theme"} small className={"my-1"} onClick={() => context.onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
+                    <UiButton label={"Dark Mode"} small className={"my-1"} onClick={() => onAppearanceToggle()}>Dark Mode</UiButton>
+                    <UiButton label={"Random Theme"} small className={"my-1"} onClick={() => onThemeChange(themes[Math.floor(Math.random() * themes.length)])}>Random Theme</UiButton>
                     <UiButton label={"Snackbar Test"} small className={"my-1"} onClick={() => popupNotification("Snackbar test", getCustomTheme())}>Snackbar Test</UiButton>
                 </UiContainer>
             </div>
@@ -81,8 +82,8 @@ const UiTestRoute = () => {
                         <UiLoadingSpinner className={"mx-2"} customSize={25}/>
                         <UiLoadingSpinner className={"mx-2"} color={getCustomTheme()} customSize={15}/>
 
-                        <UiPrettyUsername className={"mx-2"} user={context.user.data}/>
-                        <UiPrettyUsername className={"mx-2"} user={context.user.data} truncate={3}/>
+                        <UiPrettyUsername className={"mx-2"} user={user.data}/>
+                        <UiPrettyUsername className={"mx-2"} user={user.data} truncate={3}/>
                         <UiClickableTip className={"mx-2"} id={"tip"} title={"Title"} description={"Desc"}/>
                         <UiClickableTip className={"mx-2"} id={"tip"} title={"Title"} description={"Desc"} icon={<FaCogs/>}/>
                     </UiCol>
@@ -122,9 +123,9 @@ const UiTestRoute = () => {
                                                 minLength={2} maxLength={99} id={"form2"}/>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
-                        <UiAvatar className={"mx-2"} user={context.user.data} size={120}/>
-                        <UiAvatar className={"mx-2"} user={context.user.data} size={90} rounded/>
-                        <UiAvatar className={"mx-2"} user={context.user.data} size={60} roundedCircle/>
+                        <UiAvatar className={"mx-2"} user={user.data} size={120}/>
+                        <UiAvatar className={"mx-2"} user={user.data} size={90} rounded/>
+                        <UiAvatar className={"mx-2"} user={user.data} size={60} roundedCircle/>
                     </UiCol>
                     <UiCol xs={12} md={6} className={"my-3"}>
                         <UiImage className={"mx-2"} src={"https://static.plajer.xyz/avatar/generator.php?name=Plajer"} width={128} height={128}/>

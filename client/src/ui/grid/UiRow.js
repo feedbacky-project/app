@@ -5,6 +5,7 @@ import {Row} from "react-bootstrap";
 const UiRow = (props) => {
     const {centered, verticallyCentered, className, children, innerRef, ...otherProps} = props;
     let classes = className;
+
     if (centered) {
         classes += " justify-content-center";
     }

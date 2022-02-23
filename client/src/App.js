@@ -10,6 +10,7 @@ import {BrowserRouter, Route, Switch, useHistory, useLocation} from "react-route
 
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
+import {UiThemeContext} from "ui";
 import {hideNotifications, popupError, popupWarning} from "utils/basic-utils";
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
@@ -103,6 +104,7 @@ const App = ({appearanceSettings}) => {
         }
         // eslint-disable-next-line
     }, [userData]);
+
     const hardResetData = () => {
         Cookies.remove("prefs_appearance");
         onLogOut();
@@ -132,7 +134,8 @@ const App = ({appearanceSettings}) => {
         metaThemeColor.setAttribute("content", changedTheme);
     };
     if (serviceData.error) {
-        return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"} onBackButtonClick={() => window.location.reload()}/></BrowserRouter>
+        const onBack = () => window.location.reload();
+        return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"} onBackButtonClick={onBack}/></BrowserRouter>
     }
     return <ComponentLoader loader={<LoadingRouteUtil/>} loaded={serviceData.loaded && userData.loaded} component={
         <AppContext.Provider value={{
@@ -147,14 +150,17 @@ const App = ({appearanceSettings}) => {
             serviceData: serviceData.data,
             onLocalPreferencesUpdate: setLocalPrefs,
             onAppearanceToggle: onAppearanceToggle,
-            getTheme: getTheme,
-            theme: theme,
             appearance: appearance,
             setAppearance: setAppearance,
-            defaultTheme: appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
-            onThemeChange: onThemeChange,
             hardResetData: hardResetData,
         }}>
+            <UiThemeContext.Provider value={{
+                darkMode: appearance.mode === "dark",
+                getTheme: getTheme,
+                theme: theme,
+                defaultTheme: appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
+                onThemeChange: onThemeChange,
+            }}>
             <Suspense fallback={<LoadingRouteUtil/>}>
                 <Switch>
                     <Route exact path={"/"} component={ProfileRoute}/>
@@ -173,6 +179,7 @@ const App = ({appearanceSettings}) => {
                     <Route render={() => <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>}/>
                 </Switch>
             </Suspense>
+            </UiThemeContext.Provider>
         </AppContext.Provider>
     }/>
 };

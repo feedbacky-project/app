@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/commons/SvgNotice";
-import {SimpleIdeaCard} from "components/roadmap/SimpleIdeaCard";
+import SimpleIdeaCard from "components/roadmap/SimpleIdeaCard";
 import React from "react";
 import tinycolor from "tinycolor2";
 import {UiBadge} from "ui";
@@ -36,7 +36,7 @@ const StyledTagName = styled(UiBadge)`
   padding: .25rem .75rem;
 `;
 
-export const BoardRoadmapBox = ({roadmapData}) => {
+const BoardRoadmapBox = ({roadmapData}) => {
     if (roadmapData.length === 0) {
         return <SvgNotice Component={UndrawNoData} title={"This Roadmap Is Empty"}/>
     }
@@ -56,3 +56,5 @@ export const BoardRoadmapBox = ({roadmapData}) => {
         </UiCol>
     });
 };
+
+export default BoardRoadmapBox;

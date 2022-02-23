@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
+import {UiThemeContext} from "ui";
 import {truncateText} from "utils/basic-utils";
 
 const MarkdownBox = styled.div`
@@ -36,8 +37,9 @@ renderer.link = (href, title, text) => {
 marked.setOptions({renderer: renderer, ...marked.options,});
 
 const MarkdownContainer = (props) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {text, stripped, truncate = -1, ...otherProps} = props;
+
     const parseEmojis = (preText) => {
         let replaced = preText;
         replaced = replaced.replace(":)", "\uD83D\uDE04");

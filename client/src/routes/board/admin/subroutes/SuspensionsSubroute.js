@@ -1,10 +1,11 @@
+import styled from "@emotion/styled";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import {AppContext, BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {UiBadge} from "ui";
+import {UiBadge, UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -13,13 +14,20 @@ import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
 
+const Suspended = styled.div`
+  display: inline-flex;
+  justify-content: center;
+  margin: .5em;
+`;
+
 const SuspensionSettings = () => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("suspended"), [setCurrentNode]);
     useTitle(boardData.name + " | Suspensions");
+
     const renderContent = () => {
         return <UiCol xs={12}>
             <UiFormLabel>Suspended Users</UiFormLabel>
@@ -36,15 +44,15 @@ const SuspensionSettings = () => {
             return <SvgNotice Component={UndrawNoData} title={"No suspensions yet."} description={"Lets hope nobody will never appear here."}/>
         }
         return boardData.suspendedUsers.map((suspendedUser, i) => {
-            return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={i}>
+            const onDelete = () => setModal({open: true, data: suspendedUser.id, dataName: suspendedUser.user.username});
+            return <Suspended key={i}>
                 <div className={"text-center"}>
                     <UiAvatar roundedCircle user={suspendedUser.user} size={35}/>
-                    <UiElementDeleteButton id={"mod_del_" + i} tooltipName={"Unsuspend"}
-                                           onClick={() => setModal({open: true, data: suspendedUser.id, dataName: suspendedUser.user.username})}/>
+                    <UiElementDeleteButton id={"mod_del_" + i} tooltipName={"Unsuspend"} onClick={onDelete}/>
                     <br/>
                     <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{suspendedUser.user.username}</small>
                 </div>
-            </div>
+            </Suspended>
         });
     };
     const onUnsuspension = () => {

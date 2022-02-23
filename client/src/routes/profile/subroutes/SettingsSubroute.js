@@ -6,7 +6,7 @@ import {AppContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
@@ -16,7 +16,8 @@ import {hideMail, popupError, popupNotification, popupWarning} from "utils/basic
 import {useTitle} from "utils/use-title";
 
 const SettingsSubroute = () => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const history = useHistory();
     const [username, setUsername] = useState(user.data.username);
@@ -25,6 +26,19 @@ const SettingsSubroute = () => {
     const [modal, setModal] = useState({open: false, type: ""});
     useEffect(() => setCurrentNode("settings"), [setCurrentNode]);
     useTitle("Profile | Settings");
+    useEffect(() => {
+        if (!user.loggedIn) {
+            return;
+        }
+        axios.get("/users/@me/connectedAccounts").then(res => {
+            if (res.status !== 200) {
+                return;
+            }
+            setConnectedAccounts({...connectedAccounts, data: res.data, loaded: true});
+        }).catch(() => setConnectedAccounts({...connectedAccounts, loaded: true, error: true}));
+        // eslint-disable-next-line
+    }, []);
+
     const onChangesSave = () => {
         if (username.length < 3) {
             popupWarning("Username length should be longer than 3 characters");
@@ -53,19 +67,6 @@ const SettingsSubroute = () => {
             popupNotification("Account deactivated and logged out", getTheme());
         });
     };
-
-    useEffect(() => {
-        if (!user.loggedIn) {
-            return;
-        }
-        axios.get("/users/@me/connectedAccounts").then(res => {
-            if (res.status !== 200) {
-                return;
-            }
-            setConnectedAccounts({...connectedAccounts, data: res.data, loaded: true});
-        }).catch(() => setConnectedAccounts({...connectedAccounts, loaded: true, error: true}));
-        // eslint-disable-next-line
-    }, []);
     if (!user.loggedIn) {
         return <UiCol xs={12} md={9}>
             <UiViewBox title={"User Settings"} description={"Edit your account here."}>
@@ -74,6 +75,11 @@ const SettingsSubroute = () => {
         </UiCol>
     }
     const renderContent = () => {
+        const component = <UiButton label={"Change"} color={tinycolor("#00c851")} className={"align-top mx-3 my-0"}
+                                    onClick={() => setModal({open: true, type: "avatar"})}>Change</UiButton>;
+        const loader = <UiButton label={"Loading..."} color={tinycolor("#00c851")} disabled className={"align-top mx-3 my-0"}>
+            <UiLoadingSpinner className={"mr-1"} size={"sm"}/> Loading
+        </UiButton>;
         return <React.Fragment>
             <ComponentLoader loaded={connectedAccounts.loaded} component={
                 <AvatarSelectionModal isOpen={modal.open && modal.type === "avatar"} onHide={() => setModal({...modal, open: false})}
@@ -92,13 +98,7 @@ const SettingsSubroute = () => {
                 <UiFormLabel>Avatar</UiFormLabel>
                 <br/>
                 <img alt={"User Avatar"} src={avatar} className={"rounded-circle"} width={100} height={100}/>
-                <ComponentLoader loaded={connectedAccounts.loaded}
-                                 component={<UiButton label={"Change"} color={tinycolor("#00c851")} className={"align-top mx-3 my-0"}
-                                                      onClick={() => setModal({open: true, type: "avatar"})}>Change</UiButton>}
-                                 loader={<UiButton label={"Loading..."} color={tinycolor("#00c851")} disabled className={"align-top mx-3 my-0"}>
-                                     <UiLoadingSpinner className={"mr-1"} size={"sm"}/> Loading
-                                 </UiButton>}
-                />
+                <ComponentLoader loaded={connectedAccounts.loaded} component={component} loader={loader}/>
             </UiCol>
             <UiCol xs={{span: 12, order: 3}} lg={6}>
                 <UiFormLabel className={"mt-2"}>Email</UiFormLabel>
@@ -114,6 +114,7 @@ const SettingsSubroute = () => {
             </UiCol>
         </React.Fragment>
     };
+    const onDeactivate = () => setModal({...modal, open: true, type: "anonymize"});
     return <UiCol xs={12} md={9}>
         <UiViewBox title={"User Settings"} description={"Edit your account here."}>
             {renderContent()}
@@ -127,10 +128,9 @@ const SettingsSubroute = () => {
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiLoadableButton label={"Deactivate Account"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")}
-                                      onClick={() => Promise.resolve(setModal({...modal, open: true, type: "anonymize"}))}>
+                    <UiButton label={"Deactivate Account"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={onDeactivate}>
                         Deactivate
-                    </UiLoadableButton>
+                    </UiButton>
                 </UiCol>
             </UiRow>
         </UiViewBoxDangerBackground>

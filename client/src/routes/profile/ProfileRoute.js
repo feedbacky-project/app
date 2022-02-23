@@ -7,7 +7,7 @@ import React, {lazy, Suspense, useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
 import {Route, Switch, useHistory, useLocation} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
@@ -28,7 +28,7 @@ const ProfileRoute = () => {
       return location.state._boardData;
     };
     const [board, setBoard] = useState({data: getPassedBoardData(), loaded: true, error: false});
-    const {onThemeChange, defaultTheme} = useContext(AppContext);
+    const {onThemeChange, defaultTheme} = useContext(UiThemeContext);
     useEffect(() => {
         const data = getPassedBoardData();
         if(data !== null) {
@@ -38,15 +38,17 @@ const ProfileRoute = () => {
         onThemeChange();
         /*eslint-disable-next-line*/
     }, [defaultTheme]);
-    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setLoginModalOpen(true)}
-                                    errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
+
+    const onNotLogged = () => setLoginModalOpen(true);
+    const onReRoute = destination => history.push({pathname: "/me/" + destination, state: {_boardData: getPassedBoardData()}});
+    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
             <LoginModal isOpen={loginModalOpen} onHide={() => setLoginModalOpen(false)}
                         image={ServiceLogo} boardName={getEnvVar("REACT_APP_SERVICE_NAME")} redirectUrl={"me"}/>
             <ProfileNavbar onNotLoggedClick={() => setLoginModalOpen(true)}/>
             <UiContainer>
                 <UiRow centered className={"pb-5"}>
-                    <ProfileSidebar currentNode={currentNode} reRouteTo={destination => history.push({pathname: "/me/" + destination, state: {_boardData: getPassedBoardData()}})}/>
+                    <ProfileSidebar currentNode={currentNode} reRouteTo={onReRoute}/>
                     <Suspense fallback={<UiCol xs={12} md={9}><UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow></UiCol>}>
                         <Switch>
                             <Route path={"/me/settings"} component={SettingsSubroute}/>

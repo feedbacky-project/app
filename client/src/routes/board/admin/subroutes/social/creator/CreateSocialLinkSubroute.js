@@ -6,13 +6,13 @@ import {Link, useHistory, withRouter} from "react-router-dom";
 import StepFirstRoute from "routes/board/admin/subroutes/social/creator/StepFirstRoute";
 import StepSecondRoute from "routes/board/admin/subroutes/social/creator/StepSecondRoute";
 import tinycolor from "tinycolor2";
-import {UiProgressBar} from "ui";
+import {UiProgressBar, UiThemeContext} from "ui";
 import {UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {popupNotification, popupWarning} from "utils/basic-utils";
 
 const CreateSocialLinkSubroute = () => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {updateState, data: boardData} = useContext(BoardContext);
     const history = useHistory();
     const [settings, setSettings] = useState({step: 1, iconData: "", url: "", chosen: -1, customIcon: false});

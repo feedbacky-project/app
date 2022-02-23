@@ -2,16 +2,17 @@ import axios from "axios";
 import {renderModal} from "components/commons/tag-modal-commons";
 import {AppContext, BoardContext} from "context";
 import {useContext, useRef, useState} from 'react';
+import {UiThemeContext} from "ui";
 import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data} = useContext(BoardContext);
     const [color, setColor] = useState("#0994f6");
     const [tagData, setTagData] = useState({name: "", roadmapIgnored: false, publicUse: false});
     const ref = useRef();
 
-    const handleSubmit = () => {
+    const onClick = () => {
         const name = tagData.name;
         if (name.length < 3 || name.length > 20) {
             popupWarning("Tag name must be between 3 and 20 characters");
@@ -31,7 +32,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             popupNotification("Tag created", getTheme());
         });
     };
-    return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, tagData, setTagData, ref);
+    return renderModal(isOpen, onHide, "Add new Tag", onClick, color, setColor, tagData, setTagData, ref);
 };
 
 export default TagCreateModal;

@@ -3,25 +3,26 @@ import BoardBanner from "components/board/BoardBanner";
 import PageNavbar from "components/commons/PageNavbar";
 import ComponentLoader from "components/ComponentLoader";
 import LoginModal from "components/LoginModal";
-import {BoardRoadmapBox} from "components/roadmap/BoardRoadmapBox";
+import BoardRoadmapBox from "components/roadmap/BoardRoadmapBox";
 import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiContainer, UiRow} from "ui/grid";
 import {useTitle} from "utils/use-title";
 
 const RoadmapRoute = () => {
-    const {onThemeChange, defaultTheme, user} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {onThemeChange, defaultTheme} = useContext(UiThemeContext);
     const location = useLocation();
     const history = useHistory();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [roadmap, setRoadmap] = useState({data: {}, loaded: false, error: false});
-    const [modalOpen, setModalOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     useTitle(board.loaded ? board.data.name + " | Roadmap" : "Loading...");
     const resolvePassedData = () => {
         const state = location.state;
@@ -61,6 +62,7 @@ const RoadmapRoute = () => {
         loadRoadmapData();
         // eslint-disable-next-line
     }, [user.session]);
+
     if(board.loaded && !board.data.roadmapEnabled) {
         history.push("/b/" + id);
         return <React.Fragment/>
@@ -68,11 +70,11 @@ const RoadmapRoute = () => {
     if (roadmap.error) {
         return <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>
     }
-    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setModalOpen(true)}
-                                    errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
-        <LoginModal isOpen={modalOpen} image={board.data.logo}
+    const onNotLogged = () => setOpen(true);
+    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
+        <LoginModal isOpen={open} image={board.data.logo}
                     boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/roadmap"}
-                    onHide={() => setModalOpen(false)}/>
+                    onHide={() => setOpen(false)}/>
         <PageNavbar selectedNode={"roadmap"}/>
         <UiContainer className={"pb-5"}>
             <UiRow centered className={"pb-4"}>

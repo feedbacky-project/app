@@ -47,7 +47,6 @@ const StepFirstRoute = ({settings, updateSettings}) => {
             ...settings, chosen: item, customIcon: false, iconData: itemData[item]
         });
     };
-
     return <React.Fragment>
         <input id={"logoInput"} type={"file"} accept={"image/jpeg, image/png"} className={"d-none"} name={"logo"} onChange={e => onUpload(e)}/>
         <SetupImageBanner svg={UndrawCreateProject} stepName={"Choose Link Icon"} stepDescription={"Select icon that your Social Link will represent."}/>

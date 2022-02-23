@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
 import {FaUserSecret} from "react-icons/all";
-import {UiPrettyUsername, UiTooltip} from "ui";
+import {UiPrettyUsername, UiThemeContext, UiTooltip} from "ui";
 import {UiCancelButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
@@ -17,10 +17,11 @@ const AnonymousIcon = styled(FaUserSecret)`
 `;
 
 const VotersViewModal = ({votersData, isOpen, onHide}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const anonymousVoters = votersData.filter(u => u.fake).length;
-    return <UiDismissibleModal id={"votersView"} size={"md"} isOpen={isOpen} onHide={onHide} title={"Idea Voters"} applyButton={<React.Fragment/>}
-                               footer={<UiCancelButton className={"m-0 mr-1"} onClick={onHide}>Close</UiCancelButton>}>
+
+    const footer = <UiCancelButton className={"m-0 mr-1"} onClick={onHide}>Close</UiCancelButton>;
+    return <UiDismissibleModal id={"votersView"} size={"md"} isOpen={isOpen} onHide={onHide} title={"Idea Voters"} applyButton={<React.Fragment/>} footer={footer}>
         <UiRow className={"mt-2 mb-1"}>
             <UiFormLabel className={"col-12"}>All Voters ({votersData.length - anonymousVoters} Registered, {anonymousVoters} Anonymous)</UiFormLabel>
             {votersData.map(voter => {

@@ -81,7 +81,8 @@ const UiMarkdownFormControl = (props) => {
     const {CustomOptions, ...otherProps} = props;
     const [modal, setModal] = useState({open: false, type: ""});
     const [selection, setSelection] = useState("");
-    const markdownInsert = (text, between) => {
+
+    const insert = (text, between) => {
         const form = ref.current;
         const scrollPos = form.scrollTop;
         let caretPos = form.selectionStart;
@@ -98,25 +99,20 @@ const UiMarkdownFormControl = (props) => {
         form.selectionEnd = caretPos;
         form.focus();
         form.scrollTop = scrollPos;
+        return Promise.resolve();
     };
     return <React.Fragment>
         <MarkdownOptionModal as={TextInputActionModal} size={"sm"} id={"linkInput"} isOpen={modal.open && modal.type === "link"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
-                             actionDescription={"Insert link, type link URL."} onAction={link => {
-            markdownInsert("[" + selection + "](" + link + ")", false);
-            return Promise.resolve();
-        }}/>
+                             actionDescription={"Insert link, type link URL."} onAction={link => insert("[" + selection + "](" + link + ")", false)}/>
         <MarkdownOptionModal as={TextInputActionModal} className={"test"} size={"sm"} id={"imageInput"} isOpen={modal.open && modal.type === "image"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
-                             actionDescription={"Insert image, type image URL."} onAction={link => {
-            markdownInsert("![" + selection + "](" + link + ")", false);
-            return Promise.resolve();
-        }}/>
+                             actionDescription={"Insert image, type image URL."} onAction={link => insert("![" + selection + "](" + link + ")", false)}/>
         <MarkdownForm>
             {/* fixme window.getSelection().toString() broken on Firefox */}
             <FormControl innerRef={ref} onSelect={() => setSelection(window.getSelection().toString())} {...otherProps}/>
             <MarkdownOptions as={CustomOptions}>
-                <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("**", true)}><FaBold/></MarkdownIcon>
-                <MarkdownIcon className={"mr-1"} onClick={() => markdownInsert("*", true)}><FaItalic/></MarkdownIcon>
-                <MarkdownIcon className={"mr-sm-4 mr-1"} onClick={() => markdownInsert("~~", true)}><FaStrikethrough/></MarkdownIcon>
+                <MarkdownIcon className={"mr-1"} onClick={() => insert("**", true)}><FaBold/></MarkdownIcon>
+                <MarkdownIcon className={"mr-1"} onClick={() => insert("*", true)}><FaItalic/></MarkdownIcon>
+                <MarkdownIcon className={"mr-sm-4 mr-1"} onClick={() => insert("~~", true)}><FaStrikethrough/></MarkdownIcon>
                 <MarkdownIcon className={"mr-1"} onClick={() => setModal({open: true, type: "image"})}><FaImage/></MarkdownIcon>
                 <MarkdownIcon onClick={() => setModal({open: true, type: "link"})}><FaLink/></MarkdownIcon>
             </MarkdownOptions>

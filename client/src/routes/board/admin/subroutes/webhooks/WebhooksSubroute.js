@@ -8,7 +8,7 @@ import ComponentLoader from "components/ComponentLoader";
 import {AppContext, BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
-import {UiBadge, UiLoadingSpinner} from "ui";
+import {UiBadge, UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -16,6 +16,13 @@ import {UiImage} from "ui/image";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification, prettifyEnum} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
+
+const Webhook = styled.div`
+  display: inline-flex;
+  justify-content: center;
+  text-align: center;
+  margin: .5em;
+`;
 
 const EventsContainer = styled.div`
   max-height: 80px;
@@ -36,7 +43,7 @@ const WebhookIcon = styled(UiImage)`
 `;
 
 const WebhooksSubroute = () => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [webhooks, setWebhooks] = useState({data: [], loaded: false, error: false});
@@ -54,21 +61,22 @@ const WebhooksSubroute = () => {
         }).catch(() => setWebhooks({...webhooks, error: true}));
         // eslint-disable-next-line
     }, []);
+
     const renderWebhooks = () => {
         if (webhooks.data.length === 0) {
             return <SvgNotice Component={UndrawNoData} title={"No webhooks yet."} description={"How about creating one?"}/>
         }
         return webhooks.data.map((hook, i) => {
-            return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={hook.id}>
+            const onDelete = () => setModal({open: true, type: "delete", data: hook.id, dataName: prettifyEnum(hook.type) + " #" + hook.id});
+            return <Webhook key={hook.id}>
                 <div className={"text-center"}>
                     <WebhookIcon alt={"Webhook"} rounded src={getTypeIcon(hook)} height={40} width={40} onClick={() => onWebhookEdit(hook)}/>
-                    <UiElementDeleteButton id={"webhook_del_" + i} tooltipName={"Delete"}
-                                           onClick={() => setModal({open: true, type: "delete", data: hook.id, dataName: prettifyEnum(hook.type) + " #" + hook.id})}/>
+                    <UiElementDeleteButton id={"webhook_del_" + i} tooltipName={"Delete"} onClick={onDelete}/>
                     <br/>
                     <small className={"text-truncate text-center d-block"}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
                     <EventsContainer>{renderEvents(hook)}</EventsContainer>
                 </div>
-            </div>
+            </Webhook>
         })
     };
     const renderContent = () => {

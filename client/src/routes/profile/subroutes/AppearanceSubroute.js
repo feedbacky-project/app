@@ -17,6 +17,7 @@ const AppearanceSubroute = () => {
     const {setCurrentNode} = useContext(PageNodesContext);
     useEffect(() => setCurrentNode("appearance"), [setCurrentNode]);
     useTitle("Profile | Appearance");
+
     const renderContent = () => {
         return <UiCol xs={12} className={"my-2 text-center"}>
             <h4 className={"mb-1"}>Application Theme</h4>

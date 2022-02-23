@@ -10,6 +10,7 @@ export const DARK_THEME_COLOR = "#6bbef9";
 
 const AppAppearance = () => {
     const [theme, setTheme] = useState(DEFAULT_THEME);
+
     const generateAppearanceData = () => {
         const cookie = getCookieOrDefault("prefs_appearance", null);
         const systemDefault = cookie == null;

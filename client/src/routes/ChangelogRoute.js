@@ -9,17 +9,19 @@ import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
+import {UiThemeContext} from "ui";
 import {UiContainer, UiRow} from "ui/grid";
 import {useTitle} from "utils/use-title";
 
 const ChangelogRoute = () => {
-    const {onThemeChange, defaultTheme, user} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {onThemeChange, defaultTheme} = useContext(UiThemeContext);
     const location = useLocation();
     const history = useHistory();
     const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [searchQuery, setSearchQuery] = useState("");
-    const [modalOpen, setModalOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     useTitle(board.loaded ? board.data.name + " | Changelog" : "Loading...");
     const resolvePassedData = () => {
         const state = location.state;
@@ -55,11 +57,11 @@ const ChangelogRoute = () => {
         history.push("/b/" + id);
         return <React.Fragment/>
     }
-    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => setModalOpen(true)}
-                                    errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
-        <LoginModal isOpen={modalOpen} image={board.data.logo}
+    const onNotLogged = () => setOpen(true);
+    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
+        <LoginModal isOpen={open} image={board.data.logo}
                     boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/changelog"}
-                    onHide={() => setModalOpen(false)}/>
+                    onHide={() => setOpen(false)}/>
         <PageNavbar selectedNode={"changelog"}/>
         <UiContainer className={"pb-5"}>
             <UiRow className={"pb-4"}>

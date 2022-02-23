@@ -24,7 +24,6 @@ const StepFirstSubroute = ({updateSettings, settings}) => {
             return <SetupCard key={i} icon={typeIcon[i]} text={name} onClick={() => onChoose(item)} className={"m-2"} chosen={settings.type === item}/>
         });
     };
-
     return <React.Fragment>
         <SetupImageBanner svg={UndrawCreateProject} stepName={"Select Webhook Type"} stepDescription={"Select in which way you'll utilize this webhook."}/>
         <UiCol xs={12} className={"mt-4"}>

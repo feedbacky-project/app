@@ -9,7 +9,7 @@ import {AppContext, BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaExclamation} from "react-icons/all";
 import {Link} from "react-router-dom";
-import {UiBadge, UiLoadingSpinner, UiTooltip} from "ui";
+import {UiBadge, UiLoadingSpinner, UiThemeContext, UiTooltip} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -24,14 +24,13 @@ const SocialIcon = styled(UiImage)`
 `;
 
 const SocialLinksSubroute = () => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {updateState, data: boardData} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [socialLinks, setSocialLinks] = useState({data: [], loaded: false, error: false});
     const [modal, setModal] = useState({open: false, data: -1, dataName: ""});
     useEffect(() => setCurrentNode("social"), [setCurrentNode]);
     useTitle(boardData.name + " | Social Links");
-    const getQuota = () => 5 - socialLinks.data.length;
     useEffect(() => {
         axios.get("/boards/" + boardData.discriminator + "/socialLinks").then(res => {
             if (res.status !== 200) {
@@ -44,6 +43,7 @@ const SocialLinksSubroute = () => {
         // eslint-disable-next-line
     }, []);
 
+    const getQuota = () => 5 - socialLinks.data.length;
     const renderSocialLinks = () => {
         if (socialLinks.data.length === 0) {
             return <SvgNotice Component={UndrawNoData} title={"No social links yet."} description={"How about creating one?"}/>

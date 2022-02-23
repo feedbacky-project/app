@@ -8,10 +8,12 @@ import {UiDismissibleModal} from "ui/modal";
 const TextInputActionModal = ({id, isOpen, onHide, onAction, actionButtonName = "Confirm", actionDescription, ...otherProps}) => {
     const [text, setText] = useState("");
     const ref = useRef();
-    return <UiDismissibleModal id={id} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
-                               applyButton={<UiLoadableButton label={actionButtonName} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => {
-                                   return onAction(text).then(onHide);
-                               }}>{actionButtonName}</UiLoadableButton>} onEntered={() => ref.current && ref.current.focus()} {...otherProps}>
+
+    const applyButton = <UiLoadableButton label={actionButtonName} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => {
+        return onAction(text).then(onHide);
+    }}>{actionButtonName}</UiLoadableButton>;
+    return <UiDismissibleModal id={id} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}
+                               onEntered={() => ref.current && ref.current.focus()} {...otherProps}>
         <UiRow centered className={"mt-3 justify-content-center"}>
             <UiCol xs={12} className={"mb-2 px-4 text-center"}>
                 <div>{actionDescription}</div>

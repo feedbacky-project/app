@@ -7,6 +7,7 @@ import {FaAngleDown} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiClassicButton} from "ui/button";
 import {DropdownMenu, DropdownToggle} from "ui/dropdown/UiDropdown";
+import {UiThemeContext} from "ui/index";
 
 const SelectableDropdown = styled(UiClassicButton)`
   margin: 0;
@@ -33,10 +34,11 @@ const SelectableDropdown = styled(UiClassicButton)`
 `;
 
 const UiSelectableDropdown = (props) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {darkMode, getTheme} = useContext(UiThemeContext);
     const {id, className = null, currentValue, label, values} = props;
     let children;
-    if (user.darkMode) {
+
+    if (darkMode) {
         let color = getTheme().lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(color, "#282828") < 2.5) {

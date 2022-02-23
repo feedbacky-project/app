@@ -6,7 +6,7 @@ import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaTimes} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiClickableTip, UiPrettyUsername} from "ui";
+import {UiClickableTip, UiPrettyUsername, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -48,12 +48,14 @@ const UsernameBox = styled.small`
 `;
 
 const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {onNotLoggedClick, data} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
     const isModerator = data.moderators.find(mod => mod.userId === user.data.id);
     const [submitOpen, setSubmitOpen] = useState(false);
     const [warningOpen, setWarningOpen] = useState(false);
+
     if (!ideaData.open && !data.closedIdeasCommentingEnabled) {
         return <React.Fragment/>;
     }

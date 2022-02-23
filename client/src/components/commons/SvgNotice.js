@@ -1,9 +1,11 @@
 import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
+import {UiThemeContext} from "ui";
 
 export const SvgNotice = ({Component, title, description}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
+
     return <div className={"text-center mt-3"}>
         <Component style={{maxWidth: 150, maxHeight: 120, color: getTheme()}}/>
         <div>

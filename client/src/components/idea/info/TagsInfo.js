@@ -5,6 +5,7 @@ import {UiBadge} from "ui";
 
 const TagsInfo = () => {
     const {tags} = useContext(IdeaContext).ideaData;
+
     if (tags.length === 0) {
         return <React.Fragment/>;
     }

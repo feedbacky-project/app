@@ -4,6 +4,7 @@ import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/side
 import {AppContext} from "context";
 import React, {useContext} from 'react';
 import {FaAt, FaColumns, FaSlidersH, FaTags, FaUserLock, FaUsersCog} from "react-icons/all";
+import {UiThemeContext} from "ui";
 import {UiCol} from "ui/grid";
 
 const AdminSidebar = ({currentNode, reRouteTo}) => {
@@ -16,10 +17,10 @@ const AdminSidebar = ({currentNode, reRouteTo}) => {
         {suspended: data => <React.Fragment><SidebarIcon as={FaUserLock} style={data}/> Suspensions</React.Fragment>}
     ];
     const context = useContext(AppContext);
-    const themeColor = context.getTheme();
+    const {getTheme} = useContext(UiThemeContext);
 
-    return <UiCol xs={12} md={3} as={Sidebar} theme={themeColor.toString()}>
-        <ul>{renderSidebarRoutes(routes, themeColor, currentNode, reRouteTo)}</ul>
+    return <UiCol xs={12} md={3} as={Sidebar} theme={getTheme().toString()}>
+        <ul>{renderSidebarRoutes(routes, getTheme(), currentNode, reRouteTo)}</ul>
         <small className={"text-black-60"}>
             <div>
                 Running <img alt={"Project Logo"} src={"https://cdn.feedbacky.net/static/img/logo.png"} width={16} height={16}/> <SafeAnchor url={"https://feedbacky.net"} className={"text-black-60"}>Feedbacky</SafeAnchor>

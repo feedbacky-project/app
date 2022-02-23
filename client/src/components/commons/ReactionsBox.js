@@ -34,8 +34,16 @@ const AddReaction = styled(MdOutlineAddReaction)`
   }
 `
 
+const Reaction = styled.img`
+  width: 14px;
+  height: 14px;
+  transform: translateY(-1px);
+  vertical-align: middle;
+`;
+
 const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact, onUnreact}) => {
     const {serviceData, user} = useContext(AppContext);
+
     const onReaction = (emoteId) => {
         let reactions = reactionsData.filter(r => r.reactionId === emoteId) || [];
         let isReacted = reactions.find(r => r.user.id === user.data.id) !== undefined;
@@ -58,7 +66,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
             let whoReacted = "";
             let i = 0;
             reactions.forEach(r => {
-                if(i >= 3) {
+                if (i >= 3) {
                     i++;
                     return;
                 }
@@ -66,16 +74,16 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
                 i++;
             });
             whoReacted = whoReacted.substring(0, whoReacted.length - 2);
-            if(i > 3) {
+            if (i > 3) {
                 whoReacted += " and " + (reactions.length - 3) + " more";
             }
             whoReacted += " reacted with " + emote.name;
             return <LoadableReaction key={emote.id} isSelected={selected} onReact={() => onReaction(emote.id)}>
                 <UiTooltip id={parentObjectId + emote.id} text={whoReacted}>
-                        <span>
-                        <img className={"align-middle move-top-1px mr-2"} alt={emote.name} src={emote.path} width={14} height={14}/>
+                    <span>
+                        <Reaction className={"mr-2"} alt={emote.name} src={emote.path}/>
                         <span>{reactions.length}</span>
-                        </span>
+                    </span>
                 </UiTooltip>
             </LoadableReaction>
         })}
@@ -91,7 +99,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
                     i++;
                     return <React.Fragment key={"reaction_" + emote.id}>
                         <UiDropdownElement className={"d-inline"} onClick={() => onReaction(emote.id)}>
-                            <img className={"align-middle move-top-1px"} alt={emote.name} src={emote.path} width={14} height={14}/>
+                            <Reaction alt={emote.name} src={emote.path}/>
                         </UiDropdownElement>
                         {i === 3 && <div className={"py-1"}/>}
                     </React.Fragment>
