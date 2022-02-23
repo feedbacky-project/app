@@ -5,7 +5,7 @@ import ReactionsBox from "components/commons/ReactionsBox";
 import parseComment from "components/idea/discussion/comment-parser";
 import CommentIcon from "components/idea/discussion/CommentIcon";
 import {AppContext, BoardContext} from "context";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaCommentSlash, FaLowVision, FaPen, FaReply, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
@@ -74,8 +74,19 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     const {user, getTheme} = useContext(AppContext);
     const {data: boardData} = useContext(BoardContext);
     const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(data.description || "")});
+    const editorRef = useRef();
     //smaller step size for mobile
     const stepRemSize = window.matchMedia("only screen and (max-width: 760px)").matches ? 1.75 : 2.75;
+    useEffect(() => {
+        if(editorRef.current) {
+            editorRef.current.focus();
+            //trick to force cursor to the end not start of textarea
+            const val = editorRef.current.value;
+            editorRef.current.value = "";
+            editorRef.current.value = val;
+        }
+
+    }, [editor]);
     const renderRepliesRecursive = () => {
         return comments.map(c => {
             if (c.replyTo != null && c.replyTo === data.id) {
@@ -148,7 +159,6 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         }
         return <UiHoverableIcon as={FaPen} className={"text-black-60 ml-1"} onClick={() => {
             setEditor({...editor, enabled: !editor.enabled});
-            setTimeout(() => document.getElementById("editorBox").focus(), 200);
         }}/>
     };
     const renderDeletionButton = () => {
@@ -179,7 +189,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <UiMarkdownFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
+            <UiMarkdownFormControl innerRef={editorRef} as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
                                    placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
                                    style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={editor.value}/>
             <div className={"m-0 mt-2"}>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {renderModal} from "components/commons/tag-modal-commons";
 import {AppContext, BoardContext} from "context";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
@@ -9,6 +9,7 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
     const {data} = useContext(BoardContext);
     const [color, setColor] = useState(tag.color);
     const [tagData, setTagData] = useState({name: "", roadmapIgnored: false, publicUse: false});
+    const ref = useRef();
     useEffect(() => {
         setColor(tag.color);
         if(tag.roadmapIgnored != null && tag.publicUse != null) {
@@ -36,7 +37,7 @@ const TagEditModal = ({tag, isOpen, onHide, onEdit}) => {
             popupNotification("Tag edited", getTheme());
         });
     };
-    return renderModal(isOpen, onHide, "Edit Tag", handleSubmit, color, setColor, tagData, setTagData);
+    return renderModal(isOpen, onHide, "Edit Tag", handleSubmit, color, setColor, tagData, setTagData, ref);
 };
 
 export default TagEditModal;

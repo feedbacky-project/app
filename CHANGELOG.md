@@ -3,6 +3,7 @@
 * **[FEATURE]** Comments can now receive replies
 * **[FEATURE]** Added Twitch OAuth2 log-in support
 * **[IMPROVEMENT]** Reduced server-side service memory footprint by using different Docker image
+* **[IMPROVEMENT]** Quality of Life improvement - all focusable input forms will now be focused by default for example in modals or creators
 * **[FIX]** Scrollbars didn't work properly on Chromium browsers
 * **[FIX]** Changelog modal didn't respect 2500 chars change
 

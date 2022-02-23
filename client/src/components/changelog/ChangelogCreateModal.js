@@ -1,6 +1,6 @@
 import axios from "axios";
 import {AppContext, BoardContext} from "context";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
@@ -13,6 +13,7 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
     const {discriminator} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const ref = useRef();
 
     const handleSubmit = () => {
         if (title.length < 10) {
@@ -38,7 +39,7 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
         });
     };
 
-    return <UiDismissibleModal id={"changelogPost"} isOpen={isOpen} onHide={onHide} title={"Post Changelog"}
+    return <UiDismissibleModal id={"changelogPost"} isOpen={isOpen} onHide={onHide} title={"Post Changelog"} onEntered={() => ref.current && ref.current.focus()}
                                applyButton={<UiLoadableButton label={"Post Changelog"} onClick={handleSubmit} className={"mx-0"}>Post Changelog</UiLoadableButton>}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>Title</UiFormLabel>
@@ -48,7 +49,7 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
                                    onChange={e => {
                                        formatRemainingCharacters("remainingTitle", "titleTextarea", 70);
                                        setTitle(e.target.value.substring(0, 70));
-                                   }} label={"Idea title"}/>
+                                   }} label={"Idea title"} innerRef={ref}/>
                 </UiCol>
             </UiCol>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingTitle"}>
@@ -64,7 +65,7 @@ const ChangelogCreateModal = ({isOpen, onHide, onChangelogCreation}) => {
                                    onChange={e => {
                                        e.target.value = e.target.value.substring(0, 2500);
                                        formatRemainingCharacters("remainingDescription", "descriptionTextarea", 2500);
-                                       setDescription(e.target.value.substring(0, 2500));
+                                       setDescription(e.target.value);
                                    }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
                 2500 Remaining

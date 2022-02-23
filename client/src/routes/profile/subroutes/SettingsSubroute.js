@@ -1,5 +1,4 @@
 import axios from "axios";
-import ConfirmationActionModal from "components/commons/modal/ConfirmationActionModal";
 import ComponentLoader from "components/ComponentLoader";
 import AccountDeleteModal from "components/profile/AccountDeleteModal";
 import AvatarSelectionModal from "components/profile/AvatarSelectionModal";
@@ -7,7 +6,7 @@ import {AppContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiKeyboardInput, UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormControl, UiFormLabel, UiFormText} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";

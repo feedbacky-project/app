@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import {AppContext, BoardContext} from "context";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {FaExternalLinkAlt, FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
@@ -49,6 +49,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
     const applicableTags = tags.filter(tag => tag.publicUse);
     const [chosenTags, setChosenTags] = useState([]);
     const [searchTimeout, setSearchTimeout] = useState(null);
+    const descriptionRef = useRef();
 
     const handleSubmit = () => {
         if (title.length < 10) {
@@ -122,12 +123,13 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
         }), 500));
     }
     return <UiDismissibleModal id={"ideaPost"} isOpen={isOpen} onHide={onHide} title={"Post Feedback"}
-                               applyButton={<UiLoadableButton label={"Post Idea"} onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}>
+                               applyButton={<UiLoadableButton label={"Post Idea"} onClick={handleSubmit} className={"mx-0"}>Post Idea</UiLoadableButton>}
+                               onEntered={() => descriptionRef.current && descriptionRef.current.focus()}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>Title</UiFormLabel>
             <UiCol xs={12} className={"d-inline-block px-0"}>
                 <UiCol xs={10} className={"pr-sm-0 pr-2 px-0 d-inline-block"}>
-                    <UiFormControl minLength={10} maxLength={50} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
+                    <UiFormControl innerRef={descriptionRef} minLength={10} maxLength={50} rows={1} type={"text"} defaultValue={title} placeholder={"Brief and descriptive title."} id={"titleTextarea"}
                                    onChange={e => {
                                        formatRemainingCharacters("remainingTitle", "titleTextarea", 50);
                                        const text = e.target.value.substring(0, 50);

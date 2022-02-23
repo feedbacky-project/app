@@ -1,5 +1,5 @@
 import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {FaExclamation} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiKeyboardInput, UiLabelledCheckbox} from "ui";
@@ -14,6 +14,8 @@ const BoardDeleteModal = ({id, isOpen, onHide, onAction, boardData, ...otherProp
     const [ideaAgree, setIdeaAgree] = useState(false);
     const [moderatorsAgree, setModeratorsAgree] = useState(false);
     const [deleteAgree, setDeleteAgree] = useState(false);
+    const ref = useRef();
+
     return <UiDismissibleModal id={"boardDelete"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
                                applyButton={<UiLoadableButton label={"Delete Now"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => {
                                    if (!ideaAgree || !moderatorsAgree || !deleteAgree) {
@@ -25,7 +27,8 @@ const BoardDeleteModal = ({id, isOpen, onHide, onAction, boardData, ...otherProp
                                        return Promise.resolve();
                                    }
                                    return onAction().then(onHide);
-                               }}><FaExclamation className={"move-top-1px"}/> Delete Now</UiLoadableButton>} {...otherProps}>
+                               }}><FaExclamation className={"move-top-1px"}/> Delete Now</UiLoadableButton>}
+                               onEntered={() => ref.current && ref.current.focus()} {...otherProps}>
         <UiRow centered className={"mt-3 justify-content-center"}>
             <UiCol xs={12} className={"mb-2 px-4 text-center"}>
                 <QuestionIcon/>
@@ -40,7 +43,7 @@ const BoardDeleteModal = ({id, isOpen, onHide, onAction, boardData, ...otherProp
                 </div>
             </UiCol>
             <UiCol xs={12} sm={10}>
-                <UiFormControl id={"confirm"} label={"Confirm Action"} className={"mt-2"} onChange={e => setText(e.target.value)} placeholder={boardData.name}/>
+                <UiFormControl innerRef={ref} id={"confirm"} label={"Confirm Action"} className={"mt-2"} onChange={e => setText(e.target.value)} placeholder={boardData.name}/>
             </UiCol>
         </UiRow>
     </UiDismissibleModal>

@@ -65,7 +65,14 @@ const MarkdownForm = styled.form`
 
 const MarkdownOptionModal = styled.div`
   & .modal-content {
-    background-color: var(--tertiary);
+    background-color: var(--secondary);
+    
+    input {
+      background-color: var(--tertiary);
+    }
+    input:focus {
+      background-color: var(--quaternary) !important;
+    }
   }
 `;
 

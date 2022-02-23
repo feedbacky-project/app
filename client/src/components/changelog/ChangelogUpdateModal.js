@@ -1,6 +1,6 @@
 import axios from "axios";
 import {AppContext} from "context";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
@@ -11,6 +11,7 @@ import {formatRemainingCharacters, htmlDecodeEntities, popupError, popupNotifica
 const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) => {
     const {getTheme} = useContext(AppContext);
     const [title, setTitle] = useState(changelog.title);
+    const ref = useRef();
 
     const handleSubmit = () => {
         const description = document.getElementById("descriptionTextarea").value;
@@ -35,7 +36,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
         });
     };
 
-    return <UiDismissibleModal id={"changelogPost"} isOpen={isOpen} onHide={onHide} title={"Update Changelog"}
+    return <UiDismissibleModal id={"changelogPost"} isOpen={isOpen} onHide={onHide} title={"Update Changelog"} onEntered={() => ref.current && ref.current.focus()}
                                applyButton={<UiLoadableButton label={"Update Changelog"} onClick={handleSubmit} className={"mx-0"}>Update Changelog</UiLoadableButton>}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>Title</UiFormLabel>
@@ -45,7 +46,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
                                    onChange={e => {
                                        formatRemainingCharacters("remainingTitle", "titleTextarea", 70);
                                        setTitle(e.target.value.substring(0, 70));
-                                   }} label={"Idea title"}/>
+                                   }} label={"Idea title"} innerRef={ref}/>
                 </UiCol>
             </UiCol>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingTitle"}>

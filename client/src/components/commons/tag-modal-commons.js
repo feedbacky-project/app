@@ -1,5 +1,5 @@
 import ColorSelectionHelper from "components/commons/ColorSelectionHelper";
-import React from "react";
+import React, {useRef} from "react";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";
@@ -7,14 +7,15 @@ import {UiCountableFormControl, UiFormLabel} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
 
-export const renderModal = (isOpen, onHide, title, handleSubmit, color, setColor, tagData = {name: "", roadmapIgnored: false, publicUse: false}, setTagData) => {
+export const renderModal = (isOpen, onHide, title, handleSubmit, color, setColor, tagData = {name: "", roadmapIgnored: false, publicUse: false}, setTagData, ref) => {
     return <UiDismissibleModal id={"tagCreate"} isOpen={isOpen} onHide={onHide} title={title}
-                               applyButton={<UiLoadableButton label={"Save"} onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}>
+                               applyButton={<UiLoadableButton label={"Save"} onClick={handleSubmit} className={"mx-0"}>Save</UiLoadableButton>}
+                               onEntered={() => ref.current && ref.current.focus()}>
         <UiRow>
             <UiCol xs={12} className={"mt-2 mb-1"}>
                 <UiFormLabel>Tag Name</UiFormLabel>
                 <UiClickableTip id={"tagName"} title={"Tag Name"} description={"Descriptive and under 20 characters name of tag."}/>
-                <UiCountableFormControl key={tagData.id} label={"Type tag name"} id={"tagNameTextarea"} minLength={2} maxLength={15} placeholder={"Short and descriptive."}
+                <UiCountableFormControl innerRef={ref} key={tagData.id} label={"Type tag name"} id={"tagNameTextarea"} minLength={2} maxLength={15} placeholder={"Short and descriptive."}
                                         defaultValue={tagData.name} onChange={e => setTagData({...tagData, name: e.target.value})}/>
             </UiCol>
             <UiCol xs={12} sm={6} className={"mb-2"}>

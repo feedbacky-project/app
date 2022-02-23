@@ -1,7 +1,7 @@
 import axios from "axios";
 import {renderModal} from "components/commons/tag-modal-commons";
 import {AppContext, BoardContext} from "context";
-import {useContext, useState} from 'react';
+import {useContext, useRef, useState} from 'react';
 import {popupError, popupNotification, popupWarning} from "utils/basic-utils";
 
 const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
@@ -9,6 +9,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
     const {data} = useContext(BoardContext);
     const [color, setColor] = useState("#0994f6");
     const [tagData, setTagData] = useState({name: "", roadmapIgnored: false, publicUse: false});
+    const ref = useRef();
 
     const handleSubmit = () => {
         const name = tagData.name;
@@ -30,7 +31,7 @@ const TagCreateModal = ({isOpen, onHide, onTagCreate}) => {
             popupNotification("Tag created", getTheme());
         });
     };
-    return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, tagData, setTagData);
+    return renderModal(isOpen, onHide, "Add new Tag", handleSubmit, color, setColor, tagData, setTagData, ref);
 };
 
 export default TagCreateModal;
