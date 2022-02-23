@@ -49,7 +49,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
                 </UiCol>
             </UiCol>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingTitle"}>
-                70 Remaining
+                {70 - changelog.title.length} Remaining
             </small>
         </div>
         <br/>
@@ -63,7 +63,7 @@ const ChangelogUpdateModal = ({isOpen, onHide, changelog, onChangelogUpdate}) =>
                                        formatRemainingCharacters("remainingDescription", "descriptionTextarea", 2500);
                                    }}/>
             <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingDescription"}>
-                1800 Remaining
+                {2500 - changelog.description.length} Remaining
             </small>
             <small className={"d-inline mt-1 float-right text-black-60"}>
                 Markdown Supported

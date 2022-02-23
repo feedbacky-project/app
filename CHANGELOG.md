@@ -4,6 +4,7 @@
 * **[FEATURE]** Added Twitch OAuth2 log-in support
 * **[IMPROVEMENT]** Reduced server-side service memory footprint by using different Docker image
 * **[FIX]** Scrollbars didn't work properly on Chromium browsers
+* **[FIX]** Changelog modal didn't respect 2500 chars change
 
 ### 1.0.0.RC.1
 * **[FEATURE]** Display toast messages when page is loading for too long
