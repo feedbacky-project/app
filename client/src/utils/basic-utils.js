@@ -3,7 +3,7 @@ import Snackbar from "utils/snackbar";
 import tinycolor from "tinycolor2";
 import {getEnvVar} from "utils/env-vars";
 
-export const scrollIntoViewAndPop = (id) => {
+export const scrollIntoView = (id, pop = true) => {
     //kudos to https://stackoverflow.com/a/22480938/10156191
     const element = document.getElementById(id);
     let rect = element.getBoundingClientRect();
@@ -19,7 +19,9 @@ export const scrollIntoViewAndPop = (id) => {
         });
     }
     return new Promise(resolve => setTimeout(function () {
-        element.classList.add("upvote-animation");
+        if(pop) {
+            element.classList.add("upvote-animation");
+        }
         resolve();
     }, 200));
 }

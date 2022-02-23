@@ -18,7 +18,7 @@ import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
-import {popupWarning, prepareFilterAndSortRequests, scrollIntoViewAndPop} from "utils/basic-utils";
+import {popupWarning, prepareFilterAndSortRequests, scrollIntoView} from "utils/basic-utils";
 
 const ShareBoxOverlay = styled.div`
   display: inline-block;
@@ -49,7 +49,7 @@ const BoardChangelogBox = ({searchQuery}) => {
             return;
         }
         setTimeout(function () {
-            scrollIntoViewAndPop("changelogc_" + scrollTo).then(() => setScrollTo(null));
+            scrollIntoView("changelogc_" + scrollTo).then(() => setScrollTo(null));
         }, 500);
     }, [scrollTo]);
     const onLoadRequest = (override = false) => {

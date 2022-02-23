@@ -10,7 +10,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
-import {prepareFilterAndSortRequests, scrollIntoViewAndPop} from "utils/basic-utils";
+import {prepareFilterAndSortRequests, scrollIntoView} from "utils/basic-utils";
 
 const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
     const {user} = useContext(AppContext);
@@ -79,7 +79,7 @@ const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
             return;
         }
         setTimeout(function () {
-            scrollIntoViewAndPop("ideac_" + scrollTo).then(() => setScrollTo(null));
+            scrollIntoView("ideac_" + scrollTo).then(() => setScrollTo(null));
         }, 500);
     }, [scrollTo]);
 

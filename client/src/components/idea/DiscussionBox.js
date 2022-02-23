@@ -12,7 +12,7 @@ import {UiLoadingSpinner} from "ui";
 import {UiButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
-import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests, scrollIntoViewAndPop} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests, scrollIntoView} from "utils/basic-utils";
 
 const DiscussionBox = forwardRef((props, ref) => {
     const {user, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
@@ -82,7 +82,7 @@ const DiscussionBox = forwardRef((props, ref) => {
     };
     const onReply = (data) => {
         setTimeout(() => {
-            scrollIntoViewAndPop("replyBox");
+            scrollIntoView("replyBox", false);
             //time for animation to scroll into the element
             setTimeout(() => document.getElementById("commentMessage").focus(), 200);
         }, 100);
