@@ -4,11 +4,6 @@ discord:
     oauth-link: https://discordapp.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=identify%20email&state=
     icon: https://static.plajer.xyz/svg/login-discord.svg
     color: "#7289da"
-  environment-variables:
-    enabled: OAUTH_DISCORD_ENABLED
-    redirect-uri: OAUTH_DISCORD_REDIRECT_URI
-    client-id: OAUTH_DISCORD_CLIENT_ID
-    client-secret: OAUTH_DISCORD_CLIENT_SECRET
   oauth:
     token-url: https://discordapp.com/api/oauth2/token
     authorization-property: Bearer {TOKEN}
@@ -26,11 +21,6 @@ github:
     oauth-link: https://github.com/login/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=read%3Auser%20user%3Aemail&state=
     icon: https://static.plajer.xyz/svg/login-github.svg
     color: "#333333"
-  environment-variables:
-    enabled: OAUTH_GITHUB_ENABLED
-    redirect-uri: OAUTH_GITHUB_REDIRECT_URI
-    client-id: OAUTH_GITHUB_CLIENT_ID
-    client-secret: OAUTH_GITHUB_CLIENT_SECRET
   oauth:
     token-url: https://github.com/login/oauth/access_token
     authorization-property: token {TOKEN}
@@ -47,11 +37,6 @@ google:
     oauth-link: https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&redirect_uri={REDIRECT_URI}&state=
     icon: https://static.plajer.xyz/svg/login-google.svg
     color: "#db4437"
-  environment-variables:
-    enabled: OAUTH_GOOGLE_ENABLED
-    redirect-uri: OAUTH_GOOGLE_REDIRECT_URI
-    client-id: OAUTH_GOOGLE_CLIENT_ID
-    client-secret: OAUTH_GOOGLE_CLIENT_SECRET
   oauth:
     token-url: https://www.googleapis.com/oauth2/v4/token
     authorization-property: Bearer {TOKEN}
@@ -68,11 +53,6 @@ gitlab:
     oauth-link: https://gitlab.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=read_user%20email&state=
     icon: https://static.plajer.xyz/svg/login-gitlab.svg
     color: "#fca121"
-  environment-variables:
-    enabled: OAUTH_GITLAB_ENABLED
-    redirect-uri: OAUTH_GITLAB_REDIRECT_URI
-    client-id: OAUTH_GITLAB_CLIENT_ID
-    client-secret: OAUTH_GITLAB_CLIENT_SECRET
   oauth:
     token-url: https://gitlab.com/oauth/token
     authorization-property: Bearer {TOKEN}
@@ -83,3 +63,19 @@ gitlab:
     username: username
     avatar: avatar_url
     email-verified: null
+twitch:
+  provider-data:
+    name: Twitch
+    oauth-link: https://id.twitch.tv/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=user%3Aread%3Aemail%20openid&claims=%7B%22userinfo%22%3A%7B%22email%22%3Anull%2C%22picture%22%3Anull%2C%22preferred_username%22%3Anull%2C%22email_verified%22%3Anull%7D%7D&state=
+    icon: https://static.plajer.xyz/svg/login-twitch.svg
+    color: "#6441a4"
+  oauth:
+    token-url: https://id.twitch.tv/oauth2/token
+    authorization-property: Bearer {TOKEN}
+    user-url: https://id.twitch.tv/oauth2/userinfo
+  data-fields:
+    id: sub
+    email: email
+    username: preferred_username
+    avatar: picture
+    email-verified: email_verified
