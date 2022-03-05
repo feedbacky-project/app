@@ -105,7 +105,8 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
   [![DiscordInvite][discordBanner]][discordInvite]
     
   <h3>Contributing</h3>
-  <p>We encourage everyone to contribute, thus making Feedbacky better with the help of our community. Follow our <a href="/CONTRIBUTING.md">Contributing guidelines</a> if you are interested!</a></p>
+  <p>We encourage everyone to contribute, thus making Feedbacky better with the help of our community.</p>
+    <p>Follow our <a href="/CONTRIBUTING.md">contributing guidelines</a> if you are interested!</a></p>
 </div>
   
 <!--- Donating ---->
@@ -164,7 +165,7 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 [licenseURL]: https://github.com/feedbacky-project/app/blob/master/LICENSE.txt
 [contribShield]: https://img.shields.io/github/contributors/feedbacky-project/app.svg?style=for-the-badge&labelColor=ecf0f1&color=007bff
 [contribURL]: https://github.com/feedbacky-project/app/graphs/contributors
-[discordShield]: https://img.shields.io/badge/dynamic/json?style=for-the-badge&logoColor=white&logo=Discord&labelColor=5865F2&label=&color=5865F2&suffix=%20MEMBERS&query=approximate_member_count&url=https://discord.com/api/invites/6qCnKh5?with_counts=true&link=
+[discordShield]: https://img.shields.io/discord/614568773940150288?style=for-the-badge&logoColor=white&logo=Discord&labelColor=5865F2&color=5865F2
 [discordURL]: https://discord.com/invite/6qCnKh5
-[discordBanner]: https://discordapp.com/api/guilds/614568773940150288/widget.png?style=banner3
+[discordBanner]: https://invidget.switchblade.xyz/6qCnKh5
 [discordInvite]: https://discord.com/invite/6qCnKh5
