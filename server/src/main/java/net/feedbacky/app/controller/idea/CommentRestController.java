@@ -4,12 +4,11 @@ import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
-import net.feedbacky.app.data.user.dto.FetchUserDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.PostCommentReactionDto;
 import net.feedbacky.app.service.comment.CommentService;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestParamsParser;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -66,9 +65,9 @@ public class CommentRestController {
     return commentService.post(dto);
   }
 
-  @PostMapping("v1/comments/{id}/reactions/{reactionId}")
-  public FetchCommentReactionDto postReaction(@PathVariable long id, @PathVariable String reactionId) {
-    return commentService.postReaction(id, reactionId);
+  @PostMapping("v1/comments/{id}/reactions")
+  public FetchCommentReactionDto postReaction(@PathVariable long id, @Valid @RequestBody PostCommentReactionDto dto) {
+    return commentService.postReaction(id, dto);
   }
 
   @PatchMapping("v1/comments/{id}")

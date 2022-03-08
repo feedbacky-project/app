@@ -8,6 +8,7 @@ import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
 import com.google.errorprone.annotations.CheckReturnValue;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
   private String viewType;
   private List<FetchCommentReactionDto> reactions;
   private boolean edited;
+  private Long replyTo;
   private Date creationDate;
 
   @Override
@@ -44,7 +46,20 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.viewType = entity.getViewType().name();
     this.reactions = entity.getReactions().stream().map(r -> new FetchCommentReactionDto().from(r)).collect(Collectors.toList());
     this.edited = entity.isEdited();
+    if(entity.getReplyTo() != null) {
+      this.replyTo = entity.getReplyTo().getId();
+    }
     this.creationDate = entity.getCreationDate();
+    return this;
+  }
+
+  //strip any data for internal comments except replyTo for comment history purposes
+  public FetchCommentDto asInternalInvisible() {
+    this.user = null;
+    this.description = null;
+    this.reactions = new ArrayList<>();
+    this.edited = false;
+    this.creationDate = null;
     return this;
   }
 

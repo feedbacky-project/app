@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {ReactComponent as UndrawNetworkError} from "assets/svg/undraw/network_error.svg";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
@@ -8,19 +9,32 @@ import CommentWriteBox from "components/idea/discussion/CommentWriteBox";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton} from "ui/button";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiCol, UiRow} from "ui/grid";
-import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests} from "utils/basic-utils";
+import {popupError, popupNotification, popupWarning, prepareFilterAndSortRequests, scrollIntoView} from "utils/basic-utils";
+
+const DiscussionTitle = styled.div`
+  display: inline-block;
+  margin-right: .25em;
+  vertical-align: middle;
+  color: hsla(0, 0%, 0%, .75);
+
+  .dark & {
+    color: hsla(0, 0%, 95%, .75);
+  }
+`;
 
 const DiscussionBox = forwardRef((props, ref) => {
-    const {user, onLocalPreferencesUpdate, getTheme} = useContext(AppContext);
+    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const [comments, setComments] = useState({data: [], loaded: false, error: false, moreToLoad: true, page: 0});
     const [page, setPage] = useState(0);
     const [modal, setModal] = useState({open: true, type: "", data: -1});
+    const [replyTo, setReplyTo] = useState(null);
     const sorts = [
         {newest: "Newest"},
         {oldest: "Oldest"}
@@ -34,6 +48,7 @@ const DiscussionBox = forwardRef((props, ref) => {
         onLoadRequest(true);
         // eslint-disable-next-line
     }, [user.localPreferences]);
+
     const onLoadRequest = (override) => {
         const currentPage = override ? 0 : page;
         return axios.get("/ideas/" + ideaData.id + "/comments?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.comments)).then(res => {
@@ -61,8 +76,11 @@ const DiscussionBox = forwardRef((props, ref) => {
             dataLength={comments.data.length}
             loader={<UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow>}>
             {comments.data.map(data => {
+                    if (data.replyTo != null) {
+                        return <React.Fragment key={data.id}/>
+                    }
                     return <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentReact={onCommentReact}
-                                        onCommentUnreact={onCommentUnreact} onSuspend={onPreSuspend}/>
+                                        onCommentUnreact={onCommentUnreact} onSuspend={onPreSuspend} onReply={onReply} comments={comments.data}/>
                 }
             )}
         </InfiniteScroll>
@@ -76,6 +94,14 @@ const DiscussionBox = forwardRef((props, ref) => {
         }
         return <React.Fragment/>
     };
+    const onReply = (data) => {
+        setTimeout(() => {
+            scrollIntoView("replyBox", false);
+            //time for animation to scroll into the element
+            setTimeout(() => document.getElementById("commentMessage").focus(), 200);
+        }, 100);
+        setReplyTo(data);
+    }
     const onCommentUpdate = (data) => {
         const newComments = [...comments.data];
         const index = newComments.findIndex(c => c.id === data.id);
@@ -120,12 +146,12 @@ const DiscussionBox = forwardRef((props, ref) => {
             popupNotification("Comment deleted", getTheme());
         });
     };
-    const onCommentReact = (commentId, emoteId) => {
+    const onCommentReact = (commentId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.post("/comments/" + commentId + "/reactions/" + emoteId, {}).then(res => {
+        return axios.post("/comments/" + commentId + "/reactions", {reactionId}).then(res => {
             if (res.status !== 200) {
                 popupWarning("Failed to add reaction");
                 return;
@@ -140,12 +166,12 @@ const DiscussionBox = forwardRef((props, ref) => {
             });
         });
     };
-    const onCommentUnreact = (commentId, emoteId) => {
+    const onCommentUnreact = (commentId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.delete("/comments/" + commentId + "/reactions/" + emoteId).then(res => {
+        return axios.delete("/comments/" + commentId + "/reactions/" + reactionId).then(res => {
             if (res.status !== 204) {
                 popupWarning("Failed to remove reaction");
                 return;
@@ -153,7 +179,7 @@ const DiscussionBox = forwardRef((props, ref) => {
             setComments({
                 ...comments, data: comments.data.map(comment => {
                     if (comment.id === commentId) {
-                        const reaction = comment.reactions.find(r => r.user.id === user.data.id && r.reactionId === emoteId);
+                        const reaction = comment.reactions.find(r => r.user.id === user.data.id && r.reactionId === reactionId);
                         comment.reactions = comment.reactions.filter(r => r !== reaction);
                     }
                     return comment;
@@ -175,11 +201,11 @@ const DiscussionBox = forwardRef((props, ref) => {
         <DangerousActionModal id={"commentDel"} onHide={() => setModal({...modal, open: false, type: ""})} isOpen={modal.open && modal.type === "delete"} onAction={onCommentDelete}
                               actionDescription={<div>Comment will be permanently <u>deleted</u>.</div>}/>
         <div className={"pb-1"}>
-            <div className={"d-inline-block text-black-75 mr-1 align-middle"}>Discussion ({ideaData.commentsAmount} comments)</div>
+            <DiscussionTitle>Discussion ({ideaData.commentsAmount} comments)</DiscussionTitle>
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>
         </div>
         <UiCol xs={12} sm={10} md={6} className={"p-0 mb-1 mt-1"} id={"commentBox"}>
-            <CommentWriteBox onCommentSubmit={onCommentSubmit}/>
+            <CommentWriteBox onCommentSubmit={onCommentSubmit} replyTo={replyTo} setReplyTo={setReplyTo}/>
             {renderNoDataImage()}
         </UiCol>
         <UiCol xs={12} sm={11} md={10} className={"px-0"}>

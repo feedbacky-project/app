@@ -5,6 +5,7 @@ import {getDefaultAvatar} from "utils/basic-utils";
 
 const UiAvatar = (props) => {
     const {user, size, ...otherProps} = props;
+
     const getSizedAvatarByUrl = (url, sizing) => {
         if (url.includes("googleusercontent")) {
             return url + "=h" + sizing;

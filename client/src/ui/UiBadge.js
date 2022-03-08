@@ -4,6 +4,7 @@ import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";
+import {UiThemeContext} from "ui/index";
 
 const Badge = styled.div`
     display: inline-block;
@@ -21,10 +22,11 @@ const Badge = styled.div`
 `;
 
 const UiBadge = (props) => {
-    const context = useContext(AppContext);
+    const context = useContext(UiThemeContext);
     const {color = context.getTheme(), children, innerRef, style, ...otherProps} = props;
     let badgeColor = color;
-    if (context.user.darkMode) {
+
+    if (context.darkMode) {
         badgeColor = badgeColor.lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(badgeColor, "#282828") < WCAG_AA_CONTRAST) {

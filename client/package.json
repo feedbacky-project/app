@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "prop-types": "latest",
+    "react-error-overlay": "^6.0.9",
     "source-map-explorer": "^2.5.2"
   }
 }

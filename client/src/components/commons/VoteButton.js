@@ -4,6 +4,7 @@ import {AppContext, IdeaContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {FiChevronsUp, FiChevronUp} from "react-icons/all";
+import {UiThemeContext} from "ui";
 import {UiClassicButton} from "ui/button";
 import {popupError} from "utils/basic-utils";
 
@@ -88,9 +89,10 @@ const ToUpvoteIcon = styled(FiChevronUp)`
 `;
 
 const VoteButton = ({idea, onVote, animationRef, className = ""}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {ideaData} = useContext(IdeaContext);
     let color = getTheme();
+
     const doVote = () => {
         let request;
         let upvoted;
@@ -120,7 +122,6 @@ const VoteButton = ({idea, onVote, animationRef, className = ""}) => {
             onVote(upvoted, votersAmount);
         });
     };
-
     if (!ideaData.upvoted) {
         return <ToUpvoteBtn className={className} label={"Upvote"} onClick={doVote} variant={""}>
             <ToUpvoteIcon className={"to-upvote"}/>

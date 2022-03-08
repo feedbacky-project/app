@@ -8,7 +8,7 @@ import StepFirstSubroute from "routes/board/creator/StepFirstSubroute";
 import StepSecondSubroute from "routes/board/creator/StepSecondSubroute";
 import StepThirdSubroute from "routes/board/creator/StepThirdSubroute";
 import tinycolor from "tinycolor2";
-import {UiProgressBar} from "ui";
+import {UiProgressBar, UiThemeContext} from "ui";
 import {UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {hideNotifications, isServiceAdmin, popupNotification, popupWarning} from "utils/basic-utils";
@@ -16,8 +16,8 @@ import {useTitle} from "utils/use-title";
 
 const CreatorBoardRoute = () => {
     const context = useContext(AppContext);
-    const {getTheme} = context;
-    const {onThemeChange, user} = context;
+    const {getTheme, onThemeChange} = useContext(UiThemeContext);
+    const {user} = context;
     const history = useHistory();
     const [settings, setSettings] = useState({step: 1, name: "", discriminator: "", banner: null, logo: null, themeColor: "#2d3436"});
     useEffect(() => onThemeChange(), [onThemeChange]);

@@ -50,6 +50,7 @@ const ColorSelectionHelper = ({title, color, setColor, colorWarning}) => {
     const warn = colorWarning === true ? tinycolor.readability(color, "#fff") < WCAG_AA_CONTRAST || tinycolor.readability(tinycolor(color).clone().lighten(10), "#292c30") < WCAG_AA_CONTRAST : false;
     const textClass = warn ? "text-red" : "";
     const {data: boardData} = useContext(BoardContext);
+
     return <React.Fragment>
         <UiFormLabel className={textClass}>{title}</UiFormLabel>
         <UiClickableTip id={"colorChooser"} title={"Choose Color"} description={"Choose the color. Avoid too bright and too dark colors, poorly visible in Light and Dark Themes."}/>

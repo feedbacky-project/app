@@ -8,16 +8,17 @@ import {UiLoadableButton} from "ui/button";
 import {UiCol} from "ui/grid";
 
 const BoardChangelogInfoCard = ({onChangelogCreation}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
     const {data} = useContext(BoardContext);
     const [open, setOpen] = useState(false);
+
     const renderButtons = () => {
         const contains = data.moderators.find(mod => mod.userId === user.data.id && (mod.role === "ADMINISTRATOR" || mod.role === "OWNER"));
         if (!contains) {
             return;
         }
         return <React.Fragment>
-            <UiHorizontalRule theme={getTheme().setAlpha(.1)} className={"pb-1"}/>
+            <UiHorizontalRule className={"pb-1"}/>
             {/* eslint-disable-next-line */}
             <UiLoadableButton label={"Post Changelog"} tabIndex={1} className={"py-1"} onClick={() => {
                 setOpen(true);

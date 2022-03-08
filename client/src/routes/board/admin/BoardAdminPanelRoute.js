@@ -7,7 +7,7 @@ import {FaExclamationCircle} from "react-icons/fa";
 import {Route, Switch, useHistory, useLocation, useParams} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {retry} from "utils/lazy-init";
 
@@ -21,7 +21,8 @@ const CreateSocialLink = lazy(() => retry(() => import("routes/board/admin/subro
 const SuspensionSettings = lazy(() => retry(() => import("routes/board/admin/subroutes/SuspensionsSubroute")));
 
 const BoardAdminPanelRoute = () => {
-    const {onThemeChange, user} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {onThemeChange} = useContext(UiThemeContext);
     const {id} = useParams();
     const location = useLocation();
     const history = useHistory();
@@ -67,13 +68,14 @@ const BoardAdminPanelRoute = () => {
         history.push("/b/" + id);
         return <React.Fragment/>
     }
-    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={() => console.warn("BoardAdminPanelRoute invalid onNotLoggedClick call")}
-                                    errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
+    const onWarn = () => console.warn("BoardAdminPanelRoute invalid onNotLoggedClick call");
+    const onReRoute = route => history.push({pathname: "/ba/" + board.data.discriminator + "/" + route, state: {_boardData: board.data}})
+    return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onWarn} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
             <PageNavbar selectedNode={"admin"} goBackVisible/>
             <UiContainer>
                 <UiRow centered className={"pb-5"}>
-                    <AdminSidebar currentNode={currentNode} reRouteTo={route => history.push({pathname: "/ba/" + board.data.discriminator + "/" + route, state: {_boardData: board.data}})} data={board}/>
+                    <AdminSidebar currentNode={currentNode} reRouteTo={onReRoute} data={board}/>
                     <Suspense fallback={<UiCol xs={12} md={9}><UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow></UiCol>}>
                         <Switch>
                             <Route path={"/ba/:id/tags"} component={TagsSettings}/>

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import React, {useContext, useState} from "react";
 import tinycolor from "tinycolor2";
 import {UiButton} from "ui/button/UiButton";
+import {UiThemeContext} from "ui/index";
 import {UiLoadingSpinner} from "ui/UiLoadingSpinner";
 
 const Loadable = styled(UiLoadingSpinner)`
@@ -23,14 +24,15 @@ const Top = styled(UiButton)`
 const UiLoadableButton = (props) => {
     const {children, onClick, ...otherProps} = props;
     const [loading, setLoading] = useState(false);
-    const {user} = useContext(AppContext);
+    const {darkMode} = useContext(UiThemeContext);
     const darkModeColor = tinycolor("#f2f2f2");
     const lightModeColor = tinycolor(LIGHT_THEME_COLOR);
+
     return <Top disabled={loading} onClick={() => {
         setLoading(true);
         onClick().finally(() => setLoading(false));
     }} {...otherProps}>{loading ? <React.Fragment>
-        <Loadable size={"sm"} color={user.darkMode ? darkModeColor : lightModeColor}/>
+        <Loadable size={"sm"} color={darkMode ? darkModeColor : lightModeColor}/>
         <span style={{visibility: "hidden"}}>{children}</span>
     </React.Fragment> : children}</Top>
 };

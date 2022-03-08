@@ -15,15 +15,17 @@ export const BoardDescription = styled(MarkdownContainer)`
 `;
 
 const BoardInfoCard = ({onIdeaCreation, setSearchQuery}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const [open, setOpen] = useState(false);
+
     const onCreateIdeaModalClick = () => {
         if (!user.loggedIn) {
             onNotLoggedClick();
-            return;
+            return Promise.resolve();
         }
         setOpen(true);
+        return Promise.resolve();
     };
     const renderEditButton = () => {
         const contains = data.moderators.find(mod => mod.userId === user.data.id && (mod.role === "ADMINISTRATOR" || mod.role === "OWNER"));
@@ -34,17 +36,13 @@ const BoardInfoCard = ({onIdeaCreation, setSearchQuery}) => {
             Manage <FaAlignRight className={"ml-1 move-top-1px"}/>
         </UiButton>
     };
-
     return <UiCol xs={{span: 12, order: 1}} lg={{span: 4, order: 12}}>
         <IdeaCreateModal isOpen={open} onHide={() => setOpen(false)} onIdeaCreation={onIdeaCreation} setSearchQuery={setSearchQuery}/>
         <UiCard className={"my-2 text-left"}>
             <BoardDescription text={data.fullDescription}/>
-            <UiHorizontalRule theme={getTheme().setAlpha(.1)} className={"pb-1"}/>
+            <UiHorizontalRule className={"pb-1"}/>
             {/* eslint-disable-next-line */}
-            <UiLoadableButton label={"Create Idea"} tabIndex={1} className={"py-1"} onClick={() => {
-                onCreateIdeaModalClick();
-                return Promise.resolve();
-            }}>
+            <UiLoadableButton label={"Create Idea"} tabIndex={1} className={"py-1"} onClick={onCreateIdeaModalClick}>
                 <FaPencilAlt className={"mr-1 move-top-1px"}/> New Idea
             </UiLoadableButton>
             {renderEditButton()}

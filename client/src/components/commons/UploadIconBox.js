@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
 import {FaUpload} from "react-icons/all";
+import {UiThemeContext} from "ui";
 
 const UploadButton = styled.div`
   background-color: ${props => props.theme};
@@ -23,10 +24,16 @@ const UploadButton = styled.div`
   }
 `;
 
+const UploadIcon = styled(FaUpload)`
+  width: 1.8em;
+  height: 1.8em;
+  margin-bottom: .25em;
+`
+
 const UploadIconBox = ({text = "Upload"}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     return <UploadButton theme={getTheme().setAlpha(.8).toString()}>
-        <FaUpload className={"mb-1"} style={{width: "1.8em", height: "1.8em"}}/>
+        <UploadIcon/>
         <div>{text}</div>
     </UploadButton>
 };

@@ -34,6 +34,7 @@ public class PostCommentDto {
   @EnumValue(enumClazz = Comment.ViewType.class, message = "Comment type must be valid view type.")
   @NotNull(message = "Type cannot be empty.")
   private String type;
+  private Long replyTo;
   private final Date creationDate = Calendar.getInstance().getTime();
 
 }

@@ -5,6 +5,7 @@ import SafeAnchor from "components/commons/SafeAnchor";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useState} from "react";
 import {FaUpload} from "react-icons/all";
+import {UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiImage} from "ui/image";
 import {getBase64FromFile, popupError, popupNotification, validateImageWithWarning} from "utils/basic-utils";
@@ -14,10 +15,12 @@ const Attachment = styled(UiImage)`
 `;
 
 const AttachmentsInfo = ({editor, onAttachmentUpdate}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {moderators} = useContext(BoardContext).data;
     const {ideaData, updateState} = useContext(IdeaContext);
     const [modal, setModal] = useState({open: false, data: -1, dataUrl: "", uploaded: true});
+
     const onAttachmentUpload = (e) => {
         if (!validateImageWithWarning(e, "attachmentUpload", 1024)) {
             return;
@@ -56,7 +59,7 @@ const AttachmentsInfo = ({editor, onAttachmentUpdate}) => {
     const doAttachmentDelete = (attachment) => {
         //todo multiple attachments support
         //if attachment isn't uploaded to feedbacky (added in editor) then dont open real deletion modal
-        if(!modal.uploaded) {
+        if (!modal.uploaded) {
             updateState({...ideaData, attachments: []});
             return;
         }

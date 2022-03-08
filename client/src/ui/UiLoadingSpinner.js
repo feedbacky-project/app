@@ -1,11 +1,12 @@
-import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from 'react';
+import {UiThemeContext} from "ui/index";
 
 const UiLoadingSpinner = (props) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {size = "lg", className = "", customSize, color = getTheme()} = props;
     let sizePx = 40;
+
     if (size === "sm") {
         sizePx = 18;
     }

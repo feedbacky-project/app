@@ -30,6 +30,7 @@ const Footer = styled(Modal.Footer)`
 
 const UiModal = (props) => {
     const {id, isOpen, onHide, header, footer = null, children, size, innerRef, ...otherProps} = props;
+
     return <StyledModal size={size} id={id} show={isOpen} onHide={onHide} centered ref={innerRef} {...otherProps}>
         <Header>{header}</Header>
         <Body>{children}</Body>

@@ -8,7 +8,7 @@ import {FaThumbtack} from "react-icons/all";
 import {FaLock, FaRegComment} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiCard, UiClassicIcon, UiPrettyUsername} from "ui";
+import {UiBadge, UiCard, UiClassicIcon, UiPrettyUsername, UiThemeContext} from "ui";
 import {UiCol, UiRow} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {convertIdeaToSlug} from "utils/basic-utils";
@@ -82,12 +82,14 @@ export const PinIcon = styled(FaThumbtack)`
 
 const IdeaCard = ({ideaData, onIdeaDelete}) => {
     const cardRef = React.createRef();
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data} = useContext(BoardContext);
     const history = useHistory();
     const location = useLocation();
     const [idea, setIdea] = useState(ideaData);
     useEffect(() => setIdea(ideaData), [ideaData]);
+
     const renderComments = () => {
         if (idea.commentsAmount > 0) {
             return <InfoContainer>
@@ -116,13 +118,11 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             <UiAvatar className={"align-top"} roundedCircle user={idea.user} size={16}/>
         </InfoContainer>
     };
-    return <IdeaContext.Provider value={{
-        ideaData: idea, loaded: true, error: false,
-        updateState: data => {
-            setIdea(data);
-            history.replace({pathname: location.pathname, state: null});
-        },
-    }}>
+    const updateState = data => {
+        setIdea(data);
+        history.replace({pathname: location.pathname, state: null});
+    };
+    return <IdeaContext.Provider value={{ideaData: idea, loaded: true, error: false, updateState: updateState}}>
         <CardStyle innerRef={cardRef} id={"ideac_" + idea.id} bodyAs={UiRow} bodyClassName={"py-3"} pinned={idea.pinned} darkMode={user.darkMode} theme={getTheme()}>
             <span className={"my-sm-auto mr-sm-3 mr-2"}>
                 <VoteButton className={"pt-sm-1 pt-0 pl-sm-2 pl-0"} idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>

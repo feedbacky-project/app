@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
 import {FaComment, FaCommentSlash, FaEdit, FaICursor, FaLink, FaLock, FaLockOpen, FaTags, FaUndoAlt, FaUnlink, FaUserCheck} from "react-icons/all";
+import {UiThemeContext} from "ui";
 
 const IconOverlay = styled.div`
   text-align: center;
@@ -23,8 +24,10 @@ const Icon = styled.div`
 `;
 
 const CommentIcon = ({specialType}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     let color = getTheme();
+
     if (user.darkMode) {
         color = color.setAlpha(.2);
     }

@@ -9,13 +9,19 @@ import {AppContext, BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaPencilAlt} from "react-icons/all";
 import tinycolor from "tinycolor2";
-import {UiBadge} from "ui";
+import {UiBadge, UiThemeContext} from "ui";
 import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiViewBox} from "ui/viewbox";
 import {popupError, popupNotification} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
+
+const Tag = styled.div`
+  display: inline-flex;
+  justify-content: center;
+  margin: .5em;
+`;
 
 const TagIcon = styled.div`
   padding: .5rem;
@@ -28,7 +34,7 @@ const TagIcon = styled.div`
 `;
 
 const TagsSubroute = () => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [modal, setModal] = useState({open: false, type: "", data: {id: -1, name: ""}});
@@ -52,16 +58,16 @@ const TagsSubroute = () => {
             return <SvgNotice Component={UndrawNoData} title={"No tags yet."} description={"How about creating one?"}/>
         }
         return boardData.tags.map((tag, i) => {
-            return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={tag.id}>
+            const onDelete = () => setModal({open: true, type: "delete", data: {id: tag.id, name: tag.name, color: tinycolor(tag.color)}});
+            return <Tag key={tag.id}>
                 <div className={"text-center"}>
-                    <UiElementDeleteButton tooltipName={"Delete"} id={"tag-" + tag.id + "-del"} offsetX={"12px"}
-                                           onClick={() => setModal({open: true, type: "delete", data: {id: tag.id, name: tag.name, color: tinycolor(tag.color)}})}/>
+                    <UiElementDeleteButton tooltipName={"Delete"} id={"tag-" + tag.id + "-del"} offsetX={"12px"} onClick={onDelete}/>
                     <TagIcon onClick={() => onTagEdit(tag)} style={{backgroundColor: tinycolor(tag.color).setAlpha(.1)}}>
                         <FaPencilAlt style={{height: 18, width: 18, color: tag.color}}/>
                     </TagIcon>
                     <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>
                 </div>
-            </div>
+            </Tag>
         });
     };
     const onTagEdit = (tag) => {

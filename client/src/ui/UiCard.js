@@ -25,6 +25,7 @@ const StyledBody = styled.div`
 
 const UiCard = (props) => {
     const {className, bodyClassName, bodyAs, children, innerRef, ...otherProps} = props;
+
     return <StyledCard className={className} ref={innerRef} {...otherProps}>
         <StyledBody as={bodyAs} className={bodyClassName}>
             {children}

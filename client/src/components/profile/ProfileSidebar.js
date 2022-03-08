@@ -2,6 +2,7 @@ import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/side
 import {AppContext, BoardContext} from "context";
 import React, {useContext} from 'react';
 import {FaRegAddressCard, FaRegBell, FaRegKeyboard} from "react-icons/all";
+import {UiThemeContext} from "ui";
 import {UiCol} from "ui/grid";
 
 const ProfileSidebar = ({currentNode, reRouteTo}) => {
@@ -10,12 +11,13 @@ const ProfileSidebar = ({currentNode, reRouteTo}) => {
         {appearance: data => <React.Fragment><SidebarIcon as={FaRegKeyboard} style={data}/> Appearance</React.Fragment>},
         {notifications: data => <React.Fragment><SidebarIcon as={FaRegBell} style={data}/> Notifications</React.Fragment>},
     ];
-    const {defaultTheme, getTheme} = useContext(AppContext);
+    const {defaultTheme, getTheme} = useContext(UiThemeContext);
     const {data} = useContext(BoardContext);
     let theme = defaultTheme;
     if(data !== null) {
         theme = getTheme();
     }
+
     return <UiCol xs={12} md={3} as={Sidebar} theme={theme.toString()}>
         <ul>{renderSidebarRoutes(routes, theme, currentNode, reRouteTo)}</ul>
     </UiCol>

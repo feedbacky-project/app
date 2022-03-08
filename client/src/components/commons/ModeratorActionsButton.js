@@ -11,6 +11,7 @@ import React, {useContext, useState} from 'react';
 import {FaCog, FaComment, FaCommentSlash, FaICursor, FaLink, FaUnlink, FaUserCheck, FaUserLock} from "react-icons/all";
 import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
+import {UiThemeContext} from "ui";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {popupError, popupNotification, popupRevertableNotification, popupWarning} from "utils/basic-utils";
 
@@ -36,13 +37,21 @@ export const DropdownOption = styled(UiDropdownElement)`
   cursor: pointer;
 `;
 
+const ActionIcon = styled.span`
+  margin-right: .25em;
+  transform: translateY(-2px);
+  color: ${props => props.color};
+`;
+
 const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = () => void 0}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData, updateState: updateBoardState} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const [modal, setModal] = useState({open: false, type: ""});
     const history = useHistory();
     const visible = boardData.moderators.find(mod => mod.userId === user.data.id);
+
     const doIdeaStateChange = (state, value, message, revertMessage, isRevert = false) => {
         return axios.patch("/ideas/" + ideaData.id, {[state]: value}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
@@ -176,33 +185,27 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
         <ModeratorAssignUpdateModal onHide={hide} isOpen={modal.open && modal.type === "assign"} onAction={onModeratorAssign}/>
         <ModeratorVotesResetModal onHide={hide} isOpen={modal.open && modal.type === "votes_reset"} onAction={onVotesReset}/>
         <TitleEditModal onHide={hide} isOpen={modal.open && modal.type === "title_edit"} onAction={onTitleEdit}/>
-        <DropdownOption onClick={() => {
-            setModal({open: true, type: "title_edit"})
-        }} as={"span"}><FaICursor className={"mr-1 move-top-2px"} style={{color}}/> Edit Title</DropdownOption>
-        <DropdownOption onClick={() => {
-            setModal({open: true, type: "tags"})
-        }} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Change Tags</DropdownOption>
-        <DropdownOption onClick={() => {
-            setModal({open: true, type: "assign"})
-        }} as={"span"}><FaUserCheck className={"mr-1 move-top-2px"} style={{color}}/> Assign Moderator</DropdownOption>
+        <DropdownOption onClick={() => setModal({open: true, type: "title_edit"})} as={"span"}><ActionIcon as={FaICursor} color={color}/> Edit Title</DropdownOption>
+        <DropdownOption onClick={() => setModal({open: true, type: "tags"})} as={"span"}><ActionIcon as={FaTags} color={color}/> Change Tags</DropdownOption>
+        <DropdownOption onClick={() => setModal({open: true, type: "assign"})} as={"span"}><ActionIcon as={FaUserCheck} color={color}/> Assign Moderator</DropdownOption>
         {ideaData.open ?
-            <DropdownOption onClick={() => setModal({open: true, type: "close"})} as={"span"}><FaLock className={"mr-1 move-top-2px"} style={{color}}/> Close Idea</DropdownOption> :
-            <DropdownOption onClick={() => setModal({open: true, type: "open"})} as={"span"}><FaUnlock className={"mr-1 move-top-2px"} style={{color}}/> Open Idea</DropdownOption>
+            <DropdownOption onClick={() => setModal({open: true, type: "close"})} as={"span"}><ActionIcon as={FaLock} color={color}/> Close Idea</DropdownOption> :
+            <DropdownOption onClick={() => setModal({open: true, type: "open"})} as={"span"}><ActionIcon as={FaUnlock} color={color}/> Open Idea</DropdownOption>
         }
-        <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Idea</DropdownOption>
+        <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><ActionIcon as={FaTrash} color={color}/> Delete Idea</DropdownOption>
         {ideaData.commentingRestricted ?
-            <DropdownOption onClick={() => setModal({open: true, type: "enable_comments"})} as={"span"}><FaComment className={"mr-1 move-top-2px"} style={{color}}/> Enable Comments</DropdownOption> :
-            <DropdownOption onClick={() => setModal({open: true, type: "restrict_comments"})} as={"span"}><FaCommentSlash className={"mr-1 move-top-2px"} style={{color}}/> Disable Comments</DropdownOption>
+            <DropdownOption onClick={() => setModal({open: true, type: "enable_comments"})} as={"span"}><ActionIcon as={FaComment} color={color}/> Enable Comments</DropdownOption> :
+            <DropdownOption onClick={() => setModal({open: true, type: "restrict_comments"})} as={"span"}><ActionIcon as={FaCommentSlash} color={color}/> Disable Comments</DropdownOption>
         }
         {ideaData.pinned ?
-            <DropdownOption onClick={() => setModal({open: true, type: "unpin"})} as={"span"}><FaUnlink className={"mr-1 move-top-2px"} style={{color}}/> Unpin Idea</DropdownOption> :
-            <DropdownOption onClick={() => setModal({open: true, type: "pin"})} as={"span"}><FaLink className={"mr-1 move-top-2px"} style={{color}}/> Pin Idea</DropdownOption>
+            <DropdownOption onClick={() => setModal({open: true, type: "unpin"})} as={"span"}><ActionIcon as={FaUnlink} color={color}/> Unpin Idea</DropdownOption> :
+            <DropdownOption onClick={() => setModal({open: true, type: "pin"})} as={"span"}><ActionIcon as={FaLink} color={color}/> Pin Idea</DropdownOption>
         }
         <DropdownOption onClick={() => {
             setModal({open: true, type: "votes_reset"})
-        }} as={"span"}><FaTags className={"mr-1 move-top-2px"} style={{color}}/> Reset Votes</DropdownOption>
+        }} as={"span"}><ActionIcon as={FaTags} color={color}/> Reset Votes</DropdownOption>
         {isSuspendable() && <DropdownOption onClick={() => setModal({open: true, type: "suspend"})} className={"text-red"} as={"span"}>
-            <FaUserLock className={"mr-1 move-top-2px"} style={{color: getTheme()}}/> Suspend User
+            <ActionIcon as={FaUserLock}/> Suspend User
         </DropdownOption>
         }
     </UiDropdown>

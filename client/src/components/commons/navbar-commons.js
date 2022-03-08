@@ -38,19 +38,28 @@ const TopDropdownElement = styled(UiDropdownElement)`
   border-top: 2px solid ${props => props.theme};
 `;
 
-export const renderLogIn = (onNotLoggedClick, context, boardData = null) => {
+const Username = styled.strong`
+  display: inline-block;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+`;
+
+export const renderLogIn = (onNotLoggedClick, context, theme, boardData = null) => {
     if (!context.user.loggedIn) {
-        return <LoginButton theme={context.getTheme().setAlpha(.2).toString()} className={"d-inline-block float-right order-sm-2 order-1"} label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
+        return <LoginButton theme={theme.setAlpha(.2).toString()} className={"d-inline-block float-right order-sm-2 order-1"} label={"Log-in"} onClick={onNotLoggedClick}><FaSignInAlt/> Log In</LoginButton>
     }
     return <UiDropdown className={"d-inline-block float-right order-sm-2 order-1"} label={"Options"} toggleClassName={"px-0"} menuClassName={"pt-0 rounded-top-0"} toggle={
         <OptionsButton>
-            <UiAvatar className={"mx-1"} roundedCircle user={context.user.data} size={28} style={{border: "1px solid " + context.getTheme()}}/>
-            <FaAngleDown color={context.getTheme()}/>
+            <UiAvatar className={"mx-1"} roundedCircle user={context.user.data} size={28} style={{border: "1px solid " + theme}}/>
+            <FaAngleDown color={theme}/>
         </OptionsButton>
     }>
-        <TopDropdownElement theme={context.getTheme().setAlpha(.75).toString()}>
+        <TopDropdownElement theme={theme.setAlpha(.75).toString()}>
             <FaUserAlt className={"mr-2 move-top-1px"}/>
-            <strong className={"d-inline-block align-middle text-truncate"} style={{maxWidth: 100}}>{context.user.data.username}</strong>
+            <Username>{context.user.data.username}</Username>
         </TopDropdownElement>
         <div className={"my-1"}/>
         <UiDropdownElement as={Link} to={{pathname: "/me", state: {_boardData: boardData}}}>

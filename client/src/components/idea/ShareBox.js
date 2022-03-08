@@ -4,7 +4,7 @@ import {AppContext, BoardContext} from "context";
 import copy from "copy-text-to-clipboard";
 import React, {useContext} from "react";
 import {FaFacebookSquare, FaLink, FaTwitterSquare} from "react-icons/all";
-import {UiCard, UiTooltip} from "ui";
+import {UiCard, UiThemeContext, UiTooltip} from "ui";
 import {popupNotification} from "utils/basic-utils";
 
 const ShareRelativeContainer = styled.div`
@@ -37,7 +37,7 @@ const ShareIcon = styled.div`
 `;
 
 const ShareBox = ({locationHref = window.location.href, bodyClassName = null}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data} = useContext(BoardContext);
 
     //workaround for already set query values

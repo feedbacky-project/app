@@ -13,13 +13,15 @@ import {AppContext, IdeaContext} from "context";
 import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {useHistory} from "react-router-dom";
+import {UiThemeContext} from "ui";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
 import {UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
 
 const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {ideaData, updateState} = useContext(IdeaContext);
     const voteRef = React.createRef();
     const history = useHistory();
@@ -36,6 +38,7 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
             onLoadRequest();
         }
     }));
+
     const onLoadRequest = () => {
         axios.get("/ideas/" + ideaData.id + "/voters").then(res => {
             if (res.status !== 200) {
@@ -46,7 +49,6 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
             setVoters({...voters, data, loaded: true});
         }).catch(() => setVoters({...voters, error: true}));
     };
-
     const onEditApply = () => {
         let description = editor.value;
         if (ideaData.description === description && updatedAttachment == null) {
@@ -84,8 +86,8 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
     };
     const renderEditorMode = () => {
         return <React.Fragment>
-            <UiMarkdownFormControl as={TextareaAutosize} className={"bg-lighter"} id={"editorBox"} rows={4} maxRows={12}
-                                   placeholder={"Write a description..."} required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
+            <UiMarkdownFormControl as={TextareaAutosize} id={"editorBox"} rows={4} maxRows={12} placeholder={"Write a description..."}
+                                   required label={"Write a description"} onChange={e => setEditor({...editor, value: e.target.value})}
                                    style={{resize: "none", overflow: "hidden"}} defaultValue={editor.value}/>
             <div className={"m-0 mt-2"}>
                 <UiLoadableButton label={"Save"} small onClick={onEditApply}>Save</UiLoadableButton>
@@ -93,20 +95,21 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
             </div>
         </React.Fragment>
     };
+    const onVote = (upvoted, votersAmount) => {
+        updateState({...ideaData, upvoted, votersAmount});
+        if (upvoted) {
+            setVoters({...voters, data: voters.data.concat(user.data)});
+        } else {
+            setVoters({...voters, data: voters.data.filter(voter => voter.id !== user.data.id)});
+        }
+    };
     return <React.Fragment>
         <DangerousActionModal id={"ideaDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onDelete}
                               actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
         <UiCol sm={12} md={10}>
             <UiCol xs={12} className={"d-inline-flex mb-2 p-0"}>
                 <div className={"my-auto mr-2"} ref={voteRef}>
-                    <VoteButton idea={ideaData} animationRef={voteRef} onVote={(upvoted, votersAmount) => {
-                        updateState({...ideaData, upvoted, votersAmount});
-                        if (upvoted) {
-                            setVoters({...voters, data: voters.data.concat(user.data)});
-                        } else {
-                            setVoters({...voters, data: voters.data.filter(voter => voter.id !== user.data.id)});
-                        }
-                    }}/>
+                    <VoteButton idea={ideaData} animationRef={voteRef} onVote={onVote}/>
                 </div>
                 <TitleInfo editor={editor} setEditor={setEditor} setModal={setModal} onStateChange={onStateChange}/>
             </UiCol>

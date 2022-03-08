@@ -33,10 +33,10 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     /*eslint-disable-next-line*/
     useEffect(() => setTags(ideaData.tags), [onHide]);
 
-    return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"}
-                               applyButton={<UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
-                                   <FaExclamation className={"move-top-1px"}/> Update
-                               </UiLoadableButton>}>
+    const applyButton = <UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
+        <FaExclamation className={"move-top-1px"}/> Update
+    </UiLoadableButton>;
+    return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
                 <QuestionIcon/>

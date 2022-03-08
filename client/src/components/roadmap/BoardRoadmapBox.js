@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import {SvgNotice} from "components/commons/SvgNotice";
-import {SimpleIdeaCard} from "components/roadmap/SimpleIdeaCard";
+import SimpleIdeaCard from "components/roadmap/SimpleIdeaCard";
 import React from "react";
 import tinycolor from "tinycolor2";
 import {UiBadge} from "ui";
@@ -20,7 +20,7 @@ const RoadmapContainer = styled.div`
     background: hsl(0, 0%, 94%);
   }
   
-  .dark {
+  .dark & {
     scrollbar-color: var(--hover) var(--tertiary); /* firefox property */
     &::-webkit-scrollbar {
       background: var(--tertiary);
@@ -36,7 +36,7 @@ const StyledTagName = styled(UiBadge)`
   padding: .25rem .75rem;
 `;
 
-export const BoardRoadmapBox = ({roadmapData}) => {
+const BoardRoadmapBox = ({roadmapData}) => {
     if (roadmapData.length === 0) {
         return <SvgNotice Component={UndrawNoData} title={"This Roadmap Is Empty"}/>
     }
@@ -48,11 +48,13 @@ export const BoardRoadmapBox = ({roadmapData}) => {
                     <UiBadge style={{fontSize: "1rem"}} className={"align-middle"} color={tinycolor(element.tag.color)}>{element.ideas.data.length}</UiBadge>
                 </div>
             </h3>
-            <UiViewBoxBackground as={RoadmapContainer}>
+            <RoadmapContainer as={UiViewBoxBackground}>
                 {element.ideas.data.map(idea => {
                     return <SimpleIdeaCard key={idea.id} ideaData={idea}/>
                 })}
-            </UiViewBoxBackground>
+            </RoadmapContainer>
         </UiCol>
     });
 };
+
+export default BoardRoadmapBox;

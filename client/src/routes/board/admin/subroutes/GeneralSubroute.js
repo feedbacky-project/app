@@ -12,7 +12,7 @@ import TextareaAutosize from "react-autosize-textarea";
 import {FaEllipsisH, FaEyeSlash} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
-import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner} from "ui";
+import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton, UiLoadableButton} from "ui/button";
 import {UiCountableFormControl, UiFormLabel, UiFormText, UiMarkdownFormControl} from "ui/form";
 import {UiCol, UiRow} from "ui/grid";
@@ -55,7 +55,8 @@ const ApiKeyElement = styled.span`
 
 const GeneralSubroute = ({updateState}) => {
     const history = useHistory();
-    const {onThemeChange, getTheme, user} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {onThemeChange, getTheme} = useContext(UiThemeContext);
     const {data: boardData} = useContext(BoardContext);
     const [anonymousVoting, setAnonymousVoting] = useState(boardData.anonymousAllowed);
     const [roadmapEnabled, setRoadmapEnabled] = useState(boardData.roadmapEnabled);
@@ -266,7 +267,7 @@ const GeneralSubroute = ({updateState}) => {
                     <h4 className="mb-1 text-red">API Key</h4>
                     <span className="text-black-60" style={{fontSize: ".9em"}}>
                         Generate access key to utilise Feedbacky API for anonymous ideas posting.<br/>
-                        Your API key <ApiKeyElement className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</ApiKeyElement>
+                        Your API key is <ApiKeyElement className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</ApiKeyElement>
                         <ApiKeyIcon className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
                         Remember to keep it safe!<br/>
                         <span><strong className="text-red" role={"button"} tabIndex={0} style={{cursor: "pointer"}} onClick={apiResetPrompt} onKeyPress={apiResetPrompt}>Click here</strong> to regenerate API key if it got compromised.</span>

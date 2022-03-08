@@ -6,7 +6,7 @@ import {AppContext, BoardContext, PageNodesContext} from "context";
 import copy from "copy-text-to-clipboard";
 import React, {useContext, useEffect, useState} from 'react';
 import tinycolor from "tinycolor2";
-import {UiBadge, UiClickableTip, UiKeyboardInput} from "ui";
+import {UiBadge, UiClickableTip, UiKeyboardInput, UiThemeContext} from "ui";
 import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -25,8 +25,14 @@ const ClickableButton = styled.div`
   }
 `;
 
+const Moderator = styled.div`
+  display: inline-flex;
+  justify-content: center;
+  margin: .5em;
+`;
+
 const ModeratorsSubroute = () => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData, updateState} = useContext(BoardContext);
     const {setCurrentNode} = useContext(PageNodesContext);
     const [moderators, setModerators] = useState(boardData.moderators);
@@ -45,6 +51,7 @@ const ModeratorsSubroute = () => {
         }).catch(() => setInvited({...invited, error: true}));
         // eslint-disable-next-line
     }, []);
+
     const renderOverview = () => {
         return <React.Fragment>
             <UiFormLabel as={UiCol} xs={12} className={"mb-0"}>Permissions Overview</UiFormLabel>
@@ -81,7 +88,7 @@ const ModeratorsSubroute = () => {
                     <UiFormLabel>Active Moderators</UiFormLabel>
                 </div>
                 {moderators.map((mod, i) => {
-                    return <div className={"d-inline-flex justify-content-center mr-2"} key={i}>
+                    return <Moderator key={i}>
                         <div className={"text-center"}>
                             <UiAvatar roundedCircle user={mod.user} size={35}/>
                             {renderModerationKick(mod, i)}
@@ -90,7 +97,7 @@ const ModeratorsSubroute = () => {
                             <UiBadge className={"d-block"}>{prettifyEnum(mod.role)}</UiBadge>
                             {renderPromoteBadge(mod)}
                         </div>
-                    </div>
+                    </Moderator>
                 })}
             </UiCol>
             <UiCol xs={12} sm={6}>
@@ -99,10 +106,11 @@ const ModeratorsSubroute = () => {
                     <UiClickableTip id={"invited"} title={"Invited Moderators"} description={"Moderators that were invited and received invitation email."}/>
                 </div>
                 {invited.data.map((invited, i) => {
-                    return <div className={"d-inline-flex justify-content-center mr-2 mb-2"} key={i}>
+                    const onDelete = () => setModal({open: true, type: "inviteDelete", data: invited.id});
+                    return <Moderator key={i}>
                         <div className={"text-center"}>
                             <UiAvatar roundedCircle user={invited.user} size={35}/>
-                            <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={() => setModal({open: true, type: "inviteDelete", data: invited.id})}/>
+                            <UiElementDeleteButton id={"invite_del_" + invited.user.id} tooltipName={"Invalidate"} onClick={onDelete}/>
                             <br/>
                             <small className={"text-truncate d-block"} style={{maxWidth: 100}}>{invited.user.username}</small>
                             <ClickableButton theme={tinycolor("#0994f6").setAlpha(.5).toString()} onClick={() => {
@@ -110,7 +118,7 @@ const ModeratorsSubroute = () => {
                                 popupNotification("Copied", getTheme());
                             }}><UiBadge color={tinycolor("#0994f6")} className={"d-block"}>Copy Invite</UiBadge></ClickableButton>
                         </div>
-                    </div>
+                    </Moderator>
                 })}
             </UiCol>
             <UiCol xs={12}>

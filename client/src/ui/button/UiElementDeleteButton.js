@@ -20,6 +20,7 @@ const DeleteButton = styled(FaTimes)`
 
 const UiElementDeleteButton = (props) => {
     const {id, tooltipName, onClick, offsetX = "-6px", offsetY = "-6px"} = props;
+
     return <OverlayTrigger overlay={<Tooltip id={id}>{tooltipName}</Tooltip>}>
         <DeleteButton onClick={onClick} offsetx={offsetX} offsety={offsetY}/>
     </OverlayTrigger>

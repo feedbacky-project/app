@@ -22,15 +22,22 @@ public class SubscriptionExecutor {
 
   public void notifySubscribers(Idea idea, NotificationEvent event) {
     for(User user : idea.getSubscribers()) {
-      if(!user.getMailPreferences().isNotificationsEnabled()) {
-        continue;
-      }
       //do not notify creator of idea if he made any changes to the idea
       if(user.equals(event.getSource()) && idea.getCreator().equals(event.getSource())) {
         continue;
       }
-      doNotifySubscriber(user, event);
+      notifySubscriber(idea, user, event);
     }
+  }
+
+  public void notifySubscriber(Idea idea, User user, NotificationEvent event) {
+    if(!user.getMailPreferences().isNotificationsEnabled()) {
+      return;
+    }
+    if(!idea.getSubscribers().contains(user)) {
+      return;
+    }
+    doNotifySubscriber(user, event);
   }
 
   private void doNotifySubscriber(User user, NotificationEvent event) {
@@ -48,7 +55,7 @@ public class SubscriptionExecutor {
   }
 
   public enum Event {
-    IDEA_BY_MODERATOR_COMMENT, IDEA_STATUS_CHANGE, IDEA_TAGS_CHANGE
+    IDEA_BY_MODERATOR_COMMENT, IDEA_STATUS_CHANGE, IDEA_TAGS_CHANGE, COMMENT_REPLY
   }
 
 }

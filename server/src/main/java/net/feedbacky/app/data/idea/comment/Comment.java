@@ -19,6 +19,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
@@ -41,7 +42,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@NamedEntityGraph(name = "Comment.fetch", attributeNodes = {@NamedAttributeNode("creator"), @NamedAttributeNode("reactions")})
+@NamedEntityGraph(name = "Comment.fetch", attributeNodes = {@NamedAttributeNode("creator"), @NamedAttributeNode("reactions"), @NamedAttributeNode("replyTo")})
 public class Comment implements Serializable {
 
   @Id
@@ -61,6 +62,9 @@ public class Comment implements Serializable {
   private ViewType viewType = ViewType.PUBLIC;
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true)
   private Set<CommentReaction> reactions = new HashSet<>();
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "replyTo", referencedColumnName = "id")
+  private Comment replyTo;
   @CreationTimestamp
   private Date creationDate;
 
@@ -70,7 +74,7 @@ public class Comment implements Serializable {
   }
 
   public enum ViewType {
-    PUBLIC, INTERNAL
+    PUBLIC, INTERNAL, DELETED
   }
 
 }

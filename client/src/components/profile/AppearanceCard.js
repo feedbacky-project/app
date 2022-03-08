@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
-import {UiCard} from "ui";
+import {UiCard, UiThemeContext} from "ui";
 
 const OptionCard = styled(UiCard)`
   min-width: 200px;
@@ -23,13 +23,14 @@ const OptionImage = styled.img`
 `;
 
 const AppearanceCard = ({className, chosen, alt, imgSrc, onClick}) => {
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     let style;
     if (chosen) {
         style = {border: "2px solid " + getTheme().toString()};
     } else {
         style = {border: "2px solid transparent"};
     }
+
     return <OptionCard className={className} onClick={onClick} style={style} bodyClassName={"p-0"}>
         <OptionImage alt={alt} src={imgSrc}/>
     </OptionCard>

@@ -74,10 +74,9 @@ public class ServiceLoginController {
 
     OutputStream os = conn.getOutputStream();
     String content = "client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&redirect_uri={REDIRECT_URI}&code={CODE}&grant_type=authorization_code";
-    content = StringUtils.replace(content, "{CLIENT_ID}", LoginProvider.EnvironmentVariables.readEnvVariable(provider.getEnvironmentVariables().getClientId()));
-    content = StringUtils.replace(content, "{CLIENT_SECRET}", LoginProvider.EnvironmentVariables.readEnvVariable(provider.getEnvironmentVariables().getClientSecret()));
-    content = StringUtils.replace(content, "{REDIRECT_URI}", URLEncoder.encode(
-            LoginProvider.EnvironmentVariables.readEnvVariable(provider.getEnvironmentVariables().getRedirectUri()), "UTF-8"));
+    content = StringUtils.replace(content, "{CLIENT_ID}", provider.getEnvironmentVariables().getClientId());
+    content = StringUtils.replace(content, "{CLIENT_SECRET}", provider.getEnvironmentVariables().getClientSecret());
+    content = StringUtils.replace(content, "{REDIRECT_URI}", URLEncoder.encode(provider.getEnvironmentVariables().getRedirectUri(), "UTF-8"));
     content = StringUtils.replace(content, "{CODE}", code);
     os.write(content.getBytes(StandardCharsets.UTF_8));
     os.flush();

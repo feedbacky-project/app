@@ -12,6 +12,7 @@ const UiImage = (props) => {
     const {roundedCircle, rounded, thumbnail, className, onError = () => void 0, innerRef, ...otherProps} = props;
     let borderRadius = 0;
     const defaultRadius = getComputedStyle(document.documentElement).getPropertyValue("--border-radius");
+
     if (rounded) {
         borderRadius = defaultRadius;
     }

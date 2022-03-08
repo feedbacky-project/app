@@ -1,5 +1,12 @@
 ### 1.0.0.RC.2
 * **[FEATURE]** Board and account deletion modals now contain checkboxes to agree that you delete board/account (requested by [Matou0014](https://app.feedbacky.net/i/hardened-board-deletion.4089))
+* **[FEATURE]** Comments can now receive replies
+* **[FEATURE]** Added Twitch OAuth2 log-in support
+* **[IMPROVEMENT]** Reduced server-side service memory footprint by using different Docker image
+* **[IMPROVEMENT]** Quality of Life improvement - all focusable input forms will now be focused by default for example in modals or creators
+* **[CHANGE]** Breaking UI change - separated UI components from client, now they are standalone
+* **[FIX]** Scrollbars didn't work properly on Chromium browsers
+* **[FIX]** Changelog modal didn't respect 2500 chars change
 
 ### 1.0.0.RC.1
 * **[FEATURE]** Display toast messages when page is loading for too long
@@ -7,7 +14,7 @@
 * **[IMPROVEMENT]** Dynamically change theme-color meta tag based on page theme color
 * **[IMPROVEMENT]** Reduced motion now applies to most of hoverable UI elements
 * **[IMPROVEMENT]** Webhooks will now assign changelog id to link to use latest scroll to changelog feature
-  * **[IMPROVEMENT]** Comment and idea edit forms should now contain markdown buttons (requested by [Tigerpanzer_02](https://app.feedbacky.net/i/markdown-bar-for-comments.4061))
+* **[IMPROVEMENT]** Comment and idea edit forms should now contain markdown buttons (requested by [Tigerpanzer_02](https://app.feedbacky.net/i/markdown-bar-for-comments.4061))
 * **[CHANGE]** Newly created idea will now display under pinned ones as it should (reported by [Tigerpanzer_02](https://app.feedbacky.net/i/new-ideas-get-added-over-pinned-idea.4059))
 * **[FIX]** Reset idea create modal description when posting new idea (reported at [Feedbacky](https://app.feedbacky.net/i/reset-description-field-on-new-idea.4045))
 * **[FIX]** `and X more` message didn't appear properly

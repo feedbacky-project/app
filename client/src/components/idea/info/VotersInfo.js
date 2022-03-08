@@ -32,6 +32,7 @@ const Voter = styled(UiAvatar)`
 const VotersInfo = ({data}) => {
     const [open, setOpen] = useState(false);
     const {votersAmount} = useContext(IdeaContext).ideaData;
+
     const renderVoters = () => {
         if (!data.loaded) {
             const voters = votersAmount > 5 ? 5 : votersAmount;
@@ -62,12 +63,11 @@ const VotersInfo = ({data}) => {
             {renderAndMore(data.data.length)}
         </div>
     };
-
     const renderAndMore = (amount) => {
         if (amount <= 5) {
             return;
         }
-        return <MoreVotersText onClick={() => setOpen(true)}> + {amount - 5} more</MoreVotersText>
+        return <MoreVotersText className={"text-black-75"} onClick={() => setOpen(true)}> + {amount - 5} more</MoreVotersText>
     };
     return <React.Fragment>
         <VotersViewModal votersData={data.data} isOpen={open} onHide={() => setOpen(false)}/>

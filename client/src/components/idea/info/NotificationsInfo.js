@@ -2,14 +2,16 @@ import axios from "axios";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
 import {FaRegBell, FaRegBellSlash} from "react-icons/all";
-import {UiClickableTip} from "ui";
+import {UiClickableTip, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {popupError, popupNotification} from "utils/basic-utils";
 
 const NotificationsInfo = () => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
+
     const onSubscribeToggle = () => {
         if (!user.loggedIn) {
             onNotLoggedClick();
@@ -18,7 +20,7 @@ const NotificationsInfo = () => {
         const request = ideaData.subscribed ? "DELETE" : "POST";
         return axios({
             method: request,
-            url: "/ideas/" + ideaData.id + "/subscribe"
+            url: "/ideas/" + ideaData.id + "/subscribers"
         }).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();

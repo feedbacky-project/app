@@ -3,7 +3,7 @@ import {LIGHT_THEME_COLOR} from "AppAppearance";
 import {AppContext} from "context";
 import React, {useContext, useState} from "react";
 import tinycolor from "tinycolor2";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 
 const Loadable = styled(UiLoadingSpinner)`
   position: absolute;
@@ -22,7 +22,6 @@ const DefaultReaction = styled.div`
   display: inline-block;
   padding: .05rem .3rem;
   margin-right: .25rem;
-  margin-top: .25rem;
   border-radius: var(--border-radius);
   color: hsla(0, 0%, 0%, .6);
   transition: var(--hover-transition);
@@ -47,7 +46,8 @@ const SelectedReaction = styled(DefaultReaction)`
 
 const LoadableReaction = (props) => {
     const {isSelected, onReact, children} = props;
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const [loading, setLoading] = useState(false);
     let Component;
     if (isSelected) {
@@ -57,6 +57,7 @@ const LoadableReaction = (props) => {
     }
     const darkModeColor = tinycolor("#f2f2f2");
     const lightModeColor = tinycolor(LIGHT_THEME_COLOR);
+
     return <Component onClick={() => {
         setLoading(true);
         onReact().finally(() => setLoading(false));

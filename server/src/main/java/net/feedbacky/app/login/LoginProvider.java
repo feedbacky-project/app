@@ -47,21 +47,23 @@ public class LoginProvider {
     }
   }
 
-  @AllArgsConstructor
   @Getter
   public static class EnvironmentVariables {
     private String redirectUri;
     private String clientId;
     private String clientSecret;
 
-    public static String readEnvVariable(String variable) {
-      return System.getenv(variable);
+    public EnvironmentVariables(String providerId) {
+      String id = providerId.toUpperCase();
+      this.redirectUri = readEnvVariable("OAUTH_" + id + "_REDIRECT_URI");
+      this.clientId = readEnvVariable("OAUTH_" + id + "_CLIENT_ID");
+      this.clientSecret = readEnvVariable("OAUTH_" + id + "_CLIENT_SECRET");
     }
 
-    public static String readEnvVariable(String variable, String defaultValue) {
+    private String readEnvVariable(String variable) {
       String env = System.getenv(variable);
       if(env == null) {
-        return defaultValue;
+        return "";
       }
       return env;
     }

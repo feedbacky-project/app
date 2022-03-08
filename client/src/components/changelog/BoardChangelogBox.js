@@ -14,11 +14,11 @@ import qs from "querystringify";
 import React, {useContext, useEffect, useState} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {useLocation} from "react-router-dom";
-import {UiLoadingSpinner} from "ui";
+import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton} from "ui/button";
 import {UiCol} from "ui/grid";
 import {UiViewBoxBackground} from "ui/viewbox/UiViewBox";
-import {popupWarning, prepareFilterAndSortRequests, scrollIntoViewAndPop} from "utils/basic-utils";
+import {popupWarning, prepareFilterAndSortRequests, scrollIntoView} from "utils/basic-utils";
 
 const ShareBoxOverlay = styled.div`
   display: inline-block;
@@ -28,7 +28,8 @@ const ShareBoxOverlay = styled.div`
 `;
 
 const BoardChangelogBox = ({searchQuery}) => {
-    const {user, getTheme} = useContext(AppContext);
+    const {user} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData, onNotLoggedClick} = useContext(BoardContext);
     const [changelog, setChangelog] = useState({data: [], loaded: false, error: false, moreToLoad: true});
     const [page, setPage] = useState(0);
@@ -49,13 +50,14 @@ const BoardChangelogBox = ({searchQuery}) => {
             return;
         }
         setTimeout(function () {
-            scrollIntoViewAndPop("changelogc_" + scrollTo).then(() => setScrollTo(null));
+            scrollIntoView("changelogc_" + scrollTo).then(() => setScrollTo(null));
         }, 500);
     }, [scrollTo]);
+
     const onLoadRequest = (override = false) => {
         const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
         const currentPage = override ? 0 : page;
-        return axios.get("/boards/" + boardData.discriminator + "/changelog?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog) + withQuery).then(res => {
+        return axios.get("/boards/" + boardData.discriminator + "/changelogs?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.changelog) + withQuery).then(res => {
             const data = res.data.data;
             if (override) {
                 setChangelog({...changelog, data, loaded: true, moreToLoad: res.data.pageMetadata.currentPage < res.data.pageMetadata.pages, error: false});
@@ -79,12 +81,12 @@ const BoardChangelogBox = ({searchQuery}) => {
         newData = newData.filter(changelog => changelog.id !== data.id);
         setChangelog({...changelog, data: newData});
     };
-    const onChangelogReact = (changelogId, emoteId) => {
+    const onChangelogReact = (changelogId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.post("/changelog/" + changelogId + "/reactions/" + emoteId, {}).then(res => {
+        return axios.post("/changelogs/" + changelogId + "/reactions", {reactionId}).then(res => {
             if (res.status !== 200) {
                 popupWarning("Failed to add reaction");
                 return;
@@ -99,12 +101,12 @@ const BoardChangelogBox = ({searchQuery}) => {
             });
         });
     };
-    const onChangelogUnreact = (changelogId, emoteId) => {
+    const onChangelogUnreact = (changelogId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
             return Promise.resolve();
         }
-        return axios.delete("/changelog/" + changelogId + "/reactions/" + emoteId).then(res => {
+        return axios.delete("/changelogs/" + changelogId + "/reactions/" + reactionId).then(res => {
             if (res.status !== 204) {
                 popupWarning("Failed to remove reaction");
                 return;
@@ -112,7 +114,7 @@ const BoardChangelogBox = ({searchQuery}) => {
             setChangelog({
                 ...changelog, data: changelog.data.map(element => {
                     if (element.id === changelogId) {
-                        const reaction = element.reactions.find(r => r.user.id === user.data.id && r.reactionId === emoteId);
+                        const reaction = element.reactions.find(r => r.user.id === user.data.id && r.reactionId === reactionId);
                         element.reactions = element.reactions.filter(r => r !== reaction);
                     }
                     return element;

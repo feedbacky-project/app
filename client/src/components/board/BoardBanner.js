@@ -60,6 +60,7 @@ const SocialLink = styled(Link)`
 const BoardBanner = ({customName}) => {
     const {data: boardData} = useContext(BoardContext);
     const {socialLinks, name, shortDescription, banner} = boardData;
+
     const renderSocialLinks = () => {
         return <SocialLinkContainer>
             {socialLinks.map(link => {

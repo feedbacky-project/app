@@ -13,10 +13,10 @@ import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PostCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
+import net.feedbacky.app.data.idea.dto.comment.reaction.PostCommentReactionDto;
 import net.feedbacky.app.data.idea.subscribe.NotificationEvent;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.user.User;
-import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InsufficientPermissionsException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -92,11 +92,14 @@ public class CommentServiceImpl implements CommentService {
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     final User finalUser = user;
     boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
-    if(!isModerator) {
-      comments = comments.stream().filter(comment -> comment.getViewType() != Comment.ViewType.INTERNAL).collect(Collectors.toList());
-    }
-    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize),
-            comments.stream().map(comment -> new FetchCommentDto().from(comment)).collect(Collectors.toList()));
+    List<FetchCommentDto> returnData = comments.stream().map(c -> {
+      FetchCommentDto dto = new FetchCommentDto().from(c);
+      if(!isModerator && c.getViewType() == Comment.ViewType.INTERNAL) {
+        dto = dto.asInternalInvisible();
+      }
+      return dto;
+    }).collect(Collectors.toList());
+    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), returnData);
   }
 
   @Override
@@ -141,6 +144,13 @@ public class CommentServiceImpl implements CommentService {
     comment.setSpecialType(Comment.SpecialType.LEGACY);
     comment.setViewType(Comment.ViewType.valueOf(dto.getType().toUpperCase()));
     comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
+    if(dto.getReplyTo() != null) {
+      Comment repliedComment = commentRepository.findById(dto.getReplyTo())
+              .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Reply comment with id {0} not found.", dto.getReplyTo())));
+      comment.setReplyTo(repliedComment);
+      subscriptionExecutor.notifySubscriber(idea, user, new NotificationEvent(SubscriptionExecutor.Event.COMMENT_REPLY, user,
+              comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
+    }
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't post duplicated comments.");
@@ -167,7 +177,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public FetchCommentReactionDto postReaction(long id, String reactionId) {
+  public FetchCommentReactionDto postReaction(long id, PostCommentReactionDto dto) {
     UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
     User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
             .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
@@ -176,19 +186,19 @@ public class CommentServiceImpl implements CommentService {
     if(comment.isSpecial()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't react to this comment.");
     }
-    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {
+    if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(dto.getReactionId()))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid reaction.");
     }
-    if(comment.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(reactionId))) {
+    if(comment.getReactions().stream().anyMatch(r -> r.getUser().equals(user) && r.getReactionId().equals(dto.getReactionId()))) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already reacted.");
     }
     CommentReaction reaction = new CommentReaction();
     reaction.setComment(comment);
-    reaction.setReactionId(reactionId);
+    reaction.setReactionId(dto.getReactionId());
     reaction.setUser(user);
     comment.getReactions().add(reaction);
     commentRepository.save(comment);
-    reaction = comment.getReactions().stream().filter(r -> r.getReactionId().equals(reactionId) && r.getUser().equals(user)).findFirst().get();
+    reaction = comment.getReactions().stream().filter(r -> r.getReactionId().equals(dto.getReactionId()) && r.getUser().equals(user)).findFirst().get();
     return new FetchCommentReactionDto().from(reaction);
   }
 
@@ -232,11 +242,12 @@ public class CommentServiceImpl implements CommentService {
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     Idea idea = comment.getIdea();
     webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
-    commentRepository.delete(comment);
+    comment.setViewType(Comment.ViewType.DELETED);
+    comment.setCreator(null);
+    comment.setDescription("");
+    commentRepository.save(comment);
     //to force trend score update
-    Set<Comment> comments = idea.getComments();
-    comments.remove(comment);
-    idea.setComments(comments);
+    idea.setComments(idea.getComments());
     ideaRepository.save(idea);
     return ResponseEntity.noContent().build();
   }
@@ -263,6 +274,6 @@ public class CommentServiceImpl implements CommentService {
     reaction.setComment(null);
     commentRepository.save(comment);
     //no need to expose
-    return ResponseEntity.noContent(). build();
+    return ResponseEntity.noContent().build();
   }
 }

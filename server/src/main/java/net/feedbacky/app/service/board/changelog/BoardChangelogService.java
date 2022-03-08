@@ -4,8 +4,7 @@ import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PatchChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.reaction.FetchChangelogReactionDto;
-import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
-import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
+import net.feedbacky.app.data.board.dto.changelog.reaction.PostChangelogReactionDto;
 import net.feedbacky.app.util.PaginableRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public interface BoardChangelogService {
 
   ResponseEntity<FetchChangelogDto> post(String discriminator, PostChangelogDto dto);
 
-  FetchChangelogReactionDto postReaction(long id, String reactionId);
+  FetchChangelogReactionDto postReaction(long id, PostChangelogReactionDto dto);
 
   FetchChangelogDto patch(long id, PatchChangelogDto dto);
 

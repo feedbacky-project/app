@@ -4,6 +4,7 @@ import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";
+import {UiThemeContext} from "ui/index";
 
 export const BasePageButton = styled.button`
   display: inline-block;
@@ -51,10 +52,11 @@ export const PageButton = styled(BasePageButton)`
 `;
 
 const UiButton = (props) => {
-    const {getTheme, user} = useContext(AppContext);
+    const {getTheme, darkMode} = useContext(UiThemeContext);
     const {children, label, color = getTheme(), style, innerRef, ...otherProps} = props;
     let buttonColor = color;
-    if (user.darkMode) {
+
+    if (darkMode) {
         buttonColor = buttonColor.lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(color, "#282828") < WCAG_AA_CONTRAST) {

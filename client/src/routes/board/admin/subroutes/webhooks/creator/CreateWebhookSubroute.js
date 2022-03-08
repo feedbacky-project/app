@@ -7,14 +7,14 @@ import StepFirstSubroute from "routes/board/admin/subroutes/webhooks/creator/Ste
 import StepSecondSubroute from "routes/board/admin/subroutes/webhooks/creator/StepSecondSubroute";
 import StepThirdSubroute from "routes/board/admin/subroutes/webhooks/creator/StepThirdSubroute";
 import tinycolor from "tinycolor2";
-import {UiProgressBar} from "ui";
+import {UiProgressBar, UiThemeContext} from "ui";
 import {UiCancelButton, UiLoadableButton, UiNextStepButton, UiPreviousStepButton} from "ui/button";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
 import {popupNotification, popupWarning} from "utils/basic-utils";
 
 const CreateWebhookSubroute = () => {
     const history = useHistory();
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
     const {data: boardData} = useContext(BoardContext);
     const [settings, setSettings] = useState({step: 1, type: "", listenedEvents: [], url: ""});
     const {setCurrentNode} = useContext(PageNodesContext);

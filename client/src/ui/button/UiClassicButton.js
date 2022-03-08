@@ -3,6 +3,7 @@ import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {PageButton} from "ui/button/UiButton";
+import {UiThemeContext} from "ui/index";
 
 const ClassicButton = styled(PageButton)`
   color: var(--font-color);
@@ -15,7 +16,8 @@ const ClassicButton = styled(PageButton)`
 
 const UiClassicButton = (props) => {
     const {children, label, innerRef, ...otherProps} = props;
-    const {getTheme} = useContext(AppContext);
+    const {getTheme} = useContext(UiThemeContext);
+
     return <ClassicButton theme={getTheme().clone()} aria-label={label} ref={innerRef} {...otherProps}>{children}</ClassicButton>
 };
 

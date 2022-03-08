@@ -9,11 +9,13 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaExclamationCircle} from "react-icons/fa";
 import {useLocation, useParams} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
+import {UiThemeContext} from "ui";
 import {UiContainer, UiRow} from "ui/grid";
 import {useTitle} from "utils/use-title";
 
 const BoardRoute = () => {
-    const {onThemeChange, defaultTheme, user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {onThemeChange, defaultTheme} = useContext(UiThemeContext);
+    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [searchQuery, setSearchQuery] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
@@ -42,6 +44,7 @@ const BoardRoute = () => {
         // eslint-disable-next-line
     }, [id]);
     useTitle(board.loaded ? board.data.name : "Loading...");
+
     return <BoardContextedRouteUtil board={board} setBoard={data => setBoard(data)} onNotLoggedClick={() => setModalOpen(true)} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator} onHide={() => setModalOpen(false)}/>
         <PageNavbar selectedNode={"feedback"}/>

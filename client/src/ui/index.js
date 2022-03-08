@@ -10,3 +10,5 @@ export {UiLoadingSpinner} from "ui/UiLoadingSpinner";
 export {UiPrettyUsername} from "ui/UiPrettyUsername";
 export {UiProgressBar} from "ui/UiProgressBar";
 export {UiTooltip} from "ui/UiTooltip";
+
+export {ThemeContext as UiThemeContext} from "ui/UiThemeContext";

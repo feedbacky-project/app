@@ -26,7 +26,6 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
                               text={name} onClick={() => onChoose(item)} className={"m-2"} chosen={settings.listenedEvents.includes(item)}/>
         });
     };
-
     return <React.Fragment>
         <SetupImageBanner svg={UndrawChooseEvents} stepName={"Choose Listened Events"} stepDescription={"Select events that this webhook will listen for."}/>
         <UiCol xs={12} className={"mt-4"}>

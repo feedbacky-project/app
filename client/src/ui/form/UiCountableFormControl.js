@@ -6,6 +6,7 @@ import {UiFormControl} from "ui/form/UiFormControl";
 const UiCountableFormControl = (props) => {
     const {minLength, maxLength, defaultValue, onChange = () => void 0, ...otherProps} = props;
     const [currentLength, setCurrentLength] = useState(defaultValue == null ? 0 : defaultValue.length);
+
     return <React.Fragment>
         <UiFormControl onChange={e => {
             e.target.value = e.target.value.substring(0, maxLength);
