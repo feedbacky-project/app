@@ -53,7 +53,7 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
   <div align="center">
     <h1>Understand your users' needs.</h1>
       <p>Collect feedback from people easily while also improving your business with <img src="https://feedbacky.net/img/logo.webp" height="16px" width="16px"><b> Feedbacky</b>, a free and open source software.</p>     
-      <img src="https://feedbacky.net/img/features/v1/board.webp" alt="The looks of a board.">      
+      <img src="https://feedbacky.net/img/main_banner_dark_v1.webp" alt="The looks of a board.">      
   </div>
 </div>
 
@@ -68,32 +68,32 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 <!--- Getting Started ---->
 <div id="gettingstarted">
 <h2>Getting Started</h2>
-  <p>Interested in having your own Feedbacky instance? Awesome! There are 2 ways in which you can do so;</p>
-    <h3>Cloud-hosted</h3>
+  <p>Interested in having your own Feedbacky instance? Awesome! There are two ways that you can proceed.</p>
+    <h3>1. Cloud-hosted</h3>
       <p>This is the simplest way to get started with using Feedbacky, all you have to do is create a board and we will handle the hosting.</p>
-      <p>Currently, cloud-hosted instances are entirely free with some quota limitations, you can read more about that <a href="https://feedbacky.net/#pricing">here</a>.</p>
-        <p><i><b>➤ <a href="">Create your own board.</a></b></i></p>
-    <h3>Self-hosted</h3>
-      <p>Host Feedbacky on your own hardware or with a Virtual Private Server (VPS), we have a complete guide covering all the necessary steps that is also simple for Linux newbies.</p>
-    <p><i><b>➤ <a href="">Getting started with self-hosting.</a></b></i></p>          
+        <p><b><a href="https://app.feedbacky.net/create?source=Main_Page">Create your own board.</a></b></p>
+      <p><i>Currently, cloud-hosted instances are entirely free with some quota limitations, you can read more about that <a href="https://feedbacky.net/#pricing">here</a>.</i></p>
+    <h3>2. Self-hosted</h3>
+      <p>Host Feedbacky on your own hardware or with a Virtual Private Server (VPS). We have a complete guide covering the necessaries that is also friendly for Linux newbies!</p>
+    <p><b><a href="https://docs.feedbacky.net/getting-started/installation">Self-hosting Feedbacky.</a></b></p>          
 </div>
 
 <!--- Case Studies ---->
 <br />
 <div id="cases">
 <h2>Case Studies</h2>
-  <p>See how Feedbacky helps others with their products.</p>
-    <h3><img src="https://static.plajer.xyz/feedbacky/img/projects/logos/arceon.png" height="19px" width="19px"> <b>Arceon</b></h3>
+  <p>We created Feedbacky to help others, read the case studies of people who are using it to improve their projects/products.</p>
+    <h3>Arceon</h3>
     <p>Arcaniax Brennian uses Feedbacky to <b>improve their Arceon Minecraft plugin</b>;</p>
     <blockquote>
     I use Feedbacky for feedback on existing tools and also new tool ideas for my Patreon exclusive plugin called Arceon which features a lot of building tools.
     </blockquote>
     <list>
         <ul>
-            <li><a href="">Official board</a></li>
+            <li><a href="https://app.feedbacky.net/b/arceon">Official board</a></li>
         </ul>         
     </list>        
-  <p><i>See more <a href="">case studies</a>.</i></p>
+  <p><i>See more <a href="https://docs.feedbacky.net/project-overview/case-studies">case studies</a>.</i></p>
 </div>
   
 <!--- Community ---->
@@ -104,48 +104,45 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 
   [![DiscordInvite][discordBanner]][discordInvite]
     
-  <h3>Contributing</h3>
+<!--- Contributing ---->
+<br />
+<div id="contributing">
+<h2>Contributing</h2>
   <p>We encourage everyone to contribute, thus making Feedbacky better with the help of our community.</p>
-    <p>Follow our <a href="/CONTRIBUTING.md">contributing guidelines</a> if you are interested!</a></p>
-</div>
+ <p>Follow our <a href="/CONTRIBUTING.md">contributing guidelines</a> if you are interested!</a></p>
+</div>  
   
-<!--- Donating ---->
+<!--- Funding ---->
 <br />
-<div id="donating">
-<h2>Donating</h2>
-  <p>Consider supporting the development of Feedbacky by making a <a href="">donation</a>!</p>
-</div>
-
-<!--- Sponsors ---->
-<br />
-<div id="sponsors">
-<h2>Sponsors</h2>
+<div id="funding">
+<h2>Funding</h2>
+    <p>Support the development of Feedbacky by making a <a href="https://docs.feedbacky.net/project-overview/donating">donation</a> or by becoming a Feedbacky sponsor, <a href="https://docs.feedbacky.net/project-overview/donating#sponsoring">check it out!</a></p>
   <table>   
     <tr>
-      <td><a href="https://billing.senior-host.com/link.php?id=1"><img src="https://cdn.feedbacky.net/static/img/partner-logo.png" height="19px" width="19px"><b> Senior Hosting </b></a></td>
-      <td>Affordable, high-performance VPS with Minecraft/Discord bot hosting. <br><i>Get 10% off using code FEEDBACKY.</i></td>
+      <td>Sponsors</td>
+      <td>About</td>        
+      </tr>
+      <td><a href="https://billing.senior-host.com/link.php?id=1"><b> Senior Hosting </b></a></td>
+      <td>Affordable, high-performance VPS with Minecraft/Discord bot hosting. <br><b>Get 10% off using code <code>FEEDBACKY</code>!</b></td>
     </tr>
     <tr>
-      <td><a href="https://plugily.xyz/?source=Feedbacky"><img src="https://plugily.xyz/assets/img/android-chrome-512x512.png" height="19px" width="19px"><b> Plugily Projects </b></a></td>
+      <td><a href="https://plugily.xyz/?source=Feedbacky"><b> Plugily Projects </b></a></td>
       <td>Creating a better future by developing something beneficial for everyone.</td>
     </tr>
   </table>
-    <p><i>Become a Feedbacky <a href=""> sponsor</a>.</i></p>
 </div>
 
 <!--- Legal ---->
 <br />
 <div id="legal">
 <h2>Legal</h2>
-    <h3>Attributions</h3>
+    <p><b>© 2022 Plajer</b></p>
     <list>
         <ul>
-            <li>Some SVG illustrations are provided by <a href="https://undraw.co/">unDraw</a>.</li>
-            <li>Design system used in project is provided by <a href="https://getbootstrap.com/">Bootstrap</a>.</li>
+            <li>Some SVG illustrations are attributed to <a href="https://undraw.co/">unDraw</a>.</li>
+            <li>Design system used in project is attributed to <a href="https://getbootstrap.com/">Bootstrap</a>.</li>
         </ul> 
-    </list>
-    <h3>License</h3>
-    <p><b>© 2022 Plajer</b></p>
+    </list>    
     <p>Feedbacky is distributed under the <a href="/LICENSE.md">MIT License</a>.</p>
 </div>
 
@@ -156,7 +153,7 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
     </p>
 </div>
 
-<!--- MARKDOWN LINKS ---->
+<!--- Links/Images ---->
 [dockerShield]: https://img.shields.io/static/v1?style=for-the-badge&logoColor=white&logo=Docker&label=&message=DOCKER%20HUB&color=0db7ed
 [dockerURL]: https://hub.docker.com/u/plajer
 [releaseShield]: https://img.shields.io/github/v/release/feedbacky-project/app?include_prereleases&style=for-the-badge&labelColor=ecf0f1&color=007bff
