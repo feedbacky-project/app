@@ -1,10 +1,12 @@
 package net.feedbacky.app.config.filter;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.service.FeedbackyUserDetailsService;
 import net.feedbacky.app.service.ServiceUser;
-import net.feedbacky.app.util.JwtTokenUtil;
+import net.feedbacky.app.util.jwt.JwtToken;
+import net.feedbacky.app.util.jwt.JwtTokenBuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -52,6 +54,7 @@ public class InternalRequestFilter extends OncePerRequestFilter {
     }
     if(tokenHeader.startsWith("Bearer ")) {
       String jwtToken = tokenHeader.substring(7);
+      JwtToken token = new JwtToken(jwtToken, JwtTokenBuilder.DEFAULT_SECRET);
       String email = getEmailFromToken(jwtToken);
       //don't reply with errors, just ignore broken bearer because it's Feedbacky UI component
       //API keys would require clear message with error instead
@@ -60,7 +63,7 @@ public class InternalRequestFilter extends OncePerRequestFilter {
         return;
       }
       if(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken
-              && JwtTokenUtil.validateToken(jwtToken, email)) {
+              && new JwtToken(jwtToken, JwtTokenBuilder.DEFAULT_SECRET).isValid(Claims::getSubject, email)) {
         ServiceUser serviceUser = userDetailsService.loadUserByEmail(email);
         UserAuthenticationToken userAuthenticationToken = new UserAuthenticationToken(serviceUser, null, serviceUser.getAuthorities());
         userAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -75,7 +78,7 @@ public class InternalRequestFilter extends OncePerRequestFilter {
 
   private String getEmailFromToken(String jwtToken) {
     try {
-      return JwtTokenUtil.getEmailFromToken(jwtToken);
+      return new JwtToken(jwtToken, JwtTokenBuilder.DEFAULT_SECRET).getClaimFromToken(Claims::getSubject);
     } catch(JwtException ex) {
       return null;
     }
