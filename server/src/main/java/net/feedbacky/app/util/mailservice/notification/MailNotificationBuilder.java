@@ -27,19 +27,26 @@ public class MailNotificationBuilder {
   public static final MailService.EmailTemplate MAIL_TEMPLATE = MailService.EmailTemplate.SUBSCRIBE_NOTIFICATION;
   public static final String IDEA_COMMENT_TEMPLATE = "mail_templates/notification/idea_comment.template.html";
   public static final String COMMENT_REPLY_TEMPLATE = "mail_templates/notification/comment_reply.template.html";
+  public static final String COMMENT_MENTION = "mail_templates/notification/comment_mention.template.html";
   public static final String IDEA_STATE_CHANGE_TEMPLATE = "mail_templates/notification/idea_state_change.template.html";
   private String rawHtml = "";
   private int notificationsAmount = 0;
 
-  public MailNotificationBuilder withIdeaCommentedByModerator(Comment comment) {
-    String bonusHtml = FileResourceUtils.readFileContents(IDEA_COMMENT_TEMPLATE);
-    bonusHtml = parsePlaceholders(bonusHtml, comment.getDescription(), comment.getIdea().getBoard(), comment.getIdea(), comment.getCreator());
-    insertNewNotification(bonusHtml);
-    return this;
-  }
-
-  public MailNotificationBuilder withCommentReplied(Comment comment) {
-    String bonusHtml = FileResourceUtils.readFileContents(COMMENT_REPLY_TEMPLATE);
+  public MailNotificationBuilder withCommentAction(Comment comment, CommentAction action) {
+    String bonusHtml;
+    switch(action) {
+      case MODERATOR_REPLY:
+        bonusHtml =  FileResourceUtils.readFileContents(IDEA_COMMENT_TEMPLATE);
+        break;
+      case YOUR_POST_REPLY:
+        bonusHtml =  FileResourceUtils.readFileContents(COMMENT_REPLY_TEMPLATE);
+        break;
+      case MENTION:
+        bonusHtml = FileResourceUtils.readFileContents(COMMENT_MENTION);
+        break;
+      default:
+        throw new UnsupportedOperationException("Invalid action " + action);
+    }
     bonusHtml = parsePlaceholders(bonusHtml, comment.getDescription(), comment.getIdea().getBoard(), comment.getIdea(), comment.getCreator());
     insertNewNotification(bonusHtml);
     return this;
@@ -93,6 +100,10 @@ public class MailNotificationBuilder {
     return new MailBuilder()
             .withCustomSubject(MAIL_TEMPLATE.getSubject().replace("${notifications.amount}", String.valueOf(notificationsAmount)))
             .withCustomHtml(html);
+  }
+
+  public enum CommentAction {
+    MODERATOR_REPLY, YOUR_POST_REPLY, MENTION
   }
 
 }

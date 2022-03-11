@@ -33,6 +33,8 @@ public interface IdeaService {
 
   ResponseEntity delete(long id);
 
+  List<FetchSimpleUserDto> getAllMentions(long id);
+
   List<FetchSimpleUserDto> getAllVoters(long id);
 
   List<FetchSimpleUserDto> patchVoters(long id, PatchVotersDto dto);

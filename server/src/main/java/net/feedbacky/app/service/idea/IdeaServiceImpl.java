@@ -330,6 +330,24 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
+  public List<FetchSimpleUserDto> getAllMentions(long id) {
+    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("board", "creator", "comments"))
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
+    Set<User> uniqueUsers = new HashSet<>();
+    uniqueUsers.add(idea.getCreator());
+    for(Comment comment : idea.getComments()) {
+      if(comment.getViewType() == Comment.ViewType.DELETED) {
+        continue;
+      }
+      uniqueUsers.add(comment.getCreator());
+    }
+    for(Moderator moderator : idea.getBoard().getModerators()) {
+      uniqueUsers.add(moderator.getUser());
+    }
+    return uniqueUsers.stream().filter(u -> !u.isFake()).map(u -> new FetchSimpleUserDto().from(u)).collect(Collectors.toList());
+  }
+
+  @Override
   public List<FetchSimpleUserDto> getAllVoters(long id) {
     Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("voters"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));

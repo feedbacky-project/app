@@ -50,6 +50,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -66,6 +68,7 @@ public class CommentServiceImpl implements CommentService {
   private final SubscriptionExecutor subscriptionExecutor;
   private final WebhookExecutor webhookExecutor;
   private final EmojiDataRegistry emojiDataRegistry;
+  private final Pattern mentionPattern = Pattern.compile("(@[{a-zA-Z0-9_-}{^A-Za-z0-9 \\n}]+#[0-9]+)");
 
   @Autowired
   public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor,
@@ -144,12 +147,14 @@ public class CommentServiceImpl implements CommentService {
     comment.setSpecialType(Comment.SpecialType.LEGACY);
     comment.setViewType(Comment.ViewType.valueOf(dto.getType().toUpperCase()));
     comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
+    boolean isReply = false;
     if(dto.getReplyTo() != null) {
       Comment repliedComment = commentRepository.findById(dto.getReplyTo())
               .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Reply comment with id {0} not found.", dto.getReplyTo())));
       comment.setReplyTo(repliedComment);
       subscriptionExecutor.notifySubscriber(idea, user, new NotificationEvent(SubscriptionExecutor.Event.COMMENT_REPLY, user,
               comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
+      isReply = true;
     }
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
@@ -172,6 +177,24 @@ public class CommentServiceImpl implements CommentService {
         subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, user,
                 comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
       }
+    }
+    Matcher mentions = mentionPattern.matcher(comment.getDescription());
+    while(mentions.find()) {
+      String mention = mentions.group();
+      mention = mention.replace("@", "");
+      String[] data = mention.split("#");
+      //parse after last # in case username contains #
+      long id = Long.parseLong(data[data.length - 1]);
+      Optional<User> optional = userRepository.findById(id);
+      if(!optional.isPresent()) {
+        continue;
+      }
+      //do not notify about mention if we already notify about a reply
+      if(isReply && optional.get().getId().equals(dto.getReplyTo())) {
+        continue;
+      }
+      subscriptionExecutor.notifySubscriber(idea, optional.get(), new NotificationEvent(SubscriptionExecutor.Event.COMMENT_MENTION, user,
+              comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
     }
     return ResponseEntity.status(HttpStatus.CREATED).body(new FetchCommentDto().from(comment));
   }

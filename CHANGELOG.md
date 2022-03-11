@@ -2,6 +2,7 @@
 * **[FEATURE]** Board and account deletion modals now contain checkboxes to agree that you delete board/account (requested by [Matou0014](https://app.feedbacky.net/i/hardened-board-deletion.4089))
 * **[FEATURE]** Comments can now receive replies
 * **[FEATURE]** Added Twitch OAuth2 log-in support
+* **[FEATURE]** Comment mentions feature added
 * **[IMPROVEMENT]** Reduced server-side service memory footprint by using different Docker image
 * **[IMPROVEMENT]** Quality of Life improvement - all focusable input forms will now be focused by default for example in modals or creators
 * **[CHANGE]** Breaking UI change - separated UI components from client, now they are standalone

@@ -52,11 +52,15 @@ public class MailNotifierTask {
         switch(event.getEventType()) {
           case IDEA_BY_MODERATOR_COMMENT:
             comment = (Comment) event.getObject();
-            builder = builder.withIdeaCommentedByModerator(comment);
+            builder = builder.withCommentAction(comment, MailNotificationBuilder.CommentAction.MODERATOR_REPLY);
             break;
           case COMMENT_REPLY:
             comment = (Comment) event.getObject();
-            builder = builder.withCommentReplied(comment);
+            builder = builder.withCommentAction(comment, MailNotificationBuilder.CommentAction.YOUR_POST_REPLY);
+            break;
+          case COMMENT_MENTION:
+            comment = (Comment) event.getObject();
+            builder = builder.withCommentAction(comment, MailNotificationBuilder.CommentAction.MENTION);
             break;
           case IDEA_STATUS_CHANGE:
             idea = (Idea) event.getObject();

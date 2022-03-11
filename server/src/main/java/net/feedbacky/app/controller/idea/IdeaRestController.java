@@ -96,6 +96,11 @@ public class IdeaRestController {
     return ideaService.delete(id);
   }
 
+  @GetMapping("v1/ideas/{id}/mentionableUsers")
+  public List<FetchSimpleUserDto> getAllMentions(@PathVariable long id) {
+    return ideaService.getAllMentions(id);
+  }
+
   @GetMapping("v1/ideas/{id}/voters")
   public List<FetchSimpleUserDto> getAllVoters(@PathVariable long id) {
     return ideaService.getAllVoters(id);
