@@ -29,8 +29,8 @@ public class AboutRestController {
   private final LoginProviderRegistry loginProviderRegistry;
   private final EmojiDataRegistry emojiDataRegistry;
   private final UserRepository userRepository;
+  private final boolean developmentMode;
   private AboutFeedbackyData aboutFeedbackyData = null;
-  private boolean developmentMode = false;
 
   @Autowired
   public AboutRestController(ApplicationContext context, LoginProviderRegistry loginProviderRegistry, EmojiDataRegistry emojiDataRegistry, UserRepository userRepository) {

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Plajer
@@ -29,6 +30,16 @@ public class LoginProviderRegistry {
   public LoginProviderRegistry() {
     loadProviders();
   }
+
+  public Optional<LoginProvider> getLoginProviderById(String id) {
+    for(LoginProvider provider : loginProviders) {
+      if(provider.getId().equals(id)) {
+        return Optional.of(provider);
+      }
+    }
+    return Optional.empty();
+  }
+
 
   @SneakyThrows
   private void loadProviders() {
