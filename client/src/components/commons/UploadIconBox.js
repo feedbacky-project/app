@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
 import React, {useContext} from "react";
 import {FaUpload} from "react-icons/all";
 import {UiThemeContext} from "ui";

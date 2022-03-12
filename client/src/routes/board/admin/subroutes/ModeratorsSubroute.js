@@ -2,9 +2,10 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import ModeratorInviteModal from "components/board/admin/ModeratorInviteModal";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import copy from "copy-text-to-clipboard";
 import React, {useContext, useEffect, useState} from 'react';
+import {FaTrash} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip, UiKeyboardInput, UiThemeContext} from "ui";
 import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
@@ -192,7 +193,7 @@ const ModeratorsSubroute = () => {
     return <UiCol xs={12} md={9}>
         <ModeratorInviteModal onModInvitationSend={onModInvitationSend} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "invite"}/>
         <DangerousActionModal id={"inviteDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "inviteDelete"} onAction={onInvalidation}
-                              actionDescription={<div>User won't be able to accept this invitation anymore.</div>}/>
+                              actionDescription={<div>User won't be able to accept this invitation anymore.</div>} Icon={FaTrash}/>
         <DangerousActionModal id={"revokeMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "revoke"} onAction={onPermissionsRevoke}
                               actionDescription={<div>User permissions to moderate the board will be <u>revoked</u>.</div>} actionButtonName={"Revoke"}/>
         <DangerousActionModal id={"promoteMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "promote"} onAction={onPromotion}

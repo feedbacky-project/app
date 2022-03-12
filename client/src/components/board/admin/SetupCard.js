@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {UiCard, UiThemeContext} from "ui";
@@ -28,9 +27,7 @@ const SetupCard = ({icon, chosen = false, text, onClick, className = ""}) => {
     const {getTheme} = useContext(UiThemeContext);
     let style;
     if (chosen) {
-        style = {border: "2px solid " + getTheme()};
-    } else {
-        style = {border: "2px solid transparent"};
+        style = {outline: "1px dashed " + getTheme()};
     }
     return <OptionCard className={className} bodyClassName={"text-center"} onClick={onClick} style={style}>
         {icon}

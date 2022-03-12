@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
-import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
+import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamation} from "react-icons/all";
+import {FaTags} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";
@@ -39,7 +40,7 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
-                <QuestionIcon/>
+                <IconContainer><GenericIcon as={FaTags}/></IconContainer>
                 <h3>Are you sure?</h3>
                 <div>
                     Choose tags to add or remove and click Update to confirm.

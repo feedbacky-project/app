@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import {WCAG_AA_CONTRAST} from "App";
-import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";

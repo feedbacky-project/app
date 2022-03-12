@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
 import React, {useContext} from "react";
 import {BasePageButton} from "ui/button/UiButton";
 import {UiThemeContext} from "ui/index";

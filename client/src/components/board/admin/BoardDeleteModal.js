@@ -1,6 +1,6 @@
-import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
+import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import React, {useRef, useState} from "react";
-import {FaExclamation} from "react-icons/all";
+import {FaEraser, FaExclamation} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiKeyboardInput, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";
@@ -32,7 +32,7 @@ const BoardDeleteModal = ({id, isOpen, onHide, onAction, boardData, ...otherProp
                                applyButton={applyButton} onEntered={() => ref.current && ref.current.focus()} {...otherProps}>
         <UiRow centered className={"mt-3 justify-content-center text-center"}>
             <UiCol xs={12} className={"mb-2 px-4"}>
-                <QuestionIcon/>
+                <IconContainer><GenericIcon as={FaEraser}/></IconContainer>
                 <h3>Are you sure?</h3>
                 <div>
                     Hold on, <strong>this is one-way road.</strong> Your board and all the data <strong>will be permanently deleted.</strong> Are you really sure?

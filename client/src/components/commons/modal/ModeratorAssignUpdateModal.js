@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
-import {AppContext, BoardContext, IdeaContext} from "context";
+import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
+import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaExclamation} from "react-icons/all";
+import {FaExclamation, FaUserCircle} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
@@ -18,7 +18,8 @@ const AssigneeDetails = styled.div`
 `;
 
 const AssigneeCandidate = styled(UiAvatar)`
-  ${props => props.chosen ? `border: 2px solid ` + props.theme : `border: 2px solid transparent`}\
+  ${props => props.chosen && `outline: 1px dashed ` + props.theme + `;`}
+  padding: .25rem;
 `;
 
 const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
@@ -42,7 +43,7 @@ const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
     return <UiDismissibleModal id={"assigneeUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
-                <QuestionIcon/>
+                <IconContainer><GenericIcon as={FaUserCircle}/></IconContainer>
                 <h3>Are you sure?</h3>
                 <div>
                     Choose assignee to add or remove and click Update to confirm.
@@ -51,7 +52,7 @@ const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
                         const chosen = assignee == null ? false : assignee.id === mod.user.id;
                         return <AssigneeDetails key={i} onClick={() => toggleAssignee(mod.user)}>
                             <div className={"mb-1"}>
-                                <AssigneeCandidate chosen={chosen} theme={getTheme()} size={64} user={mod.user} roundedCircle/>
+                                <AssigneeCandidate chosen={chosen} theme={getTheme()} size={48} user={mod.user} roundedCircle/>
                             </div>
                             <UiBadge>{mod.user.username}</UiBadge>
                         </AssigneeDetails>

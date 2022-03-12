@@ -8,6 +8,7 @@ const MarkdownOptions = styled.div`
   border-bottom-right-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
   padding: 0.375rem 0.75rem;
+  transition: var(--hover-transition);
 `;
 
 const MarkdownIcon = styled.div`

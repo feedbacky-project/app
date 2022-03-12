@@ -8,6 +8,8 @@ import CommentsBox from "components/idea/discussion/CommentsBox";
 import CommentWriteBox from "components/idea/discussion/CommentWriteBox";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
+import {FaUserLock} from "react-icons/all";
+import {FaTrash} from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton} from "ui/button";
@@ -80,7 +82,7 @@ const DiscussionBox = forwardRef((props, ref) => {
                         return <React.Fragment key={data.id}/>
                     }
                     return <CommentsBox key={data.id} data={data} onCommentUpdate={onCommentUpdate} onCommentDelete={onCommentPreDelete} onCommentReact={onCommentReact}
-                                        onCommentUnreact={onCommentUnreact} onSuspend={onPreSuspend} onReply={onReply} comments={comments.data}/>
+                                        onCommentUnreact={onCommentUnreact} onSuspend={onPreSuspend} onReply={onReply} comments={comments.data} replyToComment={replyTo}/>
                 }
             )}
         </InfiniteScroll>
@@ -98,7 +100,11 @@ const DiscussionBox = forwardRef((props, ref) => {
         setTimeout(() => {
             scrollIntoView("replyBox", false);
             //time for animation to scroll into the element
-            setTimeout(() => document.getElementById("commentMessage").focus(), 200);
+            setTimeout(() => {
+                const textarea = document.getElementById("commentMessage");
+                textarea.value = (textarea.value + "@" + data.user.username + "#" + data.user.id).trim();
+                textarea.focus();
+            }, 200);
         }, 100);
         setReplyTo(data);
     }
@@ -107,6 +113,7 @@ const DiscussionBox = forwardRef((props, ref) => {
         const index = newComments.findIndex(c => c.id === data.id);
         newComments[index] = data;
         setComments({...comments, data: newComments});
+        onLoadRequest(true);
     };
     const onCommentSubmit = (returnData) => {
         if (user.localPreferences.comments.sort === "newest") {
@@ -197,9 +204,9 @@ const DiscussionBox = forwardRef((props, ref) => {
     });
     return <UiCol xs={12}>
         <DangerousActionModal id={"suspend"} onHide={() => setModal({...modal, open: false, type: ""})} isOpen={modal.open && modal.type === "suspend"} onAction={onSuspend}
-                              actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
+                              actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>} Icon={FaUserLock}/>
         <DangerousActionModal id={"commentDel"} onHide={() => setModal({...modal, open: false, type: ""})} isOpen={modal.open && modal.type === "delete"} onAction={onCommentDelete}
-                              actionDescription={<div>Comment will be permanently <u>deleted</u>.</div>}/>
+                              actionDescription={<div>Comment will be permanently <u>deleted</u>.</div>} Icon={FaTrash}/>
         <div className={"pb-1"}>
             <DiscussionTitle>Discussion ({ideaData.commentsAmount} comments)</DiscussionTitle>
             <UiSelectableDropdown label={"Choose Sort"} id={"sort"} className={"d-inline-block"} currentValue={sortCurrentValue} values={sortValues}/>

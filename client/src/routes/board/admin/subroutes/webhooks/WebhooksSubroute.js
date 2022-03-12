@@ -5,8 +5,9 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import WebhookUpdateModal from "components/commons/modal/WebhookUpdateModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
+import {FaTrash} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiBadge, UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
@@ -130,7 +131,7 @@ const WebhooksSubroute = () => {
     };
     return <UiCol xs={12} md={9}>
         <DangerousActionModal id={"webhookDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "delete"} onAction={onWebhookDelete}
-                              actionDescription={<div>Webhook <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u> and won't receive any future data.</div>}/>
+                              actionDescription={<div>Webhook <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u> and won't receive any future data.</div>} Icon={FaTrash}/>
         <WebhookUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "edit"} webhook={modal.data} onWebhookUpdate={onWebhookUpdate}/>
         <UiViewBox title={"Webhooks"} description={"Edit webhooks to integrate with other apps here."}>
             {renderContent()}

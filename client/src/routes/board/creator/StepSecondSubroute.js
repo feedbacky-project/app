@@ -47,8 +47,8 @@ const StepSecondSubroute = ({updateSettings, settings}) => {
             {/* simulate real board banner to show properly sized image */}
             <Banner image={settings.banner || "https://cdn.feedbacky.net/static/img/main-background.png"} id={"boardBanner"} className={"mb-2"}
                     onClick={() => document.getElementById("bannerInput").click()}>
-                <h3 style={{color: "transparent"}}>Example Board</h3>
-                <h5 style={{color: "transparent"}}>Description of board</h5>
+                <h3 style={{color: "transparent", textShadow: "none", userSelect: "none"}}>Example Board</h3>
+                <h5 style={{color: "transparent", textShadow: "none", userSelect: "none"}}>Description of board</h5>
                 <UploadIconBox/>
             </Banner>
             <input hidden accept={"image/jpeg, image/png"} id={"bannerInput"} type={"file"} name={"banner"} onChange={e => onBannerChange(e)}/>

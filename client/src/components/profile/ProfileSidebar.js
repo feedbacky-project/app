@@ -1,5 +1,5 @@
 import {renderSidebarRoutes, Sidebar, SidebarIcon} from "components/commons/sidebar-commons";
-import {AppContext, BoardContext} from "context";
+import {BoardContext} from "context";
 import React, {useContext} from 'react';
 import {FaRegAddressCard, FaRegBell, FaRegKeyboard} from "react-icons/all";
 import {UiThemeContext} from "ui";

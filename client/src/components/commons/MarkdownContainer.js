@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
+import {parseMentionsHtmlUnsafe} from "components/idea/discussion/comment-parser";
 import React, {useContext} from "react";
 import {UiThemeContext} from "ui";
 import {truncateText} from "utils/basic-utils";
@@ -60,6 +60,7 @@ const MarkdownContainer = (props) => {
     if(truncate > 0) {
         html = truncateText(html, truncate);
     }
+    html = parseMentionsHtmlUnsafe(html, getTheme());
     return <MarkdownBox theme={getTheme()} dangerouslySetInnerHTML={{__html: html}} {...otherProps}/>
 };
 

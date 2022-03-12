@@ -132,8 +132,8 @@ const GeneralSubroute = ({updateState}) => {
                 <div aria-label={"Banner Upload"} role={"button"} tabIndex={0} onClick={bannerUpload} onKeyPress={bannerUpload}>
                     <Banner image={boardData.banner} aria-label={"Board Banner View"} id={"boardBannerPreview"} className={"mb-2"}
                             style={{minHeight: 200, position: "relative"}}>
-                        <h3 style={{color: "transparent"}}>{boardData.name}</h3>
-                        <h5 style={{color: "transparent"}}>{htmlDecodeEntities(boardData.shortDescription)}</h5>
+                        <h3 style={{color: "transparent", textShadow: "none", userSelect: "none"}}>{boardData.name}</h3>
+                        <h5 style={{color: "transparent", textShadow: "none", userSelect: "none"}}>{htmlDecodeEntities(boardData.shortDescription)}</h5>
                         <UploadIconBox/>
                     </Banner>
                 </div>

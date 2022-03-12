@@ -40,7 +40,7 @@
         backgroundColor: '#323232',
         pos: 'bottom-left',
         duration: 5000,
-        customClass: '',
+        customStyle: {},
         onActionClick: function(element) {
             element.style.opacity = 0;
         },
@@ -65,7 +65,7 @@
         }
 
         Snackbar.snackbar = document.createElement('div');
-        Snackbar.snackbar.className = 'snackbar-container ' + options.customClass;
+        Snackbar.snackbar.className = 'snackbar-container';
         Snackbar.snackbar.style.width = options.width;
         var bodyStyle = getComputedStyle(document.body);
         var $div = document.createElement("div");
@@ -82,6 +82,9 @@
         $p.style.fontWeight = 500;
         $p.style.lineHeight = '1em';
         $p.style.display = "inline-block";
+        Object.keys(options.customStyle).map(key => {
+            $div.style[key] = options.customStyle[key];
+        });
         $p.innerHTML = options.text;
         $div.appendChild($p);
         Snackbar.snackbar.appendChild($div);
@@ -153,7 +156,7 @@
         var $top = getComputedStyle(Snackbar.snackbar).top;
         Snackbar.snackbar.style.opacity = 1;
         Snackbar.snackbar.className =
-            'snackbar-container ' + options.customClass + ' snackbar-pos ' + options.pos;
+            'snackbar-container' + ' snackbar-pos ' + options.pos;
     };
 
     Snackbar.close = function() {

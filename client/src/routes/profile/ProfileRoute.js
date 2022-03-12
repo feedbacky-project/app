@@ -2,7 +2,7 @@ import ServiceLogo from "assets/img/service-logo.png";
 import LoginModal from "components/LoginModal";
 import ProfileNavbar from "components/profile/ProfileNavbar";
 import ProfileSidebar from "components/profile/ProfileSidebar";
-import {AppContext, PageNodesContext} from "context";
+import {PageNodesContext} from "context";
 import React, {lazy, Suspense, useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/all";
 import {Route, Switch, useHistory, useLocation} from "react-router-dom";

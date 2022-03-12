@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import {AppContext} from "context";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {WEBHOOK_EVENT_LIST} from "routes/board/admin/subroutes/webhooks/creator/StepSecondSubroute";
 import {UiBadge, UiLabelledCheckbox, UiThemeContext} from "ui";

@@ -17,10 +17,10 @@ const Loadable = styled(UiLoadingSpinner)`
 const DefaultReaction = styled.div`
   position: relative;
   cursor: pointer;
-  border: 1px solid transparent;
-  background-color: ${props => props.theme.setAlpha(.1).toString()};
+  outline: 1px solid transparent;
+  background-color: var(--tertiary);
   display: inline-block;
-  padding: .05rem .3rem;
+  padding: 0 .3rem;
   margin-right: .25rem;
   border-radius: var(--border-radius);
   color: hsla(0, 0%, 0%, .6);
@@ -31,12 +31,12 @@ const DefaultReaction = styled.div`
   }
   
   &:hover {
-    background-color: ${props => props.theme.setAlpha(.2).toString()};
+    background-color: var(--quaternary);
   }
 `;
 
 const SelectedReaction = styled(DefaultReaction)`
-  border: 1px solid ${props => props.theme.setAlpha(.7).toString()};
+  outline: 1px solid ${props => props.theme.setAlpha(.7).toString()};
   background-color: ${props => props.theme.setAlpha(.2).toString()};
 
   &:hover {

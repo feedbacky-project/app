@@ -1,6 +1,6 @@
-import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
+import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import React from "react";
-import {FaExclamation} from "react-icons/all";
+import {FaExclamation, FaPoll} from "react-icons/all";
 import tinycolor from "tinycolor2";
 import {UiLoadableButton} from "ui/button";
 import {UiRow} from "ui/grid";
@@ -18,7 +18,7 @@ const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
     return <UiDismissibleModal id={"assigneeUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
-                <QuestionIcon/>
+                <IconContainer><GenericIcon as={FaPoll}/></IconContainer>
                 <h3>Are you sure?</h3>
                 <div>
                     Click <strong>Reset All</strong> to remove every vote or <strong>Reset Anonymous</strong> to remove votes only made by anonymous accounts.

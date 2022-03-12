@@ -1,5 +1,5 @@
 import ColorSelectionHelper from "components/commons/ColorSelectionHelper";
-import React, {useRef} from "react";
+import React from "react";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";

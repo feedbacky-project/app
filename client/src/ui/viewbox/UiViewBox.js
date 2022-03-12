@@ -53,11 +53,11 @@ export const UiViewBoxBackground = styled(UiCol)`
 `;
 
 export const UiViewBoxDangerBackground = styled(UiViewBoxBackground)`
-  border: hsla(355, 100%, 60%, .4) 1px solid;
+  border: hsla(355, 100%, 60%, .4) 1px dashed;
 
   .dark & {
     box-shadow: none;
-    border: hsla(2, 100%, 60%, .3) 1px solid;
+    border: hsla(2, 100%, 60%, .3) 1px dashed;
   }
 `;
 

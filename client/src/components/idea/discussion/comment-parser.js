@@ -5,7 +5,24 @@ import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip, UiKeyboardInput, UiPrettyUsername} from "ui";
 import {UiButton} from "ui/button";
 
-const parseComment = (message, moderatorsData, tagsData) => {
+export const parseMentionsHtmlUnsafe = (message, theme) => {
+    const regex = /@[{a-zA-Z0-9_-}{^A-Za-z0-9 \n}]+#[0-9]+/g;
+    let finalMessage = message;
+    message.match(regex) && message.match(regex).forEach(el => {
+        finalMessage = finalMessage.replace(el, parseMention(el, theme));
+    });
+    return finalMessage;
+};
+
+const parseMention = (result, theme) => {
+    //remove last text after # (the user ID part) (assuming user can have # in username, so take last one)
+    const data = result.split("#").pop();
+    const mention = result.replace(data, "").slice(0, -1);
+    return "<div style='border-radius: var(--border-radius); color: " + theme.clone().toString()  + "; background-color: " + theme.clone().setAlpha(.1).toString() + "; font-weight: bold;" + "; display: inline; padding: .1em .3em; font-size: 80%; vertical-align: text-bottom'>"
+        + mention + "</div>";
+};
+
+export const parseComment = (message, moderatorsData, tagsData) => {
     const regex = /[^{}]+(?=})/g;
     let finalMessage = message;
     message.match(regex) && message.match(regex).forEach(el => {
@@ -68,5 +85,3 @@ const parseDiffView = (data, index) => {
         </React.Fragment>} icon={<UiButton tiny={true} label={"View Diff"}>{data[1]}</UiButton>}/>
     </DiffViewButton>
 };
-
-export default parseComment;

@@ -67,7 +67,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
 
     const onMailLogin = (email) => {
         popupNotification("Sending Log-in Link...", getTheme());
-        return axios.get("/service/mailRequest?email=" + email).then(res => {
+        return axios.get("/service/magicLink?email=" + email).then(res => {
             if (res.status === 200) {
                 popupNotification("Check mailbox for Log-in Link.", getTheme());
             }

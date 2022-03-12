@@ -5,9 +5,10 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import SafeAnchor from "components/commons/SafeAnchor";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaExclamation} from "react-icons/all";
+import {FaTrash} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiBadge, UiLoadingSpinner, UiThemeContext, UiTooltip} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
@@ -108,7 +109,7 @@ const SocialLinksSubroute = () => {
         });
     };
     return <UiCol xs={12} md={9}>
-        <DangerousActionModal id={"socialDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onSocialLinkDelete}
+        <DangerousActionModal id={"socialDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onSocialLinkDelete} Icon={FaTrash}
                               actionDescription={<div>Social link <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u>.</div>}/>
         <UiViewBox title={"Social Links"} description={"Edit links visible at your board page here."}>
             {renderContent()}

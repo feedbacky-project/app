@@ -7,13 +7,15 @@ const DropdownItem = styled(Dropdown.Item)`
   padding: 4px 10px;
   transition: var(--hover-transition);
   box-shadow: var(--box-shadow);
-  color: var(--font-color) !important;
+  color: var(--font-color);
   
   &:active {
     background-color: hsla(0, 0%, 0%, .075);
+    color: var(--font-color);
   }
 
   &:hover, &:focus {
+    color: var(--font-color);
     background-color: var(--hover) !important;
   }
 `;

@@ -146,9 +146,9 @@ const BoardChangelogBox = ({searchQuery}) => {
                     <UiViewBoxBackground className={"d-inline-block p-4"}>
                         <BoardChangelogTitle data={element} onChangelogDelete={onChangelogDelete} onChangelogUpdate={onChangelogUpdate}/>
                         <MarkdownContainer className={"my-2"} text={element.description}/>
-                        <div>
-                            <ReactionsBox className={"d-inline-block mt-1"} parentObjectId={element.id} reactionsData={element.reactions} onReact={onChangelogReact} onUnreact={onChangelogUnreact}/>
-                            <ShareBoxOverlay theme={getTheme().setAlpha(.2).toString()}>
+                        <div className={"d-flex"}>
+                            <ReactionsBox className={"d-inline-block my-auto"} parentObjectId={element.id} reactionsData={element.reactions} onReact={onChangelogReact} onUnreact={onChangelogUnreact}/>
+                            <ShareBoxOverlay className={"ml-auto"} theme={getTheme().setAlpha(.2).toString()}>
                                 <ShareBox locationHref={window.location.href + "?changelogId=" + element.id} bodyClassName={"p-1"}/>
                             </ShareBoxOverlay>
                         </div>

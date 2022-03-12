@@ -159,26 +159,26 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
     }
     const hide = () => setModal({...modal, open: false});
     return <UiDropdown label={"Moderate Idea"} className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline"}/>}>
-        <DangerousActionModal id={"close"} onHide={hide} isOpen={modal.open && modal.type === "close"}
+        <DangerousActionModal id={"close"} onHide={hide} isOpen={modal.open && modal.type === "close"} Icon={FaLock}
                               onAction={() => doIdeaStateChange("open", false, "Idea closed.", "Idea opened.")}
                               actionDescription={<div>Once you close idea you can open it again.</div>} actionButtonName={"Close"}/>
-        <DangerousActionModal id={"open"} onHide={hide} isOpen={modal.open && modal.type === "open"}
+        <DangerousActionModal id={"open"} onHide={hide} isOpen={modal.open && modal.type === "open"} Icon={FaUnlock}
                               onAction={() => doIdeaStateChange("open", true, "Idea opened.", "Idea closed.")}
                               actionDescription={<div>Once you reopen idea you can close it again.</div>} actionButtonName={"Open"}/>
-        <DangerousActionModal id={"delete"} onHide={hide} isOpen={modal.open && modal.type === "delete"} onAction={doIdeaDelete}
-                              actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
-        <DangerousActionModal id={"suspend"} onHide={hide} isOpen={modal.open && modal.type === "suspend"} onAction={doSuspendUser} actionButtonName={"Suspend"}
+        <DangerousActionModal id={"delete"} onHide={hide} isOpen={modal.open && modal.type === "delete"} onAction={doIdeaDelete} Icon={FaTrash}
+                              actionDescription={<div>Idea with <strong className={"text-red"}>{ideaData.votersAmount} Voters</strong> and <strong className={"text-red"}>{ideaData.commentsAmount} Comments</strong> will be permanently <u>deleted</u>.</div>}/>
+        <DangerousActionModal id={"suspend"} onHide={hide} isOpen={modal.open && modal.type === "suspend"} onAction={doSuspendUser} actionButtonName={"Suspend"} Icon={FaUserLock}
                               actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
-        <DangerousActionModal id={"enable_comments"} onHide={hide} isOpen={modal.open && modal.type === "enable_comments"}
+        <DangerousActionModal id={"enable_comments"} onHide={hide} isOpen={modal.open && modal.type === "enable_comments"} Icon={FaComment}
                               onAction={() => doIdeaStateChange("commentingRestricted", false, "Commenting enabled.", "Commenting disabled.")}
                               actionDescription={<div>Everyone will be able to comment this idea.</div>} actionButtonName={"Enable"}/>
-        <DangerousActionModal id={"restrict_comments"} onHide={hide} isOpen={modal.open && modal.type === "restrict_comments"}
+        <DangerousActionModal id={"restrict_comments"} onHide={hide} isOpen={modal.open && modal.type === "restrict_comments"} Icon={FaCommentSlash}
                               onAction={() => doIdeaStateChange("commentingRestricted", true, "Commenting disabled.", "Commenting enabled.")}
                               actionDescription={<div>Only moderators will be able to comment this idea.</div>} actionButtonName={"Disable"}/>
-        <DangerousActionModal id={"unpin"} onHide={hide} isOpen={modal.open && modal.type === "unpin"}
+        <DangerousActionModal id={"unpin"} onHide={hide} isOpen={modal.open && modal.type === "unpin"} Icon={FaUnlink}
                               onAction={() => doIdeaStateChange("pinned", false, "Idea unpinned.", "Idea pinned.")}
                               actionDescription={<div>Idea will no longer be pinned at the top of ideas list.</div>} actionButtonName={"Unpin"}/>
-        <DangerousActionModal id={"pin"} onHide={hide} isOpen={modal.open && modal.type === "pin"}
+        <DangerousActionModal id={"pin"} onHide={hide} isOpen={modal.open && modal.type === "pin"} Icon={FaLink}
                               onAction={() => doIdeaStateChange("pinned", true, "Idea pinned.", "Idea unpinned.")}
                               actionDescription={<div>Idea will be pinned at the top of ideas list.</div>} actionButtonName={"Pin"}/>
         <ModeratorTagsUpdateModal onHide={hide} isOpen={modal.open && modal.type === "tags"} onAction={onTagsManage}/>
