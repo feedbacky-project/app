@@ -20,6 +20,8 @@ import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 import net.feedbacky.app.util.request.ServiceValidator;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,10 +52,8 @@ public class AttachmentServiceImpl implements AttachmentService {
 
   @Override
   public ResponseEntity<FetchAttachmentDto> postAttachment(long id, PostAttachmentDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id)
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(!idea.getCreator().getId().equals(user.getId())) {
       throw new InsufficientPermissionsException();
@@ -67,13 +67,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     attachment = attachmentRepository.save(attachment);
     idea.getAttachments().add(attachment);
     ideaRepository.save(idea);
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchAttachmentDto().from(attachment));
+    return ResponseEntity.status(HttpStatus.CREATED).body(attachment.toDto());
   }
   @Override
   public ResponseEntity deleteAttachment(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Attachment attachment = attachmentRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Attachment with id {0} not found.", id)));
     Idea idea = attachment.getIdea();

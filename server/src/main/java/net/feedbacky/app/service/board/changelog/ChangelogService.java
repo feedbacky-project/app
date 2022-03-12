@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * Created at 28.03.2021
  */
-public interface BoardChangelogService {
+public interface ChangelogService {
 
   PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize, SortType sortType);
 

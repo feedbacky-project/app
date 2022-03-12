@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.dto.attachment.FetchAttachmentDto;
 
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
@@ -29,10 +31,8 @@ import java.io.Serializable;
 @Table(name = "ideas_attachments")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class Attachment implements Serializable {
+public class Attachment implements Serializable, Fetchable<FetchAttachmentDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +43,8 @@ public class Attachment implements Serializable {
   @LazyToOne(LazyToOneOption.NO_PROXY)
   private Idea idea;
 
+  @Override
+  public FetchAttachmentDto toDto() {
+    return new FetchAttachmentDto().from(this);
+  }
 }

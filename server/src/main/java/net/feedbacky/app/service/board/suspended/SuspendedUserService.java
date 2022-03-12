@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
  * <p>
  * Created at 27.11.2020
  */
-public interface BoardSuspendedUsersService {
+public interface SuspendedUserService {
 
   ResponseEntity<FetchSuspendedUserDto> post(String discriminator, PostSuspendedUserDto dto);
 

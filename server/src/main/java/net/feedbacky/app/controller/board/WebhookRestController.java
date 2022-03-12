@@ -27,12 +27,12 @@ import java.util.List;
  */
 @CrossOrigin
 @RestController
-public class BoardWebhooksRestController {
+public class WebhookRestController {
 
   private final WebhookService webhookService;
 
   @Autowired
-  public BoardWebhooksRestController(WebhookService webhookService) {
+  public WebhookRestController(WebhookService webhookService) {
     this.webhookService = webhookService;
   }
 

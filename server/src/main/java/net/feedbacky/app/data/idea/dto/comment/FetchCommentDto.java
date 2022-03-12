@@ -3,6 +3,7 @@ package net.feedbacky.app.data.idea.dto.comment;
 import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.comment.reaction.CommentReaction;
 import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
@@ -44,7 +45,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.special = entity.isSpecial();
     this.specialType = entity.getSpecialType().name();
     this.viewType = entity.getViewType().name();
-    this.reactions = entity.getReactions().stream().map(r -> new FetchCommentReactionDto().from(r)).collect(Collectors.toList());
+    this.reactions = entity.getReactions().stream().map(CommentReaction::toDto).collect(Collectors.toList());
     this.edited = entity.isEdited();
     if(entity.getReplyTo() != null) {
       this.replyTo = entity.getReplyTo().getId();

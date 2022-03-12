@@ -5,7 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.changelog.Changelog;
+import net.feedbacky.app.data.board.dto.changelog.reaction.FetchChangelogReactionDto;
 import net.feedbacky.app.data.user.User;
 
 import org.hibernate.annotations.LazyToOne;
@@ -30,10 +32,9 @@ import java.io.Serializable;
 @Table(name = "boards_changelog_reactions")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ChangelogReaction implements Serializable {
+public class ChangelogReaction implements Serializable, Fetchable<FetchChangelogReactionDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +48,8 @@ public class ChangelogReaction implements Serializable {
   private User user;
   private String reactionId;
 
+  @Override
+  public FetchChangelogReactionDto toDto() {
+    return new FetchChangelogReactionDto().from(this);
+  }
 }

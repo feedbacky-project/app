@@ -1,8 +1,7 @@
-package net.feedbacky.app.controller.about;
+package net.feedbacky.app.data.emoji;
 
 import lombok.Data;
 import lombok.SneakyThrows;
-import net.feedbacky.app.login.LoginProvider;
 import net.feedbacky.app.util.FileResourceUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;

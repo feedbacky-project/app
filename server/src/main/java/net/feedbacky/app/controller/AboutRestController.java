@@ -1,10 +1,11 @@
-package net.feedbacky.app.controller.about;
+package net.feedbacky.app.controller;
 
 import net.feedbacky.app.FeedbackyApplication;
 import net.feedbacky.app.data.AboutFeedbackyData;
+import net.feedbacky.app.data.emoji.EmojiDataRegistry;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
-import net.feedbacky.app.login.LoginProvider;
-import net.feedbacky.app.login.LoginProviderRegistry;
+import net.feedbacky.app.data.login.LoginProvider;
+import net.feedbacky.app.data.login.LoginProviderRegistry;
 import net.feedbacky.app.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class AboutRestController {
     this.developmentMode = (boolean) context.getBean("isDevelopmentMode");
   }
 
-  @GetMapping("/v1/service/about")
+  @GetMapping("v1/service/about")
   public ResponseEntity<AboutFeedbackyData> handle() {
     AboutFeedbackyData data;
     //lazy init to make sure all login providers are registered before

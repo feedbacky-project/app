@@ -2,9 +2,9 @@ package net.feedbacky.app.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.feedbacky.app.controller.about.EmojiDataRegistry;
+import net.feedbacky.app.data.emoji.EmojiDataRegistry;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
-import net.feedbacky.app.login.LoginProvider;
+import net.feedbacky.app.data.login.LoginProvider;
 
 import java.util.List;
 

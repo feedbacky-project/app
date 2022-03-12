@@ -5,7 +5,7 @@ import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.board.dto.invite.PostInviteDto;
 import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.dto.moderator.PatchModeratorDto;
-import net.feedbacky.app.service.board.moderator.BoardModeratorService;
+import net.feedbacky.app.service.board.moderator.ModeratorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,43 +29,43 @@ import java.util.List;
  */
 @CrossOrigin
 @RestController
-public class BoardModeratorInviteRestController {
+public class ModeratorRestController {
 
-  private final BoardModeratorService boardModeratorService;
+  private final ModeratorService moderatorService;
 
   @Autowired
-  public BoardModeratorInviteRestController(BoardModeratorService boardModeratorService) {
-    this.boardModeratorService = boardModeratorService;
+  public ModeratorRestController(ModeratorService moderatorService) {
+    this.moderatorService = moderatorService;
   }
 
   @GetMapping("v1/boards/{discriminator}/invitedModerators")
   public List<FetchInviteDto> getAllInvited(@PathVariable String discriminator) {
-    return boardModeratorService.getAllInvited(discriminator);
+    return moderatorService.getAllInvited(discriminator);
   }
 
   @PostMapping("v1/moderatorInvitations/{code}/accept")
   public FetchBoardDto postAccept(@PathVariable String code) {
-    return boardModeratorService.postAccept(code);
+    return moderatorService.postAccept(code);
   }
 
   @PostMapping("v1/boards/{discriminator}/moderators")
   public ResponseEntity<FetchInviteDto> post(@PathVariable String discriminator, @RequestBody @Valid PostInviteDto dto) {
-    return boardModeratorService.post(discriminator, dto);
+    return moderatorService.post(discriminator, dto);
   }
 
   @PatchMapping("v1/boards/{discriminator}/moderators")
   public FetchModeratorDto patch(@PathVariable String discriminator, @RequestBody @Valid PatchModeratorDto dto) {
-    return boardModeratorService.patch(discriminator, dto);
+    return moderatorService.patch(discriminator, dto);
   }
 
   @DeleteMapping("v1/boards/{discriminator}/moderators/{id}")
   public ResponseEntity delete(@PathVariable String discriminator, @PathVariable long id) {
-    return boardModeratorService.delete(discriminator, id);
+    return moderatorService.delete(discriminator, id);
   }
 
   @DeleteMapping("v1/moderatorInvitations/{id}")
   public ResponseEntity deleteInvitation(@PathVariable long id) {
-    return boardModeratorService.deleteInvitation(id);
+    return moderatorService.deleteInvitation(id);
   }
 
 }

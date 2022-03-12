@@ -2,7 +2,7 @@ package net.feedbacky.app.controller.board;
 
 import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.data.board.dto.social.PostSocialLinkDto;
-import net.feedbacky.app.service.board.social.BoardSocialLinksService;
+import net.feedbacky.app.service.board.social.SocialLinkService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +25,12 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
-public class BoardSocialLinksRestController {
+public class SocialLinkRestController {
 
-  private final BoardSocialLinksService socialLinksService;
+  private final SocialLinkService socialLinksService;
 
   @Autowired
-  public BoardSocialLinksRestController(BoardSocialLinksService socialLinksService) {
+  public SocialLinkRestController(SocialLinkService socialLinksService) {
     this.socialLinksService = socialLinksService;
   }
 

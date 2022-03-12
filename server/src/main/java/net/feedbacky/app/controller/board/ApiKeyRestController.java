@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin
-public class BoardApiKeyRestController {
+public class ApiKeyRestController {
 
   private final ApiKeyService apiKeyService;
 
   @Autowired
-  public BoardApiKeyRestController(ApiKeyService apiKeyService) {
+  public ApiKeyRestController(ApiKeyService apiKeyService) {
     this.apiKeyService = apiKeyService;
   }
 

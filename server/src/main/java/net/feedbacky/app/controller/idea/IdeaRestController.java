@@ -101,26 +101,6 @@ public class IdeaRestController {
     return ideaService.getAllMentions(id);
   }
 
-  @GetMapping("v1/ideas/{id}/voters")
-  public List<FetchSimpleUserDto> getAllVoters(@PathVariable long id) {
-    return ideaService.getAllVoters(id);
-  }
-
-  @PatchMapping("v1/ideas/{id}/voters")
-  public List<FetchSimpleUserDto> patchVoters(@PathVariable long id, @Valid @RequestBody PatchVotersDto dto) {
-    return ideaService.patchVoters(id, dto);
-  }
-
-  @PostMapping("v1/ideas/{id}/voters")
-  public FetchUserDto postUpvote(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
-    return ideaService.postUpvote(id, anonymousId);
-  }
-
-  @DeleteMapping("v1/ideas/{id}/voters")
-  public ResponseEntity deleteUpvote(@PathVariable long id, @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
-    return ideaService.deleteUpvote(id, anonymousId);
-  }
-
   @PatchMapping("v1/ideas/{id}/tags")
   public List<FetchTagDto> patchTags(@PathVariable long id, @RequestBody List<PatchTagRequestDto> tags) {
     return ideaService.patchTags(id, tags);

@@ -2,7 +2,7 @@ package net.feedbacky.app.controller.board;
 
 import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
 import net.feedbacky.app.data.board.dto.suspended.PostSuspendedUserDto;
-import net.feedbacky.app.service.board.suspended.BoardSuspendedUsersServiceImpl;
+import net.feedbacky.app.service.board.suspended.SuspendedUserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,23 +22,23 @@ import javax.validation.Valid;
  */
 @RestController
 @CrossOrigin
-public class BoardSuspendedUsersRestController {
+public class SuspendedUsersRestController {
 
-  private final BoardSuspendedUsersServiceImpl boardSuspendedUsersService;
+  private final SuspendedUserServiceImpl suspendedUsersService;
 
   @Autowired
-  public BoardSuspendedUsersRestController(BoardSuspendedUsersServiceImpl boardSuspendedUsersService) {
-    this.boardSuspendedUsersService = boardSuspendedUsersService;
+  public SuspendedUsersRestController(SuspendedUserServiceImpl suspendedUsersService) {
+    this.suspendedUsersService = suspendedUsersService;
   }
 
   @PostMapping("v1/boards/{discriminator}/suspendedUsers")
   public ResponseEntity<FetchSuspendedUserDto> post(@PathVariable String discriminator, @Valid @RequestBody PostSuspendedUserDto dto) {
-    return boardSuspendedUsersService.post(discriminator, dto);
+    return suspendedUsersService.post(discriminator, dto);
   }
 
   @DeleteMapping("v1/suspendedUsers/{id}")
   public ResponseEntity delete(@PathVariable long id) {
-    return boardSuspendedUsersService.delete(id);
+    return suspendedUsersService.delete(id);
   }
 
 }

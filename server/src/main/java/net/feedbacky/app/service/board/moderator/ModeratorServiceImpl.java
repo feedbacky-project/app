@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * Created at 03.12.2019
  */
 @Service
-public class BoardModeratorServiceImpl implements BoardModeratorService {
+public class ModeratorServiceImpl implements ModeratorService {
 
   private final BoardRepository boardRepository;
   private final ModeratorRepository moderatorRepository;
@@ -53,8 +53,8 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
   private final MailHandler mailHandler;
 
   @Autowired
-  public BoardModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository,
-                                   InvitationRepository invitationRepository, MailHandler mailHandler) {
+  public ModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository,
+                              InvitationRepository invitationRepository, MailHandler mailHandler) {
     this.boardRepository = boardRepository;
     this.moderatorRepository = moderatorRepository;
     this.userRepository = userRepository;
@@ -64,20 +64,16 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   @Override
   public List<FetchInviteDto> getAllInvited(String discriminator) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphUtils.fromAttributePaths("permissions"))
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("invitedModerators"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
-    return board.getInvitedModerators().stream().map(invite -> new FetchInviteDto().from(invite)).collect(Collectors.toList());
+    return board.getInvitedModerators().stream().map(Invitation::toDto).collect(Collectors.toList());
   }
 
   @Override
   public FetchBoardDto postAccept(String code) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Invitation invitation = invitationRepository.findByCode(code)
             .orElseThrow(() -> new ResourceNotFoundException("Invalid invitation link."));
     if(!invitation.getUser().equals(user)) {
@@ -89,16 +85,14 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     moderator.setBoard(board);
     moderator.setRole(Moderator.Role.MODERATOR);
     board.getModerators().add(moderator);
-    boardRepository.save(board);
+    board = boardRepository.save(board);
     invitationRepository.delete(invitation);
-    return new FetchBoardDto().from(board);
+    return board.toDto();
   }
 
   @Override
   public ResponseEntity<FetchInviteDto> post(String discriminator, PostInviteDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
@@ -122,14 +116,12 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
             .withInvitation(invitation)
             .withTemplate(MailService.EmailTemplate.MODERATOR_INVITATION)
             .sendMail(mailHandler.getMailService()).async();
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchInviteDto().from(invitation));
+    return ResponseEntity.status(HttpStatus.CREATED).body(invitation.toDto());
   }
 
   @Override
   public FetchModeratorDto patch(String discriminator, PatchModeratorDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.OWNER, user);
@@ -140,15 +132,13 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
     }
     Moderator moderator = optional.get();
     moderator.setRole(Moderator.Role.valueOf(dto.getRole().toUpperCase()));
-    moderatorRepository.save(moderator);
-    return new FetchModeratorDto().from(moderator);
+    moderator = moderatorRepository.save(moderator);
+    return moderator.toDto();
   }
 
   @Override
   public ResponseEntity deleteInvitation(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Invitation invitation = invitationRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Invitation with id {0} not found.", id)));
     ServiceValidator.isPermitted(invitation.getBoard(), Moderator.Role.ADMINISTRATOR, user);
@@ -164,9 +154,7 @@ public class BoardModeratorServiceImpl implements BoardModeratorService {
 
   @Override
   public ResponseEntity delete(String discriminator, long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);

@@ -1,4 +1,4 @@
-package net.feedbacky.app.controller;
+package net.feedbacky.app.controller.user;
 
 import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
 import net.feedbacky.app.data.user.dto.FetchUserDto;

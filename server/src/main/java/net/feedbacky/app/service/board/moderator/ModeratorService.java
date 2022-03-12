@@ -15,7 +15,7 @@ import java.util.List;
  * <p>
  * Created at 03.12.2019
  */
-public interface BoardModeratorService {
+public interface ModeratorService {
 
   List<FetchInviteDto> getAllInvited(String discriminator);
 

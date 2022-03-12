@@ -31,14 +31,14 @@ import java.util.Optional;
  * Created at 27.11.2020
  */
 @Service
-public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersService {
+public class SuspendedUserServiceImpl implements SuspendedUserService {
 
   private final BoardRepository boardRepository;
   private final SuspendedUserRepository suspendedUserRepository;
   private final UserRepository userRepository;
 
   @Autowired
-  public BoardSuspendedUsersServiceImpl(BoardRepository boardRepository, SuspendedUserRepository suspendedUserRepository, UserRepository userRepository) {
+  public SuspendedUserServiceImpl(BoardRepository boardRepository, SuspendedUserRepository suspendedUserRepository, UserRepository userRepository) {
     this.boardRepository = boardRepository;
     this.suspendedUserRepository = suspendedUserRepository;
     this.userRepository = userRepository;
@@ -46,9 +46,7 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
 
   @Override
   public ResponseEntity<FetchSuspendedUserDto> post(String discriminator, PostSuspendedUserDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
@@ -65,14 +63,12 @@ public class BoardSuspendedUsersServiceImpl implements BoardSuspendedUsersServic
     suspendedUser = suspendedUserRepository.save(suspendedUser);
     board.getSuspensedList().add(suspendedUser);
     boardRepository.save(board);
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchSuspendedUserDto().from(suspendedUser));
+    return ResponseEntity.status(HttpStatus.CREATED).body(suspendedUser.toDto());
   }
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     SuspendedUser suspendedUser = suspendedUserRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Suspended user with id {0} not found.", id)));
     Board board = suspendedUser.getBoard();

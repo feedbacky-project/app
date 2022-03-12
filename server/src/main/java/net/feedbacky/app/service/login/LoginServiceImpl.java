@@ -6,8 +6,8 @@ import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.types.LoginFailedException;
-import net.feedbacky.app.login.LoginProvider;
-import net.feedbacky.app.login.LoginProviderRegistry;
+import net.feedbacky.app.data.login.LoginProvider;
+import net.feedbacky.app.data.login.LoginProviderRegistry;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.util.jwt.JwtToken;
 import net.feedbacky.app.util.jwt.JwtTokenBuilder;
@@ -122,7 +122,7 @@ public class LoginServiceImpl implements LoginService {
 
   private Map<String, Object> generateAccessData(User user) {
     Map<String, Object> json = new HashMap<>();
-    JwtToken token = new JwtTokenBuilder().withSubject(user.getEmail()).build();
+    JwtToken token = new JwtTokenBuilder().withSubject(user.getEmail()).withIssuer(user.getUsername()).build();
     json.put("token", token.getToken());
     json.put("user", new FetchUserDto().from(user).withConfidentialData(user));
     return json;

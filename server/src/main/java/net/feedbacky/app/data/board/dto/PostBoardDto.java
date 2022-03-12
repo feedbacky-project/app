@@ -62,5 +62,4 @@ public class PostBoardDto {
     board.setCreationDate(creationDate);
     return board;
   }
-
 }

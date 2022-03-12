@@ -12,6 +12,9 @@ import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraph;
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,10 +42,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
   @Override
   public FetchUserDto postSubscribe(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id)
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(idea.getSubscribers().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Already subscribed.");
@@ -51,15 +52,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     subscribers.add(user);
     idea.setSubscribers(subscribers);
     ideaRepository.save(idea);
-    return new FetchUserDto().from(user);
+    return user.toDto();
   }
 
   @Override
   public ResponseEntity deleteSubscribe(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id)
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(!idea.getSubscribers().contains(user)) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet subscribed.");

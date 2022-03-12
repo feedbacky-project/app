@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 public class MailNotifierTask {
 
   private final Logger logger = Logger.getLogger("MailService");
-  private MailHandler mailHandler;
-  private SubscriptionExecutor subscriptionExecutor;
+  private final MailHandler mailHandler;
+  private final SubscriptionExecutor subscriptionExecutor;
 
   @Autowired
   public MailNotifierTask(MailHandler mailHandler, SubscriptionExecutor subscriptionExecutor) {

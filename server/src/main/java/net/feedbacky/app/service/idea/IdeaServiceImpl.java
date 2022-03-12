@@ -84,7 +84,6 @@ public class IdeaServiceImpl implements IdeaService {
   private final ObjectStorage objectStorage;
   private final SubscriptionExecutor subscriptionExecutor;
   private final IdeaServiceCommons ideaServiceCommons;
-  private final RandomNicknameUtils randomNicknameUtils;
   private final MailHandler mailHandler;
   private final WebhookExecutor webhookExecutor;
 
@@ -92,8 +91,7 @@ public class IdeaServiceImpl implements IdeaService {
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
                          CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
-                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils,
-                         MailHandler mailHandler, WebhookExecutor webhookExecutor) {
+                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, MailHandler mailHandler, WebhookExecutor webhookExecutor) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -103,7 +101,6 @@ public class IdeaServiceImpl implements IdeaService {
     this.objectStorage = objectStorage;
     this.subscriptionExecutor = subscriptionExecutor;
     this.ideaServiceCommons = ideaServiceCommons;
-    this.randomNicknameUtils = randomNicknameUtils;
     this.mailHandler = mailHandler;
     this.webhookExecutor = webhookExecutor;
   }
@@ -140,25 +137,23 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity<FetchIdeaDto> post(PostIdeaDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Board board = boardRepository.findByDiscriminator(dto.getDiscriminator())
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Board board = boardRepository.findByDiscriminator(dto.getDiscriminator(), EntityGraphs.named("Board.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", dto.getDiscriminator())));
     return ResponseEntity.status(HttpStatus.CREATED).body(ideaServiceCommons.post(dto, board, user));
   }
 
   @Override
   public FetchIdeaDto patch(long id, PatchIdeaDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.patch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
+    //if modifying staff only fields throw exception if not a moderator
     if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null || dto.getAssignee() != null)
             && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
+    //either creator or moderator can apply edits
     if(!(idea.getCreator().equals(user) || ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user))) {
       throw new InsufficientPermissionsException();
     }
@@ -169,8 +164,8 @@ public class IdeaServiceImpl implements IdeaService {
     handleAssigneeUpdate(idea, dto, user);
 
     idea.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(idea.getDescription())));
-    ideaRepository.save(idea);
-    return new FetchIdeaDto().from(idea).withUser(idea, user);
+    idea = ideaRepository.save(idea);
+    return idea.toDto().withUser(idea, user);
   }
 
   private void handleTitleUpdate(Idea idea, PatchIdeaDto dto, User user) {
@@ -302,7 +297,7 @@ public class IdeaServiceImpl implements IdeaService {
               .withRecipient(assigneeMod.getUser())
               .withCustomPlaceholder("${idea.name}", idea.getTitle())
               .withCustomPlaceholder("${idea.viewLink}", idea.toViewLink())
-              .sendMail(mailHandler.getMailService()).sync();
+              .sendMail(mailHandler.getMailService()).async();
     }
 
     Comment comment = commentBuilder.of(idea).build();
@@ -314,9 +309,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(!idea.getCreator().equals(user) && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
@@ -331,7 +324,7 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public List<FetchSimpleUserDto> getAllMentions(long id) {
-    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("board", "creator", "comments"))
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetchMentions"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     Set<User> uniqueUsers = new HashSet<>();
     uniqueUsers.add(idea.getCreator());
@@ -348,106 +341,9 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
-  public List<FetchSimpleUserDto> getAllVoters(long id) {
-    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("voters"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    return idea.getVoters().stream().map(usr -> new FetchSimpleUserDto().from(usr)).collect(Collectors.toList());
-  }
-
-  @Override
-  public List<FetchSimpleUserDto> patchVoters(long id, PatchVotersDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("board", "voters"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    ServiceValidator.isPermitted(idea.getBoard(), Moderator.Role.MODERATOR, user);
-    CommentBuilder commentBuilder = new CommentBuilder().by(user).type(Comment.SpecialType.IDEA_ASSIGNED);
-    switch(PatchVotersDto.VotersClearType.valueOf(dto.getClearType().toUpperCase())) {
-      case ALL:
-        idea.setVoters(new HashSet<>());
-        idea.setVotersAmount(0);
-        idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset all votes.");
-        break;
-      case ANONYMOUS:
-        Set<User> voters = idea.getVoters();
-        voters = voters.stream().filter(voter -> !voter.isFake()).collect(Collectors.toSet());
-        idea.setVoters(voters);
-        idea.setVotersAmount(voters.size());
-        idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset anonymous votes.");
-        break;
-      default:
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid clear type provided.");
-    }
-    Comment comment = commentBuilder.of(idea).build();
-    Set<Comment> comments = idea.getComments();
-    comments.add(comment);
-    idea.setComments(comments);
-    commentRepository.save(comment);
-    return idea.getVoters().stream().map(voter -> new FetchSimpleUserDto().from(voter)).collect(Collectors.toList());
-  }
-
-  @Override
-  public FetchUserDto postUpvote(long id, String anonymousId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    User user;
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    if(auth instanceof AnonymousAuthenticationToken) {
-      if(anonymousId == null || !idea.getBoard().isAnonymousAllowed()) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Please log-in to vote.");
-      }
-      user = userRepository.findByEmail(anonymousId).orElseGet(() -> createAnonymousUser(anonymousId));
-    } else {
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-              .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    }
-    return ideaServiceCommons.postUpvote(user, idea);
-  }
-
-  @Override
-  public ResponseEntity deleteUpvote(long id, String anonymousId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    User user;
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    if(auth instanceof AnonymousAuthenticationToken) {
-      if(anonymousId == null || !idea.getBoard().isAnonymousAllowed()) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Please log-in to vote.");
-      }
-      //if not found and vote deleted then don't create new user
-      user = userRepository.findByEmail(anonymousId)
-              .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet upvoted."));
-    } else {
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-              .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    }
-    return ideaServiceCommons.deleteUpvote(user, idea);
-  }
-
-  private User createAnonymousUser(String anonymousId) {
-    User user = new User();
-    user.setEmail(anonymousId);
-    MailPreferences preferences = new MailPreferences();
-    preferences.setNotificationsEnabled(false);
-    preferences.setUnsubscribeToken("");
-    preferences.setUser(user);
-    user.setMailPreferences(preferences);
-    String nick = randomNicknameUtils.getRandomNickname();
-    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", nick));
-    user.setUsername(nick);
-    user.setFake(true);
-    return userRepository.save(user);
-  }
-
-  @Override
   public List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.patchTags"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
@@ -479,14 +375,14 @@ public class IdeaServiceImpl implements IdeaService {
     comments.add(comment);
     idea.setComments(comments);
     commentRepository.save(comment);
-    ideaRepository.save(idea);
+    idea = ideaRepository.save(idea);
     WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea())
             .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
     webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
 
     subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE, user,
             idea, prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));
-    return idea.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
+    return idea.getTags().stream().map(Tag::toDto).collect(Collectors.toList());
   }
 
   private Comment prepareTagsPatchComment(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags) {

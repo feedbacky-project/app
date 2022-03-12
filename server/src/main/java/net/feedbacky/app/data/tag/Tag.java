@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.tag.dto.FetchTagDto;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,11 +30,9 @@ import java.io.Serializable;
 @Table(name = "boards_tags")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Tag implements Serializable {
+public class Tag implements Serializable, Fetchable<FetchTagDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +45,11 @@ public class Tag implements Serializable {
   private String color;
   private boolean roadmapIgnored = false;
   private boolean publicUse = false;
+
+  @Override
+  public FetchTagDto toDto() {
+    return new FetchTagDto().from(this);
+  }
 
   public String convertToSpecialCommentMention() {
     return "{data_tag;" + id + ";" + name + ";" + color + "}";

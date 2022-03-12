@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin
 @RestController
-public class IdeaSubscriptionRestController {
+public class SubscriptionRestController {
 
   private final SubscriptionService subscriptionService;
 
   @Autowired
-  public IdeaSubscriptionRestController(SubscriptionService subscriptionService) {
+  public SubscriptionRestController(SubscriptionService subscriptionService) {
     this.subscriptionService = subscriptionService;
   }
 

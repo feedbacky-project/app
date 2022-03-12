@@ -35,14 +35,6 @@ public interface IdeaService {
 
   List<FetchSimpleUserDto> getAllMentions(long id);
 
-  List<FetchSimpleUserDto> getAllVoters(long id);
-
-  List<FetchSimpleUserDto> patchVoters(long id, PatchVotersDto dto);
-
-  FetchUserDto postUpvote(long id, String anonymousId);
-
-  ResponseEntity deleteUpvote(long id, String anonymousId);
-
   List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags);
 
   enum SortType {

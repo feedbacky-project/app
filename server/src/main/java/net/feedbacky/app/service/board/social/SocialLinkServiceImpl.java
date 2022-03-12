@@ -8,7 +8,6 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.exception.types.InsufficientPermissionsException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
  * Created at 23.12.2019
  */
 @Service
-public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
+public class SocialLinkServiceImpl implements SocialLinkService {
 
   private final BoardRepository boardRepository;
   private final SocialLinksRepository socialLinksRepository;
@@ -46,7 +45,7 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
   private final ObjectStorage objectStorage;
 
   @Autowired
-  public BoardSocialLinksServiceImpl(BoardRepository boardRepository, SocialLinksRepository socialLinksRepository, UserRepository userRepository, ObjectStorage objectStorage) {
+  public SocialLinkServiceImpl(BoardRepository boardRepository, SocialLinksRepository socialLinksRepository, UserRepository userRepository, ObjectStorage objectStorage) {
     this.boardRepository = boardRepository;
     this.socialLinksRepository = socialLinksRepository;
     this.userRepository = userRepository;
@@ -57,14 +56,12 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
   public List<FetchSocialLinkDto> getAll(String discriminator) {
     Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphUtils.fromAttributePaths("socialLinks"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    return board.getSocialLinks().stream().map(link -> new FetchSocialLinkDto().from(link)).collect(Collectors.toList());
+    return board.getSocialLinks().stream().map(SocialLink::toDto).collect(Collectors.toList());
   }
 
   @Override
   public ResponseEntity<FetchSocialLinkDto> post(String discriminator, PostSocialLinkDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
@@ -85,14 +82,12 @@ public class BoardSocialLinksServiceImpl implements BoardSocialLinksService {
     socialLink = socialLinksRepository.save(socialLink);
     board.getSocialLinks().add(socialLink);
     boardRepository.save(board);
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchSocialLinkDto().from(socialLink));
+    return ResponseEntity.status(HttpStatus.CREATED).body(socialLink.toDto());
   }
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     SocialLink socialLink = socialLinksRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Social link with id {0} not found.", id)));
     Board board = socialLink.getBoard();

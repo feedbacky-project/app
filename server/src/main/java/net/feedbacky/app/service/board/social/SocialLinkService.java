@@ -12,7 +12,7 @@ import java.util.List;
  * <p>
  * Created at 23.12.2019
  */
-public interface BoardSocialLinksService {
+public interface SocialLinkService {
 
   List<FetchSocialLinkDto> getAll(String discriminator);
 

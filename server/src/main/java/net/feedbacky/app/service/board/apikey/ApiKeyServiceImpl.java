@@ -28,8 +28,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApiKeyServiceImpl implements ApiKeyService {
 
-  private BoardRepository boardRepository;
-  private UserRepository userRepository;
+  private final BoardRepository boardRepository;
+  private final UserRepository userRepository;
 
   @Autowired
   public ApiKeyServiceImpl(BoardRepository boardRepository, UserRepository userRepository) {
@@ -39,35 +39,29 @@ public class ApiKeyServiceImpl implements ApiKeyService {
 
   @Override
   public ResponseEntity<FetchBoardDto> patch(String discriminator) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    if(!ServiceValidator.hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("No permission to manage api keys for this board.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
+
     board.setApiKey(RandomStringUtils.randomAlphanumeric(40));
-    boardRepository.save(board);
-    return ResponseEntity.ok(new FetchBoardDto().from(board).withConfidentialData(board, true));
+    board = boardRepository.save(board);
+    return ResponseEntity.ok(board.toDto().withConfidentialData(board, true));
   }
 
   @Override
   public ResponseEntity delete(String discriminator) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("User session not found. Try again with new token"));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException("Board with discriminator " + discriminator + " not found"));
-    if(!ServiceValidator.hasPermission(board, Moderator.Role.ADMINISTRATOR, user)) {
-      throw new InvalidAuthenticationException("No permission to manage api keys for this board.");
-    }
+    ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
+
     if(board.getApiKey().equals("")) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Api key is already disabled.");
     }
     board.setApiKey("");
-    boardRepository.save(board);
-    return ResponseEntity.ok(new FetchBoardDto().from(board).withConfidentialData(board, true));
+    board = boardRepository.save(board);
+    return ResponseEntity.ok(board.toDto().withConfidentialData(board, true));
   }
 
 }

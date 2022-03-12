@@ -1,4 +1,4 @@
-package net.feedbacky.app.controller.idea;
+package net.feedbacky.app.controller.comment;
 
 import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;

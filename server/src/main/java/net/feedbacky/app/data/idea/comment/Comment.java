@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.reaction.CommentReaction;
+import net.feedbacky.app.data.idea.dto.comment.FetchCommentDto;
 import net.feedbacky.app.data.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,10 +42,9 @@ import java.util.Set;
 @Table(name = "ideas_comments")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @NamedEntityGraph(name = "Comment.fetch", attributeNodes = {@NamedAttributeNode("creator"), @NamedAttributeNode("reactions"), @NamedAttributeNode("replyTo")})
-public class Comment implements Serializable {
+public class Comment implements Serializable, Fetchable<FetchCommentDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,6 +68,11 @@ public class Comment implements Serializable {
   private Comment replyTo;
   @CreationTimestamp
   private Date creationDate;
+
+  @Override
+  public FetchCommentDto toDto() {
+    return new FetchCommentDto().from(this);
+  }
 
   public enum SpecialType {
     LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED, COMMENTS_RESTRICTED, COMMENTS_ALLOWED, IDEA_PINNED, IDEA_UNPINNED,

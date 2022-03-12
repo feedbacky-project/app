@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin
 @RestController
-public class IdeaAttachmentRestController {
+public class AttachmentRestController {
 
   private final AttachmentService attachmentService;
 
   @Autowired
-  public IdeaAttachmentRestController(AttachmentService attachmentService) {
+  public AttachmentRestController(AttachmentService attachmentService) {
     this.attachmentService = attachmentService;
   }
 

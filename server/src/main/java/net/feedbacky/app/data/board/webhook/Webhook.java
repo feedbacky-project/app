@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.webhook.FetchWebhookDto;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -29,9 +31,8 @@ import java.util.List;
 @Table(name = "boards_webhooks")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Webhook implements Serializable {
+public class Webhook implements Serializable, Fetchable<FetchWebhookDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +45,11 @@ public class Webhook implements Serializable {
   private Type type;
   @ElementCollection(targetClass = Event.class)
   private List<Event> events = new ArrayList<>();
+
+  @Override
+  public FetchWebhookDto toDto() {
+    return new FetchWebhookDto().from(this);
+  }
 
   public enum Type {
     CUSTOM_ENDPOINT(0), DISCORD(1);

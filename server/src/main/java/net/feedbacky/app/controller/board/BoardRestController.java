@@ -69,29 +69,4 @@ public class BoardRestController {
     return boardService.delete(discriminator);
   }
 
-  @GetMapping("v1/boards/{discriminator}/tags")
-  public List<FetchTagDto> getAllTags(@PathVariable String discriminator) {
-    return boardService.getAllTags(discriminator);
-  }
-
-  @GetMapping("v1/boards/{discriminator}/tags/{id}")
-  public FetchTagDto getTagById(@PathVariable String discriminator, @PathVariable long id) {
-    return boardService.getTagById(discriminator, id);
-  }
-
-  @PostMapping("v1/boards/{discriminator}/tags")
-  public ResponseEntity<FetchTagDto> postTag(@PathVariable String discriminator, @Valid @RequestBody PostTagDto dto) {
-    return boardService.postTag(discriminator, dto);
-  }
-
-  @PatchMapping("v1/boards/{discriminator}/tags/{id}")
-  public FetchTagDto patchTag(@PathVariable String discriminator, @PathVariable long id, @Valid @RequestBody PatchTagDto dto) {
-    return boardService.patchTag(discriminator, id, dto);
-  }
-
-  @DeleteMapping("v1/boards/{discriminator}/tags/{id}")
-  public ResponseEntity deleteTag(@PathVariable String discriminator, @PathVariable long id) {
-    return boardService.deleteTag(discriminator, id);
-  }
-
 }

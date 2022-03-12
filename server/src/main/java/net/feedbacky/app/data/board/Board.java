@@ -5,7 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.changelog.Changelog;
+import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
@@ -31,6 +33,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -49,19 +52,23 @@ import java.util.Set;
 @Table(name = "boards")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedEntityGraph(name = "Board.fetch", attributeNodes = {
         @NamedAttributeNode("creator"), @NamedAttributeNode("ideas"),
-        @NamedAttributeNode("moderators"), @NamedAttributeNode("tags"),
-        @NamedAttributeNode("socialLinks"), @NamedAttributeNode("suspensedList")})
-public class Board implements Serializable {
+        @NamedAttributeNode(value = "moderators", subgraph = "Board.subgraph.moderatorsFetch"), @NamedAttributeNode("tags"),
+        @NamedAttributeNode("socialLinks"), @NamedAttributeNode("suspensedList"), @NamedAttributeNode("webhooks")},
+        subgraphs = {
+                @NamedSubgraph(name = "Board.subgraph.moderatorsFetch", attributeNodes = {
+                        @NamedAttributeNode("user")
+                })
+        })
+public class Board implements Serializable, Fetchable<FetchBoardDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @EqualsAndHashCode.Include
-  private Long id;
+  @EqualsAndHashCode.Include private Long id;
+
   private String name;
   private String discriminator;
   private String shortDescription;
@@ -97,6 +104,11 @@ public class Board implements Serializable {
   private boolean changelogEnabled = true;
   private boolean closedIdeasCommentingEnabled = false;
   private Date lastChangelogUpdate;
+
+  @Override
+  public FetchBoardDto toDto() {
+    return new FetchBoardDto().from(this);
+  }
 
   public String toViewLink() {
     return MailService.HOST_ADDRESS + "/b/" + discriminator;

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.feedbacky.app.data.Fetchable;
+import net.feedbacky.app.data.user.dto.FetchConnectedAccount;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,9 +28,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class ConnectedAccount implements Serializable {
+public class ConnectedAccount implements Serializable, Fetchable<FetchConnectedAccount> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +39,8 @@ public class ConnectedAccount implements Serializable {
   private String provider;
   private String accountId;
 
+  @Override
+  public FetchConnectedAccount toDto() {
+    return new FetchConnectedAccount().from(this);
+  }
 }

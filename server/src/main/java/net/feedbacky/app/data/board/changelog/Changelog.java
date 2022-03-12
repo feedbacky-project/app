@@ -5,8 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.reaction.ChangelogReaction;
+import net.feedbacky.app.data.board.dto.changelog.FetchChangelogDto;
 import net.feedbacky.app.data.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,9 +24,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,15 +44,21 @@ import java.util.Set;
 @Table(name = "boards_changelogs")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Changelog {
+@NamedEntityGraph(name = "Changelog.fetch", attributeNodes = {
+        @NamedAttributeNode("creator"), @NamedAttributeNode(value = "reactions", subgraph = "Changelog.subgraph.reactionsFetch")},
+        subgraphs = {
+                @NamedSubgraph(name = "Changelog.subgraph.reactionsFetch", attributeNodes = {
+                        @NamedAttributeNode("user")
+                })
+        })
+public class Changelog implements Serializable, Fetchable<FetchChangelogDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @EqualsAndHashCode.Include
-  private Long id;
+  @EqualsAndHashCode.Include private Long id;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "board_id")
   private Board board;
@@ -63,4 +75,8 @@ public class Changelog {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "changelog", orphanRemoval = true)
   private Set<ChangelogReaction> reactions = new HashSet<>();
 
+  @Override
+  public FetchChangelogDto toDto() {
+    return new FetchChangelogDto().from(this);
+  }
 }

@@ -1,7 +1,7 @@
 package net.feedbacky.app.service.board.changelog;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
-import net.feedbacky.app.controller.about.EmojiDataRegistry;
+import net.feedbacky.app.data.emoji.EmojiDataRegistry;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.Changelog;
 import net.feedbacky.app.data.board.changelog.reaction.ChangelogReaction;
@@ -14,9 +14,6 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
-import net.feedbacky.app.data.idea.comment.Comment;
-import net.feedbacky.app.data.idea.comment.reaction.CommentReaction;
-import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -52,7 +49,7 @@ import java.util.stream.Collectors;
  * Created at 28.03.2021
  */
 @Service
-public class BoardChangelogServiceImpl implements BoardChangelogService {
+public class ChangelogServiceImpl implements ChangelogService {
 
   private final BoardRepository boardRepository;
   private final UserRepository userRepository;
@@ -61,8 +58,8 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
   private final EmojiDataRegistry emojiDataRegistry;
 
   @Autowired
-  public BoardChangelogServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ChangelogRepository changelogRepository,
-                                   WebhookExecutor webhookExecutor, EmojiDataRegistry emojiDataRegistry) {
+  public ChangelogServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ChangelogRepository changelogRepository,
+                              WebhookExecutor webhookExecutor, EmojiDataRegistry emojiDataRegistry) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.changelogRepository = changelogRepository;
@@ -72,51 +69,45 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
 
   @Override
   public PaginableRequest<List<FetchChangelogDto>> getAll(String discriminator, int page, int pageSize, SortType sortType) {
-    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.empty())
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    Page<Changelog> pageData = changelogRepository.findByBoard(board, PageRequest.of(page, pageSize, SortFilterResolver.resolveChangelogSorting(sortType)));
+    Page<Changelog> pageData = changelogRepository.findByBoardDiscriminator(discriminator, PageRequest.of(page, pageSize, SortFilterResolver.resolveChangelogSorting(sortType)))
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));;
     List<Changelog> changelogs = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), changelogs.stream()
-            .map(changelog -> new FetchChangelogDto().from(changelog)).collect(Collectors.toList()));
+            .map(Changelog::toDto).collect(Collectors.toList()));
   }
 
   @Override
   public PaginableRequest<List<FetchChangelogDto>> getAllChangelogsContaining(String discriminator, int page, int pageSize, String query, SortType sortType) {
-    Board board = boardRepository.findByDiscriminator(discriminator, EntityGraphs.empty())
+    Page<Changelog> pageData = changelogRepository.findByQuery(discriminator, query, PageRequest.of(page, pageSize, SortFilterResolver.resolveChangelogSorting(sortType)))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
-    Page<Changelog> pageData = changelogRepository.findByQuery(board, query, PageRequest.of(page, pageSize, SortFilterResolver.resolveChangelogSorting(sortType)));
     List<Changelog> changelogs = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), changelogs.stream()
-            .map(changelog -> new FetchChangelogDto().from(changelog)).collect(Collectors.toList()));
+            .map(Changelog::toDto).collect(Collectors.toList()));
   }
 
   @Override
   public ResponseEntity<FetchChangelogDto> post(String discriminator, PostChangelogDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.MODERATOR, user);
     Changelog changelog = dto.convertToEntity(board, user);
     board.getChangelogs().add(changelog);
-    changelogRepository.save(changelog);
+    changelog = changelogRepository.save(changelog);
 
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withChangelog(changelog);
     webhookExecutor.executeWebhooks(board, Webhook.Event.CHANGELOG_CREATE, builder.build());
     board.setLastChangelogUpdate(Calendar.getInstance().getTime());
     boardRepository.save(board);
 
-    return ResponseEntity.ok(new FetchChangelogDto().from(changelog));
+    return ResponseEntity.ok(changelog.toDto());
   }
 
   @Override
   public FetchChangelogReactionDto postReaction(long id, PostChangelogReactionDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Changelog changelog = changelogRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog with id {0} not found.", id)));
     if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(dto.getReactionId()))) {
@@ -132,28 +123,24 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
     changelog.getReactions().add(reaction);
     changelogRepository.save(changelog);
     reaction = changelog.getReactions().stream().filter(r -> r.getReactionId().equals(dto.getReactionId()) && r.getUser().equals(user)).findFirst().get();
-    return new FetchChangelogReactionDto().from(reaction);
+    return reaction.toDto();
   }
 
   @Override
   public FetchChangelogDto patch(long id, PatchChangelogDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Changelog changelog = changelogRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog with id {0} not found.", id)));
     ServiceValidator.isPermitted(changelog.getBoard(), Moderator.Role.MODERATOR, user);
     changelog.setTitle(dto.getTitle());
     changelog.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())));
-    changelogRepository.save(changelog);
-    return new FetchChangelogDto().from(changelog);
+    changelog = changelogRepository.save(changelog);
+    return changelog.toDto();
   }
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Changelog changelog = changelogRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog {0} not found.", id)));
     ServiceValidator.isPermitted(changelog.getBoard(), Moderator.Role.MODERATOR, user);
@@ -163,9 +150,7 @@ public class BoardChangelogServiceImpl implements BoardChangelogService {
 
   @Override
   public ResponseEntity deleteReaction(long id, String reactionId) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Changelog changelog = changelogRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog {0} not found.", id)));
     if(emojiDataRegistry.getEmojis().stream().noneMatch(e -> e.getId().equals(reactionId))) {

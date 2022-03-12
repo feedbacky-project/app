@@ -22,12 +22,12 @@ import java.util.Map;
  */
 @CrossOrigin
 @RestController
-public class BoardRoadmapRestController {
+public class RoadmapRestController {
 
   private final RoadmapService roadmapService;
 
   @Autowired
-  public BoardRoadmapRestController(RoadmapService roadmapService) {
+  public RoadmapRestController(RoadmapService roadmapService) {
     this.roadmapService = roadmapService;
   }
 

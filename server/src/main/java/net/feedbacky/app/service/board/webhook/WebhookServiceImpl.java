@@ -57,20 +57,16 @@ public class WebhookServiceImpl implements WebhookService {
 
   @Override
   public List<FetchWebhookDto> getAll(String discriminator) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail(), EntityGraphUtils.fromAttributePaths("permissions"))
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
-    return webhookRepository.findByBoard(board).stream().map(webhook -> new FetchWebhookDto().from(webhook)).collect(Collectors.toList());
+    return webhookRepository.findByBoard(board).stream().map(Webhook::toDto).collect(Collectors.toList());
   }
 
   @Override
   public ResponseEntity<FetchWebhookDto> post(String discriminator, PostWebhookDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
@@ -78,19 +74,17 @@ public class WebhookServiceImpl implements WebhookService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Webhook with that URL already exists.");
     }
     Webhook webhook = dto.convertToEntity(board);
-    webhookRepository.save(webhook);
+    webhook = webhookRepository.save(webhook);
     board.getWebhooks().add(webhook);
     boardRepository.save(board);
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user);
     webhookExecutor.executeWebhook(webhook, Webhook.Event.SAMPLE_EVENT, builder.build());
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchWebhookDto().from(webhook));
+    return ResponseEntity.status(HttpStatus.CREATED).body(webhook.toDto());
   }
 
   @Override
   public FetchWebhookDto patch(long id, PatchWebhookDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Webhook webhook = webhookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Webhook with id {0} not found.", id)));
     if(!dto.getUrl().equals(webhook.getUrl()) && webhookRepository.findByUrl(dto.getUrl()).isPresent()) {
@@ -108,15 +102,13 @@ public class WebhookServiceImpl implements WebhookService {
       }
     }
     webhook.setEvents(webhookEvents);
-    webhookRepository.save(webhook);
-    return new FetchWebhookDto().from(webhook);
+    webhook = webhookRepository.save(webhook);
+    return webhook.toDto();
   }
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Webhook webhook = webhookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Webhook with id {0} not found.", id)));
     ServiceValidator.isPermitted(webhook.getBoard(), Moderator.Role.ADMINISTRATOR, user);
