@@ -9,6 +9,7 @@
 * **[CHANGE]** Breaking UI change - separated UI components from client, now they are standalone
 * **[FIX]** Scrollbars didn't work properly on Chromium browsers
 * **[FIX]** Changelog modal didn't respect 2500 chars change
+* **[FIX]** Page crashing when having INTERNAL comment in discussion and being non-moderator user
 
 ### 1.0.0.RC.1
 * **[FEATURE]** Display toast messages when page is loading for too long

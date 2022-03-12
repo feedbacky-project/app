@@ -112,7 +112,10 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         </React.Fragment>
     }
     //internal comment with limited visibility is used for comment history purposes
-    if (data.viewType === "INTERNAL" && data.user == null && data.replyTo != null) {
+    if (data.viewType === "INTERNAL" && data.user == null) {
+        if (data.replyTo == null) {
+            return <React.Fragment/>
+        }
         return <React.Fragment>
             <div className={"text-black-60 mb-2"} style={{paddingLeft: stepRemSize * stepSize + "rem"}}>
                 <HiddenContent>
