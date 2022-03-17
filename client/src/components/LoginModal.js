@@ -5,7 +5,8 @@ import {AppContext} from "context";
 import React, {useContext, useState} from 'react';
 import {ModalDialog} from "react-bootstrap";
 import {UiThemeContext} from "ui";
-import {UiClassicButton} from "ui/button";
+import {UiButton, UiClassicButton} from "ui/button";
+import {UiFormControl, UiInputFormControl} from "ui/form";
 import {UiImage} from "ui/image";
 import {UiModal} from "ui/modal";
 import {popupNotification} from "utils/basic-utils";
@@ -29,11 +30,11 @@ const CascadingModal = styled(ModalDialog)`
   }
 
   .modal-header {
-    margin: -6rem 0 -1rem;
+    margin: -4.5rem 0 -1rem;
     box-shadow: none;
 
     img {
-      width: 130px;
+      width: 100px;
       margin-right: auto;
       margin-left: auto;
       box-shadow: var(--box-shadow);
@@ -64,6 +65,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
     const {serviceData} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
     const [mailModalOpen, setMailModalOpen] = useState(false);
+    const [mail, setMail] = useState("");
 
     const onMailLogin = (email) => {
         popupNotification("Sending Log-in Link...", getTheme());
@@ -78,20 +80,21 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
         if (!serviceData.mailLoginEnabled) {
             return <React.Fragment/>
         }
-        return <React.Fragment>
-            <TextInputActionModal size={"sm"} id={"emailInput"} isOpen={mailModalOpen} onHide={() => setMailModalOpen(false)} actionButtonName={"Send Link"}
-                                  actionDescription={"Type your email to receive log-in link."} onAction={mail => onMailLogin(mail)}/>
-            <UiClassicButton label={"Mail Log-in"} className={"m-1"} style={{color: "#fff", backgroundColor: "#74c23d"}} onClick={() => setMailModalOpen(true)}>
-                <img alt={"Mail"} src={"https://static.plajer.xyz/svg/login-mail.svg"} width={16} height={16}/>
-            </UiClassicButton>
-        </React.Fragment>
+        return <div className={"mt-2"}>
+            <div>Or, sign in using mail link</div>
+            <div className={"d-inline-flex mt-2"}>
+                <UiFormControl id={"emailInput"} label={"Enter your Email"} placeholder={"Enter your Email"} onChange={e => setMail(e.target.value)}
+                               style={{borderTopRightRadius: 0, borderBottomRightRadius: 0}}/>
+                <UiButton style={{borderTopLeftRadius: 0, borderBottomLeftRadius: 0}} label={"Submit"} onClick={() => onMailLogin(mail)}>Submit</UiButton>
+            </div>
+
+        </div>
     };
     const header = <LoginHeader src={image} alt={"Avatar"} roundedCircle thumbnail/>;
     return <React.Fragment>
         <UiModal size={"sm"} dialogAs={CascadingModal} id={"loginModal"} isOpen={isOpen} onHide={onHide} header={header}>
             <ModalContent>
-                <div className={"mb-2"}>Sign in to <span style={{color: getTheme()}}>{boardName}</span> with</div>
-                {renderMailLogin()}
+                <div className={"mb-2"}>Sign in to <strong style={{color: getTheme()}}>{boardName}</strong> with</div>
                 {serviceData.loginProviders.map((data, i) => {
                     let provider = data;
                     return <a key={i} href={provider.oauthLink + redirectUrl} tabIndex={-1}>
@@ -100,6 +103,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
                         </UiClassicButton>
                     </a>
                 })}
+                {renderMailLogin()}
             </ModalContent>
         </UiModal>
     </React.Fragment>

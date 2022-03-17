@@ -75,6 +75,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public FetchUserDto patchSelf(PatchUserDto dto) {
     User user = InternalRequestValidator.getRequestUser(userRepository);
+    //do not allow this character as it's used in our internal code tags
+    if(dto.getUsername().contains(";")) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid character in username.");
+    }
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     mapper.map(dto, user);

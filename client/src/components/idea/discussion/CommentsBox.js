@@ -3,17 +3,16 @@ import axios from "axios";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import ReactionsBox from "components/commons/ReactionsBox";
 import {parseComment} from "components/idea/discussion/comment-parser";
-import CommentIcon from "components/idea/discussion/CommentIcon";
 import MentionableForm from "components/idea/discussion/MentionableForm";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
-import {FaAt, FaCommentSlash, FaLowVision, FaPen, FaReply, FaReplyAll, FaTrashAlt, FaUserLock} from "react-icons/all";
+import {FaCommentSlash, FaLowVision, FaPen, FaReply, FaReplyAll, FaTrashAlt, FaUserLock} from "react-icons/all";
 import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiThemeContext, UiTooltip} from "ui";
 import {UiCancelButton, UiClassicButton, UiLoadableButton} from "ui/button";
 import {UiAvatar} from "ui/image";
-import {htmlDecodeEntities, popupError, popupNotification, truncateText} from "utils/basic-utils";
+import {htmlDecodeEntities, popupError, popupNotification} from "utils/basic-utils";
 
 const CommentContainer = styled.div`
   display: inline-flex;
@@ -46,6 +45,7 @@ const ReplyButton = styled(UiClassicButton)`
   margin-left: .25rem;
   transform: translateY(-1px);
   color: hsla(0, 0%, 0%, .6);
+  background-color: transparent;
 
   .dark & {
     color: hsla(0, 0%, 95%, .6);
@@ -227,16 +227,18 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             <FaReply className={"text-black-60 my-auto"} style={{flexShrink: 0}}/>
             <UiAvatar roundedCircle className={"ml-2 mr-1"} size={16} user={parentData.user} style={{minWidth: "16px"}}/>
             <div style={{whiteSpace: "nowrap"}}><UiPrettyUsername user={parentData.user} truncate={16}/></div>
-            <div className={"text-black-60 ml-1"} style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>{truncateText(parentData.description, 55)}</div>
+            <div className={"text-black-60 ml-1"} style={{textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}>
+                <MarkdownContainer as={"span"} text={parentData.description} truncate={55} stripped/>
+            </div>
         </div>
     }
-    const renderDescription = () => {
-        let CommentComponent;
-        if (data.viewType === "INTERNAL") {
-            CommentComponent = InternalContainer;
-        } else {
-            CommentComponent = CommentContainer;
-        }
+    let CommentComponent;
+    if (data.viewType === "INTERNAL") {
+        CommentComponent = InternalContainer;
+    } else {
+        CommentComponent = CommentContainer;
+    }
+    if (!data.special) {
         const replyStyle = (data.replyTo != null && parentData != null) ? {paddingLeft: (stepRemSize * stepSize) + "rem"} : {};
         return <React.Fragment>
             {renderReplyData()}
@@ -264,16 +266,13 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             <br/>
             {renderRepliesRecursive()}
         </React.Fragment>
-    };
-    if (!data.special) {
-        return renderDescription();
     }
     return <React.Fragment>
         <div className={"d-inline-flex my-2 text-black-75"}>
-            <CommentIcon specialType={data.specialType}/>
-            <div>
+            <UiAvatar roundedCircle className={"mr-3"} size={26} user={data.user} style={{minWidth: "26px"}}/>
+            <div style={{display: "flex", margin: "auto 0"}}>
                 <span>{parseComment(data.description, boardData.moderators, boardData.tags)}</span>
-                <small className={"ml-1 text-black-60"}><TimeAgo datetime={data.creationDate}/></small>
+                <small className={"ml-1 text-black-60 my-auto"}><TimeAgo datetime={data.creationDate}/></small>
             </div>
         </div>
         <br/>

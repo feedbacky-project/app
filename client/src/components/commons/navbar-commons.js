@@ -10,7 +10,6 @@ import {isServiceAdmin} from "utils/basic-utils";
 
 const LoginButton = styled(UiButton)`
   padding: .25rem .5rem;
-  color: var(--font-color);
   transition: var(--hover-transition);
   cursor: pointer;
   box-shadow: none;

@@ -21,6 +21,7 @@ const AddReactionOverlay = styled(UiClassicButton)`
   padding: .1rem .2rem;
   border-radius: var(--border-radius);
   transition: var(--hover-transition);
+  background-color: transparent;
 
   &:hover {
     background-color: hsla(0, 0%, 0%, .15) !important;

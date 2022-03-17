@@ -7,6 +7,7 @@ import {FaTags} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";
+import {UiFormSelect} from "ui/form";
 import {UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
 
@@ -37,35 +38,21 @@ const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const applyButton = <UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(tags).then(onHide)}>
         <FaExclamation className={"move-top-1px"}/> Update
     </UiLoadableButton>;
+    const onTagChange = changed => {
+        setTags(changed.map(option => allTags.find(t => t.id === option.value)));
+    }
     return <UiDismissibleModal id={"tagsUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
                 <IconContainer><GenericIcon as={FaTags}/></IconContainer>
                 <h3>Are you sure?</h3>
-                <div>
-                    Choose tags to add or remove and click Update to confirm.
-                    <TagsContainer>
-                        {allTags.map((tag, i) => {
-                            const update = () => {
-                                let newTags;
-                                if (tags.some(t => t.name === tag.name)) {
-                                    newTags = tags.filter(t => t.name !== tag.name);
-                                } else {
-                                    newTags = tags.concat(tag);
-                                }
-                                // https://stackoverflow.com/a/39225750/10156191
-                                setTimeout(() => setTags(newTags), 10);
-                            };
-                            //FIXME odd workaround for not working checkbox
-                            return <SelectableTag key={i} onClick={update} className={"d-inline-block"}>
-                                <UiLabelledCheckbox id={"applicableTag_" + tag.id} key={i} checked={tags.some(t => t.name === tag.name)} onChange={update}
-                                                    label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
-                            </SelectableTag>
-                        })}
-                        {/* for uneven amount of tags add a dummy div(s) for even flex stretch*/}
-                        {allTags.length % 3 === 1 || <SelectableTag/>}
-                        {allTags.length % 3 === 2 || <SelectableTag/>}
-                    </TagsContainer>
+                <div className={"text-left"}>
+                    <div className={"mb-2 text-center"}>Choose tags to add or remove and click Update to confirm.</div>
+                    <UiFormSelect name={"tagSelector"} value={tags.map(tag => ({value: tag.id, label: <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}))} isMulti options={allTags.map(tag => ({value: tag.id, label: <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}))}
+                                  onChange={onTagChange} placeholder={"Choose Tags"}
+                                  filterOption={(candidate, input) => {
+                                      return candidate.data.__isNew__ || allTags.find(t => t.id === candidate.value).name.toLowerCase().includes(input.toLowerCase());
+                                  }}/>
                 </div>
             </div>
         </UiRow>
