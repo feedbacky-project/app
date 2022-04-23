@@ -76,7 +76,7 @@ const CreateWebhookSubroute = () => {
         }
         setSettings({...settings, step: settings.step + 1});
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <UiContainer>
             <UiRow className={"mt-5"}>
                 <UiProgressBar currentStep={settings.step} steps={4}>

@@ -129,7 +129,7 @@ const WebhooksSubroute = () => {
     const onWebhookEdit = (webhook) => {
         setModal({open: true, type: "edit", data: webhook, dataName: ""});
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <DangerousActionModal id={"webhookDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "delete"} onAction={onWebhookDelete}
                               actionDescription={<div>Webhook <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u> and won't receive any future data.</div>} Icon={FaTrash}/>
         <WebhookUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "edit"} webhook={modal.data} onWebhookUpdate={onWebhookUpdate}/>

@@ -1,3 +1,6 @@
+### 1.0.0.RC.3
+* **[IMPROVEMENT]** Admin panel sidebar redesigned
+
 ### 1.0.0.RC.2
 * **[FEATURE]** Board and account deletion modals now contain checkboxes to agree that you delete board/account (requested by [Matou0014](https://app.feedbacky.net/i/hardened-board-deletion.4089))
 * **[FEATURE]** Comments can now receive replies

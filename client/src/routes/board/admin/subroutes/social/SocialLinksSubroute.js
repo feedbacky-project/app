@@ -108,7 +108,7 @@ const SocialLinksSubroute = () => {
             popupNotification("Social link deleted", getTheme());
         });
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <DangerousActionModal id={"socialDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onSocialLinkDelete} Icon={FaTrash}
                               actionDescription={<div>Social link <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u>.</div>}/>
         <UiViewBox title={"Social Links"} description={"Edit links visible at your board page here."}>

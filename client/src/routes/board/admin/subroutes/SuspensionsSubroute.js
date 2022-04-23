@@ -67,7 +67,7 @@ const SuspensionSettings = () => {
             updateState({...boardData, suspendedUsers: suspendedUsers});
         });
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <DangerousActionModal id={"suspensionDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onUnsuspension}
                               actionButtonName={"Unsuspend"} Icon={FaTrash}
                               actionDescription={<div>User <UiBadge>{modal.dataName}</UiBadge> will no longer be suspended and will be able to give feedback again.</div>}/>

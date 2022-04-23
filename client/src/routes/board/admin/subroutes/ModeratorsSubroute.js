@@ -190,7 +190,7 @@ const ModeratorsSubroute = () => {
             popupNotification("Demoted to moderator.", getTheme());
         });
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <ModeratorInviteModal onModInvitationSend={onModInvitationSend} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "invite"}/>
         <DangerousActionModal id={"inviteDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "inviteDelete"} onAction={onInvalidation}
                               actionDescription={<div>User won't be able to accept this invitation anymore.</div>} Icon={FaTrash}/>

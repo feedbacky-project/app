@@ -78,12 +78,12 @@ const GeneralSubroute = ({updateState}) => {
             <UiCol xs={12} lg={6}>
                 <UiFormLabel>Board Name</UiFormLabel>
                 <UiClickableTip id={"boardName"} title={"Set Board Name"} description={"Name of your board should be at least 4 and maximum 25 characters long."}/>
-                <UiCountableFormControl label={"Type board name"} id={"boardTextarea"} className={"bg-light"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={boardData.name}/>
+                <UiCountableFormControl key={boardData.name} label={"Type board name"} id={"boardTextarea"} className={"bg-light"} minLength={4} maxLength={25} placeholder={"Short name of board."} defaultValue={boardData.name}/>
             </UiCol>
             <UiCol xs={12} lg={6} className={"mt-lg-0 mt-2"}>
                 <UiFormLabel>Short Description</UiFormLabel>
                 <UiClickableTip id={"boardShortDescription"} title={"Set Short Description"} description={"Very short board description used for thumbnail purposes. Keep it under 50 characters long."}/>
-                <UiCountableFormControl label={"Type board short description"} id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
+                <UiCountableFormControl key={boardData.shortDescription} label={"Type board short description"} id={"shortDescrTextarea"} className={"bg-light"} minLength={10} maxLength={50} placeholder={"Short description of board."}
                                         defaultValue={htmlDecodeEntities(boardData.shortDescription)}/>
             </UiCol>
             <UiCol xs={12} lg={6} className={"mt-2"}>
@@ -95,7 +95,7 @@ const GeneralSubroute = ({updateState}) => {
                     <strong>Markdown Tips:</strong>
                     <br/><UiKeyboardInput><strong>**bold text**</strong></UiKeyboardInput> <UiKeyboardInput><i>*italic text*</i></UiKeyboardInput>
                 </React.Fragment>}/>
-                <UiMarkdownFormControl as={TextareaAutosize} label={"Type board description"} className={"bg-light"} minLength={10} maxLength={2500} rows={6}
+                <UiMarkdownFormControl key={boardData.fullDescription} as={TextareaAutosize} label={"Type board description"} className={"bg-light"} minLength={10} maxLength={2500} rows={6}
                                        maxRows={13} required placeholder={"Full and descriptive description of board (supports emojis and markdown)."}
                                        defaultValue={htmlDecodeEntities(boardData.fullDescription)} id={"fullDescrTextarea"} CustomOptions={CustomOptions}
                                        onChange={e => {
@@ -369,7 +369,7 @@ const GeneralSubroute = ({updateState}) => {
             setBannerInput(data);
         });
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <DangerousActionModal id={"apiReset"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "apiReset"} onAction={onApiKeyRegenerate}
                               actionDescription={<div>API key will be regenerated and you must update it anywhere you use it.</div>} actionButtonName={"Regenerate"}/>
         <DangerousActionModal id={"apiDisable"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "apiDisable"} onAction={onApiKeyDisable}

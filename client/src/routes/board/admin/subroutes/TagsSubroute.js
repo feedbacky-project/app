@@ -90,7 +90,7 @@ const TagsSubroute = () => {
             popupNotification("Tag deleted", getTheme());
         });
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <TagCreateModal isOpen={modal.open && modal.type === "new"} onTagCreate={onTagCreate} onHide={() => setModal({...modal, open: false})}/>
         <TagEditModal isOpen={modal.open && modal.type === "edit"} onHide={() => setModal({...modal, open: false})} tag={modal.data} onEdit={onEdit}/>
         <DangerousActionModal isOpen={modal.open && modal.type === "delete"} id={"tagDel"} onHide={() => setModal({...modal, open: false})} onAction={onTagDelete} Icon={FaTrash}

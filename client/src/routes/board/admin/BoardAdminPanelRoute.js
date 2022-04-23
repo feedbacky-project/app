@@ -42,7 +42,7 @@ const BoardAdminPanelRoute = () => {
             resolvePassedData();
         }
         // eslint-disable-next-line
-    }, []);
+    }, [id]);
 
     const resolvePassedData = () => {
         const state = location.state;
@@ -72,25 +72,26 @@ const BoardAdminPanelRoute = () => {
     const onReRoute = route => history.push({pathname: "/ba/" + board.data.discriminator + "/" + route, state: {_boardData: board.data}})
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onWarn} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
-            <PageNavbar selectedNode={"admin"} goBackVisible/>
-            <UiContainer>
-                <UiRow centered className={"pb-5"}>
-                    <AdminSidebar currentNode={currentNode} reRouteTo={onReRoute} data={board}/>
-                    <Suspense fallback={<UiCol xs={12} md={9}><UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow></UiCol>}>
-                        <Switch>
-                            <Route path={"/ba/:id/tags"} component={TagsSettings}/>
-                            <Route path={"/ba/:id/moderators"} component={ModeratorsSettings}/>
-                            <Route path={"/ba/:id/webhooks/create"} component={CreateWebhook}/>
-                            <Route path={"/ba/:id/webhooks"} component={WebhooksSettings}/>
-                            <Route path={"/ba/:id/social/create"} component={CreateSocialLink}/>
-                            <Route path={"/ba/:id/social"} component={SocialLinksSettings}/>
-                            <Route path={"/ba/:id/suspended"} component={SuspensionSettings}/>
-                            <Route path={"/ba/:id/general"} render={() => <GeneralSettings updateState={data => setBoard({...board, data})}/>}/>
-                            <Route render={() => <GeneralSettings updateState={data => setBoard({...board, data})}/>}/>
-                        </Switch>
-                    </Suspense>
-                </UiRow>
-            </UiContainer>
+            <AdminSidebar currentNode={currentNode} reRouteTo={onReRoute} data={board}>
+                <PageNavbar selectedNode={"admin"} goBackVisible/>
+                <UiContainer>
+                    <UiRow centered className={"pb-5"}>
+                        <Suspense fallback={<UiCol xs={12}><UiRow centered className={"mt-5 pt-5"}><UiLoadingSpinner/></UiRow></UiCol>}>
+                            <Switch>
+                                <Route path={"/ba/:id/tags"} component={TagsSettings}/>
+                                <Route path={"/ba/:id/moderators"} component={ModeratorsSettings}/>
+                                <Route path={"/ba/:id/webhooks/create"} component={CreateWebhook}/>
+                                <Route path={"/ba/:id/webhooks"} component={WebhooksSettings}/>
+                                <Route path={"/ba/:id/social/create"} component={CreateSocialLink}/>
+                                <Route path={"/ba/:id/social"} component={SocialLinksSettings}/>
+                                <Route path={"/ba/:id/suspended"} component={SuspensionSettings}/>
+                                <Route path={"/ba/:id/general"} render={() => <GeneralSettings updateState={data => setBoard({...board, data})}/>}/>
+                                <Route render={() => <GeneralSettings updateState={data => setBoard({...board, data})}/>}/>
+                            </Switch>
+                        </Suspense>
+                    </UiRow>
+                </UiContainer>
+            </AdminSidebar>
         </PageNodesContext.Provider>
     </BoardContextedRouteUtil>
 };

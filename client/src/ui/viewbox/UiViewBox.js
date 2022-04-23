@@ -13,14 +13,25 @@ const ViewBox = styled(UiCard)`
   padding: 1rem 1.5rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
+
+  @media (min-width: 576px) {
+    width: 60%;
+  }
 `;
 
 const TitleOverlayParent = styled.div`
   position: relative;
   top: 35px;
+  
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
+  @media (max-width: 576px) {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 const TitleOverlayChild = styled(UiCol)`
@@ -29,6 +40,10 @@ const TitleOverlayChild = styled(UiCol)`
   position: absolute;
   bottom: 0;
   background-color: var(--background);
+
+  @media (min-width: 576px) {
+    width: 60%;
+  }
 `;
 
 const ViewBoxContent = styled(UiRow)`
