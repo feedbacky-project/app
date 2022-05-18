@@ -87,6 +87,19 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         editorArea.value = val;
     }, [editor.enabled]);
 
+    const hasAnyVisibleChildren = (comment) => {
+        for(const c of comments) {
+            if(c.replyTo !== comment.id) {
+                continue;
+            }
+            if(c.user == null) {
+                return hasAnyVisibleChildren(c);
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
     const renderRepliesRecursive = () => {
         return comments.map(c => {
             if (c.replyTo != null && c.replyTo === data.id) {
@@ -99,7 +112,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     };
     //deleted comment is used for comment history purposes, should be only visible with a parent comment
     if (data.viewType === "DELETED") {
-        if (data.replyTo == null) {
+        if(!hasAnyVisibleChildren(data)) {
             return <React.Fragment/>
         }
         return <React.Fragment>
@@ -113,7 +126,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     }
     //internal comment with limited visibility is used for comment history purposes
     if (data.viewType === "INTERNAL" && data.user == null) {
-        if (data.replyTo == null) {
+        if(!hasAnyVisibleChildren(data)) {
             return <React.Fragment/>
         }
         return <React.Fragment>
