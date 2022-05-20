@@ -1,5 +1,6 @@
 ### 1.0.0.RC.3
 * **[IMPROVEMENT]** Admin panel sidebar redesigned
+* **[CHORE]** Update client-side dependencies to remove vulnerabilities
 * **[FIX]** Show visible replies with not visible parent comments
 
 ### 1.0.0.RC.2
