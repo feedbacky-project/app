@@ -17,6 +17,7 @@ import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.service.ServiceUser;
+import net.feedbacky.app.service.board.integration.IntegrationService;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.mailservice.MailBuilder;
@@ -56,14 +57,17 @@ public class BoardServiceImpl implements BoardService {
   private final ObjectStorage objectStorage;
   private final MailHandler mailHandler;
   private final TriggerExecutor triggerExecutor;
+  private final IntegrationService integrationService;
 
   @Autowired
-  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ObjectStorage objectStorage, MailHandler mailHandler, TriggerExecutor triggerExecutor) {
+  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ObjectStorage objectStorage, MailHandler mailHandler,
+                          TriggerExecutor triggerExecutor, IntegrationService integrationService) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.objectStorage = objectStorage;
     this.mailHandler = mailHandler;
     this.triggerExecutor = triggerExecutor;
+    this.integrationService = integrationService;
   }
 
   @Override
@@ -206,6 +210,7 @@ public class BoardServiceImpl implements BoardService {
       modUser.getPermissions().remove(moderator);
       userRepository.save(modUser);
     });
+    board.getIntegrations().forEach(i -> integrationService.delete(i.getId()));
     board.getSocialLinks().forEach(link -> objectStorage.deleteImage(link.getLogoUrl()));
     board.getIdeas().forEach(idea -> idea.getAttachments().forEach(attachment -> objectStorage.deleteImage(attachment.getUrl())));
     objectStorage.deleteImage(board.getBanner());
