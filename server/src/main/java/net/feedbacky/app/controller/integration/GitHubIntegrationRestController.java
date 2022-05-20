@@ -1,0 +1,250 @@
+package net.feedbacky.app.controller.integration;
+
+import lombok.SneakyThrows;
+import net.feedbacky.app.config.UserAuthenticationToken;
+import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.integration.Integration;
+import net.feedbacky.app.data.board.integration.IntegrationType;
+import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.user.MailPreferences;
+import net.feedbacky.app.data.user.User;
+import net.feedbacky.app.exception.FeedbackyRestException;
+import net.feedbacky.app.exception.types.InsufficientPermissionsException;
+import net.feedbacky.app.exception.types.InvalidAuthenticationException;
+import net.feedbacky.app.exception.types.ResourceNotFoundException;
+import net.feedbacky.app.login.LoginProvider;
+import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.repository.board.BoardRepository;
+import net.feedbacky.app.repository.board.IntegrationRepository;
+import net.feedbacky.app.repository.idea.CommentRepository;
+import net.feedbacky.app.repository.idea.IdeaRepository;
+import net.feedbacky.app.service.ServiceUser;
+import net.feedbacky.app.util.CommentBuilder;
+import net.feedbacky.app.util.WebConnectionUtils;
+import net.feedbacky.app.util.jwt.GitHubTokenBuilder;
+import net.feedbacky.app.util.request.InternalRequestValidator;
+
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.kohsuke.github.GHAppInstallationToken;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * @author Plajer
+ * <p>
+ * Created at 20.05.2022
+ */
+@CrossOrigin
+@RestController
+public class GitHubIntegrationRestController {
+
+  private final UserRepository userRepository;
+  private final IdeaRepository ideaRepository;
+  private final CommentRepository commentRepository;
+  private final BoardRepository boardRepository;
+  private final IntegrationRepository integrationRepository;
+
+  @Autowired
+  public GitHubIntegrationRestController(UserRepository userRepository, IdeaRepository ideaRepository, CommentRepository commentRepository, BoardRepository boardRepository, IntegrationRepository integrationRepository) {
+    this.userRepository = userRepository;
+    this.ideaRepository = ideaRepository;
+    this.commentRepository = commentRepository;
+    this.boardRepository = boardRepository;
+    this.integrationRepository = integrationRepository;
+  }
+
+  @GetMapping("v1/integration/github")
+  public ResponseEntity handleIntegration(@RequestParam(name = "code") String code, @RequestParam(name = "state") String state,
+                                          @RequestParam(name = "installation_id") long installationId) throws IOException {
+    String content = "client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&redirect_uri={REDIRECT_URI}&code={CODE}&grant_type=authorization_code";
+    content = StringUtils.replace(content, "{CLIENT_ID}", System.getenv("INTEGRATION_GITHUB_CLIENT_ID"));
+    content = StringUtils.replace(content, "{CLIENT_SECRET}", System.getenv("INTEGRATION_GITHUB_CLIENT_SECRET"));
+    content = StringUtils.replace(content, "{REDIRECT_URI}", URLEncoder.encode(System.getenv("INTEGRATION_GITHUB_REDIRECT_URI"), "UTF-8"));
+    content = StringUtils.replace(content, "{CODE}", code);
+    String accessToken = WebConnectionUtils.getAccessToken("https://github.com/login/oauth/access_token", content);
+
+    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
+    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
+            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    Board board = boardRepository.findByDiscriminator(state, EntityGraphs.named("Board.fetch"))
+            .orElseThrow(() -> new ResourceNotFoundException((MessageFormat.format("Board {0} not found.", state))));
+    if(!board.getCreator().equals(user)) {
+      throw new InsufficientPermissionsException(MessageFormat.format("You do not own board {0}", state));
+    }
+    if(integrationRepository.findByBoard(board).stream().anyMatch(i -> i.getType() == IntegrationType.GITHUB)) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Integration with GitHub is already enabled.");
+    }
+
+    GitHub gitHub = new GitHubBuilder().withJwtToken(GitHubTokenBuilder.generateTemporalJwtToken().getToken()).build();
+    GHAppInstallationToken appToken = gitHub.getApp().getInstallationById(installationId).createToken().create();
+    Integration integration = new Integration();
+    integration.setBoard(board);
+    integration.setType(IntegrationType.GITHUB);
+    integration.setApiKey(accessToken);
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("enabled", false);
+    jsonObject.addProperty("installation_id", String.valueOf(installationId));
+    JsonArray array = new JsonArray();
+    for(String fullName : getRepositoriesForToken(appToken.getToken())) {
+      array.add(fullName);
+    }
+    jsonObject.add("applicable_repositories", array);
+    integration.setData(jsonObject.toString());
+    integrationRepository.save(integration);
+    return ResponseEntity.ok().build();
+  }
+
+  @SneakyThrows
+  private List<String> getRepositoriesForToken(String token) {
+    URL url = new URL("https://api.github.com/installation/repositories");
+    HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+    conn.setRequestProperty("User-Agent", LoginProvider.USER_AGENT);
+    conn.setRequestProperty("Content-Type", "application/json");
+    conn.setRequestProperty("Authorization", "Bearer " + token);
+    conn.setDoOutput(true);
+
+    Map<String, Object> responseData = new ObjectMapper().readValue(WebConnectionUtils.getResponse(conn.getInputStream()), Map.class);
+    conn.disconnect();
+    List<String> repositories = new ArrayList<>();
+    for(Map<String, Object> data : (List<Map<String, Object>>) responseData.get("repositories")) {
+      repositories.add((String) data.get("full_name"));
+    }
+    return repositories;
+  }
+
+  @PostMapping("v1/integration/github/dataCallback")
+  public ResponseEntity handleWebhookData(@RequestBody String body, @RequestHeader(name = "X-GitHub-Event") String eventType) {
+    //ignored
+    if(!eventType.equals("issues") && !eventType.equals("issue_comment")) {
+      return ResponseEntity.ok().build();
+    }
+
+    ObjectMapper mapper = new ObjectMapper();
+    TypeReference<Map<String, Object>> ref = new TypeReference<Map<String, Object>>() {};
+    try {
+      Map<String, Object> data = mapper.readValue(body, ref);
+      String action = (String) data.get("action");
+
+      Map<String, Object> senderData = (Map<String, Object>) data.get("sender");
+      long githubId = Long.parseLong(String.valueOf(senderData.get("id")));
+      String username = String.valueOf(senderData.get("login"));
+      String avatar = String.valueOf(senderData.get("avatar_url"));
+
+      Map<String, Object> issueData = (Map<String, Object>) data.get("issue");
+      long issueId = Long.parseLong(String.valueOf(issueData.get("id")));
+      Idea idea = ideaRepository.findByMetadataContaining("\"integration_github_issue_id\":\"" + issueId + "\"")
+              .orElseThrow(() -> new ResourceNotFoundException("No linked idea matches the criteria."));
+      User user = userRepository.findByIntegrationAccount("github", String.valueOf(githubId))
+              .orElse(getOrCreateUser(username, avatar, githubId, idea.getBoard()));
+
+      Comment comment = null;
+      CommentBuilder builder = new CommentBuilder().of(idea).by(user);
+      if(eventType.equals("issue_comment")) {
+        //only sync created comments
+        if(!action.equals("created")) {
+          return ResponseEntity.ok().build();
+        }
+        Map<String, Object> commentData = (Map<String, Object>) data.get("comment");
+        //if not null then comment was passed from feedbacky, do not create reply loop
+        if(commentData.get("performed_via_github_app") != null) {
+          return ResponseEntity.ok().build();
+        }
+        String commentBody = String.valueOf(commentData.get("body"));
+        comment = new Comment();
+        comment.setDescription(commentBody);
+        comment.setIdea(idea);
+        comment.setCreator(user);
+        comment.setSpecialType(Comment.SpecialType.LEGACY);
+        comment.setViewType(Comment.ViewType.PUBLIC);
+      } else {
+        switch(action) {
+          case "reopened":
+          case "opened":
+            builder = builder.type(Comment.SpecialType.IDEA_OPENED).placeholders(user.convertToSpecialCommentMention());
+            idea.setStatus(Idea.IdeaStatus.OPENED);
+            break;
+          case "closed":
+            builder = builder.type(Comment.SpecialType.IDEA_CLOSED).placeholders(user.convertToSpecialCommentMention());
+            idea.setStatus(Idea.IdeaStatus.CLOSED);
+            break;
+          case "locked":
+            builder = builder.type(Comment.SpecialType.COMMENTS_RESTRICTED).placeholders(user.convertToSpecialCommentMention());
+            idea.setCommentingRestricted(true);
+            break;
+          case "unlocked":
+            builder = builder.type(Comment.SpecialType.COMMENTS_ALLOWED).placeholders(user.convertToSpecialCommentMention());
+            idea.setCommentingRestricted(false);
+            break;
+          case "pinned":
+            builder = builder.type(Comment.SpecialType.IDEA_PINNED).placeholders(user.convertToSpecialCommentMention());
+            idea.setPinned(true);
+            break;
+          case "unpinned":
+            builder = builder.type(Comment.SpecialType.IDEA_UNPINNED).placeholders(user.convertToSpecialCommentMention());
+            idea.setPinned(false);
+            break;
+          default:
+            throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Unsupported event.");
+        }
+      }
+      if(comment == null) {
+        comment = builder.metadata(Comment.CommentMetadata.POSTED_VIA, "GitHub").build();
+      }
+      commentRepository.save(comment);
+      ideaRepository.save(idea);
+      return ResponseEntity.ok().build();
+    } catch(JsonProcessingException e) {
+      e.printStackTrace();
+      throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Data read failure.");
+    }
+  }
+
+  private User getOrCreateUser(String username, String avatar, long id, Board board) {
+    Optional<User> optional = userRepository.findByToken(board.getId() + "-GHI-" + id);
+    if(optional.isPresent()) {
+      return optional.get();
+    }
+    User user = new User();
+    user.setUsername(username);
+    user.setAvatar(avatar);
+    user.setFake(true);
+    user.setToken(board.getId() + "-GHI-" + id);
+    MailPreferences preferences = new MailPreferences();
+    preferences.setNotificationsEnabled(false);
+    preferences.setUser(user);
+    user.setMailPreferences(preferences);
+    user.setConnectedAccounts(new HashSet<>());
+    return userRepository.save(user);
+  }
+
+}

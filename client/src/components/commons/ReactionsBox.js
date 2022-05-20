@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import LoadableReaction from "components/commons/LoadableReaction";
 import {AppContext} from "context";
 import React, {useContext} from "react";
-import {MdOutlineAddReaction} from "react-icons/all";
+import {MdOutlineAddReaction} from "react-icons/md";
 import {UiTooltip} from "ui";
 import {UiClassicButton} from "ui/button";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
@@ -107,7 +107,7 @@ const ReactionsBox = ({className = null, parentObjectId, reactionsData, onReact,
         </ReactionContainer>
         {
             moreReactionsToAdd &&
-            <UiDropdown label={"Reactions"} className={"d-inline-block"} toggleClassName={"p-0"} toggle={<AddReactionOverlay><AddReaction/></AddReactionOverlay>} menuStyle={{minWidth: "6.5rem"}}>
+            <UiDropdown label={"Reactions"} className={"d-inline-block"} toggleClassName={"p-0"} toggle={<AddReactionOverlay label={"React"}><AddReaction/></AddReactionOverlay>} menuStyle={{minWidth: "6.5rem"}}>
                 <ReactionTitle>Pick a Reaction</ReactionTitle>
                 {serviceData.emojisData.map(emote => {
                     let reactions = reactionsData.filter(r => r.reactionId === emote.id) || [];

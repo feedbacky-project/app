@@ -9,6 +9,7 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
+import net.feedbacky.app.data.trigger.ActionTrigger;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -77,8 +78,6 @@ public class WebhookServiceImpl implements WebhookService {
     webhook = webhookRepository.save(webhook);
     board.getWebhooks().add(webhook);
     boardRepository.save(board);
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user);
-    webhookExecutor.executeWebhook(webhook, Webhook.Event.SAMPLE_EVENT, builder.build());
     return ResponseEntity.status(HttpStatus.CREATED).body(webhook.toDto());
   }
 
@@ -93,15 +92,15 @@ public class WebhookServiceImpl implements WebhookService {
     Board board = webhook.getBoard();
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     webhook.setUrl(dto.getUrl());
-    List<Webhook.Event> webhookEvents = new ArrayList<>();
-    for(String event : dto.getEvents()) {
+    List<ActionTrigger.Trigger> triggers = new ArrayList<>();
+    for(String event : dto.getTriggers()) {
       try {
-        webhookEvents.add(Webhook.Event.valueOf(event));
+        triggers.add(ActionTrigger.Trigger.valueOf(event));
       } catch(Exception ex) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid webhook event '" + event + "'.");
+        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid webhook trigger '" + event + "'.");
       }
     }
-    webhook.setEvents(webhookEvents);
+    webhook.setTriggers(triggers);
     webhook = webhookRepository.save(webhook);
     return webhook.toDto();
   }

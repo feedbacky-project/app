@@ -7,7 +7,7 @@ import MentionableForm from "components/idea/discussion/MentionableForm";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
-import {FaCommentSlash, FaLowVision, FaPen, FaReply, FaReplyAll, FaTrashAlt, FaUserLock} from "react-icons/all";
+import {FaCommentSlash, FaLowVision, FaPen, FaReply, FaReplyAll, FaTrashAlt, FaUserLock} from "react-icons/fa";
 import TimeAgo from "timeago-react";
 import {UiClassicIcon, UiHoverableIcon, UiPrettyUsername, UiThemeContext, UiTooltip} from "ui";
 import {UiCancelButton, UiClassicButton, UiLoadableButton} from "ui/button";
@@ -171,6 +171,12 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             <small style={{fontWeight: "bold"}}><UiPrettyUsername user={data.user}/></small>
         </React.Fragment>
     };
+    const renderReplyVia = () => {
+        if(data.metadata.via) {
+            return <small className={"ml-1 text-black-60 my-auto"}>via {data.metadata.via}</small>
+        }
+        return <React.Fragment/>
+    };
     const renderEditButton = () => {
         if (data.user.id !== user.data.id) {
             return;
@@ -259,6 +265,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                 <UiAvatar roundedCircle className={"mr-3 mt-2"} size={26} user={data.user} style={{minWidth: "26px"}}/>
                 <div style={{width: "100%"}}>
                     {renderCommentUsername()}
+                    {renderReplyVia()}
                     <small className={"text-black-60"}> · <TimeAgo datetime={data.creationDate}/></small>
                     {!data.edited || <small className={"text-black-60"}> · edited</small>}
                     {renderEditButton()}
@@ -285,7 +292,8 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             <UiAvatar roundedCircle className={"mr-3"} size={26} user={data.user} style={{minWidth: "26px"}}/>
             <div style={{display: "flex", margin: "auto 0"}}>
                 <span>{parseComment(data.description, boardData.moderators, boardData.tags)}</span>
-                <small className={"ml-1 text-black-60 my-auto"}><TimeAgo datetime={data.creationDate}/></small>
+                {renderReplyVia()}
+                <small className={"ml-1 text-black-60 my-auto"}> · <TimeAgo datetime={data.creationDate}/></small>
             </div>
         </div>
         <br/>

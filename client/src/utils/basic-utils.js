@@ -146,6 +146,16 @@ export const formatRemainingCharacters = (remainingId, textareaId, limit) => {
     element.innerText = limit - textarea.value.length + " Remaining";
 };
 
+export const prettifyTrigger = (category, trigger) => {
+    //remove unnecessary 'Integration' word
+    let placeholder = trigger.replace("INTEGRATION_", "");
+    //truncate 'Board' word for moderator and suspension only related triggers
+    if(category === "moderator" || category === "suspendedUser") {
+        placeholder = placeholder.replace("BOARD_", "");
+    }
+    return prettifyEnum(placeholder);
+};
+
 export const prettifyEnum = (text) => {
     let newText = "";
     let splitted = text.toLowerCase().split("_");

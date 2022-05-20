@@ -9,6 +9,9 @@ import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.dto.moderator.PatchModeratorDto;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InsufficientPermissionsException;
@@ -51,15 +54,17 @@ public class ModeratorServiceImpl implements ModeratorService {
   private final UserRepository userRepository;
   private final InvitationRepository invitationRepository;
   private final MailHandler mailHandler;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
   public ModeratorServiceImpl(BoardRepository boardRepository, ModeratorRepository moderatorRepository, UserRepository userRepository,
-                              InvitationRepository invitationRepository, MailHandler mailHandler) {
+                              InvitationRepository invitationRepository, MailHandler mailHandler, TriggerExecutor triggerExecutor) {
     this.boardRepository = boardRepository;
     this.moderatorRepository = moderatorRepository;
     this.userRepository = userRepository;
     this.invitationRepository = invitationRepository;
     this.mailHandler = mailHandler;
+    this.triggerExecutor = triggerExecutor;
   }
 
   @Override
@@ -87,6 +92,14 @@ public class ModeratorServiceImpl implements ModeratorService {
     board.getModerators().add(moderator);
     board = boardRepository.save(board);
     invitationRepository.delete(invitation);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.BOARD_MODERATOR_ADDED)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(board, moderator)
+            .build()
+    );
     return board.toDto();
   }
 
@@ -131,6 +144,24 @@ public class ModeratorServiceImpl implements ModeratorService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Moderator with id {0} not found.", dto.getUserId()));
     }
     Moderator moderator = optional.get();
+    //promoted to higher role, else demoted
+    if(moderator.getRole().getId() > Moderator.Role.valueOf(dto.getRole().toUpperCase()).getId()) {
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.BOARD_MODERATOR_PROMOTED)
+              .withBoard(board)
+              .withTriggerer(user)
+              .withRelatedObjects(board, moderator)
+              .build()
+      );
+    } else {
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.BOARD_MODERATOR_DEMOTED)
+              .withBoard(board)
+              .withTriggerer(user)
+              .withRelatedObjects(board, moderator)
+              .build()
+      );
+    }
     moderator.setRole(Moderator.Role.valueOf(dto.getRole().toUpperCase()));
     moderator = moderatorRepository.save(moderator);
     return moderator.toDto();
@@ -171,6 +202,13 @@ public class ModeratorServiceImpl implements ModeratorService {
       throw new InsufficientPermissionsException("Insufficient permissions, same permission type.");
     }
     Moderator moderator = optional.get();
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.BOARD_MODERATOR_REMOVED)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(board, moderator)
+            .build()
+    );
     board.getModerators().remove(moderator);
     moderator.setBoard(null);
     moderatorRepository.deleteInBatch(Collections.singletonList(moderator));

@@ -5,6 +5,7 @@ import net.feedbacky.app.data.user.User;
 import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +30,10 @@ public interface UserRepository extends EntityGraphJpaRepository<User, Long> {
   Optional<User> findByToken(String token);
 
   List<User> findByServiceStaffTrue();
+
+  @org.springframework.data.jpa.repository.EntityGraph(value = "User.fetch")
+  @Query("SELECT u FROM User u JOIN u.connectedAccounts conn WHERE conn.provider = ?1 AND conn.accountId = ?2")
+  Optional<User> findByIntegrationAccount(String provider, String accountId);
 
 }
 

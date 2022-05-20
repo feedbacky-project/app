@@ -4,8 +4,7 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import SafeAnchor from "components/commons/SafeAnchor";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useState} from "react";
-import {FaUpload} from "react-icons/all";
-import {FaTrash} from "react-icons/fa";
+import {FaTrash, FaUpload} from "react-icons/fa";
 import {UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiImage} from "ui/image";

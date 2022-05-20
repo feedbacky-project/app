@@ -4,7 +4,7 @@ import ProfileNavbar from "components/profile/ProfileNavbar";
 import ProfileSidebar from "components/profile/ProfileSidebar";
 import {PageNodesContext} from "context";
 import React, {lazy, Suspense, useContext, useEffect, useState} from "react";
-import {FaExclamationCircle} from "react-icons/all";
+import {FaExclamationCircle} from "react-icons/fa";
 import {Route, Switch, useHistory, useLocation} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import {UiLoadingSpinner, UiThemeContext} from "ui";

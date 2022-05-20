@@ -5,7 +5,7 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import {DropdownOption, IconToggle} from "components/commons/ModeratorActionsButton";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
-import {FaEdit, FaTrash} from "react-icons/all";
+import {FaEdit, FaTrash} from "react-icons/fa";
 import {UiThemeContext} from "ui";
 import {UiDropdown} from "ui/dropdown";
 import {UiAvatar} from "ui/image";

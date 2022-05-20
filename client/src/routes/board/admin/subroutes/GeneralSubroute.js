@@ -9,7 +9,7 @@ import UploadIconBox from "components/commons/UploadIconBox";
 import {AppContext, BoardContext, PageNodesContext} from "context";
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
-import {FaEllipsisH, FaEyeSlash} from "react-icons/all";
+import {FaEllipsisH, FaEyeSlash} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiKeyboardInput, UiLoadingSpinner, UiThemeContext} from "ui";

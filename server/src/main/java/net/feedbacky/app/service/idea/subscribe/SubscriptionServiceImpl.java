@@ -2,6 +2,9 @@ package net.feedbacky.app.service.idea.subscribe;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
@@ -33,11 +36,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
   private final IdeaRepository ideaRepository;
   private final UserRepository userRepository;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
-  public SubscriptionServiceImpl(IdeaRepository ideaRepository, UserRepository userRepository) {
+  public SubscriptionServiceImpl(IdeaRepository ideaRepository, UserRepository userRepository, TriggerExecutor triggerExecutor) {
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
+    this.triggerExecutor = triggerExecutor;
   }
 
   @Override
@@ -52,6 +57,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     subscribers.add(user);
     idea.setSubscribers(subscribers);
     ideaRepository.save(idea);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_SUBSCRIBE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     return user.toDto();
   }
 
@@ -67,6 +80,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     subscribers.remove(user);
     idea.setSubscribers(subscribers);
     ideaRepository.save(idea);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_UNSUBSCRIBE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     //no need to expose
     return ResponseEntity.noContent().build();
   }

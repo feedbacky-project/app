@@ -2,8 +2,7 @@ import UndrawCreateProject from "assets/svg/undraw/create_project.svg";
 import SetupCard, {SetupCardIcon} from "components/board/admin/SetupCard";
 import SetupImageBanner from "components/board/admin/SetupImageBanner";
 import React from 'react';
-import {FaFileUpload} from "react-icons/all";
-import {FaDiscord, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
+import {FaDiscord, FaFileUpload, FaGithub, FaGlobe, FaPatreon, FaYoutube} from "react-icons/fa";
 import {UiCol, UiRow} from "ui/grid";
 import {getBase64FromFile, validateImageWithWarning} from "utils/basic-utils";
 

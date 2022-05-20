@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React, {useContext} from "react";
-import {FaUserSecret} from "react-icons/all";
+import {FaUserSecret} from "react-icons/fa";
 import {UiPrettyUsername, UiThemeContext, UiTooltip} from "ui";
 import {UiCancelButton} from "ui/button";
 import {UiFormLabel} from "ui/form";

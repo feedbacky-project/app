@@ -6,9 +6,10 @@ import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.types.LoginFailedException;
-import net.feedbacky.app.data.login.LoginProvider;
-import net.feedbacky.app.data.login.LoginProviderRegistry;
+import net.feedbacky.app.login.LoginProvider;
+import net.feedbacky.app.login.LoginProviderRegistry;
 import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.util.WebConnectionUtils;
 import net.feedbacky.app.util.jwt.JwtToken;
 import net.feedbacky.app.util.jwt.JwtTokenBuilder;
 import net.feedbacky.app.util.mailservice.MailBuilder;
@@ -93,30 +94,12 @@ public class LoginServiceImpl implements LoginService {
     if(!loginProvider.isEnabled()) {
       throw new LoginFailedException("Sign in with '" + loginProvider.getProviderData().getName() + "' is disabled.");
     }
-    URL url = new URL(loginProvider.getOauthDetails().getTokenUrl());
-    HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("User-Agent", LoginProvider.USER_AGENT);
-    conn.setRequestProperty("Accept", "application/json");
-    conn.setDoOutput(true);
-
-    OutputStream os = conn.getOutputStream();
     String content = "client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&redirect_uri={REDIRECT_URI}&code={CODE}&grant_type=authorization_code";
     content = StringUtils.replace(content, "{CLIENT_ID}", loginProvider.getEnvironmentVariables().getClientId());
     content = StringUtils.replace(content, "{CLIENT_SECRET}", loginProvider.getEnvironmentVariables().getClientSecret());
     content = StringUtils.replace(content, "{REDIRECT_URI}", URLEncoder.encode(loginProvider.getEnvironmentVariables().getRedirectUri(), "UTF-8"));
     content = StringUtils.replace(content, "{CODE}", code);
-    os.write(content.getBytes(StandardCharsets.UTF_8));
-    os.flush();
-    os.close();
-
-    int responseCode = conn.getResponseCode();
-    if(responseCode != HttpURLConnection.HTTP_OK) {
-      throw new LoginFailedException("Failed to sign in with '" + loginProvider.getProviderData().getName() + "' ! Code: " + responseCode + ". Message: " + conn.getResponseMessage());
-    }
-    Map<String, String> tokenData = new ObjectMapper().readValue(getResponse(conn.getInputStream()), Map.class);
-    conn.disconnect();
-    String token = tokenData.get("access_token");
+    String token = WebConnectionUtils.getAccessToken(loginProvider.getOauthDetails().getTokenUrl(), content);
     return ResponseEntity.ok().body(generateAccessData(connectToProviderAsUser(loginProvider, token)));
   }
 
@@ -138,7 +121,7 @@ public class LoginServiceImpl implements LoginService {
     conn.setRequestProperty("Authorization", authorization);
     conn.setDoOutput(true);
 
-    Map<String, Object> responseData = new ObjectMapper().readValue(getResponse(conn.getInputStream()), Map.class);
+    Map<String, Object> responseData = new ObjectMapper().readValue(WebConnectionUtils.getResponse(conn.getInputStream()), Map.class);
     conn.disconnect();
     if(responseData.get(provider.getOauthDetails().getDataFields().getEmail()) == null) {
       throw new LoginFailedException("Email address not found, please contact administrator if you think it's an error.");
@@ -160,17 +143,6 @@ public class LoginServiceImpl implements LoginService {
     User user = getOrCreateUser((String) responseData.get(fields.getEmail()), (String) responseData.get(fields.getUsername()), avatar);
     user = updateConnectedAccounts(responseData, provider, user);
     return user;
-  }
-
-  private String getResponse(InputStream inputStream) throws IOException {
-    BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-    String inputLine;
-    StringBuilder response = new StringBuilder();
-    while((inputLine = in.readLine()) != null) {
-      response.append(inputLine);
-    }
-    in.close();
-    return response.toString();
   }
 
   private User updateConnectedAccounts(Map<String, Object> data, LoginProvider provider, User user) {

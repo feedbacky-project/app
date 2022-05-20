@@ -4,6 +4,7 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import VoteButton from "components/commons/VoteButton";
 import AssigneeInfo from "components/idea/info/AssigneeInfo";
 import AttachmentsInfo from "components/idea/info/AttachmentsInfo";
+import MetadataInfo from "components/idea/info/MetadataInfo";
 import NotificationsInfo from "components/idea/info/NotificationsInfo";
 import TagsInfo from "components/idea/info/TagsInfo";
 import TitleInfo from "components/idea/info/TitleInfo";
@@ -124,6 +125,7 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
             <AttachmentsInfo editor={editor} onAttachmentUpdate={(data) => setUpdatedAttachment(data)}/>
             <AssigneeInfo/>
             <NotificationsInfo/>
+            <MetadataInfo/>
             <ShareBoxAlignment><ShareBox/></ShareBoxAlignment>
         </UiCol>
     </React.Fragment>

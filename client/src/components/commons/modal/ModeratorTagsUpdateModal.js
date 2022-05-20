@@ -1,31 +1,13 @@
-import styled from "@emotion/styled";
 import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaExclamation} from "react-icons/all";
-import {FaTags} from "react-icons/fa";
+import {FaExclamation, FaTags} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiLabelledCheckbox} from "ui";
+import {UiBadge} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {UiFormSelect} from "ui/form";
 import {UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
-
-const TagsContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: stretch;
-  text-align: left;
-  margin-top: .25rem;
-`;
-
-const SelectableTag = styled.div`
-  width: 130px;
-  flex-grow: 1;
-  display: inline-block;
-  margin-right: .5rem;
-  cursor: pointer;
-`;
 
 const ModeratorTagsUpdateModal = ({isOpen, onHide, onAction}) => {
     const {data: boardData} = useContext(BoardContext);

@@ -16,6 +16,9 @@ import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.idea.dto.comment.reaction.PostCommentReactionDto;
 import net.feedbacky.app.data.idea.subscribe.NotificationEvent;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InsufficientPermissionsException;
@@ -68,18 +71,18 @@ public class CommentServiceImpl implements CommentService {
   private final IdeaRepository ideaRepository;
   private final UserRepository userRepository;
   private final SubscriptionExecutor subscriptionExecutor;
-  private final WebhookExecutor webhookExecutor;
+  private final TriggerExecutor triggerExecutor;
   private final EmojiDataRegistry emojiDataRegistry;
   private final Pattern mentionPattern = Pattern.compile("(@[{a-zA-Z0-9_-}{^A-Za-z0-9 \\n}]+#[0-9]+)");
 
   @Autowired
   public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor,
-                            WebhookExecutor webhookExecutor, EmojiDataRegistry emojiDataRegistry) {
+                            TriggerExecutor triggerExecutor, EmojiDataRegistry emojiDataRegistry) {
     this.commentRepository = commentRepository;
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
     this.subscriptionExecutor = subscriptionExecutor;
-    this.webhookExecutor = webhookExecutor;
+    this.triggerExecutor = triggerExecutor;
     this.emojiDataRegistry = emojiDataRegistry;
   }
 
@@ -168,18 +171,22 @@ public class CommentServiceImpl implements CommentService {
     idea.setComments(comments);
     ideaRepository.save(idea);
 
-    notifyWebhooksAndSubscribers(comment, idea, isModerator);
+    notifyWebhooksAndSubscribers(comment, idea, user, isModerator);
     parseMentions(comment, idea, isReply);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(comment.toDto());
   }
 
-  private void notifyWebhooksAndSubscribers(Comment comment, Idea idea, boolean isModerator) {
+  private void notifyWebhooksAndSubscribers(Comment comment, Idea idea, User user, boolean isModerator) {
     //do not publish information about private internal comments
     if(comment.getViewType() != Comment.ViewType.INTERNAL) {
-      WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(comment.getCreator()).withIdea(idea).withComment(comment);
-      webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT, webhookBuilder.build());
-
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.COMMENT_CREATE)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(comment)
+              .build()
+      );
       //notify only if moderator
       if(isModerator) {
         subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, comment.getCreator(),
@@ -230,6 +237,14 @@ public class CommentServiceImpl implements CommentService {
     comment.getReactions().add(reaction);
     commentRepository.save(comment);
     reaction = comment.getReactions().stream().filter(r -> r.getReactionId().equals(dto.getReactionId()) && r.getUser().equals(user)).findFirst().get();
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_REACT)
+            .withBoard(comment.getIdea().getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment, reaction)
+            .build()
+    );
     return reaction.toDto();
   }
 
@@ -253,6 +268,14 @@ public class CommentServiceImpl implements CommentService {
 
     comment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(comment.getDescription())));
     comment = commentRepository.save(comment);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_EDIT)
+            .withBoard(comment.getIdea().getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment)
+            .build()
+    );
     return comment.toDto();
   }
 
@@ -266,7 +289,14 @@ public class CommentServiceImpl implements CommentService {
     }
     WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     Idea idea = comment.getIdea();
-    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_DELETE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment)
+            .build()
+    );
+
     comment.setViewType(Comment.ViewType.DELETED);
     comment.setCreator(null);
     comment.setDescription("");
@@ -293,6 +323,14 @@ public class CommentServiceImpl implements CommentService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet reacted.");
     }
     CommentReaction reaction = optional.get();
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_UNREACT)
+            .withBoard(comment.getIdea().getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment, reaction)
+            .build()
+    );
     comment.getReactions().remove(reaction);
     reaction.setComment(null);
     commentRepository.save(comment);

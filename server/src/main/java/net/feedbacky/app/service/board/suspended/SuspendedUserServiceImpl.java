@@ -6,6 +6,9 @@ import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
 import net.feedbacky.app.data.board.dto.suspended.PostSuspendedUserDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.suspended.SuspendedUser;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -36,12 +39,15 @@ public class SuspendedUserServiceImpl implements SuspendedUserService {
   private final BoardRepository boardRepository;
   private final SuspendedUserRepository suspendedUserRepository;
   private final UserRepository userRepository;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
-  public SuspendedUserServiceImpl(BoardRepository boardRepository, SuspendedUserRepository suspendedUserRepository, UserRepository userRepository) {
+  public SuspendedUserServiceImpl(BoardRepository boardRepository, SuspendedUserRepository suspendedUserRepository,
+                                  UserRepository userRepository, TriggerExecutor triggerExecutor) {
     this.boardRepository = boardRepository;
     this.suspendedUserRepository = suspendedUserRepository;
     this.userRepository = userRepository;
+    this.triggerExecutor = triggerExecutor;
   }
 
   @Override
@@ -63,6 +69,14 @@ public class SuspendedUserServiceImpl implements SuspendedUserService {
     suspendedUser = suspendedUserRepository.save(suspendedUser);
     board.getSuspensedList().add(suspendedUser);
     boardRepository.save(board);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.BOARD_USER_SUSPENSION)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(board, suspendedUser)
+            .build()
+    );
     return ResponseEntity.status(HttpStatus.CREATED).body(suspendedUser.toDto());
   }
 
@@ -74,6 +88,14 @@ public class SuspendedUserServiceImpl implements SuspendedUserService {
     Board board = suspendedUser.getBoard();
     ServiceValidator.isPermitted(board, Moderator.Role.ADMINISTRATOR, user);
     board.getSuspensedList().remove(suspendedUser);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.BOARD_USER_UNSUSPENSION)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(board, suspendedUser)
+            .build()
+    );
     suspendedUserRepository.delete(suspendedUser);
     boardRepository.save(board);
     return ResponseEntity.noContent().build();

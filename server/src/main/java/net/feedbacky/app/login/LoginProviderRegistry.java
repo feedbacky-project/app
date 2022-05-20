@@ -1,4 +1,4 @@
-package net.feedbacky.app.data.login;
+package net.feedbacky.app.login;
 
 import lombok.SneakyThrows;
 import net.feedbacky.app.util.FileResourceUtils;

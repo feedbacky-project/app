@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaExclamation, FaUserCircle} from "react-icons/all";
+import {FaExclamation, FaUserCircle} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";

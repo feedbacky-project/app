@@ -14,7 +14,7 @@ const getTextareaCoords = textArea => {
     let currentline = content.substr(0, content.selectionStart).split(/[\n\r]/g)
         .length;
     let replicaContent = "";
-    contentLines.map((l, i) => {
+    contentLines.forEach((l, i) => {
         if (i === currentline - 1 && i < contentLines.length) {
             replicaContent += contentLines[i];
             return;

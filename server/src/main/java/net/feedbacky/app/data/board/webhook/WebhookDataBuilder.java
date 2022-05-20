@@ -1,8 +1,13 @@
 package net.feedbacky.app.data.board.webhook;
 
+import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.Changelog;
+import net.feedbacky.app.data.board.changelog.reaction.ChangelogReaction;
+import net.feedbacky.app.data.board.moderator.Moderator;
+import net.feedbacky.app.data.board.suspended.SuspendedUser;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.comment.reaction.CommentReaction;
 import net.feedbacky.app.data.user.User;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -17,45 +22,54 @@ import java.util.Map;
  */
 public class WebhookDataBuilder {
 
-  private final Map<String, String> data = new HashMap<>();
+  private final Map<WebhookExecutor.WebhookDataObjects, Object> data = new HashMap<>();
 
   public WebhookDataBuilder withUser(User user) {
-    data.put(WebhookExecutor.WebhookMapData.USER_NAME.getName(), user.getUsername());
-    data.put(WebhookExecutor.WebhookMapData.USER_AVATAR.getName(), user.getAvatar());
-    data.put(WebhookExecutor.WebhookMapData.USER_ID.getName(), String.valueOf(user.getId()));
+    data.put(WebhookExecutor.WebhookDataObjects.USER, user);
     return this;
   }
 
   public WebhookDataBuilder withIdea(Idea idea) {
-    data.put(WebhookExecutor.WebhookMapData.IDEA_NAME.getName(), idea.getTitle());
-    data.put(WebhookExecutor.WebhookMapData.IDEA_TITLE.getName(), StringEscapeUtils.unescapeHtml4(idea.getTitle()));
-    data.put(WebhookExecutor.WebhookMapData.IDEA_DESCRIPTION.getName(), StringEscapeUtils.unescapeHtml4(idea.getDescription()));
-    data.put(WebhookExecutor.WebhookMapData.IDEA_ID.getName(), String.valueOf(idea.getId()));
-    data.put(WebhookExecutor.WebhookMapData.VIEW_LINK.getName(), idea.toViewLink());
+    data.put(WebhookExecutor.WebhookDataObjects.IDEA, idea);
     return this;
   }
 
   public WebhookDataBuilder withComment(Comment comment) {
-    data.put(WebhookExecutor.WebhookMapData.COMMENT_DESCRIPTION.getName(), StringEscapeUtils.unescapeHtml4(comment.getDescription()));
-    data.put(WebhookExecutor.WebhookMapData.COMMENT_ID.getName(), String.valueOf(comment.getId()));
+    data.put(WebhookExecutor.WebhookDataObjects.COMMENT, comment);
     return this;
   }
 
-  public WebhookDataBuilder withTagsChangedData(String changed) {
-    data.put(WebhookExecutor.WebhookMapData.TAGS_CHANGED.getName(), changed);
+  public WebhookDataBuilder withCommentReaction(CommentReaction reaction) {
+    data.put(WebhookExecutor.WebhookDataObjects.COMMENT_REACTION, reaction);
     return this;
   }
 
   public WebhookDataBuilder withChangelog(Changelog changelog) {
-    //substitute idea link with changelog link
-    data.put(WebhookExecutor.WebhookMapData.VIEW_LINK.getName(), changelog.getBoard().toViewLink() + "/changelog?changelogId=" + changelog.getId());
-    data.put(WebhookExecutor.WebhookMapData.CHANGELOG_ID.getName(), String.valueOf(changelog.getId()));
-    data.put(WebhookExecutor.WebhookMapData.CHANGELOG_NAME.getName(), changelog.getTitle());
-    data.put(WebhookExecutor.WebhookMapData.CHANGELOG_DESCRIPTION.getName(), changelog.getDescription());
+    data.put(WebhookExecutor.WebhookDataObjects.CHANGELOG, changelog);
     return this;
   }
 
-  public Map<String, String> build() {
+  public WebhookDataBuilder withChangelogReaction(ChangelogReaction reaction) {
+    data.put(WebhookExecutor.WebhookDataObjects.CHANGELOG_REACTION, reaction);
+    return this;
+  }
+
+  public WebhookDataBuilder withBoard(Board board) {
+    data.put(WebhookExecutor.WebhookDataObjects.BOARD, board);
+    return this;
+  }
+
+  public WebhookDataBuilder withSuspendedUser(SuspendedUser suspendedUser) {
+    data.put(WebhookExecutor.WebhookDataObjects.SUSPENDED_USER, suspendedUser);
+    return this;
+  }
+
+  public WebhookDataBuilder withModerator(Moderator moderator) {
+    data.put(WebhookExecutor.WebhookDataObjects.MODERATOR, moderator);
+    return this;
+  }
+
+  public Map<WebhookExecutor.WebhookDataObjects, Object> build() {
     return data;
   }
 

@@ -4,9 +4,8 @@ import {BoardContext} from "context";
 import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {FaExternalLinkAlt, FaRegImage} from "react-icons/fa";
-import Select from "react-select";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiLabelledCheckbox, UiThemeContext} from "ui";
+import {UiBadge, UiThemeContext} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel, UiFormSelect, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -23,20 +22,6 @@ const AttachmentButton = styled(UiClassicButton)`
       color: hsla(0, 0%, 95%, .6);
     }
   }
-`;
-
-const TagsContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: stretch;
-`;
-
-const SelectableTag = styled.div`
-  width: 130px;
-  flex-grow: 1;
-  display: inline-block;
-  margin-right: .5rem;
-  cursor: pointer;
 `;
 
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {

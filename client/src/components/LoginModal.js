@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import TextInputActionModal from "components/commons/modal/TextInputActionModal";
 import {AppContext} from "context";
 import React, {useContext, useState} from 'react';
 import {ModalDialog} from "react-bootstrap";
 import {UiThemeContext} from "ui";
 import {UiButton, UiClassicButton} from "ui/button";
-import {UiFormControl, UiInputFormControl} from "ui/form";
+import {UiFormControl} from "ui/form";
 import {UiImage} from "ui/image";
 import {UiModal} from "ui/modal";
 import {popupNotification} from "utils/basic-utils";
@@ -64,7 +63,6 @@ const ModalContent = styled.div`
 const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
     const {serviceData} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
-    const [mailModalOpen, setMailModalOpen] = useState(false);
     const [mail, setMail] = useState("");
 
     const onMailLogin = (email) => {
@@ -73,7 +71,6 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
             if (res.status === 200) {
                 popupNotification("Check mailbox for Log-in Link.", getTheme());
             }
-            setMailModalOpen(false);
         });
     };
     const renderMailLogin = () => {
@@ -81,7 +78,7 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
             return <React.Fragment/>
         }
         return <div className={"mt-2"}>
-            <div>Or, sign in using mail link</div>
+            <div>Or, sign in using <strong className={"text-blue"}>Mail Link</strong></div>
             <div className={"d-inline-flex mt-2"}>
                 <UiFormControl id={"emailInput"} label={"Enter your Email"} placeholder={"Enter your Email"} onChange={e => setMail(e.target.value)}
                                style={{borderTopRightRadius: 0, borderBottomRightRadius: 0}}/>

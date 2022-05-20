@@ -14,6 +14,9 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
 import net.feedbacky.app.data.board.webhook.WebhookExecutor;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InvalidAuthenticationException;
@@ -54,16 +57,16 @@ public class ChangelogServiceImpl implements ChangelogService {
   private final BoardRepository boardRepository;
   private final UserRepository userRepository;
   private final ChangelogRepository changelogRepository;
-  private final WebhookExecutor webhookExecutor;
+  private final TriggerExecutor triggerExecutor;
   private final EmojiDataRegistry emojiDataRegistry;
 
   @Autowired
   public ChangelogServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ChangelogRepository changelogRepository,
-                              WebhookExecutor webhookExecutor, EmojiDataRegistry emojiDataRegistry) {
+                              TriggerExecutor triggerExecutor, EmojiDataRegistry emojiDataRegistry) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.changelogRepository = changelogRepository;
-    this.webhookExecutor = webhookExecutor;
+    this.triggerExecutor = triggerExecutor;
     this.emojiDataRegistry = emojiDataRegistry;
   }
 
@@ -97,8 +100,13 @@ public class ChangelogServiceImpl implements ChangelogService {
     board.getChangelogs().add(changelog);
     changelog = changelogRepository.save(changelog);
 
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withChangelog(changelog);
-    webhookExecutor.executeWebhooks(board, Webhook.Event.CHANGELOG_CREATE, builder.build());
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.CHANGELOG_CREATE)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(changelog)
+            .build()
+    );
     board.setLastChangelogUpdate(Calendar.getInstance().getTime());
     boardRepository.save(board);
 
@@ -123,6 +131,14 @@ public class ChangelogServiceImpl implements ChangelogService {
     changelog.getReactions().add(reaction);
     changelogRepository.save(changelog);
     reaction = changelog.getReactions().stream().filter(r -> r.getReactionId().equals(dto.getReactionId()) && r.getUser().equals(user)).findFirst().get();
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.CHANGELOG_REACT)
+            .withBoard(changelog.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(changelog, reaction)
+            .build()
+    );
     return reaction.toDto();
   }
 
@@ -135,6 +151,14 @@ public class ChangelogServiceImpl implements ChangelogService {
     changelog.setTitle(dto.getTitle());
     changelog.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())));
     changelog = changelogRepository.save(changelog);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.CHANGELOG_EDIT)
+            .withBoard(changelog.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(changelog)
+            .build()
+    );
     return changelog.toDto();
   }
 
@@ -144,6 +168,14 @@ public class ChangelogServiceImpl implements ChangelogService {
     Changelog changelog = changelogRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Changelog {0} not found.", id)));
     ServiceValidator.isPermitted(changelog.getBoard(), Moderator.Role.MODERATOR, user);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.CHANGELOG_DELETE)
+            .withBoard(changelog.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(changelog)
+            .build()
+    );
     changelogRepository.delete(changelog);
     return ResponseEntity.noContent().build();
   }
@@ -161,6 +193,14 @@ public class ChangelogServiceImpl implements ChangelogService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet reacted.");
     }
     ChangelogReaction reaction = optional.get();
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.CHANGELOG_UNREACT)
+            .withBoard(changelog.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(changelog, reaction)
+            .build()
+    );
     changelog.getReactions().remove(reaction);
     reaction.setChangelog(null);
     changelogRepository.save(changelog);

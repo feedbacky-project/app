@@ -19,6 +19,7 @@ const CreateWebhook = lazy(() => retry(() => import("routes/board/admin/subroute
 const SocialLinksSettings = lazy(() => retry(() => import("routes/board/admin/subroutes/social/SocialLinksSubroute")));
 const CreateSocialLink = lazy(() => retry(() => import("routes/board/admin/subroutes/social/creator/CreateSocialLinkSubroute")));
 const SuspensionSettings = lazy(() => retry(() => import("routes/board/admin/subroutes/SuspensionsSubroute")));
+const IntegrationsSettings = lazy(() => retry(() => import("routes/board/admin/subroutes/IntegrationsSubroute")));
 
 const BoardAdminPanelRoute = () => {
     const {user} = useContext(AppContext);
@@ -85,6 +86,7 @@ const BoardAdminPanelRoute = () => {
                                 <Route path={"/ba/:id/social/create"} component={CreateSocialLink}/>
                                 <Route path={"/ba/:id/social"} component={SocialLinksSettings}/>
                                 <Route path={"/ba/:id/suspended"} component={SuspensionSettings}/>
+                                <Route path={"/ba/:id/integrations"} component={IntegrationsSettings}/>
                                 <Route path={"/ba/:id/general"} render={() => <GeneralSettings updateState={data => setBoard({...board, data})}/>}/>
                                 <Route render={() => <GeneralSettings updateState={data => setBoard({...board, data})}/>}/>
                             </Switch>

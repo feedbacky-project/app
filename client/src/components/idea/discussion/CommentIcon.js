@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
-import {FaComment, FaCommentSlash, FaEdit, FaICursor, FaLink, FaLock, FaLockOpen, FaTags, FaUndoAlt, FaUnlink, FaUserCheck} from "react-icons/all";
+import {FaComment, FaCommentSlash, FaEdit, FaGithub, FaICursor, FaLink, FaLock, FaLockOpen, FaTags, FaUndoAlt, FaUnlink, FaUserCheck} from "react-icons/fa";
 import {UiThemeContext} from "ui";
 
 const IconOverlay = styled.div`
@@ -56,6 +56,8 @@ const CommentIcon = ({specialType}) => {
                 return <Icon as={FaUndoAlt} fill={fill}/>;
             case "IDEA_TITLE_CHANGE":
                 return <Icon as={FaICursor} fill={fill}/>
+            case "INTEGRATION_GITHUB_CONVERT":
+                return <Icon as={FaGithub} fill={fill}/>
             case "LEGACY":
             case "TAGS_MANAGED":
             default:

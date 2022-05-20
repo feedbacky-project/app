@@ -7,9 +7,12 @@ import lombok.Setter;
 import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.dto.webhook.FetchWebhookDto;
+import net.feedbacky.app.data.trigger.ActionTrigger;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,8 +46,9 @@ public class Webhook implements Serializable, Fetchable<FetchWebhookDto> {
   private Board board;
   private String url;
   private Type type;
-  @ElementCollection(targetClass = Event.class)
-  private List<Event> events = new ArrayList<>();
+  @ElementCollection(targetClass = ActionTrigger.Trigger.class)
+  @Enumerated(value = EnumType.STRING)
+  private List<ActionTrigger.Trigger> triggers = new ArrayList<>();
 
   @Override
   public FetchWebhookDto toDto() {

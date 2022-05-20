@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import getTextareaCoords from "utils/textarea-utils";
 import React, {useContext, useEffect, useState} from "react";
 import {UiThemeContext} from "ui";
 import {UiMarkdownFormControl} from "ui/form";
+import getTextareaCoords from "utils/textarea-utils";
 
 const MentionsBox = styled.div`
   background-color: var(--quaternary);
@@ -27,6 +27,7 @@ const MentionableForm = (props) => {
     const {getTheme} = useContext(UiThemeContext);
     useEffect(() => {
         setMentions({...mentions, data: allMentions});
+        //eslint-disable-next-line
     }, [allMentions]);
 
     const onLocalChange = (e) => {

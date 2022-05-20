@@ -3,9 +3,11 @@ package net.feedbacky.app.data.board.dto;
 import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.integration.FetchIntegrationDto;
 import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
+import net.feedbacky.app.data.board.integration.Integration;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
 import net.feedbacky.app.data.board.suspended.SuspendedUser;
@@ -42,6 +44,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   private List<FetchTagDto> tags;
   private List<FetchModeratorDto> moderators;
   private List<FetchSuspendedUserDto> suspendedUsers;
+  private List<FetchIntegrationDto> integrations;
 
   private long allIdeas;
   private long openedIdeas;
@@ -80,6 +83,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.tags = entity.getTags().stream().map(Tag::toDto).collect(Collectors.toList());
     this.moderators = entity.getModerators().stream().map(Moderator::toDto).collect(Collectors.toList());
     this.suspendedUsers = entity.getSuspensedList().stream().map(SuspendedUser::toDto).collect(Collectors.toList());
+    this.integrations = entity.getIntegrations().stream().map(Integration::toDto).collect(Collectors.toList());
     this.allIdeas = entity.getIdeas().size();
     this.openedIdeas = entity.getIdeas().stream().filter(idea -> idea.getStatus() == Idea.IdeaStatus.OPENED).count();
     this.closedIdeas = entity.getIdeas().stream().filter(idea -> idea.getStatus() == Idea.IdeaStatus.CLOSED).count();
@@ -93,6 +97,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   public FetchBoardDto withConfidentialData(Board entity, boolean apply) {
     if(apply) {
       this.apiKey = entity.getApiKey();
+      this.integrations = entity.getIntegrations().stream().map(i -> i.toDto().withConfidentialData(i, true)).collect(Collectors.toList());
     }
     return this;
   }

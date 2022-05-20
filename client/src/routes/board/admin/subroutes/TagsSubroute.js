@@ -7,8 +7,7 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import {SvgNotice} from "components/commons/SvgNotice";
 import {BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
-import {FaPencilAlt} from "react-icons/all";
-import {FaTrash} from "react-icons/fa";
+import {FaPencilAlt, FaTrash} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiElementDeleteButton, UiLoadableButton} from "ui/button";

@@ -28,7 +28,7 @@
     "react-select": "^5.2.2",
     "react-sidebar": "^3.0.2",
     "react-string-replace": "^0.4.4",
-    "timeago-react": "^3.0.2",
+    "timeago-react": "^3.0.4",
     "tinycolor2": "^1.4.2"
   },
   "scripts": {

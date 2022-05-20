@@ -48,4 +48,7 @@ public interface IdeaRepository extends EntityGraphJpaRepository<Idea, Long> {
   @EntityGraph(value = "Idea.fetch")
   Page<Idea> findByBoardAndTagsInAndStatus(Board board, List<Tag> tags, Idea.IdeaStatus status, Pageable pageable);
 
+  @EntityGraph(value = "Idea.fetch")
+  Optional<Idea> findByMetadataContaining(String search);
+
 }

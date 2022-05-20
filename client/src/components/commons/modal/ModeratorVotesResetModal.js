@@ -1,6 +1,6 @@
 import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import React from "react";
-import {FaExclamation, FaPoll} from "react-icons/all";
+import {FaExclamation, FaPoll} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiLoadableButton} from "ui/button";
 import {UiRow} from "ui/grid";

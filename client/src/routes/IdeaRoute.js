@@ -71,7 +71,7 @@ const IdeaRoute = () => {
     }, [user.session]);
     useEffect(() => {
         axios.get("/ideas/" + id + "/mentionableUsers").then(res => setMentions(res.data));
-    }, []);
+    }, [id]);
 
     const onStateChange = (stateType) => {
         if(stateType === "discussion") {

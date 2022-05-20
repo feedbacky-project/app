@@ -5,7 +5,7 @@ import ProfileNavbar from "components/profile/ProfileNavbar";
 import {AppContext, IdeaContext} from "context";
 import {Step} from "rc-steps";
 import React, {useContext, useEffect, useState} from "react";
-import {FaCogs, FaQuestion} from "react-icons/all";
+import {FaCogs, FaQuestion} from "react-icons/fa";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip, UiHorizontalRule, UiKeyboardInput, UiLoadingSpinner, UiPrettyUsername, UiProgressBar, UiThemeContext} from "ui";

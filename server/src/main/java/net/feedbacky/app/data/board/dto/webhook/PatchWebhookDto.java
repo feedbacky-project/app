@@ -30,6 +30,6 @@ public class PatchWebhookDto {
   @EnumValue(enumClazz = Webhook.Type.class, message = "Type must be valid webhook type.")
   private String type;
   @NotNull(message = "Events cannot be empty.")
-  private List<String> events;
+  private List<String> triggers;
 
 }

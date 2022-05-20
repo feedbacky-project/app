@@ -1,37 +1,54 @@
 import UndrawChooseEvents from "assets/svg/undraw/choose_events.svg";
-import SetupCard from "components/board/admin/SetupCard";
 import SetupImageBanner from "components/board/admin/SetupImageBanner";
-import React from 'react';
+import {AppContext} from "context";
+import React, {useContext, useState} from 'react';
+import tinycolor from "tinycolor2";
+import {UiBadge, UiKeyboardInput, UiLabelledCheckbox} from "ui";
+import {UiButton} from "ui/button";
 import {UiCol, UiRow} from "ui/grid";
-
-export const WEBHOOK_EVENT_LIST = ["IDEA_CREATE", "IDEA_DELETE", "IDEA_COMMENT", "IDEA_COMMENT_DELETE", "IDEA_EDIT", "IDEA_TAG_CHANGE", "IDEA_OPEN", "IDEA_CLOSE",
-    "CHANGELOG_CREATE"];
-export const WEBHOOK_EVENT_NAMES_LIST = ["Idea Create", "Idea Delete", "Comment Post", "Comment Delete", "Idea Edit", "Idea Tag Change", "Idea State Open", "Idea State Close",
-    "Changelog Post"];
-export const WEBHOOK_EVENT_ICONS_LIST = ["idea_create.svg", "idea_delete.svg", "idea_comment.svg", "idea_comment_delete.svg", "idea_edit.svg", "idea_tag_change.svg", "idea_open.svg", "idea_close.svg",
-    "changelog_create.svg"];
+import {prettifyTrigger} from "utils/basic-utils";
 
 const StepSecondSubroute = ({updateSettings, settings}) => {
+    const {serviceData} = useContext(AppContext);
+    const [showAll, setShowAll] = useState(false);
     const onChoose = (item) => {
-        if (settings.listenedEvents.includes(item)) {
-            updateSettings({...settings, listenedEvents: settings.listenedEvents.filter(event => event !== item)});
+        if (settings.triggers.includes(item)) {
+            updateSettings({...settings, triggers: settings.triggers.filter(event => event !== item)});
         } else {
-            updateSettings({...settings, listenedEvents: [...settings.listenedEvents, item]});
+            updateSettings({...settings, triggers: [...settings.triggers, item]});
         }
     };
-    const renderCards = () => {
-        return WEBHOOK_EVENT_LIST.map((item, i) => {
-            let name = WEBHOOK_EVENT_NAMES_LIST[i];
-            return <SetupCard key={i} icon={<img alt={item} src={"https://cdn.feedbacky.net/static/svg/webhooks/" + WEBHOOK_EVENT_ICONS_LIST[i]} style={{width: "2.5rem", height: "2.5rem"}}/>}
-                              text={name} onClick={() => onChoose(item)} className={"m-2"} chosen={settings.listenedEvents.includes(item)}/>
-        });
-    };
-    return <React.Fragment>
-        <SetupImageBanner svg={UndrawChooseEvents} stepName={"Choose Listened Events"} stepDescription={"Select events that this webhook will listen for."}/>
-        <UiCol xs={12} className={"mt-4"}>
-            <UiCol centered as={UiRow} className={"mx-0"} xs={12}>
-                {renderCards()}
+    const renderCommonTriggers = () => {
+        //board triggers unsupported for webhooks
+        let triggers = Object.keys(serviceData.actionTriggers).filter(c => c !== "board");
+        if (!showAll) {
+            triggers = triggers.filter(c => c === "idea" || c === "comment");
+        }
+        return triggers.map((category, j) => {
+            return <UiCol as={UiRow} xs={12} key={category + j} className={"mb-2 px-0"}>
+                <UiCol xs={12} className={"font-weight-bold"}>Triggers for <UiKeyboardInput>{category}</UiKeyboardInput></UiCol>
+                {serviceData.actionTriggers[category].map((trigger, i) => {
+                    return <UiCol key={trigger + i} xs={6} md={4} className={"pr-0"}>
+                        <UiLabelledCheckbox id={trigger + i} checked={settings.triggers.includes(trigger)} onChange={() => onChoose(trigger)}>
+                            <UiBadge style={{letterSpacing: "-.1pt", wordSpacing: "-.2pt"}} color={tinycolor("#ffa500")}>{prettifyTrigger(category, trigger)}</UiBadge>
+                        </UiLabelledCheckbox>
+                    </UiCol>
+                })}
             </UiCol>
+        })
+    };
+    const renderButton = () => {
+        if (showAll) {
+            return <UiButton label={"Hide Advanced Triggers"} className={"mt-2"} small onClick={() => setShowAll(false)}>Hide Advanced Triggers</UiButton>
+        }
+        return <UiButton label={"Show Advanced Triggers"} className={"mt-2"} small onClick={() => setShowAll(true)}>Show Advanced Triggers</UiButton>
+    }
+
+    return <React.Fragment>
+        <SetupImageBanner svg={UndrawChooseEvents} stepName={"Choose Triggers"} stepDescription={"Select triggers that this webhook will listen to. Some triggers may be duplicated."}/>
+        <UiCol centered as={UiRow} xs={12} className={"mt-4 px-0"}>
+            {renderCommonTriggers()}
+            {renderButton()}
         </UiCol>
     </React.Fragment>
 };

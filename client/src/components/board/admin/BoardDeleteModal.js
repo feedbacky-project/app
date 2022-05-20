@@ -1,6 +1,6 @@
 import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import React, {useRef, useState} from "react";
-import {FaEraser, FaExclamation} from "react-icons/all";
+import {FaEraser, FaExclamation} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiKeyboardInput, UiLabelledCheckbox} from "ui";
 import {UiLoadableButton} from "ui/button";

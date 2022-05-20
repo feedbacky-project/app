@@ -18,6 +18,9 @@ import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
@@ -85,13 +88,13 @@ public class IdeaServiceImpl implements IdeaService {
   private final SubscriptionExecutor subscriptionExecutor;
   private final IdeaServiceCommons ideaServiceCommons;
   private final MailHandler mailHandler;
-  private final WebhookExecutor webhookExecutor;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
                          CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
-                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, MailHandler mailHandler, WebhookExecutor webhookExecutor) {
+                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, MailHandler mailHandler, TriggerExecutor triggerExecutor) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -102,7 +105,7 @@ public class IdeaServiceImpl implements IdeaService {
     this.subscriptionExecutor = subscriptionExecutor;
     this.ideaServiceCommons = ideaServiceCommons;
     this.mailHandler = mailHandler;
-    this.webhookExecutor = webhookExecutor;
+    this.triggerExecutor = triggerExecutor;
   }
 
   @Override
@@ -160,7 +163,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     handleTitleUpdate(idea, dto, user);
     handleStatusUpdate(idea, dto, user);
-    handleAttachmentUpdate(idea, dto);
+    handleAttachmentUpdate(idea, dto, user);
     handleAssigneeUpdate(idea, dto, user);
 
     idea.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(idea.getDescription())));
@@ -182,12 +185,15 @@ public class IdeaServiceImpl implements IdeaService {
             .of(idea)
             .by(user)
             .type(Comment.SpecialType.IDEA_TITLE_CHANGE)
-            .message(user.convertToSpecialCommentMention() + " has edited title of the idea. "
-                    + CommentBuilder.convertToDiffViewMode("View Diff", oldTitle, dto.getTitle()));
-    Webhook.Event event = Webhook.Event.IDEA_EDIT;
+            .placeholders(user.convertToSpecialCommentMention(), CommentBuilder.convertToDiffViewMode("View Diff", oldTitle, dto.getTitle()));
     Comment comment = commentBuilder.build();
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-    webhookExecutor.executeWebhooks(idea.getBoard(), event, builder.build());
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_EDIT)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
 
     Set<Comment> comments = idea.getComments();
     comments.add(comment);
@@ -208,42 +214,47 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Comment comment = null;
     CommentBuilder commentBuilder = new CommentBuilder().of(idea).by(user);
-    Webhook.Event event = null;
+    ActionTrigger.Trigger triggerType = null;
     //assuming you can never do any of these actions together
     if(edited) {
-      comment = commentBuilder.type(Comment.SpecialType.IDEA_EDITED).message(user.convertToSpecialCommentMention() + " has edited description of the idea.").build();
-      event = Webhook.Event.IDEA_EDIT;
+      comment = commentBuilder.type(Comment.SpecialType.IDEA_EDITED).placeholders(user.convertToSpecialCommentMention()).build();
+      triggerType = ActionTrigger.Trigger.IDEA_EDIT;
     } else if(dto.getOpen() != null && idea.getStatus().getValue() != dto.getOpen()) {
       if(!dto.getOpen()) {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_CLOSED).message(user.convertToSpecialCommentMention() + " has closed the idea.").build();
-        event = Webhook.Event.IDEA_CLOSE;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_CLOSED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_CLOSE;
       } else {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_OPENED).message(user.convertToSpecialCommentMention() + " has reopened the idea.").build();
-        event = Webhook.Event.IDEA_OPEN;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_OPENED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_OPEN;
       }
       subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_STATUS_CHANGE, user,
               idea, idea.getStatus().name()));
     } else if(dto.getCommentingRestricted() != null && idea.isCommentingRestricted() != dto.getCommentingRestricted()) {
       if(dto.getCommentingRestricted()) {
-        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_RESTRICTED).message(user.convertToSpecialCommentMention() + " has restricted commenting to moderators only.").build();
-        event = Webhook.Event.IDEA_COMMENTS_RESTRICT;
+        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_RESTRICTED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_COMMENTS_DISABLE;
       } else {
-        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_ALLOWED).message(user.convertToSpecialCommentMention() + " has removed commenting restrictions.").build();
-        event = Webhook.Event.IDEA_COMMENTS_ALLOW;
+        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_ALLOWED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_COMMENTS_ENABLE;
       }
     } else if(dto.getPinned() != null && idea.isPinned() != dto.getPinned()) {
       if(dto.getPinned()) {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_PINNED).message(user.convertToSpecialCommentMention() + " has pinned the idea.").build();
-        event = Webhook.Event.IDEA_PINNED;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_PINNED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_PIN;
       } else {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_UNPINNED).message(user.convertToSpecialCommentMention() + " has unpinned the idea.").build();
-        event = Webhook.Event.IDEA_UNPINNED;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_UNPINNED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_UNPIN;
       }
     }
     //the change was made, notify webhooks and save moderation comment
     if(comment != null) {
-      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-      webhookExecutor.executeWebhooks(idea.getBoard(), event, builder.build());
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(triggerType)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(idea)
+              .build()
+      );
 
       Set<Comment> comments = idea.getComments();
       comments.add(comment);
@@ -258,7 +269,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
   }
 
-  private void handleAttachmentUpdate(Idea idea, PatchIdeaDto dto) {
+  private void handleAttachmentUpdate(Idea idea, PatchIdeaDto dto, User user) {
     if(dto.getAttachment() == null) {
       return;
     }
@@ -270,6 +281,14 @@ public class IdeaServiceImpl implements IdeaService {
     attachment = attachmentRepository.save(attachment);
     attachments.add(attachment);
     idea.setAttachments(attachments);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_ATTACHMENT_UPDATE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
   }
 
   private void handleAssigneeUpdate(Idea idea, PatchIdeaDto dto, User user) {
@@ -284,14 +303,30 @@ public class IdeaServiceImpl implements IdeaService {
         throw new InsufficientPermissionsException();
       }
       idea.setAssignee(null);
-      commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " removed assignee from this idea.");
+      commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_UNASSIGNED).placeholders(user.convertToSpecialCommentMention());
+
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.IDEA_UNASSIGN)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(idea)
+              .build()
+      );
     } else {
       Moderator assigneeMod = idea.getBoard().getModerators().stream().filter(mod -> mod.getUser().getId().equals(dto.getAssignee())).findFirst()
               .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("User with id {0} is not a board moderator.", dto.getAssignee())));
       idea.setAssignee(assigneeMod.getUser());
 
       commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED)
-              .message(assigneeMod.getUser().convertToSpecialCommentMention() + " has been assigned to this idea by " + user.convertToSpecialCommentMention() + ".");
+              .placeholders(assigneeMod.getUser().convertToSpecialCommentMention(), user.convertToSpecialCommentMention());
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.IDEA_ASSIGN)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(idea)
+              .build()
+      );
+
       MailBuilder builder = new MailBuilder();
       builder.withTemplate(MailService.EmailTemplate.IDEA_ASSIGNED)
               .withRecipient(assigneeMod.getUser())
@@ -316,8 +351,14 @@ public class IdeaServiceImpl implements IdeaService {
       throw new InsufficientPermissionsException();
     }
     idea.getAttachments().forEach(attachment -> objectStorage.deleteImage(attachment.getUrl()));
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_DELETE, builder.build());
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_DELETE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     ideaRepository.delete(idea);
     return ResponseEntity.noContent().build();
   }
@@ -376,12 +417,16 @@ public class IdeaServiceImpl implements IdeaService {
     idea.setComments(comments);
     commentRepository.save(comment);
     idea = ideaRepository.save(idea);
-    WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea())
-            .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
-    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
 
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_TAGS_CHANGE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE, user,
-            idea, prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));
+            idea, user.getUsername() + " has " + prepareTagChangeMessage(idea, addedTags, removedTags, false)));
     return idea.getTags().stream().map(Tag::toDto).collect(Collectors.toList());
   }
 
@@ -390,18 +435,12 @@ public class IdeaServiceImpl implements IdeaService {
             .of(idea)
             .by(user)
             .type(Comment.SpecialType.TAGS_MANAGED)
-            .message(prepareTagChangeMessage(user, idea, addedTags, removedTags, true))
+            .placeholders(prepareTagChangeMessage(idea, addedTags, removedTags, true))
             .build();
   }
 
-  private String prepareTagChangeMessage(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean tagDataDisplay) {
-    String userName;
-    if(tagDataDisplay) {
-      userName = user.convertToSpecialCommentMention();
-    } else {
-      userName = user.getUsername();
-    }
-    StringBuilder builder = new StringBuilder(userName + " has ");
+  private String prepareTagChangeMessage(Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean tagDataDisplay) {
+    StringBuilder builder = new StringBuilder();
     if(!addedTags.isEmpty()) {
       builder.append("added");
       for(Tag tag : addedTags) {

@@ -4,6 +4,9 @@ import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.user.User;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 /**
  * @author Plajer
  * <p>
@@ -28,8 +31,21 @@ public class CommentBuilder {
     return this;
   }
 
-  public CommentBuilder message(String message) {
-    comment.setDescription(message);
+  public CommentBuilder placeholders(String... placeholders) {
+    comment.setDescription(comment.getSpecialType().parsePlaceholders(placeholders));
+    return this;
+  }
+
+  public CommentBuilder metadata(Comment.CommentMetadata key, String value) {
+    String metadata = comment.getMetadata();
+    JsonObject json;
+    if(metadata.equals("")) {
+      json = new Gson().fromJson("{}", JsonObject.class);
+    } else {
+      json = new Gson().fromJson(metadata, JsonObject.class);
+    }
+    json.addProperty(key.getKey(), value);
+    comment.setMetadata(json.toString());
     return this;
   }
 

@@ -6,6 +6,9 @@ import net.feedbacky.app.data.board.dto.FetchBoardDto;
 import net.feedbacky.app.data.board.dto.PatchBoardDto;
 import net.feedbacky.app.data.board.dto.PostBoardDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InsufficientPermissionsException;
@@ -52,13 +55,15 @@ public class BoardServiceImpl implements BoardService {
   private final UserRepository userRepository;
   private final ObjectStorage objectStorage;
   private final MailHandler mailHandler;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
-  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ObjectStorage objectStorage, MailHandler mailHandler) {
+  public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ObjectStorage objectStorage, MailHandler mailHandler, TriggerExecutor triggerExecutor) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.objectStorage = objectStorage;
     this.mailHandler = mailHandler;
+    this.triggerExecutor = triggerExecutor;
   }
 
   @Override
@@ -166,6 +171,13 @@ public class BoardServiceImpl implements BoardService {
     board.setShortDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(board.getShortDescription())));
     board.setFullDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(board.getFullDescription())));
 
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.BOARD_SETTINGS_EDIT)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(board)
+            .build()
+    );
     board = boardRepository.save(board);
     return board.toDto().withConfidentialData(board, true);
   }
@@ -182,6 +194,13 @@ public class BoardServiceImpl implements BoardService {
             .withTemplate(MailService.EmailTemplate.BOARD_DELETED)
             .sendMail(mailHandler.getMailService()).sync();
 
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.BOARD_DELETE)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(board)
+            .build()
+    );
     board.getModerators().forEach(moderator -> {
       User modUser = moderator.getUser();
       modUser.getPermissions().remove(moderator);

@@ -3,7 +3,7 @@ import SafeAnchor from "components/commons/SafeAnchor";
 import {renderAdminSidebarRoutes, Sidebar as UiSidebar, SidebarIcon, SidebarToggler} from "components/commons/sidebar-commons";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
-import {FaAt, FaChevronLeft, FaChevronRight, FaColumns, FaSlidersH, FaSort, FaTags, FaUserLock, FaUsersCog} from "react-icons/all";
+import {FaAt, FaChevronLeft, FaChevronRight, FaColumns, FaCubes, FaSlidersH, FaSort, FaTags, FaUserLock, FaUsersCog} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import Sidebar from "react-sidebar";
 import {UiHorizontalRule, UiThemeContext} from "ui";
@@ -18,7 +18,8 @@ const AdminSidebar = ({currentNode, reRouteTo, children}) => {
         {social: data => <React.Fragment><SidebarIcon as={FaAt} style={data}/> Social Links</React.Fragment>},
         {webhooks: data => <React.Fragment><SidebarIcon as={FaColumns} style={data}/> Webhooks</React.Fragment>},
         {moderators: data => <React.Fragment><SidebarIcon as={FaUsersCog} style={data}/> Moderators</React.Fragment>},
-        {suspended: data => <React.Fragment><SidebarIcon as={FaUserLock} style={data}/> Suspensions</React.Fragment>}
+        {suspended: data => <React.Fragment><SidebarIcon as={FaUserLock} style={data}/> Suspensions</React.Fragment>},
+        {integrations: data => <React.Fragment><SidebarIcon as={FaCubes} style={data}/> Integrations</React.Fragment>},
     ];
     const context = useContext(AppContext);
     const {data} = useContext(BoardContext);

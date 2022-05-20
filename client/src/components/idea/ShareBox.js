@@ -3,7 +3,7 @@ import SafeAnchor from "components/commons/SafeAnchor";
 import {BoardContext} from "context";
 import copy from "copy-text-to-clipboard";
 import React, {useContext} from "react";
-import {FaFacebookSquare, FaLink, FaTwitterSquare} from "react-icons/all";
+import {FaFacebookSquare, FaLink, FaTwitterSquare} from "react-icons/fa";
 import {UiCard, UiThemeContext, UiTooltip} from "ui";
 import {popupNotification} from "utils/basic-utils";
 

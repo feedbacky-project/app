@@ -68,7 +68,7 @@ const UiButton = (props) => {
             buttonColor = buttonColor.darken(10);
         }
     }
-    return <PageButton theme={buttonColor.clone()} aria-label={label} ref={innerRef} {...otherProps}>{children}</PageButton>
+    return <PageButton theme={buttonColor.clone()} aria-label={label} ref={innerRef} style={style} {...otherProps}>{children}</PageButton>
 };
 
 UiButton.propTypes = {

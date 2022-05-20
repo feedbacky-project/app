@@ -8,10 +8,12 @@ import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +35,8 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
   private Long replyTo;
   private Date creationDate;
 
+  private Map<String, String> metadata;
+
   @Override
   @CheckReturnValue
   public FetchCommentDto from(Comment entity) {
@@ -51,6 +55,8 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
       this.replyTo = entity.getReplyTo().getId();
     }
     this.creationDate = entity.getCreationDate();
+
+    this.metadata = new Gson().fromJson(entity.getMetadata(), Map.class);
     return this;
   }
 
@@ -61,6 +67,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.reactions = new ArrayList<>();
     this.edited = false;
     this.creationDate = null;
+    this.metadata = null;
     return this;
   }
 

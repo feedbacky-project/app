@@ -75,6 +75,10 @@ public class Changelog implements Serializable, Fetchable<FetchChangelogDto> {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "changelog", orphanRemoval = true)
   private Set<ChangelogReaction> reactions = new HashSet<>();
 
+  public String toViewLink() {
+    return board.toViewLink() + "/changelog?changelogId=" + id;
+  }
+
   @Override
   public FetchChangelogDto toDto() {
     return new FetchChangelogDto().from(this);

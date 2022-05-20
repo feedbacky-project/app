@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import {renderLogIn} from "components/commons/navbar-commons";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
-import {FaBars, FaChevronLeft, FaRegComment, FaRegListAlt, FaRegMap, FaRegUser} from "react-icons/all";
+import {FaBars, FaChevronLeft, FaRegComment, FaRegListAlt, FaRegMap, FaRegUser} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiContainer} from "ui/grid";

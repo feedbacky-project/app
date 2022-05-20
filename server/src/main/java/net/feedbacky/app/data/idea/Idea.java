@@ -132,6 +132,8 @@ public class Idea implements Serializable, Fetchable<FetchIdeaDto> {
   private boolean edited = false;
   private boolean commentingRestricted = false;
   private boolean pinned = false;
+  @Column(name = "metadata", columnDefinition = "varchar(2500) default '{}'")
+  private String metadata;
 
   public void setVoters(Set<User> voters) {
     this.voters = voters;
@@ -179,6 +181,17 @@ public class Idea implements Serializable, Fetchable<FetchIdeaDto> {
             .replaceAll("^(-)", "")
             .replaceAll("(-)$", "");
     return MailService.HOST_ADDRESS + "/i/" + slug + "." + id;
+  }
+
+  public enum IdeaMetadata {
+    INTEGRATION_GITHUB_ISSUE_ID("integration_github_issue_id"), INTEGRATION_GITHUB_ISSUE_NUMBER("integration_github_issue_number"),
+    INTEGRATION_GITHUB_URL("integration_github_url");
+
+    @Getter private String key;
+
+    IdeaMetadata(String key) {
+      this.key = key;
+    }
   }
 
   public enum IdeaStatus {

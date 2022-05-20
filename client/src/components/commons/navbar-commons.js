@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
-import {FaAngleDown, FaUserCog} from "react-icons/all";
-import {FaCogs, FaSignInAlt, FaUserAlt} from "react-icons/fa";
+import {FaAngleDown, FaCogs, FaSignInAlt, FaUserAlt, FaUserCog} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiButton} from "ui/button";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";

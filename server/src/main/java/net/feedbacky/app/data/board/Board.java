@@ -1,6 +1,5 @@
 package net.feedbacky.app.data.board;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.Setter;
 import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.changelog.Changelog;
 import net.feedbacky.app.data.board.dto.FetchBoardDto;
+import net.feedbacky.app.data.board.integration.Integration;
 import net.feedbacky.app.data.board.invite.Invitation;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.social.SocialLink;
@@ -57,7 +57,8 @@ import java.util.Set;
 @NamedEntityGraph(name = "Board.fetch", attributeNodes = {
         @NamedAttributeNode("creator"), @NamedAttributeNode("ideas"),
         @NamedAttributeNode(value = "moderators", subgraph = "Board.subgraph.moderatorsFetch"), @NamedAttributeNode("tags"),
-        @NamedAttributeNode("socialLinks"), @NamedAttributeNode("suspensedList"), @NamedAttributeNode("webhooks")},
+        @NamedAttributeNode("socialLinks"), @NamedAttributeNode("suspensedList"),
+        @NamedAttributeNode("webhooks"), @NamedAttributeNode("integrations")},
         subgraphs = {
                 @NamedSubgraph(name = "Board.subgraph.moderatorsFetch", attributeNodes = {
                         @NamedAttributeNode("user")
@@ -93,6 +94,8 @@ public class Board implements Serializable, Fetchable<FetchBoardDto> {
   private Set<Tag> tags = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<Webhook> webhooks = new HashSet<>();
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
+  private Set<Integration> integrations = new HashSet<>();
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "board")
   private Set<SocialLink> socialLinks = new HashSet<>();
   @ManyToMany(fetch = FetchType.LAZY)

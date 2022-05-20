@@ -1,6 +1,5 @@
 package net.feedbacky.app.data.idea.comment;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +28,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,6 +68,8 @@ public class Comment implements Serializable, Fetchable<FetchCommentDto> {
   private Comment replyTo;
   @CreationTimestamp
   private Date creationDate;
+  @Column(name = "metadata", columnDefinition = "varchar(2500) default '{}'")
+  private String metadata;
 
   @Override
   public FetchCommentDto toDto() {
@@ -75,8 +77,35 @@ public class Comment implements Serializable, Fetchable<FetchCommentDto> {
   }
 
   public enum SpecialType {
-    LEGACY, IDEA_CLOSED, IDEA_OPENED, IDEA_EDITED, TAGS_MANAGED, COMMENTS_RESTRICTED, COMMENTS_ALLOWED, IDEA_PINNED, IDEA_UNPINNED,
-    IDEA_ASSIGNED, IDEA_VOTES_RESET, IDEA_TITLE_CHANGE
+    LEGACY(""),
+    IDEA_CLOSED("{0} has closed the idea."), IDEA_OPENED("{0} has reopened the idea."),
+    IDEA_EDITED("{0} has edited description of the idea."), TAGS_MANAGED("{0} has {1}"),
+    COMMENTS_RESTRICTED("{0} has restricted commenting to moderators only."), COMMENTS_ALLOWED("{0} has removed commenting restrictions."),
+    IDEA_PINNED("{0} has pinned the idea."), IDEA_UNPINNED("{0} has unpinned the idea."),
+    IDEA_ASSIGNED("{0} has been assigned to this idea by {1}."), IDEA_VOTES_RESET("{0} has reset {1} votes."),
+    IDEA_TITLE_CHANGE("{0} has edited title of the idea. {1}"), IDEA_UNASSIGNED("{0} removed assignee from this idea."),
+
+    INTEGRATION_GITHUB_CONVERT("{0} has converted this idea to {1}");
+
+    private final String text;
+
+    SpecialType(String text) {
+      this.text = text;
+    }
+
+    public String parsePlaceholders(String... placeholders) {
+      return MessageFormat.format(text, (Object[]) placeholders);
+    }
+  }
+
+  public enum CommentMetadata {
+    POSTED_VIA("via");
+
+    @Getter private String key;
+
+    CommentMetadata(String key) {
+      this.key = key;
+    }
   }
 
   public enum ViewType {

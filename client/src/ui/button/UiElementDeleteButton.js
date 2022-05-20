@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import React from 'react';
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import {FaTimes} from "react-icons/all";
+import {FaTimes} from "react-icons/fa";
 
 const DeleteButton = styled(FaTimes)`
   padding: .25rem;

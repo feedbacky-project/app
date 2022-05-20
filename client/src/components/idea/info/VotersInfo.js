@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import VotersViewModal from "components/idea/info/VotersViewModal";
 import {IdeaContext} from "context";
 import React, {useContext, useState} from "react";
-import {FaRegFrown} from "react-icons/all";
+import {FaRegFrown} from "react-icons/fa";
 import {UiLoadingSpinner, UiTooltip} from "ui";
 import {UiAvatar} from "ui/image";
 

@@ -18,7 +18,7 @@ public class FetchWebhookDto implements FetchResponseDto<FetchWebhookDto, Webhoo
   private long id;
   private String url;
   private String type;
-  private List<String> events;
+  private List<String> triggers;
 
   @Override
   public FetchWebhookDto from(Webhook entity) {
@@ -28,7 +28,7 @@ public class FetchWebhookDto implements FetchResponseDto<FetchWebhookDto, Webhoo
     this.id = entity.getId();
     this.url = entity.getUrl();
     this.type = entity.getType().name();
-    this.events = entity.getEvents().stream().map(Enum::name).collect(Collectors.toList());
+    this.triggers = entity.getTriggers().stream().map(Enum::name).collect(Collectors.toList());
     return this;
   }
 

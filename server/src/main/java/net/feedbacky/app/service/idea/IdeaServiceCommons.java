@@ -9,6 +9,9 @@ import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.tag.Tag;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
@@ -53,15 +56,15 @@ public class IdeaServiceCommons {
   private final ObjectStorage objectStorage;
   private final AttachmentRepository attachmentRepository;
   private final TagRepository tagRepository;
-  private final WebhookExecutor webhookExecutor;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
-  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository, WebhookExecutor webhookExecutor) {
+  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository, TriggerExecutor triggerExecutor) {
     this.ideaRepository = ideaRepository;
     this.objectStorage = objectStorage;
     this.attachmentRepository = attachmentRepository;
     this.tagRepository = tagRepository;
-    this.webhookExecutor = webhookExecutor;
+    this.triggerExecutor = triggerExecutor;
   }
 
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(Board board, User user, int page, int pageSize, IdeaService.FilterType filter, IdeaService.SortType sort) {
@@ -170,10 +173,14 @@ public class IdeaServiceCommons {
     idea.setAttachments(attachments);
     idea = ideaRepository.save(idea);
 
-    FetchIdeaDto fetchDto = idea.toDto().withUser(idea, user);
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    webhookExecutor.executeWebhooks(board, Webhook.Event.IDEA_CREATE, builder.build());
-    return fetchDto;
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_CREATE)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
+    return new FetchIdeaDto().from(idea).withUser(idea, user);
   }
 
   public FetchUserDto postUpvote(User user, Idea idea) {
@@ -187,6 +194,14 @@ public class IdeaServiceCommons {
     voters.add(user);
     idea.setVoters(voters);
     ideaRepository.save(idea);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_UPVOTE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     return user.toDto();
   }
 
@@ -201,6 +216,14 @@ public class IdeaServiceCommons {
     voters.remove(user);
     idea.setVoters(voters);
     ideaRepository.save(idea);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_UNDO_UPVOTE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     return ResponseEntity.noContent().build();
   }
 

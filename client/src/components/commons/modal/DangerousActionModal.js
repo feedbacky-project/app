@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
-import {FaExclamation, FaQuestion} from "react-icons/all";
+import {FaExclamation, FaQuestion} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiLoadableButton} from "ui/button";
 import {UiRow} from "ui/grid";

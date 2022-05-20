@@ -12,9 +12,11 @@ import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,8 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   private boolean pinned;
   private Date creationDate;
 
+  private Map<String, String> metadata;
+
   private String votersUrl = "/v1/ideas/:id/voters";
   private String commentsUrl = "/v1/ideas/:id/comments";
 
@@ -70,6 +74,8 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
     this.commentingRestricted = entity.isCommentingRestricted();
     this.pinned = entity.isPinned();
     this.creationDate = entity.getCreationDate();
+
+    this.metadata = new Gson().fromJson(entity.getMetadata(), Map.class);
     return this;
   }
 

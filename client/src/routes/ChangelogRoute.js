@@ -6,7 +6,7 @@ import PageNavbar from "components/commons/PageNavbar";
 import LoginModal from "components/LoginModal";
 import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaExclamationCircle} from "react-icons/all";
+import {FaExclamationCircle} from "react-icons/fa";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import {UiThemeContext} from "ui";

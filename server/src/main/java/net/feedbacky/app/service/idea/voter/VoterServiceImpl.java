@@ -5,6 +5,9 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.PatchVotersDto;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
@@ -52,15 +55,17 @@ public class VoterServiceImpl implements VoterService {
   private final CommentRepository commentRepository;
   private final IdeaServiceCommons ideaServiceCommons;
   private final RandomNicknameUtils randomNicknameUtils;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
   public VoterServiceImpl(IdeaRepository ideaRepository, UserRepository userRepository, CommentRepository commentRepository,
-                          IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils) {
+                          IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils, TriggerExecutor triggerExecutor) {
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
     this.commentRepository = commentRepository;
     this.ideaServiceCommons = ideaServiceCommons;
     this.randomNicknameUtils = randomNicknameUtils;
+    this.triggerExecutor = triggerExecutor;
   }
 
   @Override
@@ -76,13 +81,13 @@ public class VoterServiceImpl implements VoterService {
     Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("board", "voters"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     ServiceValidator.isPermitted(idea.getBoard(), Moderator.Role.MODERATOR, user);
-    CommentBuilder commentBuilder = new CommentBuilder().by(user).type(Comment.SpecialType.IDEA_ASSIGNED);
+    CommentBuilder commentBuilder = new CommentBuilder().by(user).type(Comment.SpecialType.IDEA_VOTES_RESET);
     switch(PatchVotersDto.VotersClearType.valueOf(dto.getClearType().toUpperCase())) {
       case ALL:
         idea.setVoters(new HashSet<>());
         idea.setVotersAmount(0);
         idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset all votes.");
+        commentBuilder = commentBuilder.placeholders(user.convertToSpecialCommentMention());
         break;
       case ANONYMOUS:
         Set<User> voters = idea.getVoters();
@@ -90,7 +95,7 @@ public class VoterServiceImpl implements VoterService {
         idea.setVoters(voters);
         idea.setVotersAmount(voters.size());
         idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset anonymous votes.");
+        commentBuilder = commentBuilder.placeholders(user.convertToSpecialCommentMention());
         break;
       default:
         throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid clear type provided.");
@@ -100,6 +105,14 @@ public class VoterServiceImpl implements VoterService {
     comments.add(comment);
     idea.setComments(comments);
     commentRepository.save(comment);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_VOTES_RESET)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     return idea.getVoters().stream().map(u -> new FetchSimpleUserDto().from(u)).collect(Collectors.toList());
   }
 

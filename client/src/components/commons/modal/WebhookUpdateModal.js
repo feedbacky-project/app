@@ -1,19 +1,13 @@
 import styled from "@emotion/styled";
 import axios from "axios";
+import {AppContext} from "context";
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {WEBHOOK_EVENT_LIST} from "routes/board/admin/subroutes/webhooks/creator/StepSecondSubroute";
-import {UiBadge, UiLabelledCheckbox, UiThemeContext} from "ui";
-import {UiLoadableButton} from "ui/button";
+import {UiBadge, UiKeyboardInput, UiLabelledCheckbox, UiThemeContext} from "ui";
+import {UiButton, UiLoadableButton} from "ui/button";
 import {UiFormControl, UiFormLabel} from "ui/form";
-import {UiCol} from "ui/grid";
+import {UiCol, UiRow} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
-import {popupError, popupNotification, popupWarning, prettifyEnum, truncateText} from "utils/basic-utils";
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: stretch;
-`;
+import {popupError, popupNotification, popupWarning, prettifyTrigger} from "utils/basic-utils";
 
 const SelectableTag = styled.div`
   width: 130px;
@@ -35,10 +29,14 @@ const isValidHttpUrl = (string) => {
 }
 
 const WebhookUpdateModal = ({isOpen, onHide, webhook, onWebhookUpdate}) => {
+    const {serviceData} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
-    const [chosenEvents, setChosenEvents] = useState([]);
+    const [chosenTriggers, setChosenTriggers] = useState([]);
+    const [showAll, setShowAll] = useState(false);
     const ref = useRef();
-    useEffect(() => setChosenEvents(webhook.events || []), [webhook.events]);
+    useEffect(() => {
+        setChosenTriggers(webhook.triggers || []);
+    }, [webhook.triggers]);
 
     const onUpdate = () => {
         const url = document.getElementById("urlTextarea").value;
@@ -46,12 +44,12 @@ const WebhookUpdateModal = ({isOpen, onHide, webhook, onWebhookUpdate}) => {
             popupWarning("URL is invalid");
             return Promise.resolve();
         }
-        if (chosenEvents.length === 0) {
-            popupWarning("No webhook events chosen.");
+        if (chosenTriggers.length === 0) {
+            popupWarning("No webhook triggers chosen.");
             return Promise.resolve();
         }
         return axios.patch("/webhooks/" + webhook.id, {
-            url, events: chosenEvents, type: webhook.type
+            url, triggers: chosenTriggers, type: webhook.type
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 popupError();
@@ -63,7 +61,42 @@ const WebhookUpdateModal = ({isOpen, onHide, webhook, onWebhookUpdate}) => {
         });
     };
     const applyButton = <UiLoadableButton label={"Update"} onClick={onUpdate} className={"mx-0"}>Update</UiLoadableButton>;
-    return <UiDismissibleModal id={"webhookUpdate"} isOpen={isOpen} onHide={onHide} title={"Update Webhook"} applyButton={applyButton} onEntered={() => ref.current && ref.current.focus()}>
+    const renderCommonTriggers = () => {
+        //board triggers unsupported for webhooks
+        let triggers = Object.keys(serviceData.actionTriggers).filter(c => c !== "board");
+        if (!showAll) {
+            triggers = triggers.filter(c => c === "idea" || c === "comment");
+        }
+
+        return triggers.map((category, j) => {
+            const update = (trigger) => {
+                let newTriggers;
+                if (chosenTriggers.includes(trigger)) {
+                    newTriggers = chosenTriggers.filter(t => t !== trigger);
+                } else {
+                    newTriggers = chosenTriggers.concat(trigger);
+                }
+                // https://stackoverflow.com/a/39225750/10156191
+                setTimeout(() => setChosenTriggers(newTriggers), 0);
+            };
+            return <UiCol as={UiRow} xs={12} key={category + j} className={"mb-2 px-0"}>
+                <UiCol xs={12} className={"font-weight-bold"}>Triggers for <UiKeyboardInput>{category}</UiKeyboardInput></UiCol>
+                {serviceData.actionTriggers[category].map((trigger, i) => {
+                    return <SelectableTag xs={6} sm={4} as={UiCol} key={i} onClick={() => update(trigger)} className={"d-inline-block pr-0 mx-0"} style={{letterSpacing: "-.1pt", wordSpacing: "-.2pt"}}>
+                        <UiLabelledCheckbox id={"applicableTrigger_" + trigger} checked={chosenTriggers.includes(trigger)} onChange={update}
+                                            label={<UiBadge color={getTheme()}>{prettifyTrigger(category, trigger)}</UiBadge>}/>
+                    </SelectableTag>
+                })}
+            </UiCol>
+        })
+    };
+    const renderButton = () => {
+        if (showAll) {
+            return <UiButton label={"Hide Advanced Triggers"} className={"mt-2"} small onClick={() => setShowAll(false)}>Hide Advanced Triggers</UiButton>
+        }
+        return <UiButton label={"Show Advanced Triggers"} className={"mt-2"} small onClick={() => setShowAll(true)}>Show Advanced Triggers</UiButton>
+    }
+    return <UiDismissibleModal id={"webhookUpdate"} isOpen={isOpen} onHide={onHide} title={"Update Webhook"} applyButton={applyButton} onEntered={() => ref.current && ref.current.focus()} size={"lg"}>
         <div className={"mt-2 mb-1"}>
             <UiFormLabel>URL</UiFormLabel>
             <UiCol xs={12} className={"d-inline-block px-0"}>
@@ -76,27 +109,10 @@ const WebhookUpdateModal = ({isOpen, onHide, webhook, onWebhookUpdate}) => {
         <br/>
         <div className={"my-2"}>
             <UiFormLabel>Listened Events</UiFormLabel>
-            <FlexContainer>
-                {WEBHOOK_EVENT_LIST.map((event, i) => {
-                    const update = () => {
-                        let newEvents;
-                        if (chosenEvents.includes(event)) {
-                            newEvents = chosenEvents.filter(t => t !== event);
-                        } else {
-                            newEvents = chosenEvents.concat(event);
-                        }
-                        // https://stackoverflow.com/a/39225750/10156191
-                        setTimeout(() => setChosenEvents(newEvents), 0);
-                    };
-                    return <SelectableTag key={i} onClick={update} className={"d-inline-block"} style={{letterSpacing: "-.25pt"}}>
-                        <UiLabelledCheckbox id={"applicableEvent_" + event} checked={chosenEvents.includes(event)} onChange={update}
-                                            label={<UiBadge color={getTheme()}>{truncateText(prettifyEnum(event), 16)}</UiBadge>}/>
-                    </SelectableTag>
-                })}
-                {/* for uneven amount of tags add a dummy div(s) for even flex stretch*/}
-                {WEBHOOK_EVENT_LIST.length % 3 === 1 || <SelectableTag/>}
-                {WEBHOOK_EVENT_LIST.length % 3 === 2 || <SelectableTag/>}
-            </FlexContainer>
+            {renderCommonTriggers()}
+            <div className={"text-center"}>
+                {renderButton()}
+            </div>
         </div>
     </UiDismissibleModal>
 };
