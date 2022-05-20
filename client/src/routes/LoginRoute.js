@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import qs from "querystringify";
 import React, {useState} from 'react';
 import {FaTimes} from "react-icons/fa";
-import {Redirect, useLocation, useParams} from "react-router-dom";
+import {Redirect, useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
 import {useTitle} from "utils/use-title";
@@ -11,9 +11,11 @@ import {useTitle} from "utils/use-title";
 const LoginRoute = ({onLogin}) => {
     const {provider} = useParams();
     const location = useLocation();
+    const history = useHistory();
     const [data, setData] = useState({loaded: false, error: false, status: 0});
     useTitle("Logging in...");
 
+    const state = qs.parse(location.search).state;
     const logIn = () => {
         if (data.loaded) {
             return;
@@ -32,6 +34,7 @@ const LoginRoute = ({onLogin}) => {
             Cookies.set("FSID", response.token, {expires: 30, sameSite: "strict"});
             setData({...data, loaded: true});
             onLogin(response.token);
+            history.push("/" + state);
         }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
     };
     if (data.error && data.status !== 403) {
@@ -39,7 +42,6 @@ const LoginRoute = ({onLogin}) => {
     } else if (data.error && data.status === 403) {
         return <ErrorRoute message={"Login Refused. Sign in with other service."} Icon={FaTimes}/>
     }
-    const state = qs.parse(location.search).state;
     if (!data.loaded) {
         logIn();
         return <LoadingRouteUtil/>
