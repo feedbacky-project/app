@@ -151,6 +151,7 @@ public class CommentServiceImpl implements CommentService {
     Comment comment = dto.convertToEntity(user, idea);
     comment.setViewType(Comment.ViewType.valueOf(dto.getType().toUpperCase()));
     comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
+    comment.setMetadata("{}");
     boolean isReply = false;
     if(dto.getReplyTo() != null) {
       Comment repliedComment = commentRepository.findById(dto.getReplyTo())
