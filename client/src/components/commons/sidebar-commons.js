@@ -72,7 +72,7 @@ export const SidebarToggler = styled.div`
   z-index: 1000;
   transition: var(--hover-transition);
 
-  ${props => props.open ? ` left: 200px; top: 30px;` : `left: 0px; top: 30px;`}
+  ${props => props.open ? ` left: 224px; top: 30px;` : `left: 0px; top: 30px;`}
   &:hover {
     background-color: var(--tertiary);
   }
