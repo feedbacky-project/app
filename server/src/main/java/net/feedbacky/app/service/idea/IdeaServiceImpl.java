@@ -435,7 +435,7 @@ public class IdeaServiceImpl implements IdeaService {
             .of(idea)
             .by(user)
             .type(Comment.SpecialType.TAGS_MANAGED)
-            .placeholders(prepareTagChangeMessage(idea, addedTags, removedTags, true))
+            .placeholders(user.convertToSpecialCommentMention(), prepareTagChangeMessage(idea, addedTags, removedTags, true))
             .build();
   }
 

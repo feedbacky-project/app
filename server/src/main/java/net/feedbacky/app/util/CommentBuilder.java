@@ -51,6 +51,9 @@ public class CommentBuilder {
 
   public Comment build() {
     comment.setSpecial(true);
+    if(comment.getMetadata() == null || comment.getMetadata().equals("")) {
+      comment.setMetadata("{}");
+    }
     return comment;
   }
 
