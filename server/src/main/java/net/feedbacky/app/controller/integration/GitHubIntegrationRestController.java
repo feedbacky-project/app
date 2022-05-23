@@ -7,6 +7,7 @@ import net.feedbacky.app.data.board.integration.Integration;
 import net.feedbacky.app.data.board.integration.IntegrationType;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.dto.comment.PatchCommentDto;
 import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
@@ -20,6 +21,7 @@ import net.feedbacky.app.repository.board.IntegrationRepository;
 import net.feedbacky.app.repository.idea.CommentRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.service.ServiceUser;
+import net.feedbacky.app.service.comment.CommentService;
 import net.feedbacky.app.util.CommentBuilder;
 import net.feedbacky.app.util.WebConnectionUtils;
 import net.feedbacky.app.util.jwt.GitHubTokenBuilder;
@@ -39,6 +41,8 @@ import org.kohsuke.github.GitHubBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.net.URL;
@@ -71,14 +76,16 @@ public class GitHubIntegrationRestController {
   private final UserRepository userRepository;
   private final IdeaRepository ideaRepository;
   private final CommentRepository commentRepository;
+  private final CommentService commentService;
   private final BoardRepository boardRepository;
   private final IntegrationRepository integrationRepository;
 
   @Autowired
-  public GitHubIntegrationRestController(UserRepository userRepository, IdeaRepository ideaRepository, CommentRepository commentRepository, BoardRepository boardRepository, IntegrationRepository integrationRepository) {
+  public GitHubIntegrationRestController(UserRepository userRepository, IdeaRepository ideaRepository, CommentRepository commentRepository, CommentService commentService, BoardRepository boardRepository, IntegrationRepository integrationRepository) {
     this.userRepository = userRepository;
     this.ideaRepository = ideaRepository;
     this.commentRepository = commentRepository;
+    this.commentService = commentService;
     this.boardRepository = boardRepository;
     this.integrationRepository = integrationRepository;
   }
@@ -143,7 +150,7 @@ public class GitHubIntegrationRestController {
   }
 
   @PostMapping("v1/integration/github/dataCallback")
-  public ResponseEntity handleWebhookData(@RequestBody String body, @RequestHeader(name = "X-GitHub-Event") String eventType) {
+  public ResponseEntity handleWebhookData(HttpServletRequest request, @RequestBody String body, @RequestHeader(name = "X-GitHub-Event") String eventType) {
     //ignored
     if(!eventType.equals("issues") && !eventType.equals("issue_comment")) {
       return ResponseEntity.ok().build();
@@ -162,21 +169,40 @@ public class GitHubIntegrationRestController {
 
       Map<String, Object> issueData = (Map<String, Object>) data.get("issue");
       long issueId = Long.parseLong(String.valueOf(issueData.get("id")));
-      Idea idea = ideaRepository.findByMetadataContaining("\"integration_github_issue_id\":\"" + issueId + "\"")
+      Idea idea = ideaRepository.findByMetadataContaining("\"" + Idea.IdeaMetadata.INTEGRATION_GITHUB_ISSUE_ID.getKey() + "\":\"" + issueId + "\"")
               .orElseThrow(() -> new ResourceNotFoundException("No linked idea matches the criteria."));
       User user = userRepository.findByIntegrationAccount("github", String.valueOf(githubId))
               .orElse(getOrCreateUser(username, avatar, githubId, idea.getBoard()));
+      //as this HTTP request is user-less, assign user found from db to handle issue_comment related calls from CommentService and others
+      ServiceUser serviceUser = new ServiceUser(user.getUsername(), user.getEmail(), new ArrayList<>());
+      UserAuthenticationToken userAuthenticationToken = new UserAuthenticationToken(serviceUser, null, serviceUser.getAuthorities());
+      userAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+      SecurityContextHolder.getContext().setAuthentication(userAuthenticationToken);
 
       Comment comment = null;
       CommentBuilder builder = new CommentBuilder().of(idea).by(user);
       if(eventType.equals("issue_comment")) {
-        //only sync created comments
-        if(!action.equals("created")) {
-          return ResponseEntity.ok().build();
-        }
         Map<String, Object> commentData = (Map<String, Object>) data.get("comment");
         //if not null then comment was passed from feedbacky, do not create reply loop
         if(commentData.get("performed_via_github_app") != null) {
+          return ResponseEntity.ok().build();
+        }
+        //handle comment edits and deletions here
+        if(action.equals("edited") || action.equals("deleted")) {
+          Comment foundComment = commentRepository.findByMetadataContaining("\"" + Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey() + "\":\"" + issueId + "\"")
+                  .orElseThrow(() -> new ResourceNotFoundException("No linked comment matches the criteria."));
+          //we reuse existing code, it will handle every sanitization and safety checks and won't apply changes if needed
+          if(action.equals("edited")) {
+            PatchCommentDto dto = new PatchCommentDto();
+            dto.setDescription(String.valueOf(commentData.get("body")));
+            commentService.patch(foundComment.getId(), dto);
+          } else {
+            commentService.delete(foundComment.getId());
+          }
+          return ResponseEntity.ok().build();
+        }
+        //code below handles only new comments
+        if(!action.equals("created")) {
           return ResponseEntity.ok().build();
         }
         String commentBody = String.valueOf(commentData.get("body"));
@@ -186,6 +212,10 @@ public class GitHubIntegrationRestController {
         comment.setCreator(user);
         comment.setSpecialType(Comment.SpecialType.LEGACY);
         comment.setViewType(Comment.ViewType.PUBLIC);
+        JsonObject json = new JsonObject();
+        json.addProperty(Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey(), String.valueOf(commentData.get("id")));
+        json.addProperty(Comment.CommentMetadata.POSTED_VIA.getKey(), "GitHub");
+        comment.setMetadata(json.toString());
       } else {
         switch(action) {
           case "reopened":

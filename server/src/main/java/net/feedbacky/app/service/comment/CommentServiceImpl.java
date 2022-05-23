@@ -288,7 +288,6 @@ public class CommentServiceImpl implements CommentService {
     if(!comment.getCreator().equals(user) && !ServiceValidator.hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     Idea idea = comment.getIdea();
     triggerExecutor.executeTrigger(new ActionTriggerBuilder()
             .withTrigger(ActionTrigger.Trigger.COMMENT_DELETE)

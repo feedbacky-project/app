@@ -99,7 +99,7 @@ public class Comment implements Serializable, Fetchable<FetchCommentDto> {
   }
 
   public enum CommentMetadata {
-    POSTED_VIA("via");
+    POSTED_VIA("via"), INTEGRATION_GITHUB_COMMENT_ID("gh_comment_id");
 
     @Getter private String key;
 
