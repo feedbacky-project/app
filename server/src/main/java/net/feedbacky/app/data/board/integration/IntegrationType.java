@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.util.integration.GitHubUtils;
 
@@ -14,6 +15,7 @@ import com.google.gson.JsonObject;
 
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
@@ -102,6 +104,58 @@ public enum IntegrationType {
         i.reopen();
       } catch(Exception ex) {
         throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to open linked GitHub issue.");
+      }
+    });
+  }), new IntegrationAction(ActionTrigger.Trigger.IDEA_ASSIGN, (trigger, integration) -> {
+    if(!isEnabled(integration)) {
+      return;
+    }
+    Idea idea = (Idea) trigger.getRelatedObjects().get(0);
+    getIssueFromIdeaAndExecute(integration, idea, i -> {
+      try {
+        List<GHUser> users = i.getRepository().listAssignees().toList();
+        for(GHUser user : users) {
+          boolean isLinked = false;
+          for(ConnectedAccount account : trigger.getTriggerer().getConnectedAccounts()){
+            if(account.getProvider().equals("github") && account.getAccountId().equals(String.valueOf(user.getId()))) {
+              isLinked = true;
+              break;
+            }
+          }
+          if(trigger.getTriggerer().getEmail().equals(user.getEmail()) || isLinked) {
+            i.assignTo(user);
+            break;
+          }
+        }
+        i.reopen();
+      } catch(Exception ex) {
+        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to change assignee of linked GitHub issue.");
+      }
+    });
+  }), new IntegrationAction(ActionTrigger.Trigger.IDEA_UNASSIGN, (trigger, integration) -> {
+    if(!isEnabled(integration)) {
+      return;
+    }
+    Idea idea = (Idea) trigger.getRelatedObjects().get(0);
+    getIssueFromIdeaAndExecute(integration, idea, i -> {
+      try {
+        List<GHUser> users = i.getRepository().listAssignees().toList();
+        for(GHUser user : users) {
+          boolean isLinked = false;
+          for(ConnectedAccount account : trigger.getTriggerer().getConnectedAccounts()){
+            if(account.getProvider().equals("github") && account.getAccountId().equals(String.valueOf(user.getId()))) {
+              isLinked = true;
+              break;
+            }
+          }
+          if(trigger.getTriggerer().getEmail().equals(user.getEmail()) || isLinked) {
+            i.removeAssignees(user);
+            break;
+          }
+        }
+        i.reopen();
+      } catch(Exception ex) {
+        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to change assignee of linked GitHub issue.");
       }
     });
   }));

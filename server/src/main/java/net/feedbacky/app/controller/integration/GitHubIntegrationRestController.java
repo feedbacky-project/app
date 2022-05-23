@@ -59,6 +59,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -217,6 +218,7 @@ public class GitHubIntegrationRestController {
         json.addProperty(Comment.CommentMetadata.POSTED_VIA.getKey(), "GitHub");
         comment.setMetadata(json.toString());
       } else {
+        Map<String, Object> assigneeData = (Map<String, Object>) data.getOrDefault("assignee", new HashMap<>());
         switch(action) {
           case "reopened":
           case "opened":
@@ -242,6 +244,22 @@ public class GitHubIntegrationRestController {
           case "unpinned":
             builder = builder.type(Comment.SpecialType.IDEA_UNPINNED).placeholders(user.convertToSpecialCommentMention());
             idea.setPinned(false);
+            break;
+          case "unassigned":
+          case "assigned":
+            String assigneeId = String.valueOf(assigneeData.get("id"));
+            Optional<User> assignedOptional = userRepository.findByIntegrationAccount("github", assigneeId);
+            //do not assign/unassign non existing account and do not attempt to make one
+            if(!assignedOptional.isPresent()) {
+              return ResponseEntity.ok().build();
+            }
+            if(action.equals("assigned")) {
+              idea.setAssignee(assignedOptional.get());
+              builder = builder.type(Comment.SpecialType.IDEA_ASSIGNED).placeholders(user.convertToSpecialCommentMention(), idea.getAssignee().convertToSpecialCommentMention());
+            } else {
+              idea.setAssignee(null);
+              builder = builder.type(Comment.SpecialType.IDEA_UNASSIGNED).placeholders(user.convertToSpecialCommentMention(), idea.getAssignee().convertToSpecialCommentMention());
+            }
             break;
           default:
             throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Unsupported event.");
