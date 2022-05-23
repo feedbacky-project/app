@@ -39,7 +39,7 @@ public class CommentBuilder {
   public CommentBuilder metadata(Comment.CommentMetadata key, String value) {
     String metadata = comment.getMetadata();
     JsonObject json;
-    if(metadata.equals("")) {
+    if(metadata == null || metadata.equals("")) {
       json = new Gson().fromJson("{}", JsonObject.class);
     } else {
       json = new Gson().fromJson(metadata, JsonObject.class);
