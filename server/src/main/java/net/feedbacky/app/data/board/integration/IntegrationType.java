@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHIssueComment;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.springframework.http.HttpStatus;
@@ -156,6 +157,54 @@ public enum IntegrationType {
         i.reopen();
       } catch(Exception ex) {
         throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to change assignee of linked GitHub issue.");
+      }
+    });
+  }), new IntegrationAction(ActionTrigger.Trigger.COMMENT_EDIT, (trigger, integration) -> {
+    if(!isEnabled(integration)) {
+      return;
+    }
+    Comment comment = (Comment) trigger.getRelatedObjects().get(0);
+    JsonObject json = new Gson().fromJson(comment.getMetadata(), JsonObject.class);
+    if(!json.has(Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey())) {
+      return;
+    }
+    long commentId = Long.parseLong(json.get(Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey()).getAsString());
+    getIssueFromIdeaAndExecute(integration, comment.getIdea(), i -> {
+      try {
+        List<GHIssueComment> comments = i.getComments();
+        for(GHIssueComment ghComment : comments) {
+          if(ghComment.getId() != commentId) {
+           continue;
+          }
+          ghComment.update(comment.getDescription());
+          break;
+        }
+      } catch(Exception ex) {
+        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to edit comment of linked GitHub issue.");
+      }
+    });
+  }), new IntegrationAction(ActionTrigger.Trigger.COMMENT_DELETE, (trigger, integration) -> {
+    if(!isEnabled(integration)) {
+      return;
+    }
+    Comment comment = (Comment) trigger.getRelatedObjects().get(0);
+    JsonObject json = new Gson().fromJson(comment.getMetadata(), JsonObject.class);
+    if(!json.has(Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey())) {
+      return;
+    }
+    long commentId = Long.parseLong(json.get(Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey()).getAsString());
+    getIssueFromIdeaAndExecute(integration, comment.getIdea(), i -> {
+      try {
+        List<GHIssueComment> comments = i.getComments();
+        for(GHIssueComment ghComment : comments) {
+          if(ghComment.getId() != commentId) {
+            continue;
+          }
+          ghComment.delete();
+          break;
+        }
+      } catch(Exception ex) {
+        throw new FeedbackyRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to edit comment of linked GitHub issue.");
       }
     });
   }));
