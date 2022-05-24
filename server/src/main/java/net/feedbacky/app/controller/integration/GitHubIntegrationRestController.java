@@ -35,6 +35,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.kohsuke.github.GHAppInstallationToken;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
@@ -77,16 +78,14 @@ public class GitHubIntegrationRestController {
   private final UserRepository userRepository;
   private final IdeaRepository ideaRepository;
   private final CommentRepository commentRepository;
-  private final CommentService commentService;
   private final BoardRepository boardRepository;
   private final IntegrationRepository integrationRepository;
 
   @Autowired
-  public GitHubIntegrationRestController(UserRepository userRepository, IdeaRepository ideaRepository, CommentRepository commentRepository, CommentService commentService, BoardRepository boardRepository, IntegrationRepository integrationRepository) {
+  public GitHubIntegrationRestController(UserRepository userRepository, IdeaRepository ideaRepository, CommentRepository commentRepository, BoardRepository boardRepository, IntegrationRepository integrationRepository) {
     this.userRepository = userRepository;
     this.ideaRepository = ideaRepository;
     this.commentRepository = commentRepository;
-    this.commentService = commentService;
     this.boardRepository = boardRepository;
     this.integrationRepository = integrationRepository;
   }
@@ -174,11 +173,6 @@ public class GitHubIntegrationRestController {
               .orElseThrow(() -> new ResourceNotFoundException("No linked idea matches the criteria."));
       User user = userRepository.findByIntegrationAccount("github", String.valueOf(githubId))
               .orElse(getOrCreateUser(username, avatar, githubId, idea.getBoard()));
-      //as this HTTP request is user-less, assign user found from db to handle issue_comment related calls from CommentService and others
-      ServiceUser serviceUser = new ServiceUser(user.getUsername(), user.getEmail(), new ArrayList<>());
-      UserAuthenticationToken userAuthenticationToken = new UserAuthenticationToken(serviceUser, null, serviceUser.getAuthorities());
-      userAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-      SecurityContextHolder.getContext().setAuthentication(userAuthenticationToken);
 
       Comment comment = null;
       CommentBuilder builder = new CommentBuilder().of(idea).by(user);
@@ -192,13 +186,24 @@ public class GitHubIntegrationRestController {
         if(action.equals("edited") || action.equals("deleted")) {
           Comment foundComment = commentRepository.findByMetadataContaining("\"" + Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey() + "\":\"" + issueId + "\"")
                   .orElseThrow(() -> new ResourceNotFoundException("No linked comment matches the criteria."));
+          //we only accept comments from the same idea
+          if(!foundComment.getIdea().equals(idea)) {
+            return ResponseEntity.ok().build();
+          }
           //we reuse existing code, it will handle every sanitization and safety checks and won't apply changes if needed
           if(action.equals("edited")) {
-            PatchCommentDto dto = new PatchCommentDto();
-            dto.setDescription(String.valueOf(commentData.get("body")));
-            commentService.patch(foundComment.getId(), dto);
+            foundComment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(String.valueOf(commentData.get("body")))));
+            //edit no matter the time
+            foundComment.setEdited(true);
+            commentRepository.save(foundComment);
           } else {
-            commentService.delete(foundComment.getId());
+            foundComment.setViewType(Comment.ViewType.DELETED);
+            foundComment.setCreator(null);
+            foundComment.setDescription("");
+            commentRepository.save(foundComment);
+            //to force trend score update
+            idea.setComments(idea.getComments());
+            ideaRepository.save(idea);
           }
           return ResponseEntity.ok().build();
         }
