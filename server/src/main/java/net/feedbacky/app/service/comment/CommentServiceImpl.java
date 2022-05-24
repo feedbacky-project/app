@@ -267,7 +267,7 @@ public class CommentServiceImpl implements CommentService {
       comment.setEdited(true);
     }
 
-    comment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(comment.getDescription())));
+    comment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())));
     comment = commentRepository.save(comment);
 
     triggerExecutor.executeTrigger(new ActionTriggerBuilder()
