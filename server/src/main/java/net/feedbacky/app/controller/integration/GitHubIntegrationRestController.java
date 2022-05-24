@@ -151,7 +151,7 @@ public class GitHubIntegrationRestController {
   }
 
   @PostMapping("v1/integration/github/dataCallback")
-  public ResponseEntity handleWebhookData(HttpServletRequest request, @RequestBody String body, @RequestHeader(name = "X-GitHub-Event") String eventType) {
+  public ResponseEntity handleWebhookData(@RequestBody String body, @RequestHeader(name = "X-GitHub-Event") String eventType) {
     //ignored
     if(!eventType.equals("issues") && !eventType.equals("issue_comment")) {
       return ResponseEntity.ok().build();
@@ -185,8 +185,10 @@ public class GitHubIntegrationRestController {
         }
         //handle comment edits and deletions here
         if(action.equals("edited") || action.equals("deleted")) {
-          Comment foundComment = commentRepository.findByMetadataContaining("\"" + Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey() + "\":\"" + issueId + "\"")
+          long commentId = Long.parseLong(String.valueOf(commentData.get("id")));
+          Comment foundComment = commentRepository.findByMetadataContaining("\"" + Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey() + "\":\"" + commentId + "\"")
                   .orElseThrow(() -> new ResourceNotFoundException("No linked comment matches the criteria."));
+
           //we only accept comments from the same idea
           if(!foundComment.getIdea().equals(idea)) {
             return ResponseEntity.ok().build();
