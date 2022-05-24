@@ -164,6 +164,10 @@ public enum IntegrationType {
       return;
     }
     Comment comment = (Comment) trigger.getRelatedObjects().get(0);
+    //moderative, non public comments and fake accounts are ignored within this trigger
+    if(comment.isSpecial() || comment.getViewType() != Comment.ViewType.PUBLIC || comment.getCreator().isFake()) {
+      return;
+    }
     JsonObject json = new Gson().fromJson(comment.getMetadata(), JsonObject.class);
     if(!json.has(Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey())) {
       return;
@@ -176,7 +180,17 @@ public enum IntegrationType {
           if(ghComment.getId() != commentId) {
            continue;
           }
-          ghComment.update(comment.getDescription());
+          String authorName = comment.getCreator().getUsername();
+          String updateMessage;
+          if(comment.getReplyTo() == null) {
+            updateMessage = MessageFormat.format("<div type 'discussions-op-text'>\n\n<sup>**{0}** said</sup>\n{1}\n</div>",
+                    authorName, comment.getDescription());
+          } else {
+            String replyTo = comment.getReplyTo().getCreator().getUsername();
+            updateMessage = MessageFormat.format("<div type 'discussions-op-text'>\n\n<sup>**{0}** replied to **{1}**</sup>\n{2}\n</div>",
+                    authorName, replyTo, comment.getDescription());
+          }
+          ghComment.update(updateMessage);
           break;
         }
       } catch(Exception ex) {
@@ -188,6 +202,10 @@ public enum IntegrationType {
       return;
     }
     Comment comment = (Comment) trigger.getRelatedObjects().get(0);
+    //moderative, non public comments and fake accounts are ignored within this trigger
+    if(comment.isSpecial() || comment.getViewType() != Comment.ViewType.PUBLIC || comment.getCreator().isFake()) {
+      return;
+    }
     JsonObject json = new Gson().fromJson(comment.getMetadata(), JsonObject.class);
     if(!json.has(Comment.CommentMetadata.INTEGRATION_GITHUB_COMMENT_ID.getKey())) {
       return;
