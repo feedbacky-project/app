@@ -65,6 +65,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -258,13 +259,16 @@ public class GitHubIntegrationRestController {
             if(!assignedOptional.isPresent()) {
               return ResponseEntity.ok().build();
             }
+            Set<User> assignees = idea.getAssignedModerators();
+            User assignee = assignedOptional.get();
             if(action.equals("assigned")) {
-              idea.setAssignee(assignedOptional.get());
-              builder = builder.type(Comment.SpecialType.IDEA_ASSIGNED).placeholders(user.convertToSpecialCommentMention(), idea.getAssignee().convertToSpecialCommentMention());
+              assignees.add(assignee);
+              builder = builder.type(Comment.SpecialType.IDEA_ASSIGNED).placeholders(user.convertToSpecialCommentMention(), assignee.convertToSpecialCommentMention());
             } else {
-              idea.setAssignee(null);
-              builder = builder.type(Comment.SpecialType.IDEA_UNASSIGNED).placeholders(user.convertToSpecialCommentMention(), idea.getAssignee().convertToSpecialCommentMention());
+              assignees.remove(assignee);
+              builder = builder.type(Comment.SpecialType.IDEA_UNASSIGNED).placeholders(user.convertToSpecialCommentMention(), assignee.convertToSpecialCommentMention());
             }
+            idea.setAssignedModerators(assignees);
             break;
           default:
             throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Unsupported event.");

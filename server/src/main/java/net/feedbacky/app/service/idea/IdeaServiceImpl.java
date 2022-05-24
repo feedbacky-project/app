@@ -50,6 +50,7 @@ import net.feedbacky.app.util.request.ServiceValidator;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -152,7 +153,7 @@ public class IdeaServiceImpl implements IdeaService {
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.patch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     //if modifying staff only fields throw exception if not a moderator
-    if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null || dto.getAssignee() != null)
+    if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null || dto.getAssignees() != null)
             && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
@@ -292,33 +293,42 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   private void handleAssigneeUpdate(Idea idea, PatchIdeaDto dto, User user) {
-    CommentBuilder commentBuilder = new CommentBuilder().by(user);
-    commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED);
-    if(dto.getAssignee() == null) {
-      if(idea.getAssignee() == null) {
-        return;
+    if(dto.getAssignees() == null) {
+      return;
+    }
+    //left: new entries, right: entries to remove
+    Pair<List<User>, List<User>> updatedEntries = Pair.of(new ArrayList<>(), new ArrayList<>());
+    boolean assigneesDiffer = false;
+    //check for new added entries
+    for(Long assigneeId : dto.getAssignees()) {
+      if(idea.getAssignedModerators().stream().noneMatch(u -> u.getId().equals(assigneeId))) {
+        updatedEntries.getLeft().add(userRepository.findById(assigneeId)
+                .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Assignee with id {0} not found.", assigneeId))));
+        assigneesDiffer = true;
       }
-      //assign feature is only for moderators
-      if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
-        throw new InsufficientPermissionsException();
+    }
+    //check for removed entries
+    for(User assignee : idea.getAssignedModerators()) {
+      if(!dto.getAssignees().contains(assignee.getId())) {
+        updatedEntries.getRight().add(assignee);
+        assigneesDiffer = true;
+        break;
       }
-      idea.setAssignee(null);
-      commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_UNASSIGNED).placeholders(user.convertToSpecialCommentMention());
-
-      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
-              .withTrigger(ActionTrigger.Trigger.IDEA_UNASSIGN)
-              .withBoard(idea.getBoard())
-              .withTriggerer(user)
-              .withRelatedObjects(idea)
-              .build()
-      );
-    } else {
-      Moderator assigneeMod = idea.getBoard().getModerators().stream().filter(mod -> mod.getUser().getId().equals(dto.getAssignee())).findFirst()
-              .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("User with id {0} is not a board moderator.", dto.getAssignee())));
-      idea.setAssignee(assigneeMod.getUser());
-
-      commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED)
-              .placeholders(assigneeMod.getUser().convertToSpecialCommentMention(), user.convertToSpecialCommentMention());
+    }
+    if(!assigneesDiffer) {
+      return;
+    }
+    //assign feature is only for moderators
+    if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+      throw new InsufficientPermissionsException();
+    }
+    Set<Comment> comments = idea.getComments();
+    Set<User> assignees = idea.getAssignedModerators();
+    for(User toAssign : updatedEntries.getLeft()) {
+      CommentBuilder commentBuilder = new CommentBuilder()
+              .by(user)
+              .type(Comment.SpecialType.IDEA_ASSIGNED)
+              .placeholders(user.convertToSpecialCommentMention(), toAssign.convertToSpecialCommentMention());
       triggerExecutor.executeTrigger(new ActionTriggerBuilder()
               .withTrigger(ActionTrigger.Trigger.IDEA_ASSIGN)
               .withBoard(idea.getBoard())
@@ -326,20 +336,36 @@ public class IdeaServiceImpl implements IdeaService {
               .withRelatedObjects(idea)
               .build()
       );
-
+      assignees.add(toAssign);
+      Comment comment = commentBuilder.of(idea).build();
+      comments.add(comment);
+      commentRepository.save(comment);
       MailBuilder builder = new MailBuilder();
       builder.withTemplate(MailService.EmailTemplate.IDEA_ASSIGNED)
-              .withRecipient(assigneeMod.getUser())
+              .withRecipient(toAssign)
               .withCustomPlaceholder("${idea.name}", idea.getTitle())
               .withCustomPlaceholder("${idea.viewLink}", idea.toViewLink())
               .sendMail(mailHandler.getMailService()).async();
     }
-
-    Comment comment = commentBuilder.of(idea).build();
-    Set<Comment> comments = idea.getComments();
-    comments.add(comment);
+    for(User toUnassign : updatedEntries.getRight()) {
+      CommentBuilder commentBuilder = new CommentBuilder()
+              .by(user)
+              .type(Comment.SpecialType.IDEA_UNASSIGNED)
+              .placeholders(user.convertToSpecialCommentMention(), toUnassign.convertToSpecialCommentMention());
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.IDEA_UNASSIGN)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(idea)
+              .build()
+      );
+      assignees.remove(toUnassign);
+      Comment comment = commentBuilder.of(idea).build();
+      comments.add(comment);
+      commentRepository.save(comment);
+    }
+    idea.setAssignedModerators(assignees);
     idea.setComments(comments);
-    commentRepository.save(comment);
   }
 
   @Override

@@ -4,6 +4,7 @@
   * Sync GitHub Issue and Feedbacky idea with comments and idea/issue state
 * **[IMPROVEMENT]** Admin panel sidebar redesigned
 * **[IMPROVEMENT]** Replaced webhook events with action triggers used both for webhooks and integrations
+* **[IMPROVEMENT]** Multiple users can now be assigned to an idea
 * **[CHORE]** Update client-side dependencies to remove vulnerabilities
 * **[FIX]** Show visible replies with not visible parent comments
 

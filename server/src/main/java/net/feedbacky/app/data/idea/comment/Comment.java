@@ -83,7 +83,7 @@ public class Comment implements Serializable, Fetchable<FetchCommentDto> {
     COMMENTS_RESTRICTED("{0} has restricted commenting to moderators only."), COMMENTS_ALLOWED("{0} has removed commenting restrictions."),
     IDEA_PINNED("{0} has pinned the idea."), IDEA_UNPINNED("{0} has unpinned the idea."),
     IDEA_ASSIGNED("{0} has been assigned to this idea by {1}."), IDEA_VOTES_RESET("{0} has reset {1} votes."),
-    IDEA_TITLE_CHANGE("{0} has edited title of the idea. {1}"), IDEA_UNASSIGNED("{0} removed assignee from this idea."),
+    IDEA_TITLE_CHANGE("{0} has edited title of the idea. {1}"), IDEA_UNASSIGNED("{0} unassigned {1} from this idea."),
 
     INTEGRATION_GITHUB_CONVERT("{0} has converted this idea to {1}");
 

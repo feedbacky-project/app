@@ -121,21 +121,21 @@ public class WebhookExecutor {
       case IDEA_TAGS_CHANGE:
         embedBuilder
                 .setTitle("Tags of Idea Changed - `" + idea.getTitle() + "`")
-                .setDescription(MessageFormat.format("**`New Tags`**\n{0}", idea.getTags().stream().map(Tag::getName).collect(Collectors.joining(","))))
+                .setDescription(MessageFormat.format("**`New Tags`**\n{0}", idea.getTags().stream().map(Tag::getName).collect(Collectors.joining(", "))))
                 .setUrl(idea.toViewLink())
                 .setFooter("Edited by " + triggerer.getUsername(), triggerer.getAvatar());
         break;
       case IDEA_ASSIGN:
         embedBuilder
                 .setTitle("Idea Assigned - `" + idea.getTitle() + "`")
-                .setDescription(MessageFormat.format("**`Assignee`**\n{0}", idea.getAssignee().getUsername()))
+                .setDescription(MessageFormat.format("**`New Assignees`**\n{0}", idea.getAssignedModerators().stream().map(User::getUsername).collect(Collectors.joining(", "))))
                 .setUrl(idea.toViewLink())
                 .setFooter("Assigned by " + triggerer.getUsername(), triggerer.getAvatar());
         break;
       case IDEA_UNASSIGN:
         embedBuilder
                 .setTitle("Idea Unassigned - `" + idea.getTitle() + "`")
-                .setDescription(MessageFormat.format("**`Assignee`**\n{0}", idea.getAssignee().getUsername()))
+                .setDescription(MessageFormat.format("**`New Assignees`**\n{0}", idea.getAssignedModerators().stream().map(User::getUsername).collect(Collectors.joining(", "))))
                 .setUrl(idea.toViewLink())
                 .setFooter("Unassigned by " + triggerer.getUsername(), triggerer.getAvatar());
         break;

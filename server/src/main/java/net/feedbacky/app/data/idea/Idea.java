@@ -52,7 +52,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedEntityGraph(name = "Idea.fetch", attributeNodes = {
         @NamedAttributeNode(value = "creator"), @NamedAttributeNode("voters"),
-        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignee"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignedModerators"),
         @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers")
 })
 @NamedEntityGraph(name = "Idea.fetchMentions", attributeNodes = {
@@ -77,7 +77,7 @@ import java.util.Set;
 })
 @NamedEntityGraph(name = "Idea.patch", attributeNodes = {
         @NamedAttributeNode(value = "creator"), @NamedAttributeNode("voters"),
-        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignee"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignedModerators"),
         @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers"),
         @NamedAttributeNode(value = "board", subgraph = "Idea.subgraph.postBoardFetch")
 }, subgraphs = {
@@ -87,7 +87,7 @@ import java.util.Set;
 })
 @NamedEntityGraph(name = "Idea.patchTags", attributeNodes = {
         @NamedAttributeNode(value = "creator"), @NamedAttributeNode("voters"),
-        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignee"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignedModerators"),
         @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers"),
         @NamedAttributeNode(value = "board", subgraph = "Idea.subgraph.postBoardFetch")
 }, subgraphs = {
@@ -124,9 +124,8 @@ public class Idea implements Serializable, Fetchable<FetchIdeaDto> {
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> subscribers = new HashSet<>();
   private IdeaStatus status;
-  @ManyToOne(fetch = FetchType.LAZY)
-  @LazyToOne(LazyToOneOption.NO_PROXY)
-  private User assignee;
+  @ManyToMany(fetch = FetchType.LAZY)
+  private Set<User> assignedModerators = new HashSet<>();
   @CreationTimestamp
   private Date creationDate;
   private boolean edited = false;

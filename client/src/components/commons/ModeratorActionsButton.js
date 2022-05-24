@@ -120,14 +120,14 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             onStateChange("discussion");
         });
     };
-    const onModeratorAssign = (mod) => {
-        return axios.patch("/ideas/" + ideaData.id, {assignee: mod == null ? null : mod.id}).then(res => {
+    const onModeratorAssign = (assignees) => {
+        return axios.patch("/ideas/" + ideaData.id, {assignees: assignees.map(a => a.id)}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
                 return;
             }
-            updateState({...ideaData, assignee: res.data.assignee});
-            popupNotification("Assignee updated", getTheme());
+            updateState({...ideaData, assignees: res.data.assignees});
+            popupNotification("Assignees updated", getTheme());
             onStateChange("discussion");
         });
     };

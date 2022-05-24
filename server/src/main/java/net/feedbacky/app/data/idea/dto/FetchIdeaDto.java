@@ -35,7 +35,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   private FetchSimpleUserDto user;
   private Set<FetchTagDto> tags;
   private List<FetchAttachmentDto> attachments;
-  private FetchSimpleUserDto assignee;
+  private List<FetchSimpleUserDto> assignees;
   private long votersAmount;
   private long commentsAmount;
   private boolean upvoted;
@@ -64,7 +64,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
     this.user = new FetchSimpleUserDto().from(entity.getCreator());
     this.tags = entity.getTags().stream().map(Tag::toDto).collect(Collectors.toSet());
     this.attachments = entity.getAttachments().stream().map(Attachment::toDto).collect(Collectors.toList());
-    this.assignee = new FetchSimpleUserDto().from(entity.getAssignee());
+    this.assignees = entity.getAssignedModerators().stream().map(u -> new FetchSimpleUserDto().from(u)).collect(Collectors.toList());
     this.votersAmount = entity.getVoters().size();
     this.commentsAmount = entity.getComments().stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count();
     this.upvoted = false;

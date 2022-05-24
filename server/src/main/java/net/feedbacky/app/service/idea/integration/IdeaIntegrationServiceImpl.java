@@ -142,15 +142,16 @@ public class IdeaIntegrationServiceImpl implements IdeaIntegrationService {
       }
       issue.addLabels(labelsToAdd.toArray(new String[0]));
     }
-    if(idea.getAssignee() != null) {
-      List<GHUser> assignees = repository.listAssignees().toList();
+    List<GHUser> assignees = repository.listAssignees().toList();
+    List<GHUser> toAssign = new ArrayList<>();
+    for(User assignee : idea.getAssignedModerators()) {
       for(GHUser ghUser : assignees) {
-        if(user.getUsername().equalsIgnoreCase(ghUser.getName()) || user.getEmail().equals(ghUser.getEmail())) {
-          issue.addAssignees(ghUser);
-          break;
+        if(assignee.getUsername().equalsIgnoreCase(ghUser.getName()) || assignee.getEmail().equals(ghUser.getEmail())) {
+          toAssign.add(ghUser);
         }
       }
     }
+    issue.addAssignees(toAssign);
     CommentBuilder commentBuilder = new CommentBuilder().of(idea).by(user);
     Comment comment = commentBuilder.type(Comment.SpecialType.INTEGRATION_GITHUB_CONVERT)
             .placeholders(user.convertToSpecialCommentMention(), convertToLinkedText("GitHub Issue.", issue.getHtmlUrl().toString())).build();

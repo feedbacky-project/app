@@ -2,12 +2,10 @@ package net.feedbacky.app.controller.idea;
 
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
-import net.feedbacky.app.data.idea.dto.PatchVotersDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
-import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.service.idea.IdeaService;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.RequestParamsParser;
