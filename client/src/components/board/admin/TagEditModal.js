@@ -1,6 +1,6 @@
 import axios from "axios";
 import {renderModal} from "components/commons/tag-modal-commons";
-import {AppContext, BoardContext} from "context";
+import {BoardContext} from "context";
 import {useContext, useEffect, useRef, useState} from "react";
 import {UiThemeContext} from "ui";
 import {popupError, popupNotification, popupWarning} from "utils/basic-utils";

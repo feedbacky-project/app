@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {FaAngleLeft, FaAngleRight} from "react-icons/all";
+import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiButton} from "ui/button/UiButton";
 

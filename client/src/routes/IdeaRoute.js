@@ -30,6 +30,7 @@ const IdeaRoute = () => {
     const location = useLocation();
     const [idea, setIdea] = useState({data: {}, loaded: false, error: false});
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
+    const [mentions, setMentions] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const discussionRef = useRef();
     const votersRef = useRef();
@@ -68,6 +69,9 @@ const IdeaRoute = () => {
         }
         // eslint-disable-next-line
     }, [user.session]);
+    useEffect(() => {
+        axios.get("/ideas/" + id + "/mentionableUsers").then(res => setMentions(res.data));
+    }, [id]);
 
     const onStateChange = (stateType) => {
         if(stateType === "discussion") {
@@ -91,7 +95,7 @@ const IdeaRoute = () => {
         history.replace({pathname: location.pathname, state: null});
     };
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged}>
-        <IdeaContext.Provider value={{ideaData: idea.data, loaded: idea.loaded, error: idea.error, updateState: updateState}}>
+        <IdeaContext.Provider value={{ideaData: idea.data, loaded: idea.loaded, error: idea.error, updateState: updateState, mentions: mentions}}>
             <LoginModal isOpen={modalOpen} onHide={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
                         redirectUrl={"i/" + convertIdeaToSlug(idea.data)}/>
             <PageNavbar selectedNode={"feedback"} goBackVisible/>

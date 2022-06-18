@@ -3,16 +3,20 @@ package net.feedbacky.app.data.idea.dto;
 import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
 import net.feedbacky.app.data.idea.dto.attachment.FetchAttachmentDto;
+import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +35,7 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   private FetchSimpleUserDto user;
   private Set<FetchTagDto> tags;
   private List<FetchAttachmentDto> attachments;
-  private FetchSimpleUserDto assignee;
+  private List<FetchSimpleUserDto> assignees;
   private long votersAmount;
   private long commentsAmount;
   private boolean upvoted;
@@ -41,6 +45,8 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
   private boolean commentingRestricted;
   private boolean pinned;
   private Date creationDate;
+
+  private Map<String, String> metadata;
 
   private String votersUrl = "/v1/ideas/:id/voters";
   private String commentsUrl = "/v1/ideas/:id/comments";
@@ -56,9 +62,9 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
     this.title = entity.getTitle();
     this.description = entity.getDescription();
     this.user = new FetchSimpleUserDto().from(entity.getCreator());
-    this.tags = entity.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toSet());
-    this.attachments = entity.getAttachments().stream().map(attachment -> new FetchAttachmentDto().from(attachment)).collect(Collectors.toList());
-    this.assignee = new FetchSimpleUserDto().from(entity.getAssignee());
+    this.tags = entity.getTags().stream().map(Tag::toDto).collect(Collectors.toSet());
+    this.attachments = entity.getAttachments().stream().map(Attachment::toDto).collect(Collectors.toList());
+    this.assignees = entity.getAssignedModerators().stream().map(u -> new FetchSimpleUserDto().from(u)).collect(Collectors.toList());
     this.votersAmount = entity.getVoters().size();
     this.commentsAmount = entity.getComments().stream().filter(comment -> !comment.isSpecial()).filter(comment -> comment.getViewType() == Comment.ViewType.PUBLIC).count();
     this.upvoted = false;
@@ -68,6 +74,8 @@ public class FetchIdeaDto implements FetchResponseDto<FetchIdeaDto, Idea> {
     this.commentingRestricted = entity.isCommentingRestricted();
     this.pinned = entity.isPinned();
     this.creationDate = entity.getCreationDate();
+
+    this.metadata = new Gson().fromJson(entity.getMetadata(), Map.class);
     return this;
   }
 

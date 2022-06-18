@@ -91,13 +91,13 @@ const SettingsSubroute = () => {
             <AccountDeleteModal isOpen={modal.open && modal.type === "anonymize"} user={user} onHide={() => setModal({...modal, open: false})} onAction={onAccountDeactivation}/>
             <UiCol xs={{span: 12, order: 2}} lg={{span: 6, order: 1}}>
                 <UiFormLabel className={"mt-lg-0 mt-2"}>Username</UiFormLabel>
-                <UiCountableFormControl id={"usernameTextarea"} className={"bg-light"} defaultValue={user.data.username} minLength={4} maxLength={20} placeholder={"Name of your account."}
+                <UiCountableFormControl id={"usernameTextarea"} defaultValue={user.data.username} minLength={4} maxLength={20} placeholder={"Name of your account."}
                                         onChange={e => setUsername(e.target.value.substring(0, 20))} label={"Type your username"}/>
             </UiCol>
             <UiCol xs={{span: 12, order: 1}} lg={{span: 6, order: 2}}>
                 <UiFormLabel>Avatar</UiFormLabel>
                 <br/>
-                <img alt={"User Avatar"} src={avatar} className={"rounded-circle"} width={100} height={100}/>
+                <img alt={"User Avatar"} src={avatar} className={"rounded-circle"} width={64} height={64}/>
                 <ComponentLoader loaded={connectedAccounts.loaded} component={component} loader={loader}/>
             </UiCol>
             <UiCol xs={{span: 12, order: 3}} lg={6}>
@@ -128,7 +128,7 @@ const SettingsSubroute = () => {
                     </span>
                 </UiCol>
                 <UiCol sm={3} xs={6} className={"text-sm-right text-left my-auto"}>
-                    <UiButton label={"Deactivate Account"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={onDeactivate}>
+                    <UiButton dangerous label={"Deactivate Account"} className={"mt-sm-0 mt-2"} color={tinycolor("#ff3547")} onClick={onDeactivate}>
                         Deactivate
                     </UiButton>
                 </UiCol>

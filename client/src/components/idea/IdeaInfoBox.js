@@ -4,6 +4,7 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import VoteButton from "components/commons/VoteButton";
 import AssigneeInfo from "components/idea/info/AssigneeInfo";
 import AttachmentsInfo from "components/idea/info/AttachmentsInfo";
+import MetadataInfo from "components/idea/info/MetadataInfo";
 import NotificationsInfo from "components/idea/info/NotificationsInfo";
 import TagsInfo from "components/idea/info/TagsInfo";
 import TitleInfo from "components/idea/info/TitleInfo";
@@ -12,6 +13,7 @@ import {ShareBox, ShareBoxAlignment} from "components/idea/ShareBox";
 import {AppContext, IdeaContext} from "context";
 import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
+import {FaTrash} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
 import {UiThemeContext} from "ui";
 import {UiCancelButton, UiLoadableButton} from "ui/button";
@@ -105,7 +107,7 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
     };
     return <React.Fragment>
         <DangerousActionModal id={"ideaDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onDelete}
-                              actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
+                              actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>} Icon={FaTrash}/>
         <UiCol sm={12} md={10}>
             <UiCol xs={12} className={"d-inline-flex mb-2 p-0"}>
                 <div className={"my-auto mr-2"} ref={voteRef}>
@@ -123,6 +125,7 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
             <AttachmentsInfo editor={editor} onAttachmentUpdate={(data) => setUpdatedAttachment(data)}/>
             <AssigneeInfo/>
             <NotificationsInfo/>
+            <MetadataInfo/>
             <ShareBoxAlignment><ShareBox/></ShareBoxAlignment>
         </UiCol>
     </React.Fragment>

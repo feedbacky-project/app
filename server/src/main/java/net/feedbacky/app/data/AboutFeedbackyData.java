@@ -2,11 +2,13 @@ package net.feedbacky.app.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.feedbacky.app.controller.about.EmojiDataRegistry;
+import net.feedbacky.app.data.emoji.EmojiDataRegistry;
+import net.feedbacky.app.data.trigger.ActionTrigger;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.login.LoginProvider;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -21,6 +23,8 @@ public class AboutFeedbackyData {
   private List<LoginProvider.ProviderData> loginProviders;
   private List<FetchUserDto> serviceAdmins;
   private List<EmojiDataRegistry.EmojiData> emojisData;
+  private Map<String, List<ActionTrigger.Trigger>> actionTriggers;
+  private List<String> integrationsAvailable;
   private boolean mailLoginEnabled;
   private boolean developmentMode;
 

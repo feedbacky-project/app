@@ -1,15 +1,14 @@
 import styled from "@emotion/styled";
 import {AppContext} from "context";
 import React, {useContext} from "react";
-import {FaComment, FaCommentSlash, FaEdit, FaICursor, FaLink, FaLock, FaLockOpen, FaTags, FaUndoAlt, FaUnlink, FaUserCheck} from "react-icons/all";
+import {FaComment, FaCommentSlash, FaEdit, FaGithub, FaICursor, FaLink, FaLock, FaLockOpen, FaTags, FaUndoAlt, FaUnlink, FaUserCheck} from "react-icons/fa";
 import {UiThemeContext} from "ui";
 
 const IconOverlay = styled.div`
-  text-align: center;
+  display: flex;
   border-radius: 50%;
-  height: 30px;
-  min-width: 30px;
-  transform: translateY(-3px);
+  height: 26px;
+  min-width: 26px;
   box-shadow: 0 0 0 1px var(--background), 0 0 0 2px currentColor;
   margin-right: 1rem;
   color: ${props => props.theme};
@@ -20,7 +19,10 @@ const IconOverlay = styled.div`
 
 const Icon = styled.div`
   fill: ${props => props.fill};
-  vertical-align: bottom;
+  display: flex;
+  margin: auto;
+  width: .9em;
+  height: .9em;
 `;
 
 const CommentIcon = ({specialType}) => {
@@ -54,6 +56,8 @@ const CommentIcon = ({specialType}) => {
                 return <Icon as={FaUndoAlt} fill={fill}/>;
             case "IDEA_TITLE_CHANGE":
                 return <Icon as={FaICursor} fill={fill}/>
+            case "INTEGRATION_GITHUB_CONVERT":
+                return <Icon as={FaGithub} fill={fill}/>
             case "LEGACY":
             case "TAGS_MANAGED":
             default:

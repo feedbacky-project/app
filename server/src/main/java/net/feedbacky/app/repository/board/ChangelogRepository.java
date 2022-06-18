@@ -2,7 +2,6 @@ package net.feedbacky.app.repository.board;
 
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.Changelog;
-import net.feedbacky.app.data.idea.Idea;
 
 import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphPagingAndSortingRepository;
 
@@ -12,6 +11,8 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * @author Plajer
  * <p>
@@ -20,10 +21,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChangelogRepository extends EntityGraphPagingAndSortingRepository<Changelog, Long> {
 
-  Page<Changelog> findByBoard(Board board, Pageable pageable);
+  @EntityGraph(value = "Changelog.fetch")
+  Optional<Page<Changelog>> findByBoardDiscriminator(String discriminator, Pageable pageable);
 
-  @EntityGraph(value = "Idea.fetch")
-  @Query("SELECT c FROM Changelog c WHERE c.board = ?1 AND (c.title LIKE %?2% OR c.description LIKE %?2%)")
-  Page<Changelog> findByQuery(Board board, String query, Pageable pageable);
+  @EntityGraph(value = "Changelog.fetch")
+  @Query("SELECT c FROM Changelog c WHERE c.board.discriminator = ?1 AND (c.title LIKE %?2% OR c.description LIKE %?2%)")
+  Optional<Page<Changelog>> findByQuery(String discriminator, String query, Pageable pageable);
 
 }

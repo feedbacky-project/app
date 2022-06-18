@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import {renderLogIn} from "components/commons/navbar-commons";
 import {AppContext, BoardContext} from "context";
-import React, {useContext} from 'react';
-import {FaChevronLeft, FaRegComment, FaRegListAlt, FaRegMap, FaRegUser} from "react-icons/all";
+import React, {useContext, useEffect, useState} from 'react';
+import {FaBars, FaChevronLeft, FaRegComment, FaRegListAlt, FaRegMap, FaRegUser} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiContainer} from "ui/grid";
@@ -60,13 +60,39 @@ const NotificationBubble = styled(UiBadge)`
   height: 1rem;
 `;
 
-const PageNavbar = ({selectedNode, goBackVisible = false}) => {
+const ToggleContainer = styled.div`
+  font-weight: 500;
+  color: ${props => props.theme};
+  flex: 1 1;
+  margin-right: 0;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 1.15rem;
+  display: inline-block;
+  padding: .25rem 0;
+
+  &:hover {
+    color: ${props => props.theme};
+  }
+`;
+
+const widthQuery = window.matchMedia(`(min-width: 800px)`);
+
+const PageNavbar = ({selectedNode, goBackVisible = false, onSidebarToggle = null}) => {
+    const [sidebarToggleVisible, setSidebarToggleVisible] = useState(!widthQuery.matches);
     const context = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const FeedbackComponent = selectedNode === "feedback" ? SelectedRoute : UiNavbarOption;
     const RoadmapComponent = selectedNode === "roadmap" ? SelectedRoute : UiNavbarOption;
     const ChangelogComponent = selectedNode === "changelog" ? SelectedRoute : UiNavbarOption;
+    useEffect(() => {
+        const listener = () => setSidebarToggleVisible(!widthQuery.matches);
+        widthQuery.addEventListener("change", listener);
+        return () => widthQuery.removeEventListener("change", listener);
+    }, []);
 
     const renderChangelogNotificationBubble = () => {
         if (data.lastChangelogUpdate == null) {
@@ -87,6 +113,9 @@ const PageNavbar = ({selectedNode, goBackVisible = false}) => {
             <FaChevronLeft className={"ml-2"}/>
         </GoBackButton>}
         <UiContainer className={"d-md-flex d-block"}>
+            {onSidebarToggle && sidebarToggleVisible && <ToggleContainer style={{marginRight: 0}}>
+                <FaBars style={{color: getTheme().toString(), cursor: "pointer"}} onClick={onSidebarToggle}/>
+            </ToggleContainer>}
             <UiNavbarBrand theme={getTheme().toString()} to={{pathname: (goBackVisible ? "/b/" + data.discriminator : "/me"), state: {_boardData: data}}}>
                 <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Board Logo"}/>
                 <span className={"align-bottom"}>{data.name}</span>

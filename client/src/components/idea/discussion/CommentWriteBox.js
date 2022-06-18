@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
+import MentionableForm from "components/idea/discussion/MentionableForm";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
@@ -8,7 +9,7 @@ import {FaTimes} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiPrettyUsername, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
-import {UiFormControl, UiMarkdownFormControl} from "ui/form";
+import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiAvatar} from "ui/image";
 import {popupError, popupWarning} from "utils/basic-utils";
@@ -51,7 +52,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
     const {user} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
     const {onNotLoggedClick, data} = useContext(BoardContext);
-    const {ideaData} = useContext(IdeaContext);
+    const {ideaData, mentions} = useContext(IdeaContext);
     const isModerator = data.moderators.find(mod => mod.userId === user.data.id);
     const [submitOpen, setSubmitOpen] = useState(false);
     const [warningOpen, setWarningOpen] = useState(false);
@@ -60,7 +61,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
         return <React.Fragment/>;
     }
     const onPreSubmit = () => {
-        if(replyTo != null && replyTo.viewType === "INTERNAL") {
+        if (replyTo != null && replyTo.viewType === "INTERNAL") {
             setWarningOpen(true);
             return Promise.resolve();
         }
@@ -92,7 +93,8 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
         });
     };
     const onCommentBoxKeyUp = (e) => {
-        let chars = e.target.value.length;
+        const {value} = e.target;
+        let chars = value.length;
         if (chars > 0 && !submitOpen) {
             setSubmitOpen(true);
         }
@@ -117,7 +119,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
             </React.Fragment>}
         </div>
     };
-    const avatar = user.loggedIn ? <UiAvatar roundedCircle size={30} user={user.data}/> : <UiAvatar roundedCircle size={30} user={null}/>;
+    const avatar = user.loggedIn ? <UiAvatar roundedCircle size={26} user={user.data}/> : <UiAvatar roundedCircle size={26} user={null}/>;
     const username = user.loggedIn ? <UiPrettyUsername user={user.data}/> : "Anonymous";
     const onChange = user.loggedIn ? onCommentBoxKeyUp : onNotLoggedClick;
     const onClick = user.loggedIn ? () => void 0 : e => {
@@ -131,8 +133,8 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
                                   style={{overflow: "hidden"}} label={"Commenting restricted"}/>;
         }
         return <div id={"replyBox"}>
-            <UiMarkdownFormControl CustomOptions={replyTo != null && ReplyMarkdownOptions} as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
-                                   style={{overflow: "hidden"}} onChange={onChange} label={"Write a comment"} onClick={onClick}/>
+            <MentionableForm allMentions={mentions} CustomOptions={replyTo != null && ReplyMarkdownOptions} as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
+                             style={{overflow: "hidden"}} onChange={onChange} label={"Write a comment"} onClick={onClick}/>
             {replyTo != null && <React.Fragment>
                 <ReplyBox className={"text-black-60"}>
                     <span className={"text-black-75"}>Reply to</span>

@@ -5,8 +5,9 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import WebhookUpdateModal from "components/commons/modal/WebhookUpdateModal";
 import {SvgNotice} from "components/commons/SvgNotice";
 import ComponentLoader from "components/ComponentLoader";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
+import {FaTrash} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiBadge, UiLoadingSpinner, UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
@@ -74,7 +75,7 @@ const WebhooksSubroute = () => {
                     <UiElementDeleteButton id={"webhook_del_" + i} tooltipName={"Delete"} onClick={onDelete}/>
                     <br/>
                     <small className={"text-truncate text-center d-block"}>{prettifyEnum(hook.type) + " #" + hook.id}</small>
-                    <EventsContainer>{renderEvents(hook)}</EventsContainer>
+                    <EventsContainer>{renderTriggers(hook)}</EventsContainer>
                 </div>
             </Webhook>
         })
@@ -105,8 +106,8 @@ const WebhooksSubroute = () => {
                 return "";
         }
     };
-    const renderEvents = (hook) => {
-        return hook.events.map(event => <div key={hook.id + event}><UiBadge className={"d-block my-1"}>{prettifyEnum(event)}</UiBadge></div>);
+    const renderTriggers = (hook) => {
+        return hook.triggers.map(trigger => <div key={hook.id + trigger}><UiBadge className={"d-block my-1"}>{prettifyEnum(trigger)}</UiBadge></div>);
     };
     const onWebhookUpdate = (webhook) => {
         const newWebhooks = [...webhooks.data];
@@ -128,9 +129,9 @@ const WebhooksSubroute = () => {
     const onWebhookEdit = (webhook) => {
         setModal({open: true, type: "edit", data: webhook, dataName: ""});
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <DangerousActionModal id={"webhookDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "delete"} onAction={onWebhookDelete}
-                              actionDescription={<div>Webhook <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u> and won't receive any future data.</div>}/>
+                              actionDescription={<div>Webhook <UiBadge>{modal.dataName}</UiBadge> will be <u>deleted</u> and won't receive any future data.</div>} Icon={FaTrash}/>
         <WebhookUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "edit"} webhook={modal.data} onWebhookUpdate={onWebhookUpdate}/>
         <UiViewBox title={"Webhooks"} description={"Edit webhooks to integrate with other apps here."}>
             {renderContent()}

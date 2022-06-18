@@ -1,7 +1,7 @@
 import axios from "axios";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
-import {FaRegBell, FaRegBellSlash} from "react-icons/all";
+import {FaRegBell, FaRegBellSlash} from "react-icons/fa";
 import {UiClickableTip, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
 import {popupError, popupNotification} from "utils/basic-utils";

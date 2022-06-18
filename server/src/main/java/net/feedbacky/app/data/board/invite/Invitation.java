@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.invite.FetchInviteDto;
 import net.feedbacky.app.data.user.User;
 
 import javax.persistence.Entity;
@@ -27,9 +29,8 @@ import java.io.Serializable;
 @Table(name = "boards_invitations")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Invitation implements Serializable {
+public class Invitation implements Serializable, Fetchable<FetchInviteDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +44,8 @@ public class Invitation implements Serializable {
   private User user;
   private String code;
 
+  @Override
+  public FetchInviteDto toDto() {
+    return new FetchInviteDto().from(this);
+  }
 }

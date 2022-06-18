@@ -3,14 +3,17 @@ package net.feedbacky.app.data.idea.dto.comment;
 import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.comment.reaction.CommentReaction;
 import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
 
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +35,8 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
   private Long replyTo;
   private Date creationDate;
 
+  private Map<String, String> metadata;
+
   @Override
   @CheckReturnValue
   public FetchCommentDto from(Comment entity) {
@@ -44,12 +49,14 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.special = entity.isSpecial();
     this.specialType = entity.getSpecialType().name();
     this.viewType = entity.getViewType().name();
-    this.reactions = entity.getReactions().stream().map(r -> new FetchCommentReactionDto().from(r)).collect(Collectors.toList());
+    this.reactions = entity.getReactions().stream().map(CommentReaction::toDto).collect(Collectors.toList());
     this.edited = entity.isEdited();
     if(entity.getReplyTo() != null) {
       this.replyTo = entity.getReplyTo().getId();
     }
     this.creationDate = entity.getCreationDate();
+
+    this.metadata = new Gson().fromJson(entity.getMetadata(), Map.class);
     return this;
   }
 
@@ -60,6 +67,7 @@ public class FetchCommentDto implements FetchResponseDto<FetchCommentDto, Commen
     this.reactions = new ArrayList<>();
     this.edited = false;
     this.creationDate = null;
+    this.metadata = null;
     return this;
   }
 

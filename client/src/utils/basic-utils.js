@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
-import Snackbar from "utils/snackbar";
 import tinycolor from "tinycolor2";
 import {getEnvVar} from "utils/env-vars";
+import Snackbar from "utils/snackbar";
 
 export const scrollIntoView = (id, pop = true) => {
     //kudos to https://stackoverflow.com/a/22480938/10156191
@@ -67,7 +67,7 @@ export const popupWarning = (content = "Something unexpected happened") => {
     if(document.body.classList.contains("dark")) {
         color = tinycolor("hsl(48, 100%, 50%)");
     } else {
-        color = tinycolor("hsl(20, 99%, 50%)");
+        color = tinycolor("hsl(20, 99%, 40%)");
     }
     popup(content, color, {showAction: false, duration: 6000});
 };
@@ -86,8 +86,9 @@ const popup = (content, theme, data) => {
     Snackbar.show({
         text: content,
         textColor: theme.toString(),
-        backgroundColor: theme.setAlpha(.1).toRgbString(),
+        backgroundColor: "var(--secondary)",
         pos: "bottom-center",
+        customStyle: {border: "1px dashed " + theme.setAlpha(.2).toRgbString()},
         ...data
     });
 };
@@ -143,6 +144,16 @@ export const formatRemainingCharacters = (remainingId, textareaId, limit) => {
     const element = document.getElementById(remainingId);
     const textarea = document.getElementById(textareaId);
     element.innerText = limit - textarea.value.length + " Remaining";
+};
+
+export const prettifyTrigger = (category, trigger) => {
+    //remove unnecessary 'Integration' word
+    let placeholder = trigger.replace("INTEGRATION_", "");
+    //truncate 'Board' word for moderator and suspension only related triggers
+    if(category === "moderator" || category === "suspendedUser") {
+        placeholder = placeholder.replace("BOARD_", "");
+    }
+    return prettifyEnum(placeholder);
 };
 
 export const prettifyEnum = (text) => {

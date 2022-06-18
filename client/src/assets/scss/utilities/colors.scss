@@ -1,3 +1,11 @@
+:root {
+  --text-red: hsl(355, 67%, 48%);
+}
+
+.dark {
+  --text-red: hsl(2, 95%, 66%) !important;
+}
+
 .text-black-60 {
   color: hsla(0, 0%, 0%, .6);
 }

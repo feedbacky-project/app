@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import {AppContext, BoardContext} from "context";
+import {BoardContext} from "context";
 import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {FaExternalLinkAlt, FaRegImage} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiLabelledCheckbox, UiThemeContext} from "ui";
+import {UiBadge, UiThemeContext} from "ui";
 import {UiClassicButton, UiElementDeleteButton, UiLoadableButton} from "ui/button";
-import {UiFormControl, UiFormLabel, UiMarkdownFormControl} from "ui/form";
+import {UiFormControl, UiFormLabel, UiFormSelect, UiMarkdownFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
 import {UiDismissibleModal} from "ui/modal";
 import {formatRemainingCharacters, getBase64FromFile, popupError, popupNotification, popupWarning, validateImageWithWarning} from "utils/basic-utils";
@@ -22,20 +22,6 @@ const AttachmentButton = styled(UiClassicButton)`
       color: hsla(0, 0%, 95%, .6);
     }
   }
-`;
-
-const TagsContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: stretch;
-`;
-
-const SelectableTag = styled.div`
-  width: 130px;
-  flex-grow: 1;
-  display: inline-block;
-  margin-right: .5rem;
-  cursor: pointer;
 `;
 
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
@@ -132,6 +118,9 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
         formatRemainingCharacters("remainingDescription", "descriptionTextarea", 1800);
         setDescription(e.target.value.substring(0, 1800));
     };
+    const onTagChange = changed => {
+        setChosenTags(changed.map(option => applicableTags.find(t => t.id === option.value)));
+    }
     return <UiDismissibleModal id={"ideaPost"} isOpen={isOpen} onHide={onHide} title={"Post Feedback"}
                                applyButton={applyButton} onEntered={() => descriptionRef.current && descriptionRef.current.focus()}>
         <div className={"mt-2 mb-1"}>
@@ -175,30 +164,17 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             <br/>
             <div className={"my-2"}>
                 <UiFormLabel>Tags</UiFormLabel>
-                <TagsContainer>
-                    {applicableTags.map((tag, i) => {
-                        const update = () => {
-                            let newTags;
-                            if (chosenTags.includes(tag)) {
-                                newTags = chosenTags.filter(t => t.name !== tag.name);
-                            } else {
-                                newTags = chosenTags.concat(tag);
-                            }
-                            // https://stackoverflow.com/a/39225750/10156191
-                            setTimeout(() => setChosenTags(newTags), 0);
-                        };
-                        return <SelectableTag key={i} onClick={update} className={"d-inline-block"}>
-                            <UiLabelledCheckbox id={"applicableTag_" + tag.id} checked={chosenTags.includes(tag)} onChange={update}
-                                                label={<UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}/>
-                        </SelectableTag>
-                    })}
-                    {/* for uneven amount of tags add a dummy div(s) for even flex stretch*/}
-                    {applicableTags.length % 3 === 1 || <SelectableTag/>}
-                    {applicableTags.length % 3 === 2 || <SelectableTag/>}
-                </TagsContainer>
+                <UiFormSelect name={"tagSelector"} value={chosenTags.map(tag => ({value: tag.id, label: <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}))} isMulti options={applicableTags.map(tag => ({value: tag.id, label: <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}))}
+                              onChange={onTagChange} placeholder={"Choose Tags"}
+                              filterOption={(candidate, input) => {
+                                  return candidate.data.__isNew__ || applicableTags.find(t => t.id === candidate.value).name.toLowerCase().includes(input.toLowerCase());
+                              }}/>
             </div>
         </React.Fragment>
         }
+        <div>
+
+        </div>
     </UiDismissibleModal>
 };
 

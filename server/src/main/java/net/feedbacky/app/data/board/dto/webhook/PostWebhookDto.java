@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import net.feedbacky.app.annotation.enumvalue.EnumValue;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.webhook.Webhook;
+import net.feedbacky.app.data.trigger.ActionTrigger;
 import net.feedbacky.app.exception.FeedbackyRestException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -35,22 +36,22 @@ public class PostWebhookDto {
   @EnumValue(enumClazz = Webhook.Type.class, message = "Type must be valid webhook type.")
   @NotNull(message = "Type cannot be empty.")
   private String type;
-  @NotNull(message = "Events cannot be empty.")
-  private List<String> events;
+  @NotNull(message = "Triggers cannot be empty.")
+  private List<String> triggers;
 
   public Webhook convertToEntity(Board board) {
-    List<Webhook.Event> webhookEvents = new ArrayList<>();
-    for(String event : events) {
+    List<ActionTrigger.Trigger> webhookTriggers = new ArrayList<>();
+    for(String event : triggers) {
       try {
-        webhookEvents.add(Webhook.Event.valueOf(event));
+        webhookTriggers.add(ActionTrigger.Trigger.valueOf(event));
       } catch(Exception ex) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid webhook event '" + event + "'.");
+        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid trigger event '" + event + "'.");
       }
     }
     Webhook webhook = new Webhook();
     webhook.setUrl(url);
     webhook.setType(Webhook.Type.valueOf(type));
-    webhook.setEvents(webhookEvents);
+    webhook.setTriggers(webhookTriggers);
     webhook.setBoard(board);
     return webhook;
   }

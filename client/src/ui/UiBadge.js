@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import {WCAG_AA_CONTRAST} from "App";
-import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";
@@ -32,13 +31,12 @@ const UiBadge = (props) => {
         if (tinycolor.readability(badgeColor, "#282828") < WCAG_AA_CONTRAST) {
             badgeColor = badgeColor.lighten(25);
         }
-        return <Badge theme={badgeColor.clone().setAlpha(.1).toString()} style={{color: badgeColor, fontWeight: "bold", ...style}} ref={innerRef} {...otherProps}>{children}</Badge>
     } else {
         if (tinycolor.readability(badgeColor, "#fff") < WCAG_AA_CONTRAST) {
             badgeColor = badgeColor.darken(10);
         }
     }
-    return <Badge theme={badgeColor.toString()} style={{fontWeight: "500", color: badgeColor.clone().toString(), backgroundColor: badgeColor.clone().setAlpha(.1).toString(), ...style}} ref={innerRef} {...otherProps}>{children}</Badge>
+    return <Badge theme={badgeColor.clone().setAlpha(.1).toString()} style={{fontWeight: "bold", color: badgeColor, ...style}} ref={innerRef} {...otherProps}>{children}</Badge>
 };
 
 export {UiBadge};

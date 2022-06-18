@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {FaBomb} from "react-icons/all";
+import {FaBomb} from "react-icons/fa";
 import ErrorRoute from "routes/ErrorRoute";
 
 class ErrorBoundary extends Component {

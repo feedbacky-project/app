@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,9 +27,8 @@ import java.io.Serializable;
 @Table(name = "boards_social_links")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class SocialLink implements Serializable {
+public class SocialLink implements Serializable, Fetchable<FetchSocialLinkDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +40,8 @@ public class SocialLink implements Serializable {
   private String logoUrl;
   private String url;
 
+  @Override
+  public FetchSocialLinkDto toDto() {
+    return new FetchSocialLinkDto().from(this);
+  }
 }

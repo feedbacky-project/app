@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import {WCAG_AA_CONTRAST} from "App";
-import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import tinycolor from "tinycolor2";
@@ -38,16 +37,18 @@ export const BasePageButton = styled.button`
 `;
 
 export const PageButton = styled(BasePageButton)`
-  color: white;
+  color: ${props => props.theme.toString()};
+  background-color: ${props => props.theme.clone().setAlpha(.1).toString()};
   box-shadow: var(--box-shadow);
+  font-weight: bold !important;
   
   &:focus {
     outline: 1px dotted white;
   }
   
   &:hover, &:active {
-    color: white;
-    background-color: ${props => props.theme.setAlpha(.3).toString()} !important;
+    color: ${props => props.theme.toString()};
+    background-color: ${props => props.theme.clone().setAlpha(.3).toString()} !important;
   }
 `;
 
@@ -62,14 +63,12 @@ const UiButton = (props) => {
         if (tinycolor.readability(color, "#282828") < WCAG_AA_CONTRAST) {
             buttonColor = buttonColor.lighten(25);
         }
-        return <PageButton theme={buttonColor.clone()} aria-label={label} style={{color: buttonColor, fontWeight: "bold",backgroundColor: buttonColor.clone().setAlpha(.1), style}}
-                           ref={innerRef} {...otherProps}>{children}</PageButton>
     } else {
         if (tinycolor.readability(buttonColor, "#fff") < WCAG_AA_CONTRAST) {
             buttonColor = buttonColor.darken(10);
         }
     }
-    return <PageButton theme={buttonColor.clone()} aria-label={label} style={{backgroundColor: buttonColor.clone().setAlpha(.1), color: buttonColor, fontWeight: "500", style}} ref={innerRef} {...otherProps}>{children}</PageButton>
+    return <PageButton theme={buttonColor.clone()} aria-label={label} ref={innerRef} style={style} {...otherProps}>{children}</PageButton>
 };
 
 UiButton.propTypes = {

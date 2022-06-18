@@ -5,9 +5,9 @@ import TagCreateModal from "components/board/admin/TagCreateModal";
 import TagEditModal from "components/board/admin/TagEditModal";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
-import {FaPencilAlt} from "react-icons/all";
+import {FaPencilAlt, FaTrash} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiElementDeleteButton, UiLoadableButton} from "ui/button";
@@ -89,10 +89,10 @@ const TagsSubroute = () => {
             popupNotification("Tag deleted", getTheme());
         });
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <TagCreateModal isOpen={modal.open && modal.type === "new"} onTagCreate={onTagCreate} onHide={() => setModal({...modal, open: false})}/>
         <TagEditModal isOpen={modal.open && modal.type === "edit"} onHide={() => setModal({...modal, open: false})} tag={modal.data} onEdit={onEdit}/>
-        <DangerousActionModal isOpen={modal.open && modal.type === "delete"} id={"tagDel"} onHide={() => setModal({...modal, open: false})} onAction={onTagDelete}
+        <DangerousActionModal isOpen={modal.open && modal.type === "delete"} id={"tagDel"} onHide={() => setModal({...modal, open: false})} onAction={onTagDelete} Icon={FaTrash}
                               actionDescription={<div>Tag <UiBadge color={tinycolor(modal.data.color)}>{modal.data.name}</UiBadge> will be <u>deleted from all ideas</u> and list of available tags.</div>}/>
         <UiViewBox title={"Tags Management"} description={"Edit your board tags here."}>
             {renderContent()}

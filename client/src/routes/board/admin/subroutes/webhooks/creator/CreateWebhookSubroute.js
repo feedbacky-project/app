@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import {Step} from "rc-steps";
 import React, {useContext, useEffect, useState} from 'react';
 import {Link, useHistory, withRouter} from "react-router-dom";
@@ -16,7 +16,7 @@ const CreateWebhookSubroute = () => {
     const history = useHistory();
     const {getTheme} = useContext(UiThemeContext);
     const {data: boardData} = useContext(BoardContext);
-    const [settings, setSettings] = useState({step: 1, type: "", listenedEvents: [], url: ""});
+    const [settings, setSettings] = useState({step: 1, type: "", triggers: [], url: ""});
     const {setCurrentNode} = useContext(PageNodesContext);
     useEffect(() => setCurrentNode("webhooks"), [setCurrentNode]);
 
@@ -49,7 +49,7 @@ const CreateWebhookSubroute = () => {
                     return Promise.resolve();
                 }
                 return axios.post("/boards/" + boardData.discriminator + "/webhooks", {
-                    url: settings.url, type: settings.type, events: settings.listenedEvents,
+                    url: settings.url, type: settings.type, triggers: settings.triggers,
                 }).then(res => {
                     if (res.status !== 201) {
                         popupWarning("Couldn't add webhook due to unknown error");
@@ -70,13 +70,13 @@ const CreateWebhookSubroute = () => {
         if (settings.step === 1 && settings.type === "") {
             popupWarning("Type must be chosen");
             return;
-        } else if (settings.step === 2 && settings.listenedEvents.length === 0) {
-            popupWarning("Events must be chosen");
+        } else if (settings.step === 2 && settings.triggers.length === 0) {
+            popupWarning("Triggers must be chosen");
             return;
         }
         setSettings({...settings, step: settings.step + 1});
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <UiContainer>
             <UiRow className={"mt-5"}>
                 <UiProgressBar currentStep={settings.step} steps={4}>

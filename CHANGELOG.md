@@ -1,12 +1,25 @@
+### 1.0.0.RC.3
+* **[FEATURE]** Added GitHub integration with following features:
+  * Create GitHub Issue from Feedbacky idea
+  * Sync GitHub Issue and Feedbacky idea with comments and idea/issue state
+* **[IMPROVEMENT]** Admin panel sidebar redesigned
+* **[IMPROVEMENT]** Replaced webhook events with action triggers used both for webhooks and integrations
+* **[IMPROVEMENT]** Multiple users can now be assigned to an idea
+* **[CHORE]** Update client-side dependencies to remove vulnerabilities
+* **[FIX]** Show visible replies with not visible parent comments
+
 ### 1.0.0.RC.2
 * **[FEATURE]** Board and account deletion modals now contain checkboxes to agree that you delete board/account (requested by [Matou0014](https://app.feedbacky.net/i/hardened-board-deletion.4089))
 * **[FEATURE]** Comments can now receive replies
 * **[FEATURE]** Added Twitch OAuth2 log-in support
+* **[FEATURE]** Comment mentions feature added (requested at [Feedbacky](https://app.feedbacky.net/i/user-mentions.4099))
 * **[IMPROVEMENT]** Reduced server-side service memory footprint by using different Docker image
 * **[IMPROVEMENT]** Quality of Life improvement - all focusable input forms will now be focused by default for example in modals or creators
+* **[IMPROVEMENT]** Improved server-side performance with entity graph adjustments
 * **[CHANGE]** Breaking UI change - separated UI components from client, now they are standalone
 * **[FIX]** Scrollbars didn't work properly on Chromium browsers
 * **[FIX]** Changelog modal didn't respect 2500 chars change
+* **[FIX]** Page crashing when having INTERNAL comment in discussion and being non-moderator user
 
 ### 1.0.0.RC.1
 * **[FEATURE]** Display toast messages when page is loading for too long

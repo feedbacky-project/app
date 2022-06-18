@@ -8,10 +8,9 @@ import TitleEditModal from "components/commons/modal/TitleEditModal";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from 'react';
-import {FaCog, FaComment, FaCommentSlash, FaICursor, FaLink, FaUnlink, FaUserCheck, FaUserLock} from "react-icons/all";
-import {FaLock, FaTags, FaTrash, FaUnlock} from "react-icons/fa";
+import {FaCog, FaComment, FaCommentSlash, FaGithub, FaICursor, FaLink, FaLock, FaTags, FaTrash, FaUnlink, FaUnlock, FaUserCheck, FaUserLock} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
-import {UiThemeContext} from "ui";
+import {UiKeyboardInput, UiThemeContext} from "ui";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
 import {popupError, popupNotification, popupRevertableNotification, popupWarning} from "utils/basic-utils";
 
@@ -121,17 +120,27 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             onStateChange("discussion");
         });
     };
-    const onModeratorAssign = (mod) => {
-        return axios.patch("/ideas/" + ideaData.id, {assignee: mod == null ? null : mod.id}).then(res => {
+    const onModeratorAssign = (assignees) => {
+        return axios.patch("/ideas/" + ideaData.id, {assignees: assignees.map(a => a.id)}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
                 popupError();
                 return;
             }
-            updateState({...ideaData, assignee: res.data.assignee});
-            popupNotification("Assignee updated", getTheme());
+            updateState({...ideaData, assignees: res.data.assignees});
+            popupNotification("Assignees updated", getTheme());
             onStateChange("discussion");
         });
     };
+    const onGitHubIdeaConvert = () => {
+        return axios.patch("/ideas/" + ideaData.id + "/github/convert", {}).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                popupError();
+                return;
+            }
+            popupNotification("Converted to GitHub issue", getTheme());
+            onStateChange("discussion");
+        });
+    }
     const onVotesReset = (type) => {
         return axios.patch("/ideas/" + ideaData.id + "/voters", {clearType: type}).then(res => {
             if (res.status !== 200 && res.status !== 204) {
@@ -142,6 +151,21 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
             popupNotification("Votes reset", getTheme());
             onStateChange("both");
         });
+    };
+    const isGitHubButtonAvailable = () => {
+        const integration = boardData.integrations.filter(i => i.integrationType === "GITHUB")[0];
+        if (integration === undefined || integration.data === {} || !integration.data.enabled
+            || ideaData.metadata.integration_github_issue_number) {
+            return false;
+        }
+        return true;
+    }
+    const getGitHubIntegrationRepository = () => {
+        const integration = boardData.integrations.filter(i => i.integrationType === "GITHUB")[0];
+        if (integration === undefined || integration.data === {} || !integration.data.enabled) {
+            return "";
+        }
+        return integration.data.repository;
     };
     const isSuspendable = () => {
         if (boardData.moderators.find(mod => mod.user.id === ideaData.user.id)) {
@@ -159,26 +183,28 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
     }
     const hide = () => setModal({...modal, open: false});
     return <UiDropdown label={"Moderate Idea"} className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline"}/>}>
-        <DangerousActionModal id={"close"} onHide={hide} isOpen={modal.open && modal.type === "close"}
+        <DangerousActionModal id={"close"} onHide={hide} isOpen={modal.open && modal.type === "close"} Icon={FaLock}
                               onAction={() => doIdeaStateChange("open", false, "Idea closed.", "Idea opened.")}
                               actionDescription={<div>Once you close idea you can open it again.</div>} actionButtonName={"Close"}/>
-        <DangerousActionModal id={"open"} onHide={hide} isOpen={modal.open && modal.type === "open"}
+        <DangerousActionModal id={"open"} onHide={hide} isOpen={modal.open && modal.type === "open"} Icon={FaUnlock}
                               onAction={() => doIdeaStateChange("open", true, "Idea opened.", "Idea closed.")}
                               actionDescription={<div>Once you reopen idea you can close it again.</div>} actionButtonName={"Open"}/>
-        <DangerousActionModal id={"delete"} onHide={hide} isOpen={modal.open && modal.type === "delete"} onAction={doIdeaDelete}
-                              actionDescription={<div>Idea will be permanently <u>deleted</u>.</div>}/>
-        <DangerousActionModal id={"suspend"} onHide={hide} isOpen={modal.open && modal.type === "suspend"} onAction={doSuspendUser} actionButtonName={"Suspend"}
+        <DangerousActionModal id={"delete"} onHide={hide} isOpen={modal.open && modal.type === "delete"} onAction={doIdeaDelete} Icon={FaTrash}
+                              actionDescription={<div>Idea with <strong className={"text-red"}>{ideaData.votersAmount} Voters</strong> and <strong className={"text-red"}>{ideaData.commentsAmount} Comments</strong> will be permanently <u>deleted</u>.</div>}/>
+        <DangerousActionModal id={"suspend"} onHide={hide} isOpen={modal.open && modal.type === "suspend"} onAction={doSuspendUser} actionButtonName={"Suspend"} Icon={FaUserLock}
                               actionDescription={<div>Suspended users cannot post new ideas and upvote/downvote ideas unless unsuspended through board admin panel.</div>}/>
-        <DangerousActionModal id={"enable_comments"} onHide={hide} isOpen={modal.open && modal.type === "enable_comments"}
+        <DangerousActionModal id={"github_convert"} onHide={hide} isOpen={modal.open && modal.type === "github_convert"} onAction={onGitHubIdeaConvert} actionButtonName={"Convert"}
+                              actionDescription={<div>This idea will be converted into an issue located at <UiKeyboardInput className={"d-inline-block"}>{getGitHubIntegrationRepository()}</UiKeyboardInput> repository.</div>}/>
+        <DangerousActionModal id={"enable_comments"} onHide={hide} isOpen={modal.open && modal.type === "enable_comments"} Icon={FaComment}
                               onAction={() => doIdeaStateChange("commentingRestricted", false, "Commenting enabled.", "Commenting disabled.")}
                               actionDescription={<div>Everyone will be able to comment this idea.</div>} actionButtonName={"Enable"}/>
-        <DangerousActionModal id={"restrict_comments"} onHide={hide} isOpen={modal.open && modal.type === "restrict_comments"}
+        <DangerousActionModal id={"restrict_comments"} onHide={hide} isOpen={modal.open && modal.type === "restrict_comments"} Icon={FaCommentSlash}
                               onAction={() => doIdeaStateChange("commentingRestricted", true, "Commenting disabled.", "Commenting enabled.")}
                               actionDescription={<div>Only moderators will be able to comment this idea.</div>} actionButtonName={"Disable"}/>
-        <DangerousActionModal id={"unpin"} onHide={hide} isOpen={modal.open && modal.type === "unpin"}
+        <DangerousActionModal id={"unpin"} onHide={hide} isOpen={modal.open && modal.type === "unpin"} Icon={FaUnlink}
                               onAction={() => doIdeaStateChange("pinned", false, "Idea unpinned.", "Idea pinned.")}
                               actionDescription={<div>Idea will no longer be pinned at the top of ideas list.</div>} actionButtonName={"Unpin"}/>
-        <DangerousActionModal id={"pin"} onHide={hide} isOpen={modal.open && modal.type === "pin"}
+        <DangerousActionModal id={"pin"} onHide={hide} isOpen={modal.open && modal.type === "pin"} Icon={FaLink}
                               onAction={() => doIdeaStateChange("pinned", true, "Idea pinned.", "Idea unpinned.")}
                               actionDescription={<div>Idea will be pinned at the top of ideas list.</div>} actionButtonName={"Pin"}/>
         <ModeratorTagsUpdateModal onHide={hide} isOpen={modal.open && modal.type === "tags"} onAction={onTagsManage}/>
@@ -204,6 +230,9 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
         <DropdownOption onClick={() => {
             setModal({open: true, type: "votes_reset"})
         }} as={"span"}><ActionIcon as={FaTags} color={color}/> Reset Votes</DropdownOption>
+        {isGitHubButtonAvailable() && <DropdownOption onClick={() => setModal({open: true, type: "github_convert"})} className={"text-blue"} as={"span"}>
+            <FaGithub className={"mr-1 move-top-2px"} style={{color: getTheme()}}/> Convert To Issue
+        </DropdownOption>}
         {isSuspendable() && <DropdownOption onClick={() => setModal({open: true, type: "suspend"})} className={"text-red"} as={"span"}>
             <ActionIcon as={FaUserLock}/> Suspend User
         </DropdownOption>

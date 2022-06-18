@@ -17,15 +17,19 @@ const AssigneeUsername = styled.small`
 const AssigneeInfo = () => {
     const {ideaData} = useContext(IdeaContext);
 
-    if (ideaData.assignee == null) {
+    if(ideaData.assignees.length === 0) {
         return <React.Fragment/>
     }
     return <React.Fragment>
-        <div className={"my-1 text-black-75"}>
-            Assigned User
+        <div className={"mt-1 text-black-75"}>
+            Assignees
         </div>
-        <Assignee roundedCircle user={ideaData.assignee} size={25}/>
-        <AssigneeUsername><UiPrettyUsername user={ideaData.assignee}/></AssigneeUsername>
+        {ideaData.assignees.map(a => {
+            return  <div className={"my-1"}>
+                <Assignee roundedCircle user={a} size={25}/>
+                <AssigneeUsername><UiPrettyUsername user={a}/></AssigneeUsername>
+            </div>
+        })}
     </React.Fragment>
 };
 

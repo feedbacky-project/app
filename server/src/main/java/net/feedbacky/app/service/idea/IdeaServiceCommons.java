@@ -9,6 +9,9 @@ import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PostIdeaDto;
 import net.feedbacky.app.data.tag.Tag;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchUserDto;
 import net.feedbacky.app.exception.FeedbackyRestException;
@@ -53,15 +56,15 @@ public class IdeaServiceCommons {
   private final ObjectStorage objectStorage;
   private final AttachmentRepository attachmentRepository;
   private final TagRepository tagRepository;
-  private final WebhookExecutor webhookExecutor;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
-  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository, WebhookExecutor webhookExecutor) {
+  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository, TriggerExecutor triggerExecutor) {
     this.ideaRepository = ideaRepository;
     this.objectStorage = objectStorage;
     this.attachmentRepository = attachmentRepository;
     this.tagRepository = tagRepository;
-    this.webhookExecutor = webhookExecutor;
+    this.triggerExecutor = triggerExecutor;
   }
 
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(Board board, User user, int page, int pageSize, IdeaService.FilterType filter, IdeaService.SortType sort) {
@@ -87,7 +90,7 @@ public class IdeaServiceCommons {
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
-            .map(idea -> new FetchIdeaDto().from(idea).withUser(idea, user)).collect(Collectors.toList()));
+            .map(idea -> idea.toDto().withUser(idea, user)).collect(Collectors.toList()));
   }
 
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(Board board, User user, int page, int pageSize, String query, IdeaService.FilterType filter, IdeaService.SortType sort) {
@@ -114,13 +117,13 @@ public class IdeaServiceCommons {
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
-            .map(idea -> new FetchIdeaDto().from(idea).withUser(idea, user)).collect(Collectors.toList()));
+            .map(idea -> idea.toDto().withUser(idea, user)).collect(Collectors.toList()));
   }
 
   public FetchIdeaDto getOne(User user, long id) {
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    return new FetchIdeaDto().from(idea).withUser(idea, user);
+    return idea.toDto().withUser(idea, user);
   }
 
   public FetchIdeaDto post(PostIdeaDto dto, Board board, User user) {
@@ -142,8 +145,7 @@ public class IdeaServiceCommons {
       }
       tags.add(tag);
     }
-    ModelMapper mapper = new ModelMapper();
-    Idea idea = mapper.map(dto, Idea.class);
+    Idea idea = new Idea();
     idea.setId(null);
     idea.setBoard(board);
     idea.setCreator(user);
@@ -153,7 +155,8 @@ public class IdeaServiceCommons {
     idea.setVoters(set);
     idea.setTags(tags);
     idea.setStatus(Idea.IdeaStatus.OPENED);
-    idea.setDescription(StringEscapeUtils.escapeHtml4(idea.getDescription()));
+    idea.setTitle(dto.getTitle());
+    idea.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
     idea.setSubscribers(set);
     idea = ideaRepository.save(idea);
 
@@ -170,10 +173,14 @@ public class IdeaServiceCommons {
     idea.setAttachments(attachments);
     idea = ideaRepository.save(idea);
 
-    FetchIdeaDto fetchDto = new FetchIdeaDto().from(idea).withUser(idea, user);
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    webhookExecutor.executeWebhooks(board, Webhook.Event.IDEA_CREATE, builder.build());
-    return fetchDto;
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_CREATE)
+            .withBoard(board)
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
+    return new FetchIdeaDto().from(idea).withUser(idea, user);
   }
 
   public FetchUserDto postUpvote(User user, Idea idea) {
@@ -187,7 +194,15 @@ public class IdeaServiceCommons {
     voters.add(user);
     idea.setVoters(voters);
     ideaRepository.save(idea);
-    return new FetchUserDto().from(user);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_UPVOTE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
+    return user.toDto();
   }
 
   public ResponseEntity deleteUpvote(User user, Idea idea) {
@@ -201,6 +216,14 @@ public class IdeaServiceCommons {
     voters.remove(user);
     idea.setVoters(voters);
     ideaRepository.save(idea);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_UNDO_UPVOTE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     return ResponseEntity.noContent().build();
   }
 

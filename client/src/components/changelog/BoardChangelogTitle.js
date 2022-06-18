@@ -5,7 +5,7 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import {DropdownOption, IconToggle} from "components/commons/ModeratorActionsButton";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from "react";
-import {FaEdit, FaTrash} from "react-icons/all";
+import {FaEdit, FaTrash} from "react-icons/fa";
 import {UiThemeContext} from "ui";
 import {UiDropdown} from "ui/dropdown";
 import {UiAvatar} from "ui/image";
@@ -45,7 +45,7 @@ const BoardChangelogTitle = ({data, onChangelogDelete, onChangelogUpdate}) => {
         }
         return <UiDropdown label={"Moderate Idea"} className={"d-inline mx-1"} toggleClassName={"text-black-60 p-0"} toggle={<IconToggle className={"align-baseline"}/>}>
             <DangerousActionModal id={"delete"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "delete"} onAction={doChangelogDelete}
-                                  actionDescription={<div>Changelog will be permanently <u>deleted</u>.</div>}/>
+                                  actionDescription={<div>Changelog will be permanently <u>deleted</u>.</div>} Icon={FaTrash}/>
             <ChangelogUpdateModal onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "update"} changelog={data} onChangelogUpdate={onChangelogUpdate}/>
             <DropdownOption onClick={() => setModal({open: true, type: "update"})} as={"span"}><FaEdit className={"mr-1 move-top-2px"} style={{color}}/> Update Changelog</DropdownOption>
             <DropdownOption onClick={() => setModal({open: true, type: "delete"})} as={"span"}><FaTrash className={"mr-1 move-top-2px"} style={{color}}/> Delete Changelog</DropdownOption>

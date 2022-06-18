@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import {Step} from "rc-steps";
 import React, {useContext, useEffect, useState} from 'react';
 import {Link, useHistory, withRouter} from "react-router-dom";
@@ -75,7 +75,7 @@ const CreateSocialLinkSubroute = () => {
         }
         setSettings({...settings, step: settings.step + 1});
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <UiContainer>
             <UiRow className={"mt-5"}>
                 <UiProgressBar currentStep={settings.step} steps={3}>

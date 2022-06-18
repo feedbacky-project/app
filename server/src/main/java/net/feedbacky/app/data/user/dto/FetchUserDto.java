@@ -37,7 +37,7 @@ public class FetchUserDto implements FetchResponseDto<FetchUserDto, User> {
     this.username = entity.getUsername();
     this.avatar = entity.getAvatar();
     this.email = null;
-    this.mailPreferences = new FetchMailPreferences().from(entity.getMailPreferences());
+    this.mailPreferences = entity.getMailPreferences().toDto();
     this.permissions = entity.getPermissions().stream().map(permission -> new FetchUserPermissionDto().from(permission)).collect(Collectors.toList());
     this.fake = entity.isFake();
     this.creationDate = entity.getCreationDate();

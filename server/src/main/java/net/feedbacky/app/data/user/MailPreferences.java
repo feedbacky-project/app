@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
+import net.feedbacky.app.data.user.dto.FetchMailPreferences;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,9 +27,8 @@ import java.io.Serializable;
 @Table(name = "users_mail_preferences")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class MailPreferences implements Serializable {
+public class MailPreferences implements Serializable, Fetchable<FetchMailPreferences> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,5 +40,8 @@ public class MailPreferences implements Serializable {
   private boolean notificationsEnabled;
   private String unsubscribeToken;
 
-
+  @Override
+  public FetchMailPreferences toDto() {
+    return new FetchMailPreferences().from(this);
+  }
 }

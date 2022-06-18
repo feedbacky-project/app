@@ -3,10 +3,16 @@ package net.feedbacky.app.data.board.dto;
 import lombok.Getter;
 import net.feedbacky.app.data.FetchResponseDto;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.integration.FetchIntegrationDto;
 import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.board.dto.social.FetchSocialLinkDto;
 import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
+import net.feedbacky.app.data.board.integration.Integration;
+import net.feedbacky.app.data.board.moderator.Moderator;
+import net.feedbacky.app.data.board.social.SocialLink;
+import net.feedbacky.app.data.board.suspended.SuspendedUser;
 import net.feedbacky.app.data.idea.Idea;
+import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 
 import java.util.Date;
@@ -38,6 +44,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   private List<FetchTagDto> tags;
   private List<FetchModeratorDto> moderators;
   private List<FetchSuspendedUserDto> suspendedUsers;
+  private List<FetchIntegrationDto> integrations;
 
   private long allIdeas;
   private long openedIdeas;
@@ -72,10 +79,11 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.closedIdeasCommentingEnabled = entity.isClosedIdeasCommentingEnabled();
     this.creationDate = entity.getCreationDate();
     this.lastChangelogUpdate = entity.getLastChangelogUpdate();
-    this.socialLinks = entity.getSocialLinks().stream().map(link -> new FetchSocialLinkDto().from(link)).collect(Collectors.toList());
-    this.tags = entity.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
-    this.moderators = entity.getModerators().stream().map(mod -> new FetchModeratorDto().from(mod)).collect(Collectors.toList());
-    this.suspendedUsers = entity.getSuspensedList().stream().map(suspended -> new FetchSuspendedUserDto().from(suspended)).collect(Collectors.toList());
+    this.socialLinks = entity.getSocialLinks().stream().map(SocialLink::toDto).collect(Collectors.toList());
+    this.tags = entity.getTags().stream().map(Tag::toDto).collect(Collectors.toList());
+    this.moderators = entity.getModerators().stream().map(Moderator::toDto).collect(Collectors.toList());
+    this.suspendedUsers = entity.getSuspensedList().stream().map(SuspendedUser::toDto).collect(Collectors.toList());
+    this.integrations = entity.getIntegrations().stream().map(Integration::toDto).collect(Collectors.toList());
     this.allIdeas = entity.getIdeas().size();
     this.openedIdeas = entity.getIdeas().stream().filter(idea -> idea.getStatus() == Idea.IdeaStatus.OPENED).count();
     this.closedIdeas = entity.getIdeas().stream().filter(idea -> idea.getStatus() == Idea.IdeaStatus.CLOSED).count();
@@ -89,6 +97,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   public FetchBoardDto withConfidentialData(Board entity, boolean apply) {
     if(apply) {
       this.apiKey = entity.getApiKey();
+      this.integrations = entity.getIntegrations().stream().map(i -> i.toDto().withConfidentialData(i, true)).collect(Collectors.toList());
     }
     return this;
   }

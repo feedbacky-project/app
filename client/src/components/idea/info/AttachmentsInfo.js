@@ -4,7 +4,7 @@ import DangerousActionModal from "components/commons/modal/DangerousActionModal"
 import SafeAnchor from "components/commons/SafeAnchor";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useState} from "react";
-import {FaUpload} from "react-icons/all";
+import {FaTrash, FaUpload} from "react-icons/fa";
 import {UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiImage} from "ui/image";
@@ -68,7 +68,7 @@ const AttachmentsInfo = ({editor, onAttachmentUpdate}) => {
     //todo lightbox for attachments
     return <React.Fragment>
         <DangerousActionModal id={"attachmentDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onAttachmentDelete}
-                              actionDescription={<div>Attachment will be permanently <u>deleted</u>.</div>}/>
+                              actionDescription={<div>Attachment will be permanently <u>deleted</u>.</div>} Icon={FaTrash}/>
         <div className={"my-1 text-black-75"}>Attached Files</div>
         {ideaData.attachments.map(attachment => {
             let userId = user.data.id;

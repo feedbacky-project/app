@@ -2,7 +2,7 @@ import {IdeaCardTitle} from "components/board/IdeaCard";
 import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext} from "react";
-import {FaLock, FaPen, FaThumbtack, FaTrash} from "react-icons/all";
+import {FaLock, FaPen, FaThumbtack, FaTrash} from "react-icons/fa";
 import TimeAgo from "timeago-react";
 import {UiHoverableIcon, UiPrettyUsername} from "ui";
 import {UiAvatar} from "ui/image";

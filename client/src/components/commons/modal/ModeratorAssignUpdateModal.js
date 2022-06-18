@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
-import {AppContext, BoardContext, IdeaContext} from "context";
+import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
+import {BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaExclamation} from "react-icons/all";
+import {FaExclamation, FaUserCircle} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiLoadableButton} from "ui/button";
@@ -18,40 +18,43 @@ const AssigneeDetails = styled.div`
 `;
 
 const AssigneeCandidate = styled(UiAvatar)`
-  ${props => props.chosen ? `border: 2px solid ` + props.theme : `border: 2px solid transparent`}\
+  ${props => props.chosen && `outline: 1px dashed ` + props.theme + `;`}
+  padding: .25rem;
 `;
 
 const ModeratorAssignUpdateModal = ({isOpen, onHide, onAction}) => {
     const {getTheme} = useContext(UiThemeContext);
     const {data: boardData} = useContext(BoardContext);
     const {ideaData} = useContext(IdeaContext);
-    const [assignee, setAssignee] = useState(ideaData.assignee);
+    const [assignees, setAssignees] = useState(ideaData.assignees);
     /*eslint-disable-next-line*/
-    useEffect(() => setAssignee(ideaData.assignee), [onHide]);
+    useEffect(() => setAssignees(ideaData.assignees), [onHide]);
 
     const toggleAssignee = (newAssignee) => {
-        if (assignee === newAssignee) {
-            setAssignee(null);
-            return;
+        if(assignees.some(a => a.id === newAssignee.id)) {
+            const newAssignees = assignees.filter(a => a.id !== newAssignee.id);
+            setAssignees(newAssignees);
+        } else {
+            const newAssignees = [...assignees, newAssignee];
+            setAssignees(newAssignees);
         }
-        setAssignee(newAssignee);
     };
-    const applyButton = <UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(assignee).then(onHide)}>
+    const applyButton = <UiLoadableButton label={"Update"} className={"mx-0"} color={tinycolor("hsl(2, 95%, 66%)")} onClick={() => onAction(assignees).then(onHide)}>
         <FaExclamation className={"move-top-1px"}/> Update
     </UiLoadableButton>;
     return <UiDismissibleModal id={"assigneeUpdate"} isOpen={isOpen} onHide={onHide} title={""} size={"md"} className={"mx-0"} applyButton={applyButton}>
         <UiRow centered className={"mt-3"}>
             <div className={"mb-2 px-4 text-center"}>
-                <QuestionIcon/>
+                <IconContainer><GenericIcon as={FaUserCircle}/></IconContainer>
                 <h3>Are you sure?</h3>
                 <div>
-                    Choose assignee to add or remove and click Update to confirm.
+                    Choose assignees to add or remove and click Update to confirm.
                     <br/>
                     {boardData.moderators.map((mod, i) => {
-                        const chosen = assignee == null ? false : assignee.id === mod.user.id;
+                        const chosen = assignees.some(a => a.id === mod.user.id);
                         return <AssigneeDetails key={i} onClick={() => toggleAssignee(mod.user)}>
                             <div className={"mb-1"}>
-                                <AssigneeCandidate chosen={chosen} theme={getTheme()} size={64} user={mod.user} roundedCircle/>
+                                <AssigneeCandidate chosen={chosen} theme={getTheme()} size={48} user={mod.user} roundedCircle/>
                             </div>
                             <UiBadge>{mod.user.username}</UiBadge>
                         </AssigneeDetails>

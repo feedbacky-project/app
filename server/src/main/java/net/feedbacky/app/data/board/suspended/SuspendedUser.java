@@ -5,7 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.suspended.FetchSuspendedUserDto;
 import net.feedbacky.app.data.user.User;
 
 import javax.persistence.Entity;
@@ -28,10 +30,9 @@ import java.util.Date;
 @Table(name = "boards_suspended_users")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class SuspendedUser implements Serializable {
+public class SuspendedUser implements Serializable, Fetchable<FetchSuspendedUserDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,4 +46,8 @@ public class SuspendedUser implements Serializable {
   private User user;
   private Date suspensionEndDate;
 
+  @Override
+  public FetchSuspendedUserDto toDto() {
+    return new FetchSuspendedUserDto().from(this);
+  }
 }

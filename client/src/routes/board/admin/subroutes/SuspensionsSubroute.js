@@ -3,8 +3,9 @@ import {ReactComponent as UndrawNoData} from "assets/svg/undraw/no_data.svg";
 import axios from "axios";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import {SvgNotice} from "components/commons/SvgNotice";
-import {AppContext, BoardContext, PageNodesContext} from "context";
+import {BoardContext, PageNodesContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
+import {FaTrash} from "react-icons/fa";
 import {UiBadge, UiThemeContext} from "ui";
 import {UiButton, UiElementDeleteButton} from "ui/button";
 import {UiFormLabel} from "ui/form";
@@ -66,9 +67,9 @@ const SuspensionSettings = () => {
             updateState({...boardData, suspendedUsers: suspendedUsers});
         });
     };
-    return <UiCol xs={12} md={9}>
+    return <UiCol xs={12}>
         <DangerousActionModal id={"suspensionDel"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open} onAction={onUnsuspension}
-                              actionButtonName={"Unsuspend"}
+                              actionButtonName={"Unsuspend"} Icon={FaTrash}
                               actionDescription={<div>User <UiBadge>{modal.dataName}</UiBadge> will no longer be suspended and will be able to give feedback again.</div>}/>
         <UiViewBox title={"Suspensions Management"} description={"Manage suspended users here."}>
             {renderContent()}

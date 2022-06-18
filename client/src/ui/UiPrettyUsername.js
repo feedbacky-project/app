@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import {BoardContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
-import {FaBan} from "react-icons/all";
+import {FaBan} from "react-icons/fa";
 import {UiClassicIcon} from "ui/index";
 import {truncateText} from "utils/basic-utils";
 

@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.user.User;
 
 import org.hibernate.annotations.LazyToOne;
@@ -18,6 +20,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import java.io.Serializable;
+
 /**
  * @author Plajer
  * <p>
@@ -27,9 +31,8 @@ import javax.persistence.Table;
 @Table(name = "ideas_comment_reactions")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class CommentReaction {
+public class CommentReaction implements Serializable, Fetchable<FetchCommentReactionDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +45,8 @@ public class CommentReaction {
   private User user;
   private String reactionId;
 
+  @Override
+  public FetchCommentReactionDto toDto() {
+    return new FetchCommentReactionDto().from(this);
+  }
 }

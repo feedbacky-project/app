@@ -4,8 +4,7 @@ import ModeratorActionsButton from "components/commons/ModeratorActionsButton";
 import VoteButton from "components/commons/VoteButton";
 import {AppContext, BoardContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
-import {FaThumbtack} from "react-icons/all";
-import {FaLock, FaRegComment} from "react-icons/fa";
+import {FaLock, FaRegComment, FaThumbtack} from "react-icons/fa";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiCard, UiClassicIcon, UiPrettyUsername, UiThemeContext} from "ui";
@@ -99,14 +98,14 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
         }
     };
     const renderTags = () => {
-        const assignedTag = idea.assignee && idea.assignee.id === user.data.id && <UiBadge className={"move-top-2px"} style={{border: "1px dashed " + getTheme().setAlpha(.5)}}>Assigned</UiBadge>;
-        if (idea.tags.length === 0 && !assignedTag) {
+        const isAssigned = idea.assignees.some(a => a.id === user.data.id);
+        if (idea.tags.length === 0 && !isAssigned) {
             return;
         }
         return <span>
             <br className={"d-sm-none"}/>
             <BadgeContainer>
-                {idea.assignee !== null && idea.assignee.id === user.data.id && <UiBadge className={"move-top-2px"} style={{border: "1px dashed " + getTheme().setAlpha(.5)}}>Assigned</UiBadge>}
+                {!isAssigned || <UiBadge className={"move-top-2px"} style={{border: "1px dashed " + getTheme().setAlpha(.5)}}>Assigned</UiBadge>}
                 {idea.tags.map((tag, i) => <UiBadge key={i} color={tinycolor(tag.color)} className={"move-top-2px"}>{tag.name}</UiBadge>)}
             </BadgeContainer>
         </span>

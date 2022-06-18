@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
 import React, {useContext} from "react";
-import {FaUpload} from "react-icons/all";
+import {FaUpload} from "react-icons/fa";
 import {UiThemeContext} from "ui";
 
 const UploadButton = styled.div`

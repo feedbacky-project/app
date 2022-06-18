@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@NotNull
 public class PostSuspendedUserDto {
 
   @NotNull(message = "User id cannot be empty.")

@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import {AppContext, IdeaContext} from "context";
+import {IdeaContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
-import {FiChevronsUp, FiChevronUp} from "react-icons/all";
+import {FiChevronsUp, FiChevronUp} from "react-icons/fi";
 import {UiThemeContext} from "ui";
 import {UiClassicButton} from "ui/button";
 import {popupError} from "utils/basic-utils";

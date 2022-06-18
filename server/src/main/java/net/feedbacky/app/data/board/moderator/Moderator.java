@@ -5,7 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
+import net.feedbacky.app.data.board.dto.moderator.FetchModeratorDto;
 import net.feedbacky.app.data.user.User;
 
 import javax.persistence.Entity;
@@ -27,10 +29,9 @@ import java.io.Serializable;
 @Table(name = "boards_moderators")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Moderator implements Serializable {
+public class Moderator implements Serializable, Fetchable<FetchModeratorDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +45,10 @@ public class Moderator implements Serializable {
   private User user;
   private Role role;
 
+  @Override
+  public FetchModeratorDto toDto() {
+    return new FetchModeratorDto().from(this);
+  }
 
   public enum Role {
     USER(3), MODERATOR(2), ADMINISTRATOR(1), OWNER(0);

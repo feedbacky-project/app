@@ -1,11 +1,11 @@
 import BoardBanner from "components/board/BoardBanner";
-import {QuestionIcon} from "components/commons/modal/DangerousActionModal";
+import {GenericIcon, IconContainer} from "components/commons/modal/DangerousActionModal";
 import PageNavbar from "components/commons/PageNavbar";
 import ProfileNavbar from "components/profile/ProfileNavbar";
 import {AppContext, IdeaContext} from "context";
 import {Step} from "rc-steps";
 import React, {useContext, useEffect, useState} from "react";
-import {FaCogs} from "react-icons/all";
+import {FaCogs, FaQuestion} from "react-icons/fa";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiClickableTip, UiHorizontalRule, UiKeyboardInput, UiLoadingSpinner, UiPrettyUsername, UiProgressBar, UiThemeContext} from "ui";
@@ -49,7 +49,7 @@ const UiTestRoute = () => {
             <UiDismissibleModal id={"testModal"} isOpen={modal.open} onHide={() => setModal({open: false})} title={"Dismissible Test"}
                                 applyButton={<UiButton label={"Apply"} onClick={() => setModal({open: false})}>Apply</UiButton>}>
                 <UiCol className={"text-center"}>
-                    <QuestionIcon/>
+                    <IconContainer><GenericIcon as={FaQuestion}/></IconContainer>
                     <div>Dismissible modal testing.</div>
                 </UiCol>
             </UiDismissibleModal>

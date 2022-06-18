@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AppContext, BoardContext} from "context";
+import {BoardContext} from "context";
 import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {UiThemeContext} from "ui";

@@ -29,14 +29,4 @@ public interface BoardService {
 
   ResponseEntity delete(String discriminator);
 
-  List<FetchTagDto> getAllTags(String discriminator);
-
-  FetchTagDto getTagById(String discriminator, long id);
-
-  ResponseEntity<FetchTagDto> postTag(String discriminator, PostTagDto dto);
-
-  FetchTagDto patchTag(String discriminator, long id, PatchTagDto dto);
-
-  ResponseEntity deleteTag(String discriminator, long id);
-
 }

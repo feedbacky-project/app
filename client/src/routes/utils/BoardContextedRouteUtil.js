@@ -1,6 +1,6 @@
 import {BoardContext} from "context";
 import React from "react";
-import {FaSadTear} from "react-icons/all";
+import {FaSadTear} from "react-icons/fa";
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
 

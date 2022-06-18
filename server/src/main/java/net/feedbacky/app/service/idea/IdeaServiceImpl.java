@@ -18,6 +18,9 @@ import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.tag.dto.FetchTagDto;
 import net.feedbacky.app.data.tag.dto.PatchTagRequestDto;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.data.user.dto.FetchSimpleUserDto;
@@ -47,6 +50,7 @@ import net.feedbacky.app.util.request.ServiceValidator;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -84,16 +88,14 @@ public class IdeaServiceImpl implements IdeaService {
   private final ObjectStorage objectStorage;
   private final SubscriptionExecutor subscriptionExecutor;
   private final IdeaServiceCommons ideaServiceCommons;
-  private final RandomNicknameUtils randomNicknameUtils;
   private final MailHandler mailHandler;
-  private final WebhookExecutor webhookExecutor;
+  private final TriggerExecutor triggerExecutor;
 
   @Autowired
   //todo too big constructor
   public IdeaServiceImpl(IdeaRepository ideaRepository, BoardRepository boardRepository, UserRepository userRepository, TagRepository tagRepository,
                          CommentRepository commentRepository, AttachmentRepository attachmentRepository, ObjectStorage objectStorage,
-                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, RandomNicknameUtils randomNicknameUtils,
-                         MailHandler mailHandler, WebhookExecutor webhookExecutor) {
+                         SubscriptionExecutor subscriptionExecutor, IdeaServiceCommons ideaServiceCommons, MailHandler mailHandler, TriggerExecutor triggerExecutor) {
     this.ideaRepository = ideaRepository;
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
@@ -103,9 +105,8 @@ public class IdeaServiceImpl implements IdeaService {
     this.objectStorage = objectStorage;
     this.subscriptionExecutor = subscriptionExecutor;
     this.ideaServiceCommons = ideaServiceCommons;
-    this.randomNicknameUtils = randomNicknameUtils;
     this.mailHandler = mailHandler;
-    this.webhookExecutor = webhookExecutor;
+    this.triggerExecutor = triggerExecutor;
   }
 
   @Override
@@ -140,37 +141,35 @@ public class IdeaServiceImpl implements IdeaService {
 
   @Override
   public ResponseEntity<FetchIdeaDto> post(PostIdeaDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Board board = boardRepository.findByDiscriminator(dto.getDiscriminator())
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Board board = boardRepository.findByDiscriminator(dto.getDiscriminator(), EntityGraphs.named("Board.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", dto.getDiscriminator())));
     return ResponseEntity.status(HttpStatus.CREATED).body(ideaServiceCommons.post(dto, board, user));
   }
 
   @Override
   public FetchIdeaDto patch(long id, PatchIdeaDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.patch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null || dto.getAssignee() != null)
+    //if modifying staff only fields throw exception if not a moderator
+    if((dto.getOpen() != null || dto.getCommentingRestricted() != null || dto.getPinned() != null || dto.getAssignees() != null)
             && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
+    //either creator or moderator can apply edits
     if(!(idea.getCreator().equals(user) || ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user))) {
       throw new InsufficientPermissionsException();
     }
 
     handleTitleUpdate(idea, dto, user);
     handleStatusUpdate(idea, dto, user);
-    handleAttachmentUpdate(idea, dto);
+    handleAttachmentUpdate(idea, dto, user);
     handleAssigneeUpdate(idea, dto, user);
 
     idea.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(idea.getDescription())));
-    ideaRepository.save(idea);
-    return new FetchIdeaDto().from(idea).withUser(idea, user);
+    idea = ideaRepository.save(idea);
+    return idea.toDto().withUser(idea, user);
   }
 
   private void handleTitleUpdate(Idea idea, PatchIdeaDto dto, User user) {
@@ -187,12 +186,15 @@ public class IdeaServiceImpl implements IdeaService {
             .of(idea)
             .by(user)
             .type(Comment.SpecialType.IDEA_TITLE_CHANGE)
-            .message(user.convertToSpecialCommentMention() + " has edited title of the idea. "
-                    + CommentBuilder.convertToDiffViewMode("View Diff", oldTitle, dto.getTitle()));
-    Webhook.Event event = Webhook.Event.IDEA_EDIT;
+            .placeholders(user.convertToSpecialCommentMention(), CommentBuilder.convertToDiffViewMode("View Diff", oldTitle, dto.getTitle()));
     Comment comment = commentBuilder.build();
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-    webhookExecutor.executeWebhooks(idea.getBoard(), event, builder.build());
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_EDIT)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
 
     Set<Comment> comments = idea.getComments();
     comments.add(comment);
@@ -213,42 +215,47 @@ public class IdeaServiceImpl implements IdeaService {
     }
     Comment comment = null;
     CommentBuilder commentBuilder = new CommentBuilder().of(idea).by(user);
-    Webhook.Event event = null;
+    ActionTrigger.Trigger triggerType = null;
     //assuming you can never do any of these actions together
     if(edited) {
-      comment = commentBuilder.type(Comment.SpecialType.IDEA_EDITED).message(user.convertToSpecialCommentMention() + " has edited description of the idea.").build();
-      event = Webhook.Event.IDEA_EDIT;
+      comment = commentBuilder.type(Comment.SpecialType.IDEA_EDITED).placeholders(user.convertToSpecialCommentMention()).build();
+      triggerType = ActionTrigger.Trigger.IDEA_EDIT;
     } else if(dto.getOpen() != null && idea.getStatus().getValue() != dto.getOpen()) {
       if(!dto.getOpen()) {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_CLOSED).message(user.convertToSpecialCommentMention() + " has closed the idea.").build();
-        event = Webhook.Event.IDEA_CLOSE;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_CLOSED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_CLOSE;
       } else {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_OPENED).message(user.convertToSpecialCommentMention() + " has reopened the idea.").build();
-        event = Webhook.Event.IDEA_OPEN;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_OPENED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_OPEN;
       }
       subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_STATUS_CHANGE, user,
               idea, idea.getStatus().name()));
     } else if(dto.getCommentingRestricted() != null && idea.isCommentingRestricted() != dto.getCommentingRestricted()) {
       if(dto.getCommentingRestricted()) {
-        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_RESTRICTED).message(user.convertToSpecialCommentMention() + " has restricted commenting to moderators only.").build();
-        event = Webhook.Event.IDEA_COMMENTS_RESTRICT;
+        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_RESTRICTED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_COMMENTS_DISABLE;
       } else {
-        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_ALLOWED).message(user.convertToSpecialCommentMention() + " has removed commenting restrictions.").build();
-        event = Webhook.Event.IDEA_COMMENTS_ALLOW;
+        comment = commentBuilder.type(Comment.SpecialType.COMMENTS_ALLOWED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_COMMENTS_ENABLE;
       }
     } else if(dto.getPinned() != null && idea.isPinned() != dto.getPinned()) {
       if(dto.getPinned()) {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_PINNED).message(user.convertToSpecialCommentMention() + " has pinned the idea.").build();
-        event = Webhook.Event.IDEA_PINNED;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_PINNED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_PIN;
       } else {
-        comment = commentBuilder.type(Comment.SpecialType.IDEA_UNPINNED).message(user.convertToSpecialCommentMention() + " has unpinned the idea.").build();
-        event = Webhook.Event.IDEA_UNPINNED;
+        comment = commentBuilder.type(Comment.SpecialType.IDEA_UNPINNED).placeholders(user.convertToSpecialCommentMention()).build();
+        triggerType = ActionTrigger.Trigger.IDEA_UNPIN;
       }
     }
     //the change was made, notify webhooks and save moderation comment
     if(comment != null) {
-      WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-      webhookExecutor.executeWebhooks(idea.getBoard(), event, builder.build());
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(triggerType)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(idea)
+              .build()
+      );
 
       Set<Comment> comments = idea.getComments();
       comments.add(comment);
@@ -263,7 +270,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
   }
 
-  private void handleAttachmentUpdate(Idea idea, PatchIdeaDto dto) {
+  private void handleAttachmentUpdate(Idea idea, PatchIdeaDto dto, User user) {
     if(dto.getAttachment() == null) {
       return;
     }
@@ -275,161 +282,135 @@ public class IdeaServiceImpl implements IdeaService {
     attachment = attachmentRepository.save(attachment);
     attachments.add(attachment);
     idea.setAttachments(attachments);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_ATTACHMENT_UPDATE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
   }
 
   private void handleAssigneeUpdate(Idea idea, PatchIdeaDto dto, User user) {
-    CommentBuilder commentBuilder = new CommentBuilder().by(user);
-    commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED);
-    if(dto.getAssignee() == null) {
-      if(idea.getAssignee() == null) {
-        return;
+    if(dto.getAssignees() == null) {
+      return;
+    }
+    //left: new entries, right: entries to remove
+    Pair<List<User>, List<User>> updatedEntries = Pair.of(new ArrayList<>(), new ArrayList<>());
+    boolean assigneesDiffer = false;
+    //check for new added entries
+    for(Long assigneeId : dto.getAssignees()) {
+      if(idea.getAssignedModerators().stream().noneMatch(u -> u.getId().equals(assigneeId))) {
+        updatedEntries.getLeft().add(userRepository.findById(assigneeId)
+                .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("Assignee with id {0} not found.", assigneeId))));
+        assigneesDiffer = true;
       }
-      //assign feature is only for moderators
-      if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
-        throw new InsufficientPermissionsException();
+    }
+    //check for removed entries
+    for(User assignee : idea.getAssignedModerators()) {
+      if(!dto.getAssignees().contains(assignee.getId())) {
+        updatedEntries.getRight().add(assignee);
+        assigneesDiffer = true;
+        break;
       }
-      idea.setAssignee(null);
-      commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " removed assignee from this idea.");
-    } else {
-      Moderator assigneeMod = idea.getBoard().getModerators().stream().filter(mod -> mod.getUser().getId().equals(dto.getAssignee())).findFirst()
-              .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, MessageFormat.format("User with id {0} is not a board moderator.", dto.getAssignee())));
-      idea.setAssignee(assigneeMod.getUser());
-
-      commentBuilder = commentBuilder.type(Comment.SpecialType.IDEA_ASSIGNED)
-              .message(assigneeMod.getUser().convertToSpecialCommentMention() + " has been assigned to this idea by " + user.convertToSpecialCommentMention() + ".");
+    }
+    if(!assigneesDiffer) {
+      return;
+    }
+    //assign feature is only for moderators
+    if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+      throw new InsufficientPermissionsException();
+    }
+    Set<Comment> comments = idea.getComments();
+    Set<User> assignees = idea.getAssignedModerators();
+    for(User toAssign : updatedEntries.getLeft()) {
+      CommentBuilder commentBuilder = new CommentBuilder()
+              .by(user)
+              .type(Comment.SpecialType.IDEA_ASSIGNED)
+              .placeholders(user.convertToSpecialCommentMention(), toAssign.convertToSpecialCommentMention());
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.IDEA_ASSIGN)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(idea)
+              .build()
+      );
+      assignees.add(toAssign);
+      Comment comment = commentBuilder.of(idea).build();
+      comments.add(comment);
+      commentRepository.save(comment);
       MailBuilder builder = new MailBuilder();
       builder.withTemplate(MailService.EmailTemplate.IDEA_ASSIGNED)
-              .withRecipient(assigneeMod.getUser())
+              .withRecipient(toAssign)
               .withCustomPlaceholder("${idea.name}", idea.getTitle())
               .withCustomPlaceholder("${idea.viewLink}", idea.toViewLink())
-              .sendMail(mailHandler.getMailService()).sync();
+              .sendMail(mailHandler.getMailService()).async();
     }
-
-    Comment comment = commentBuilder.of(idea).build();
-    Set<Comment> comments = idea.getComments();
-    comments.add(comment);
+    for(User toUnassign : updatedEntries.getRight()) {
+      CommentBuilder commentBuilder = new CommentBuilder()
+              .by(user)
+              .type(Comment.SpecialType.IDEA_UNASSIGNED)
+              .placeholders(user.convertToSpecialCommentMention(), toUnassign.convertToSpecialCommentMention());
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.IDEA_UNASSIGN)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(idea)
+              .build()
+      );
+      assignees.remove(toUnassign);
+      Comment comment = commentBuilder.of(idea).build();
+      comments.add(comment);
+      commentRepository.save(comment);
+    }
+    idea.setAssignedModerators(assignees);
     idea.setComments(comments);
-    commentRepository.save(comment);
   }
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
     Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(!idea.getCreator().equals(user) && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
     idea.getAttachments().forEach(attachment -> objectStorage.deleteImage(attachment.getUrl()));
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(idea);
-    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_DELETE, builder.build());
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_DELETE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     ideaRepository.delete(idea);
     return ResponseEntity.noContent().build();
   }
 
   @Override
-  public List<FetchSimpleUserDto> getAllVoters(long id) {
-    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("voters"))
+  public List<FetchSimpleUserDto> getAllMentions(long id) {
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetchMentions"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    return idea.getVoters().stream().map(usr -> new FetchSimpleUserDto().from(usr)).collect(Collectors.toList());
-  }
-
-  @Override
-  public List<FetchSimpleUserDto> patchVoters(long id, PatchVotersDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id, EntityGraphUtils.fromAttributePaths("board", "voters"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    ServiceValidator.isPermitted(idea.getBoard(), Moderator.Role.MODERATOR, user);
-    CommentBuilder commentBuilder = new CommentBuilder().by(user).type(Comment.SpecialType.IDEA_ASSIGNED);
-    switch(PatchVotersDto.VotersClearType.valueOf(dto.getClearType().toUpperCase())) {
-      case ALL:
-        idea.setVoters(new HashSet<>());
-        idea.setVotersAmount(0);
-        idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset all votes.");
-        break;
-      case ANONYMOUS:
-        Set<User> voters = idea.getVoters();
-        voters = voters.stream().filter(voter -> !voter.isFake()).collect(Collectors.toSet());
-        idea.setVoters(voters);
-        idea.setVotersAmount(voters.size());
-        idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.message(user.convertToSpecialCommentMention() + " has reset anonymous votes.");
-        break;
-      default:
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid clear type provided.");
-    }
-    Comment comment = commentBuilder.of(idea).build();
-    Set<Comment> comments = idea.getComments();
-    comments.add(comment);
-    idea.setComments(comments);
-    commentRepository.save(comment);
-    return idea.getVoters().stream().map(voter -> new FetchSimpleUserDto().from(voter)).collect(Collectors.toList());
-  }
-
-  @Override
-  public FetchUserDto postUpvote(long id, String anonymousId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    User user;
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    if(auth instanceof AnonymousAuthenticationToken) {
-      if(anonymousId == null || !idea.getBoard().isAnonymousAllowed()) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Please log-in to vote.");
+    Set<User> uniqueUsers = new HashSet<>();
+    uniqueUsers.add(idea.getCreator());
+    for(Comment comment : idea.getComments()) {
+      if(comment.getViewType() == Comment.ViewType.DELETED) {
+        continue;
       }
-      user = userRepository.findByEmail(anonymousId).orElseGet(() -> createAnonymousUser(anonymousId));
-    } else {
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-              .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+      uniqueUsers.add(comment.getCreator());
     }
-    return ideaServiceCommons.postUpvote(user, idea);
-  }
-
-  @Override
-  public ResponseEntity deleteUpvote(long id, String anonymousId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    User user;
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
-            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
-    if(auth instanceof AnonymousAuthenticationToken) {
-      if(anonymousId == null || !idea.getBoard().isAnonymousAllowed()) {
-        throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Please log-in to vote.");
-      }
-      //if not found and vote deleted then don't create new user
-      user = userRepository.findByEmail(anonymousId)
-              .orElseThrow(() -> new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet upvoted."));
-    } else {
-      user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-              .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
+    for(Moderator moderator : idea.getBoard().getModerators()) {
+      uniqueUsers.add(moderator.getUser());
     }
-    return ideaServiceCommons.deleteUpvote(user, idea);
-  }
-
-  private User createAnonymousUser(String anonymousId) {
-    User user = new User();
-    user.setEmail(anonymousId);
-    MailPreferences preferences = new MailPreferences();
-    preferences.setNotificationsEnabled(false);
-    preferences.setUnsubscribeToken("");
-    preferences.setUser(user);
-    user.setMailPreferences(preferences);
-    String nick = randomNicknameUtils.getRandomNickname();
-    user.setAvatar(System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", nick));
-    user.setUsername(nick);
-    user.setFake(true);
-    return userRepository.save(user);
+    return uniqueUsers.stream().filter(u -> !u.isFake()).map(u -> new FetchSimpleUserDto().from(u)).collect(Collectors.toList());
   }
 
   @Override
   public List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.fetch"))
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(id, EntityGraphs.named("Idea.patchTags"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", id)));
     if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
@@ -461,14 +442,18 @@ public class IdeaServiceImpl implements IdeaService {
     comments.add(comment);
     idea.setComments(comments);
     commentRepository.save(comment);
-    ideaRepository.save(idea);
-    WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea())
-            .withTagsChangedData(prepareTagChangeMessage(user, idea, addedTags, removedTags, false));
-    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_TAG_CHANGE, webhookBuilder.build());
+    idea = ideaRepository.save(idea);
 
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.IDEA_TAGS_CHANGE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(idea)
+            .build()
+    );
     subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_TAGS_CHANGE, user,
-            idea, prepareTagChangeMessage(user, idea, addedTags, removedTags, false)));
-    return idea.getTags().stream().map(tag -> new FetchTagDto().from(tag)).collect(Collectors.toList());
+            idea, user.getUsername() + " has " + prepareTagChangeMessage(idea, addedTags, removedTags, false)));
+    return idea.getTags().stream().map(Tag::toDto).collect(Collectors.toList());
   }
 
   private Comment prepareTagsPatchComment(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags) {
@@ -476,18 +461,12 @@ public class IdeaServiceImpl implements IdeaService {
             .of(idea)
             .by(user)
             .type(Comment.SpecialType.TAGS_MANAGED)
-            .message(prepareTagChangeMessage(user, idea, addedTags, removedTags, true))
+            .placeholders(user.convertToSpecialCommentMention(), prepareTagChangeMessage(idea, addedTags, removedTags, true))
             .build();
   }
 
-  private String prepareTagChangeMessage(User user, Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean tagDataDisplay) {
-    String userName;
-    if(tagDataDisplay) {
-      userName = user.convertToSpecialCommentMention();
-    } else {
-      userName = user.getUsername();
-    }
-    StringBuilder builder = new StringBuilder(userName + " has ");
+  private String prepareTagChangeMessage(Idea idea, List<Tag> addedTags, List<Tag> removedTags, boolean tagDataDisplay) {
+    StringBuilder builder = new StringBuilder();
     if(!addedTags.isEmpty()) {
       builder.append("added");
       for(Tag tag : addedTags) {

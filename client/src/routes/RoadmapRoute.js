@@ -6,7 +6,7 @@ import LoginModal from "components/LoginModal";
 import BoardRoadmapBox from "components/roadmap/BoardRoadmapBox";
 import {AppContext} from "context";
 import React, {useContext, useEffect, useState} from "react";
-import {FaExclamationCircle} from "react-icons/all";
+import {FaExclamationCircle} from "react-icons/fa";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";

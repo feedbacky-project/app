@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 /**
  * @author Plajer
  * <p>
@@ -31,6 +33,6 @@ public class PatchIdeaDto {
   private Boolean pinned;
   @Base64(maximumKbSize = 1024, mimeType = {"image/png", "image/jpeg"}, message = "Attachment must be a valid image with maximum size of 1 MB.", allowEmpty = true)
   private String attachment;
-  private Long assignee;
+  private List<Long> assignees;
 
 }

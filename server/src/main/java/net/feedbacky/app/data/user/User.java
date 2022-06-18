@@ -1,11 +1,12 @@
 package net.feedbacky.app.data.user;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.moderator.Moderator;
+import net.feedbacky.app.data.user.dto.FetchUserDto;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyToOne;
@@ -20,6 +21,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -38,12 +40,17 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@NamedEntityGraph(name = "User.fetch", attributeNodes = {@NamedAttributeNode("permissions"), @NamedAttributeNode("mailPreferences")})
+@NamedEntityGraph(name = "User.fetch", attributeNodes = {
+        @NamedAttributeNode(value = "permissions", subgraph = "User.subgraph.permissionsFetch"), @NamedAttributeNode("mailPreferences")
+}, subgraphs = {
+        @NamedSubgraph(name = "User.subgraph.permissionsFetch", attributeNodes = {
+                @NamedAttributeNode("board")
+        })
+})
 @NamedEntityGraph(name = "User.fetchConnections", attributeNodes = {@NamedAttributeNode("connectedAccounts")})
-public class User implements Serializable {
+public class User implements Serializable, Fetchable<FetchUserDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +73,11 @@ public class User implements Serializable {
   private boolean serviceStaff = false;
   private boolean fake = false;
   private String token = "";
+
+  @Override
+  public FetchUserDto toDto() {
+    return new FetchUserDto().from(this);
+  }
 
   public String convertToSpecialCommentMention() {
     return "{data_user;" + id + ";" + username + "}";

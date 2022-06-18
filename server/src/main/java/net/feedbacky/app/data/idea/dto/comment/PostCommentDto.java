@@ -4,16 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.feedbacky.app.annotation.enumvalue.EnumValue;
+import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * @author Plajer
@@ -36,5 +40,16 @@ public class PostCommentDto {
   private String type;
   private Long replyTo;
   private final Date creationDate = Calendar.getInstance().getTime();
+
+  public Comment convertToEntity(User user, Idea idea) {
+    Comment comment = new Comment();
+    comment.setId(null);
+    comment.setIdea(idea);
+    comment.setCreator(user);
+    comment.setReactions(new HashSet<>());
+    comment.setSpecial(false);
+    comment.setSpecialType(Comment.SpecialType.LEGACY);
+    return comment;
+  }
 
 }

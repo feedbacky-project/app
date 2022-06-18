@@ -29,4 +29,7 @@ public interface CommentRepository extends EntityGraphJpaRepository<Comment, Lon
   @EntityGraph(value = "Comment.fetch")
   Optional<Comment> findByCreatorAndDescriptionAndIdea(User creator, String description, Idea idea);
 
+  @EntityGraph(value = "Comment.fetch")
+  Optional<Comment> findByMetadataContaining(String search);
+
 }

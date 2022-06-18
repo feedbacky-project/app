@@ -1,13 +1,14 @@
 package net.feedbacky.app.data.idea;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.feedbacky.app.data.Fetchable;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.comment.Comment;
+import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.tag.Tag;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.util.mailservice.MailService;
@@ -27,6 +28,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -46,19 +48,58 @@ import java.util.Set;
 @Table(name = "ideas")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedEntityGraph(name = "Idea.fetch", attributeNodes = {
-        @NamedAttributeNode("creator"), @NamedAttributeNode("voters"),
-        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"),
-        @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers")})
-public class Idea implements Serializable {
+        @NamedAttributeNode(value = "creator"), @NamedAttributeNode("voters"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignedModerators"),
+        @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers")
+})
+@NamedEntityGraph(name = "Idea.fetchMentions", attributeNodes = {
+        @NamedAttributeNode(value = "creator", subgraph = "Idea.subgraph.creatorFetch"), @NamedAttributeNode(value = "comments", subgraph = "Idea.subgraph.commentsFetch"),
+        @NamedAttributeNode(value = "board", subgraph = "Idea.subgraph.boardFetch")
+},
+        subgraphs = {
+                @NamedSubgraph(name = "Idea.subgraph.commentsFetch", attributeNodes = {
+                        @NamedAttributeNode("creator")
+                }),
+                @NamedSubgraph(name = "Idea.subgraph.boardFetch", attributeNodes = {
+                        @NamedAttributeNode("moderators")
+                })
+        })
+@NamedEntityGraph(name = "Idea.postUpvote", attributeNodes = {
+        @NamedAttributeNode(value = "creator"), @NamedAttributeNode("voters"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("subscribers"), @NamedAttributeNode(value = "board", subgraph = "Idea.subgraph.postBoardFetch")
+}, subgraphs = {
+        @NamedSubgraph(name = "Idea.subgraph.postBoardFetch", attributeNodes = {
+                @NamedAttributeNode("suspensedList")
+        })
+})
+@NamedEntityGraph(name = "Idea.patch", attributeNodes = {
+        @NamedAttributeNode(value = "creator"), @NamedAttributeNode("voters"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignedModerators"),
+        @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers"),
+        @NamedAttributeNode(value = "board", subgraph = "Idea.subgraph.postBoardFetch")
+}, subgraphs = {
+        @NamedSubgraph(name = "Idea.subgraph.postBoardFetch", attributeNodes = {
+                @NamedAttributeNode("webhooks"), @NamedAttributeNode("moderators")
+        })
+})
+@NamedEntityGraph(name = "Idea.patchTags", attributeNodes = {
+        @NamedAttributeNode(value = "creator"), @NamedAttributeNode("voters"),
+        @NamedAttributeNode("comments"), @NamedAttributeNode("tags"), @NamedAttributeNode("assignedModerators"),
+        @NamedAttributeNode("attachments"), @NamedAttributeNode("subscribers"),
+        @NamedAttributeNode(value = "board", subgraph = "Idea.subgraph.postBoardFetch")
+}, subgraphs = {
+        @NamedSubgraph(name = "Idea.subgraph.postBoardFetch", attributeNodes = {
+                @NamedAttributeNode("webhooks"), @NamedAttributeNode("moderators"), @NamedAttributeNode("tags")
+        })
+})
+public class Idea implements Serializable, Fetchable<FetchIdeaDto> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @EqualsAndHashCode.Include
-  private Long id;
+  @EqualsAndHashCode.Include private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @LazyToOne(LazyToOneOption.NO_PROXY)
@@ -83,14 +124,15 @@ public class Idea implements Serializable {
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> subscribers = new HashSet<>();
   private IdeaStatus status;
-  @ManyToOne(fetch = FetchType.LAZY)
-  @LazyToOne(LazyToOneOption.NO_PROXY)
-  private User assignee;
+  @ManyToMany(fetch = FetchType.LAZY)
+  private Set<User> assignedModerators = new HashSet<>();
   @CreationTimestamp
   private Date creationDate;
   private boolean edited = false;
   private boolean commentingRestricted = false;
   private boolean pinned = false;
+  @Column(name = "metadata", columnDefinition = "varchar(2500) default '{}'")
+  private String metadata;
 
   public void setVoters(Set<User> voters) {
     this.voters = voters;
@@ -125,6 +167,11 @@ public class Idea implements Serializable {
     return value / gravity;
   }
 
+  @Override
+  public FetchIdeaDto toDto() {
+    return new FetchIdeaDto().from(this);
+  }
+
   public String toViewLink() {
     String slug = title;
     slug = slug.toLowerCase();
@@ -133,6 +180,17 @@ public class Idea implements Serializable {
             .replaceAll("^(-)", "")
             .replaceAll("(-)$", "");
     return MailService.HOST_ADDRESS + "/i/" + slug + "." + id;
+  }
+
+  public enum IdeaMetadata {
+    INTEGRATION_GITHUB_ISSUE_ID("integration_github_issue_id"), INTEGRATION_GITHUB_ISSUE_NUMBER("integration_github_issue_number"),
+    INTEGRATION_GITHUB_URL("integration_github_url");
+
+    @Getter private String key;
+
+    IdeaMetadata(String key) {
+      this.key = key;
+    }
   }
 
   public enum IdeaStatus {

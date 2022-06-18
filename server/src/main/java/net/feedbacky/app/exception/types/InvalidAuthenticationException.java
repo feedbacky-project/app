@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 public class InvalidAuthenticationException extends FeedbackyRestException {
 
   public InvalidAuthenticationException() {
-    super(HttpStatus.FORBIDDEN);
+    super(HttpStatus.FORBIDDEN, "Session not found. Try again with new token.");
   }
 
   public InvalidAuthenticationException(String message) {

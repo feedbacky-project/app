@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import PropTypes from 'prop-types';
 import React from 'react';
 import {OverlayTrigger, Popover} from "react-bootstrap";
-import {FaQuestionCircle} from "react-icons/all";
+import {FaQuestionCircle} from "react-icons/fa";
 import {UiHoverableIcon} from "ui/index";
 
 const PopoverBox = styled(Popover)`

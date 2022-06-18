@@ -1,7 +1,7 @@
 package net.feedbacky.app.service.comment;
 
 import net.feedbacky.app.config.UserAuthenticationToken;
-import net.feedbacky.app.controller.about.EmojiDataRegistry;
+import net.feedbacky.app.data.emoji.EmojiDataRegistry;
 import net.feedbacky.app.data.board.moderator.Moderator;
 import net.feedbacky.app.data.board.webhook.Webhook;
 import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
@@ -16,6 +16,9 @@ import net.feedbacky.app.data.idea.dto.comment.reaction.FetchCommentReactionDto;
 import net.feedbacky.app.data.idea.dto.comment.reaction.PostCommentReactionDto;
 import net.feedbacky.app.data.idea.subscribe.NotificationEvent;
 import net.feedbacky.app.data.idea.subscribe.SubscriptionExecutor;
+import net.feedbacky.app.data.trigger.ActionTrigger;
+import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
+import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InsufficientPermissionsException;
@@ -30,6 +33,7 @@ import net.feedbacky.app.util.SortFilterResolver;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.request.ServiceValidator;
 
+import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -50,6 +54,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -64,17 +71,18 @@ public class CommentServiceImpl implements CommentService {
   private final IdeaRepository ideaRepository;
   private final UserRepository userRepository;
   private final SubscriptionExecutor subscriptionExecutor;
-  private final WebhookExecutor webhookExecutor;
+  private final TriggerExecutor triggerExecutor;
   private final EmojiDataRegistry emojiDataRegistry;
+  private final Pattern mentionPattern = Pattern.compile("(@[{a-zA-Z0-9_-}{^A-Za-z0-9 \\n}]+#[0-9]+)");
 
   @Autowired
   public CommentServiceImpl(CommentRepository commentRepository, IdeaRepository ideaRepository, UserRepository userRepository, SubscriptionExecutor subscriptionExecutor,
-                            WebhookExecutor webhookExecutor, EmojiDataRegistry emojiDataRegistry) {
+                            TriggerExecutor triggerExecutor, EmojiDataRegistry emojiDataRegistry) {
     this.commentRepository = commentRepository;
     this.ideaRepository = ideaRepository;
     this.userRepository = userRepository;
     this.subscriptionExecutor = subscriptionExecutor;
-    this.webhookExecutor = webhookExecutor;
+    this.triggerExecutor = triggerExecutor;
     this.emojiDataRegistry = emojiDataRegistry;
   }
 
@@ -85,16 +93,20 @@ public class CommentServiceImpl implements CommentService {
       UserAuthenticationToken auth = (UserAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
       user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail()).orElse(null);
     }
-    Idea idea = ideaRepository.findById(ideaId)
+    Idea idea = ideaRepository.findById(ideaId, EntityGraphUtils.fromAttributePaths("board.moderators.user"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", ideaId)));
     Page<Comment> pageData = commentRepository.findByIdea(idea, PageRequest.of(page, pageSize, SortFilterResolver.resolveCommentsSorting(sortType)));
     List<Comment> comments = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     final User finalUser = user;
-    boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
+    AtomicBoolean isModerator = new AtomicBoolean(false);
+    //only check if is moderator when logged in to avoid unnecessary Database lookups
+    if(finalUser != null) {
+      isModerator.set(idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser)));
+    }
     List<FetchCommentDto> returnData = comments.stream().map(c -> {
-      FetchCommentDto dto = new FetchCommentDto().from(c);
-      if(!isModerator && c.getViewType() == Comment.ViewType.INTERNAL) {
+      FetchCommentDto dto = c.toDto();
+      if(!isModerator.get() && c.getViewType() == Comment.ViewType.INTERNAL) {
         dto = dto.asInternalInvisible();
       }
       return dto;
@@ -112,44 +124,42 @@ public class CommentServiceImpl implements CommentService {
     Comment comment = commentRepository.findById(id, EntityGraphs.named("Comments.fetch"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     final User finalUser = user;
-    boolean isModerator = comment.getIdea().getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
+    boolean isModerator = false;
+    if(finalUser != null) {
+      isModerator = comment.getIdea().getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(finalUser));
+    }
     if(comment.getViewType() == Comment.ViewType.INTERNAL && !isModerator) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "No permission to view this comment.");
     }
-    return new FetchCommentDto().from(comment);
+    return comment.toDto();
   }
 
   @Override
   public ResponseEntity<FetchCommentDto> post(PostCommentDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Idea idea = ideaRepository.findById(dto.getIdeaId())
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Idea idea = ideaRepository.findById(dto.getIdeaId(), EntityGraphUtils.fromAttributePaths("subscribers", "board.moderators.user", "board.webhooks"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Idea with id {0} not found.", dto.getIdeaId())));
+    if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !idea.getBoard().isClosedIdeasCommentingEnabled()) {
+      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea already closed.");
+    }
     boolean isModerator = idea.getBoard().getModerators().stream().anyMatch(mod -> mod.getUser().equals(user));
     //1. internal type is for moderators only
     //2. restricted commenting is for moderators only
     if(!isModerator && (Comment.ViewType.valueOf(dto.getType().toUpperCase()) == Comment.ViewType.INTERNAL || idea.isCommentingRestricted())) {
       throw new InsufficientPermissionsException();
     }
-    if(idea.getStatus() == Idea.IdeaStatus.CLOSED && !idea.getBoard().isClosedIdeasCommentingEnabled()) {
-      throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Idea already closed.");
-    }
-    Comment comment = new Comment();
-    comment.setId(null);
-    comment.setIdea(idea);
-    comment.setCreator(user);
-    comment.setReactions(new HashSet<>());
-    comment.setSpecial(false);
-    comment.setSpecialType(Comment.SpecialType.LEGACY);
+    Comment comment = dto.convertToEntity(user, idea);
     comment.setViewType(Comment.ViewType.valueOf(dto.getType().toUpperCase()));
     comment.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
+    comment.setMetadata("{}");
+    boolean isReply = false;
     if(dto.getReplyTo() != null) {
       Comment repliedComment = commentRepository.findById(dto.getReplyTo())
               .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Reply comment with id {0} not found.", dto.getReplyTo())));
       comment.setReplyTo(repliedComment);
       subscriptionExecutor.notifySubscriber(idea, user, new NotificationEvent(SubscriptionExecutor.Event.COMMENT_REPLY, user,
               comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
+      isReply = true;
     }
 
     if(commentRepository.findByCreatorAndDescriptionAndIdea(user, comment.getDescription(), idea).isPresent()) {
@@ -162,26 +172,55 @@ public class CommentServiceImpl implements CommentService {
     idea.setComments(comments);
     ideaRepository.save(idea);
 
+    notifyWebhooksAndSubscribers(comment, idea, user, isModerator);
+    parseMentions(comment, idea, isReply);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(comment.toDto());
+  }
+
+  private void notifyWebhooksAndSubscribers(Comment comment, Idea idea, User user, boolean isModerator) {
     //do not publish information about private internal comments
     if(comment.getViewType() != Comment.ViewType.INTERNAL) {
-      WebhookDataBuilder webhookBuilder = new WebhookDataBuilder().withUser(user).withIdea(idea).withComment(comment);
-      webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT, webhookBuilder.build());
-
+      triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+              .withTrigger(ActionTrigger.Trigger.COMMENT_CREATE)
+              .withBoard(idea.getBoard())
+              .withTriggerer(user)
+              .withRelatedObjects(comment)
+              .build()
+      );
       //notify only if moderator
       if(isModerator) {
-        subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, user,
+        subscriptionExecutor.notifySubscribers(idea, new NotificationEvent(SubscriptionExecutor.Event.IDEA_BY_MODERATOR_COMMENT, comment.getCreator(),
                 comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
       }
     }
-    return ResponseEntity.status(HttpStatus.CREATED).body(new FetchCommentDto().from(comment));
+  }
+
+  private void parseMentions(Comment comment, Idea idea, boolean isReply) {
+    Matcher mentions = mentionPattern.matcher(comment.getDescription());
+    while(mentions.find()) {
+      String mention = mentions.group();
+      mention = mention.replace("@", "");
+      String[] data = mention.split("#");
+      //parse after last # in case username contains #
+      long id = Long.parseLong(data[data.length - 1]);
+      Optional<User> optional = userRepository.findById(id);
+      if(!optional.isPresent()) {
+        continue;
+      }
+      //do not notify about mention if we already notify about a reply
+      if(isReply && optional.get().getId().equals(comment.getReplyTo().getId())) {
+        continue;
+      }
+      subscriptionExecutor.notifySubscriber(idea, optional.get(), new NotificationEvent(SubscriptionExecutor.Event.COMMENT_MENTION, comment.getCreator(),
+              comment, StringEscapeUtils.unescapeHtml4(comment.getDescription())));
+    }
   }
 
   @Override
   public FetchCommentReactionDto postReaction(long id, PostCommentReactionDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Comment comment = commentRepository.findById(id)
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Comment comment = commentRepository.findById(id, EntityGraphUtils.fromAttributePaths("reactions.user"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(comment.isSpecial()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't react to this comment.");
@@ -199,15 +238,22 @@ public class CommentServiceImpl implements CommentService {
     comment.getReactions().add(reaction);
     commentRepository.save(comment);
     reaction = comment.getReactions().stream().filter(r -> r.getReactionId().equals(dto.getReactionId()) && r.getUser().equals(user)).findFirst().get();
-    return new FetchCommentReactionDto().from(reaction);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_REACT)
+            .withBoard(comment.getIdea().getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment, reaction)
+            .build()
+    );
+    return reaction.toDto();
   }
 
   @Override
   public FetchCommentDto patch(long id, PatchCommentDto dto) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Comment comment = commentRepository.findById(id, EntityGraphUtils.fromAttributePaths("reactions"))
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(!comment.getCreator().getId().equals(user.getId())) {
       throw new InsufficientPermissionsException();
     }
@@ -220,28 +266,37 @@ public class CommentServiceImpl implements CommentService {
             && minutesDiff > 5) {
       comment.setEdited(true);
     }
-    ModelMapper mapper = new ModelMapper();
-    mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-    mapper.map(dto, comment);
 
-    comment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(comment.getDescription())));
-    commentRepository.save(comment);
-    return new FetchCommentDto().from(comment);
+    comment.setDescription(StringEscapeUtils.escapeHtml4(StringEscapeUtils.unescapeHtml4(dto.getDescription())));
+    comment = commentRepository.save(comment);
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_EDIT)
+            .withBoard(comment.getIdea().getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment)
+            .build()
+    );
+    return comment.toDto();
   }
 
   @Override
   public ResponseEntity delete(long id) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Comment comment = commentRepository.findById(id)
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Comment comment = commentRepository.findById(id, EntityGraphUtils.fromAttributePaths("creator", "idea.voters", "idea.subscribers", "idea.comments", "idea.board", "idea.board.webhooks"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(!comment.getCreator().equals(user) && !ServiceValidator.hasPermission(comment.getIdea().getBoard(), Moderator.Role.MODERATOR, user)) {
       throw new InsufficientPermissionsException();
     }
-    WebhookDataBuilder builder = new WebhookDataBuilder().withUser(user).withIdea(comment.getIdea()).withComment(comment);
     Idea idea = comment.getIdea();
-    webhookExecutor.executeWebhooks(idea.getBoard(), Webhook.Event.IDEA_COMMENT_DELETE, builder.build());
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_DELETE)
+            .withBoard(idea.getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment)
+            .build()
+    );
+
     comment.setViewType(Comment.ViewType.DELETED);
     comment.setCreator(null);
     comment.setDescription("");
@@ -254,10 +309,8 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public ResponseEntity deleteReaction(long id, String reactionId) {
-    UserAuthenticationToken auth = InternalRequestValidator.getContextAuthentication();
-    User user = userRepository.findByEmail(((ServiceUser) auth.getPrincipal()).getEmail())
-            .orElseThrow(() -> new InvalidAuthenticationException("Session not found. Try again with new token."));
-    Comment comment = commentRepository.findById(id)
+    User user = InternalRequestValidator.getRequestUser(userRepository);
+    Comment comment = commentRepository.findById(id, EntityGraphUtils.fromAttributePaths("reactions.user"))
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Comment with id {0} not found.", id)));
     if(comment.isSpecial()) {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Can't react to this comment.");
@@ -270,6 +323,14 @@ public class CommentServiceImpl implements CommentService {
       throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Not yet reacted.");
     }
     CommentReaction reaction = optional.get();
+
+    triggerExecutor.executeTrigger(new ActionTriggerBuilder()
+            .withTrigger(ActionTrigger.Trigger.COMMENT_UNREACT)
+            .withBoard(comment.getIdea().getBoard())
+            .withTriggerer(user)
+            .withRelatedObjects(comment, reaction)
+            .build()
+    );
     comment.getReactions().remove(reaction);
     reaction.setComment(null);
     commentRepository.save(comment);

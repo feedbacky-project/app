@@ -1,9 +1,8 @@
 import styled from "@emotion/styled";
-import {AppContext} from "context";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {Dropdown} from "react-bootstrap";
-import {FaAngleDown} from "react-icons/all";
+import {FaAngleDown} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiClassicButton} from "ui/button";
 import {DropdownMenu, DropdownToggle} from "ui/dropdown/UiDropdown";

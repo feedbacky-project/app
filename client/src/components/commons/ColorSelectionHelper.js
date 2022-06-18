@@ -3,7 +3,7 @@ import {WCAG_AA_CONTRAST} from "App";
 import {BoardContext} from "context";
 import React, {Suspense, useContext} from "react";
 import {ChromePicker} from "react-color";
-import {FaExclamationCircle, FaExclamationTriangle} from "react-icons/all";
+import {FaExclamationCircle, FaExclamationTriangle} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiClickableTip, UiHoverableIcon, UiLoadingSpinner} from "ui";
 import {UiFormLabel} from "ui/form";

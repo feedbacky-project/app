@@ -1,13 +1,14 @@
 import styled from "@emotion/styled";
 import TextInputActionModal from "components/commons/modal/TextInputActionModal";
 import React, {useRef, useState} from "react";
-import {FaBold, FaImage, FaItalic, FaLink, FaStrikethrough} from "react-icons/all";
+import {FaBold, FaImage, FaItalic, FaLink, FaStrikethrough} from "react-icons/fa";
 import {UiFormControl} from "ui/form/UiFormControl";
 
 const MarkdownOptions = styled.div`
   border-bottom-right-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
   padding: 0.375rem 0.75rem;
+  transition: var(--hover-transition);
 `;
 
 const MarkdownIcon = styled.div`

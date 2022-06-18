@@ -12,6 +12,7 @@ const FormControl = styled.input`
   overflow: visible;
   margin: 0;
   border-radius: var(--border-radius);
+  transition: var(--hover-transition);
   
   min-height: 36px;
   resize: none;
