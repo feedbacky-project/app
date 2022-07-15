@@ -3,7 +3,7 @@ import axios from "axios";
 import DangerousActionModal from "components/commons/modal/DangerousActionModal";
 import MentionableForm from "components/idea/discussion/MentionableForm";
 import {AppContext, BoardContext, IdeaContext} from "context";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import TextareaAutosize from "react-autosize-textarea";
 import {FaTimes} from "react-icons/fa";
 import tinycolor from "tinycolor2";
@@ -49,13 +49,19 @@ const UsernameBox = styled.small`
 `;
 
 const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
-    const {user} = useContext(AppContext);
+    const {user, loginIntent, setIntent, onIntentComplete} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
     const {onNotLoggedClick, data} = useContext(BoardContext);
     const {ideaData, mentions} = useContext(IdeaContext);
     const isModerator = data.moderators.find(mod => mod.userId === user.data.id);
     const [submitOpen, setSubmitOpen] = useState(false);
     const [warningOpen, setWarningOpen] = useState(false);
+    useEffect(() => {
+        if(loginIntent === "COMMENT_WRITE" && user.loggedIn) {
+            document.getElementById("commentMessage").focus();
+            onIntentComplete();
+        }
+    }, [loginIntent, user]);
 
     if (!ideaData.open && !data.closedIdeasCommentingEnabled) {
         return <React.Fragment/>;
@@ -125,6 +131,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
     const onClick = user.loggedIn ? () => void 0 : e => {
         e.target.blur();
         onNotLoggedClick();
+        setIntent("COMMENT_WRITE");
     };
     const submitButton = user.loggedIn ? renderSubmitButton : () => void 0;
     const renderWriteCommentForm = () => {

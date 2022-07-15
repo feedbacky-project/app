@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import IdeaCreateModal from "components/board/IdeaCreateModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import {AppContext, BoardContext} from "context";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {FaAlignRight, FaPencilAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiCard, UiHorizontalRule} from "ui";
@@ -14,13 +14,20 @@ export const BoardDescription = styled(MarkdownContainer)`
 `;
 
 const BoardInfoCard = ({onIdeaCreation, setSearchQuery}) => {
-    const {user} = useContext(AppContext);
+    const {user, loginIntent, setIntent, onIntentComplete} = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const [open, setOpen] = useState(false);
+    useEffect(() => {
+        if(loginIntent === "IDEA_CREATE" && user.loggedIn) {
+            setOpen(true);
+            onIntentComplete();
+        }
+    }, [loginIntent, user]);
 
     const onCreateIdeaModalClick = () => {
         if (!user.loggedIn) {
             onNotLoggedClick();
+            setIntent("IDEA_CREATE");
             return Promise.resolve();
         }
         setOpen(true);

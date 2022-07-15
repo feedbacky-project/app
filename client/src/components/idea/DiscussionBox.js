@@ -28,7 +28,7 @@ const DiscussionTitle = styled.div`
 `;
 
 const DiscussionBox = forwardRef((props, ref) => {
-    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
+    const {user, onLocalPreferencesUpdate, loginIntent, setIntent, onIntentComplete} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
     const {data, updateState: updateBoardState, onNotLoggedClick} = useContext(BoardContext);
     const {ideaData, updateState} = useContext(IdeaContext);
@@ -49,6 +49,15 @@ const DiscussionBox = forwardRef((props, ref) => {
         onLoadRequest(true);
         // eslint-disable-next-line
     }, [user.localPreferences]);
+    useEffect(() => {
+        if(loginIntent !== null && loginIntent.includes("COMMENT_REACT") && user.loggedIn) {
+            const intentData = loginIntent.split(";");
+            const commentId = intentData[1];
+            const reactionId = intentData[2];
+            onCommentReact(commentId, reactionId);
+            onIntentComplete();
+        }
+    }, [loginIntent, user]);
 
     const onLoadRequest = (override) => {
         const currentPage = override ? 0 : page;

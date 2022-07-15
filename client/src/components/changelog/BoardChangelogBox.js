@@ -28,7 +28,7 @@ const ShareBoxOverlay = styled.div`
 `;
 
 const BoardChangelogBox = ({searchQuery}) => {
-    const {user} = useContext(AppContext);
+    const {user, loginIntent, setIntent, onIntentComplete} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
     const {data: boardData, onNotLoggedClick} = useContext(BoardContext);
     const [changelog, setChangelog] = useState({data: [], loaded: false, error: false, moreToLoad: true});
@@ -53,6 +53,15 @@ const BoardChangelogBox = ({searchQuery}) => {
             scrollIntoView("changelogc_" + scrollTo).then(() => setScrollTo(null));
         }, 500);
     }, [scrollTo]);
+    useEffect(() => {
+        if(loginIntent !== null && loginIntent.includes("CHANGELOG_REACT") && user.loggedIn) {
+            const intentData = loginIntent.split(";");
+            const changelogId = intentData[1];
+            const reactionId = intentData[2];
+            onChangelogReact(changelogId, reactionId);
+            onIntentComplete();
+        }
+    }, [loginIntent, user]);
 
     const onLoadRequest = (override = false) => {
         const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
@@ -84,6 +93,7 @@ const BoardChangelogBox = ({searchQuery}) => {
     const onChangelogReact = (changelogId, reactionId) => {
         if (!user.loggedIn) {
             onNotLoggedClick();
+            setIntent("CHANGELOG_REACT;" + changelogId + ";" + reactionId);
             return Promise.resolve();
         }
         return axios.post("/changelogs/" + changelogId + "/reactions", {reactionId}).then(res => {

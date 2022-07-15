@@ -55,6 +55,7 @@ const App = ({appearanceSettings}) => {
     });
     const [serviceData, setServiceData] = useState({loaded: false, data: [], error: false});
     const [userData, setUserData] = useState({loaded: false, data: [], error: false});
+    const [loginIntent, setLoginIntent] = useState(Cookies.get("intents"));
     const history = useHistory();
     const location = useLocation();
     const startAnonymousSession = () => {
@@ -92,6 +93,13 @@ const App = ({appearanceSettings}) => {
         if (!userData.loaded) {
             axios.get("/users/@me").then(res => {
                 setUserData({...userData, data: res.data, loaded: true, loggedIn: true});
+
+                //we check for log-in intents after successful login
+                const intent = Cookies.get("intents");
+                if (intent) {
+                    setLoginIntent(intent);
+                    Cookies.remove("intents");
+                }
             }).catch(err => {
                 hideNotifications();
                 if (err.response === undefined || err.response.status === 401 || err.response.status === 403 || (err.response.status >= 500 && err.response.status <= 599)) {
@@ -100,6 +108,7 @@ const App = ({appearanceSettings}) => {
                     return;
                 }
                 setUserData({...userData, loaded: true, loggedIn: false, error: true});
+
             });
         }
         // eslint-disable-next-line
@@ -133,6 +142,14 @@ const App = ({appearanceSettings}) => {
         let metaThemeColor = document.querySelector("meta[name=theme-color]");
         metaThemeColor.setAttribute("content", changedTheme);
     };
+    const onIntentComplete = () => {
+        setLoginIntent(null);
+        Cookies.remove("intents");
+    };
+    const setIntent = (data) => {
+        //we set this cookie as a temporary session cookie
+        Cookies.set("intents", data);
+    };
     if (serviceData.error) {
         const onBack = () => window.location.reload();
         return <BrowserRouter><ErrorRoute Icon={FaDizzy} message={"Service Is Temporarily Unavailable"} onBackButtonClick={onBack}/></BrowserRouter>
@@ -147,6 +164,7 @@ const App = ({appearanceSettings}) => {
                 darkMode: appearance.mode === "dark",
                 onLogOut: onLogOut,
             },
+            loginIntent, setIntent, onIntentComplete,
             serviceData: serviceData.data,
             onLocalPreferencesUpdate: setLocalPrefs,
             onAppearanceToggle: onAppearanceToggle,
@@ -161,24 +179,24 @@ const App = ({appearanceSettings}) => {
                 defaultTheme: appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
                 onThemeChange: onThemeChange,
             }}>
-            <Suspense fallback={<LoadingRouteUtil/>}>
-                <Switch>
-                    <Route exact path={"/"} component={ProfileRoute}/>
-                    <Route exact path={"/admin/create"} component={CreateBoardRoute}/>
-                    <Route path={"/me/:section"} component={ProfileRoute}/>
-                    <Route path={"/me/"} component={ProfileRoute}/>
-                    <Route path={"/moderator_invitation/:code"} component={ModeratorInvitationRoute}/>
-                    <Route path={"/b/:id/roadmap"} component={RoadmapRoute}/>
-                    <Route path={"/b/:id/changelog"} component={ChangelogRoute}/>
-                    <Route path={"/b/:id"} component={BoardRoute}/>
-                    <Route path={"/ba/:id"} component={BoardAdminPanelRoute}/>
-                    <Route path={"/i/:id"} component={IdeaRoute}/>
-                    <Route path={"/unsubscribe/:id/:code"} component={NotificationUnsubscribeRoute}/>
-                    <Route path={"/auth/:provider"} render={() => <LoginRoute onLogin={onLogin}/>}/>
-                    <Route path={"/-/ui-test"} component={UiTestRoute}/>
-                    <Route render={() => <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>}/>
-                </Switch>
-            </Suspense>
+                <Suspense fallback={<LoadingRouteUtil/>}>
+                    <Switch>
+                        <Route exact path={"/"} component={ProfileRoute}/>
+                        <Route exact path={"/admin/create"} component={CreateBoardRoute}/>
+                        <Route path={"/me/:section"} component={ProfileRoute}/>
+                        <Route path={"/me/"} component={ProfileRoute}/>
+                        <Route path={"/moderator_invitation/:code"} component={ModeratorInvitationRoute}/>
+                        <Route path={"/b/:id/roadmap"} component={RoadmapRoute}/>
+                        <Route path={"/b/:id/changelog"} component={ChangelogRoute}/>
+                        <Route path={"/b/:id"} component={BoardRoute}/>
+                        <Route path={"/ba/:id"} component={BoardAdminPanelRoute}/>
+                        <Route path={"/i/:id"} component={IdeaRoute}/>
+                        <Route path={"/unsubscribe/:id/:code"} component={NotificationUnsubscribeRoute}/>
+                        <Route path={"/auth/:provider"} render={() => <LoginRoute onLogin={onLogin}/>}/>
+                        <Route path={"/-/ui-test"} component={UiTestRoute}/>
+                        <Route render={() => <ErrorRoute Icon={FaExclamationCircle} message={"Content Not Found"}/>}/>
+                    </Switch>
+                </Suspense>
             </UiThemeContext.Provider>
         </AppContext.Provider>
     }/>
