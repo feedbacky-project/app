@@ -11,7 +11,7 @@ import {BrowserRouter, Route, Switch, useHistory, useLocation} from "react-route
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
 import {UiThemeContext} from "ui";
-import {hideNotifications, popupError, popupWarning} from "utils/basic-utils";
+import {getCookieOrDefault, hideNotifications, popupError, popupWarning} from "utils/basic-utils";
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
 
@@ -55,7 +55,7 @@ const App = ({appearanceSettings}) => {
     });
     const [serviceData, setServiceData] = useState({loaded: false, data: [], error: false});
     const [userData, setUserData] = useState({loaded: false, data: [], error: false});
-    const [loginIntent, setLoginIntent] = useState(Cookies.get("intents"));
+    const [loginIntent, setLoginIntent] = useState(getCookieOrDefault("intents", ""));
     const history = useHistory();
     const location = useLocation();
     const startAnonymousSession = () => {
