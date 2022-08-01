@@ -4,6 +4,7 @@
 * **[IMPROVEMENT/QoL]** Roadmap and changelog navbar nodes no longer redirect to /me page but feedback page (requested by [Tigerpanzer_02](https://app.feedbacky.net/i/linking-on-board-logo-name-upper-left-corner.4063) and community)
 * **[FIX]** Metadata being null crashed pages (reported by eartharoid)
 * **[FIX]** Moderator assigned message displayed assignee as a user who assigned an assignee
+* **[FIX]** Wrongly displayed tags edit message (minor lexical issue)
 
 ### 1.0.0.RC.3
 * **[FEATURE]** Added GitHub integration with following features:

@@ -489,7 +489,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
     if(!removedTags.isEmpty()) {
       //tags were added
-      if(!builder.toString().endsWith("has ")) {
+      if(!builder.toString().isEmpty()) {
         builder.append(" and ");
       }
       builder.append("removed");
