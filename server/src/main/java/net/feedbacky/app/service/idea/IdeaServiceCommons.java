@@ -158,6 +158,7 @@ public class IdeaServiceCommons {
     idea.setTitle(dto.getTitle());
     idea.setDescription(StringEscapeUtils.escapeHtml4(dto.getDescription()));
     idea.setSubscribers(set);
+    idea.setMetadata("{}");
     idea = ideaRepository.save(idea);
 
     //must save idea first in order to apply and save attachment
