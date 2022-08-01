@@ -1,6 +1,7 @@
 ### 1.0.0.RC.4 (15.07.2022)
 * **[FEATURE/QoL]** Added log-in intentions when not logged in (requested at [Feedbacky](https://app.feedbacky.net/i/log-in-intent.4385))
 * **[FIX]** Metadata being null crashed pages (reported by eartharoid)
+* **[FIX]** Moderator assigned message displayed assignee as a user who assigned an assignee
 
 ### 1.0.0.RC.3
 * **[FEATURE]** Added GitHub integration with following features:

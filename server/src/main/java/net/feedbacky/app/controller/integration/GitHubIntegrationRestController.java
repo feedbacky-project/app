@@ -265,7 +265,7 @@ public class GitHubIntegrationRestController {
             User assignee = assignedOptional.get();
             if(action.equals("assigned")) {
               assignees.add(assignee);
-              builder = builder.type(Comment.SpecialType.IDEA_ASSIGNED).placeholders(user.convertToSpecialCommentMention(), assignee.convertToSpecialCommentMention());
+              builder = builder.type(Comment.SpecialType.IDEA_ASSIGNED).placeholders(assignee.convertToSpecialCommentMention(), user.convertToSpecialCommentMention());
             } else {
               assignees.remove(assignee);
               builder = builder.type(Comment.SpecialType.IDEA_UNASSIGNED).placeholders(user.convertToSpecialCommentMention(), assignee.convertToSpecialCommentMention());

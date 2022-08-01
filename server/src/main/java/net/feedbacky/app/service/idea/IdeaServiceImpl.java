@@ -328,7 +328,7 @@ public class IdeaServiceImpl implements IdeaService {
       CommentBuilder commentBuilder = new CommentBuilder()
               .by(user)
               .type(Comment.SpecialType.IDEA_ASSIGNED)
-              .placeholders(user.convertToSpecialCommentMention(), toAssign.convertToSpecialCommentMention());
+              .placeholders(toAssign.convertToSpecialCommentMention(), user.convertToSpecialCommentMention());
       triggerExecutor.executeTrigger(new ActionTriggerBuilder()
               .withTrigger(ActionTrigger.Trigger.IDEA_ASSIGN)
               .withBoard(idea.getBoard())
