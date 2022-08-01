@@ -116,7 +116,7 @@ const PageNavbar = ({selectedNode, goBackVisible = false, onSidebarToggle = null
             {onSidebarToggle && sidebarToggleVisible && <ToggleContainer style={{marginRight: 0}}>
                 <FaBars style={{color: getTheme().toString(), cursor: "pointer"}} onClick={onSidebarToggle}/>
             </ToggleContainer>}
-            <UiNavbarBrand theme={getTheme().toString()} to={{pathname: (goBackVisible ? "/b/" + data.discriminator : "/me"), state: {_boardData: data}}}>
+            <UiNavbarBrand theme={getTheme().toString()} to={{pathname: selectedNode === "feedback" ? "/me" : "/b/" + data.discriminator, state: {_boardData: data}}}>
                 <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Board Logo"}/>
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
