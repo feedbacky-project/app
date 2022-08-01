@@ -176,9 +176,11 @@ public class IdeaServiceImpl implements IdeaService {
     if(dto.getTitle() == null) {
       return;
     }
-    //title edit is only for moderators
-    if(!ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
-      throw new InsufficientPermissionsException();
+    long creationTimeDiffMillis = Math.abs(Calendar.getInstance().getTime().getTime() - idea.getCreationDate().getTime());
+    long minutesDiff = TimeUnit.MINUTES.convert(creationTimeDiffMillis, TimeUnit.MILLISECONDS);
+    //title edit is only for moderators after 15 base minutes have passed
+    if(minutesDiff > 15 && !ServiceValidator.hasPermission(idea.getBoard(), Moderator.Role.MODERATOR, user)) {
+      throw new InsufficientPermissionsException("Cannot edit title after 15 minutes have passed.");
     }
     String oldTitle = idea.getTitle();
     idea.setTitle(dto.getTitle());

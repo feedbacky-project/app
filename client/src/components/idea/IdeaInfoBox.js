@@ -28,7 +28,7 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
     const voteRef = React.createRef();
     const history = useHistory();
     const [voters, setVoters] = useState({data: [], loaded: false, error: false});
-    const [editor, setEditor] = useState({enabled: false, value: htmlDecodeEntities(ideaData.description)});
+    const [editor, setEditor] = useState({enabled: false, titleValue: htmlDecodeEntities(ideaData.title), value: htmlDecodeEntities(ideaData.description)});
     const [modal, setModal] = useState({open: false});
     const [updatedAttachment, setUpdatedAttachment] = useState(null);
     useEffect(() => {
@@ -52,21 +52,25 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
         }).catch(() => setVoters({...voters, error: true}));
     };
     const onEditApply = () => {
+        let title = editor.titleValue;
+        //within 15 minutes (in millis)
+        let titleEditable = new Date() - new Date(ideaData.creationDate) <= 900000;
         let description = editor.value;
-        if (ideaData.description === description && updatedAttachment == null) {
+        if (ideaData.title === title && ideaData.description === description && updatedAttachment == null) {
+            if(titleEditable)
             setEditor({...editor, enabled: false});
             popupNotification("Nothing changed", getTheme());
             return Promise.resolve();
         }
-        return axios.patch("/ideas/" + ideaData.id, {
-            description, attachment: updatedAttachment
-        }).then(res => {
+        const data = titleEditable ? {title, description, attachment: updatedAttachment} : {description, attachment: updatedAttachment};
+        return axios.patch("/ideas/" + ideaData.id, data).then(res => {
             if (res.status !== 200) {
                 popupError();
                 return;
             }
-            setEditor({enabled: false, value: htmlDecodeEntities(res.data.description)});
-            updateState({...ideaData, description: res.data.description, edited: true});
+            setEditor({enabled: false, titleValue: htmlDecodeEntities(res.data.title), value: htmlDecodeEntities(res.data.description)});
+            updateState({...ideaData, title: res.data.title, description: res.data.description, edited: true});
+            onStateChange("both");
             popupNotification("Idea edited", getTheme());
         });
     };

@@ -1,5 +1,6 @@
 ### 1.0.0.RC.4 (15.07.2022)
 * **[FEATURE/QoL]** Added log-in intentions when not logged in (requested at [Feedbacky](https://app.feedbacky.net/i/log-in-intent.4385))
+* **[FEATURE/QoL]** Titles can be edited up to 15 minutes after idea creation (requested by [Tigerpanzer_02](https://app.feedbacky.net/i/edit-title-of-own-ideas.4065))
 * **[IMPROVEMENT/QoL]** Roadmap and changelog navbar nodes no longer redirect to /me page but feedback page (requested by [Tigerpanzer_02](https://app.feedbacky.net/i/linking-on-board-logo-name-upper-left-corner.4063) and community)
 * **[FIX]** Metadata being null crashed pages (reported by eartharoid)
 * **[FIX]** Moderator assigned message displayed assignee as a user who assigned an assignee
