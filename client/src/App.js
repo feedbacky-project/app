@@ -15,6 +15,7 @@ import {getCookieOrDefault, hideNotifications, popupError, popupWarning} from "u
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
 
+const ConditionalReroute = lazy(() => retry(() => import("routes/ConditionalReroute")));
 const ProfileRoute = lazy(() => retry(() => import("routes/profile/ProfileRoute")));
 const CreateBoardRoute = lazy(() => retry(() => import("routes/board/creator/CreatorBoardRoute")));
 const ModeratorInvitationRoute = lazy(() => retry(() => import("routes/ModeratorInvitationRoute")));
@@ -181,7 +182,7 @@ const App = ({appearanceSettings}) => {
             }}>
                 <Suspense fallback={<LoadingRouteUtil/>}>
                     <Switch>
-                        <Route exact path={"/"} component={ProfileRoute}/>
+                        <Route exact path={"/"} component={ConditionalReroute}/>
                         <Route exact path={"/admin/create"} component={CreateBoardRoute}/>
                         <Route path={"/me/:section"} component={ProfileRoute}/>
                         <Route path={"/me/"} component={ProfileRoute}/>

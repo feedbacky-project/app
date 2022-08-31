@@ -1,3 +1,6 @@
+### 1.0.0.RC.5 (31.08.2022)
+* **[FEATURE]** Added `REACT_APP_DEFAULT_BOARD_REROUTE` env variable utilize Single Board Feature (requested at [Feedbacky](https://app.feedbacky.net/i/single-board-self-hosted-instance.3514))
+
 ### 1.0.0.RC.4 (15.07.2022)
 * **[FEATURE/QoL]** Added log-in intentions when not logged in (requested at [Feedbacky](https://app.feedbacky.net/i/log-in-intent.4385))
 * **[FEATURE/QoL]** Titles can be edited up to 15 minutes after idea creation (requested by [Tigerpanzer_02](https://app.feedbacky.net/i/edit-title-of-own-ideas.4065))
