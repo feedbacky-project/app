@@ -56,21 +56,23 @@ const FormControl = styled(UiFormControl)`
 `;
 
 const MarkdownForm = styled.form`
-    & > div {
-      background-color: var(--secondary);
-    }
-    &:focus-within > div {
-      background-color: var(--tertiary);
-    }
+  & > div {
+    background-color: var(--secondary);
+  }
+
+  &:focus-within > div {
+    background-color: var(--tertiary);
+  }
 `;
 
 const MarkdownOptionModal = styled.div`
   & .modal-content {
     background-color: var(--secondary);
-    
+
     input {
       background-color: var(--tertiary);
     }
+
     input:focus {
       background-color: var(--quaternary) !important;
     }
@@ -102,14 +104,20 @@ const UiMarkdownFormControl = (props) => {
         form.scrollTop = scrollPos;
         return Promise.resolve();
     };
+
+    const onSelect = () => {
+        if(!ref.current) {
+            return;
+        }
+        setSelection(ref.current.value.substring(ref.current.selectionStart, ref.current.selectionEnd));
+    }
     return <React.Fragment>
         <MarkdownOptionModal as={TextInputActionModal} size={"sm"} id={"linkInput"} isOpen={modal.open && modal.type === "link"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
                              actionDescription={"Insert link, type link URL."} onAction={link => insert("[" + selection + "](" + link + ")", false)}/>
         <MarkdownOptionModal as={TextInputActionModal} className={"test"} size={"sm"} id={"imageInput"} isOpen={modal.open && modal.type === "image"} onHide={() => setModal({...modal, open: false})} actionButtonName={"Insert"}
                              actionDescription={"Insert image, type image URL."} onAction={link => insert("![" + selection + "](" + link + ")", false)}/>
         <MarkdownForm>
-            {/* fixme window.getSelection().toString() broken on Firefox */}
-            <FormControl innerRef={ref} onSelect={() => setSelection(window.getSelection().toString())} {...otherProps}/>
+            <FormControl innerRef={ref} onSelect={onSelect} {...otherProps}/>
             <MarkdownOptions as={CustomOptions}>
                 <MarkdownIcon className={"mr-1"} onClick={() => insert("**", true)}><FaBold/></MarkdownIcon>
                 <MarkdownIcon className={"mr-1"} onClick={() => insert("*", true)}><FaItalic/></MarkdownIcon>
