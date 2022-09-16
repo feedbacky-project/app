@@ -18,7 +18,7 @@ const TitleInfo = ({setModal, editor, setEditor, onStateChange}) => {
         if (ideaData.user.id !== user.data.id || data.moderators.find(mod => mod.userId === user.data.id)) {
             return;
         }
-        return <UiHoverableIcon as={FaTrash} className={"text-black-60 ml-1 my-auto"} onClick={() => setModal({open: true})}/>
+        return <UiHoverableIcon as={FaTrash} className={"text-black-60 ml-1 d-inline-block my-auto"} onClick={() => setModal({open: true})}/>
     };
     const renderTitleEditor = () => {
         //within 15 minutes (in millis)
@@ -26,18 +26,20 @@ const TitleInfo = ({setModal, editor, setEditor, onStateChange}) => {
         if (editor.enabled && titleEditable) {
             return <UiFormControl id={"titleEditorBox"} rows={1} maxRows={1} placeholder={"Write a title..."}
                                   required label={"Write a title"} onChange={e => setEditor({...editor, titleValue: e.target.value})}
-                                  style={{resize: "none", overflow: "hidden", width: "100%"}} defaultValue={editor.titleValue}/>
+                                  style={{display: "inline-block", resize: "none", overflow: "hidden", width: "80%"}} defaultValue={editor.titleValue}/>
         }
         return <IdeaCardTitle style={{fontSize: "1.4rem"}} dangerouslySetInnerHTML={{__html: ideaData.title}}/>
     }
     return <div className={"w-75"}>
-        {ideaData.open || <FaLock className={"mr-1"} style={{transform: "translateY(-4px)"}}/>}
-        {!ideaData.pinned || <FaThumbtack className={"mr-1"} style={{transform: "translateY(-4px) rotate(30deg)"}}/>}
-        <div className={"d-flex w-100"}>
+        <div className={"w-100"}>
+            {ideaData.open || <FaLock className={"mr-1 my-auto"}/>}
+            {!ideaData.pinned || <FaThumbtack className={"mr-1 my-auto"} style={{transform: "rotate(30deg)"}}/>}
             {renderTitleEditor()}
-            <ModeratorActionsButton onStateChange={onStateChange}/>
-            {renderDeletionButton()}
-            {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"text-black-60 ml-1 my-auto"} onClick={() => setEditor({...editor, enabled: !editor.enabled})}/>}
+            <div className={"d-inline-block"}>
+                <ModeratorActionsButton onStateChange={onStateChange}/>
+                {renderDeletionButton()}
+                {ideaData.user.id !== user.data.id || <UiHoverableIcon as={FaPen} className={"text-black-60 ml-1 move-top-2px"} onClick={() => setEditor({...editor, enabled: !editor.enabled})}/>}
+            </div>
         </div>
         <UiAvatar roundedCircle className={"mr-1"} user={ideaData.user} size={18} style={{maxWidth: "none"}}/>
         <small><UiPrettyUsername user={ideaData.user}/> ·{" "}</small>

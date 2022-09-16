@@ -33,6 +33,8 @@ export const IdeaCardTitle = styled.em`
   font-weight: 450;
   font-style: normal;
   transition: var(--hover-transition);
+  display: inline;
+  word-wrap: break-word;
 `;
 
 export const IdeaCardDescription = styled.small`

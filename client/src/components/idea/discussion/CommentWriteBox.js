@@ -140,7 +140,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
                                   style={{overflow: "hidden"}} label={"Commenting restricted"}/>;
         }
         return <div id={"replyBox"}>
-            <MentionableForm allMentions={mentions} CustomOptions={replyTo != null && ReplyMarkdownOptions} as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={5} placeholder={"Write a comment..."}
+            <MentionableForm allMentions={mentions} CustomOptions={replyTo != null && ReplyMarkdownOptions} as={TextareaAutosize} className={"mt-1"} id={"commentMessage"} rows={1} maxRows={10} placeholder={"Write a comment..."}
                              style={{overflow: "hidden"}} onChange={onChange} label={"Write a comment"} onClick={onClick}/>
             {replyTo != null && <React.Fragment>
                 <ReplyBox className={"text-black-60"}>
@@ -158,7 +158,7 @@ const CommentWriteBox = ({onCommentSubmit, replyTo, setReplyTo}) => {
                               actionDescription={<div>You're about to reply publicly to an <span className={"text-blue"}>internal comment</span>. This internal comment existence will be visible in comments history once you reply publicly.
                                   <div className={"mt-2"}/>
                                   All data about internal comment will be hidden.</div>} actionButtonName={"Post"}/>
-        <WriteBox xs={10}>
+        <WriteBox xs={10} md={12}>
             <div className={"text-center mr-3 pt-2"}>
                 {avatar}
                 <br/>
