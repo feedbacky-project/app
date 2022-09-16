@@ -1,6 +1,5 @@
 package net.feedbacky.app.service.board.changelog;
 
-import net.feedbacky.app.config.UserAuthenticationToken;
 import net.feedbacky.app.data.emoji.EmojiDataRegistry;
 import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.board.changelog.Changelog;
@@ -11,26 +10,19 @@ import net.feedbacky.app.data.board.dto.changelog.PostChangelogDto;
 import net.feedbacky.app.data.board.dto.changelog.reaction.FetchChangelogReactionDto;
 import net.feedbacky.app.data.board.dto.changelog.reaction.PostChangelogReactionDto;
 import net.feedbacky.app.data.board.moderator.Moderator;
-import net.feedbacky.app.data.board.webhook.Webhook;
-import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
-import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.trigger.ActionTrigger;
 import net.feedbacky.app.data.trigger.ActionTriggerBuilder;
 import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
-import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.repository.board.ChangelogRepository;
-import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.util.PaginableRequest;
-import net.feedbacky.app.util.SortFilterResolver;
+import net.feedbacky.app.util.filter.SortFilterResolver;
 import net.feedbacky.app.util.request.InternalRequestValidator;
 import net.feedbacky.app.util.request.ServiceValidator;
-
-import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;

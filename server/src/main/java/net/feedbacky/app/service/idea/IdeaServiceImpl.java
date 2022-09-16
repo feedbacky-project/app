@@ -110,6 +110,13 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   @Override
+  public PaginableRequest<List<FetchIdeaDto>> getAllIdeasByFilterQuery(String discriminator, int page, int pageSize, String filterQuery, SortType sort, String anonymousId) {
+    Board board = boardRepository.findByDiscriminator(discriminator)
+            .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
+    return ideaServiceCommons.getAllIdeasByFilterQuery(board, getRequestUser(anonymousId), page, pageSize, filterQuery, sort);
+  }
+
+  @Override
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort, String anonymousId) {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));

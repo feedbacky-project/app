@@ -1,5 +1,6 @@
 package net.feedbacky.app.service.idea;
 
+import lombok.Getter;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchIdeaDto;
 import net.feedbacky.app.data.idea.dto.PatchVotersDto;
@@ -21,6 +22,8 @@ import java.util.List;
  */
 public interface IdeaService {
 
+  PaginableRequest<List<FetchIdeaDto>> getAllIdeasByFilterQuery(String discriminator, int page, int pageSize, String filterQuery, SortType sort, String anonymousId);
+
   PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort, String anonymousId);
 
   PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(String discriminator, int page, int pageSize, String query, FilterType filter, SortType sort, String anonymousId);
@@ -37,8 +40,19 @@ public interface IdeaService {
 
   List<FetchTagDto> patchTags(long id, List<PatchTagRequestDto> tags);
 
+  @Getter
   enum SortType {
-    VOTERS_ASC, VOTERS_DESC, NEWEST, OLDEST, TRENDING
+    VOTERS_ASC("i.votersAmount ASC"),
+    VOTERS_DESC("i.votersAmount DESC"),
+    NEWEST("i.creationDate DESC"),
+    OLDEST("i.creationDate ASC"),
+    TRENDING("i.trendScore DESC");
+
+    private String orderSqlPart;
+
+    SortType(String orderSqlPart) {
+      this.orderSqlPart = orderSqlPart;
+    }
   }
 
   class FilterType {

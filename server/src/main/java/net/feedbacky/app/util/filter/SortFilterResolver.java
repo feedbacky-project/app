@@ -1,4 +1,4 @@
-package net.feedbacky.app.util;
+package net.feedbacky.app.util.filter;
 
 import net.feedbacky.app.service.board.changelog.ChangelogService;
 import net.feedbacky.app.service.comment.CommentService;

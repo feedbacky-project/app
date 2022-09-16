@@ -44,6 +44,21 @@ public class IdeaRestController {
     this.ideaService = ideaService;
   }
 
+  @GetMapping("v1/boards/{discriminator}/ideas/experimentalSearch")
+  public PaginableRequest<List<FetchIdeaDto>> getAllExperimental(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
+                                                                 @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
+    RequestParamsParser parser = new RequestParamsParser(requestParams);
+    String filter = requestParams.getOrDefault("filter", "");
+    IdeaService.SortType sortType = IdeaService.SortType.TRENDING;
+    if(requestParams.containsKey("sort")) {
+      try {
+        sortType = IdeaService.SortType.valueOf(requestParams.get("sort").toUpperCase());
+      } catch(Exception ignoredInvalid) {
+      }
+    }
+    return ideaService.getAllIdeasByFilterQuery(discriminator, parser.getPage(), parser.getPageSize(), filter, sortType, anonymousId);
+  }
+
   @GetMapping("v1/boards/{discriminator}/ideas")
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
                                                           @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {

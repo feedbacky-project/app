@@ -1,9 +1,6 @@
 package net.feedbacky.app.service.idea;
 
 import net.feedbacky.app.data.board.Board;
-import net.feedbacky.app.data.board.webhook.Webhook;
-import net.feedbacky.app.data.board.webhook.WebhookDataBuilder;
-import net.feedbacky.app.data.board.webhook.WebhookExecutor;
 import net.feedbacky.app.data.idea.Idea;
 import net.feedbacky.app.data.idea.attachment.Attachment;
 import net.feedbacky.app.data.idea.dto.FetchIdeaDto;
@@ -21,19 +18,24 @@ import net.feedbacky.app.repository.idea.AttachmentRepository;
 import net.feedbacky.app.repository.idea.IdeaRepository;
 import net.feedbacky.app.util.Base64Util;
 import net.feedbacky.app.util.PaginableRequest;
-import net.feedbacky.app.util.SortFilterResolver;
+import net.feedbacky.app.util.filter.AdvancedFilterResolver;
+import net.feedbacky.app.util.filter.SortFilterResolver;
 import net.feedbacky.app.util.objectstorage.ObjectStorage;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import java.text.MessageFormat;
 import java.util.Calendar;
@@ -57,18 +59,63 @@ public class IdeaServiceCommons {
   private final AttachmentRepository attachmentRepository;
   private final TagRepository tagRepository;
   private final TriggerExecutor triggerExecutor;
+  private final AdvancedFilterResolver advancedFilterResolver;
+  @PersistenceContext
+  private final EntityManager entityManager;
 
   @Autowired
-  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository, TriggerExecutor triggerExecutor) {
+  public IdeaServiceCommons(IdeaRepository ideaRepository, ObjectStorage objectStorage, AttachmentRepository attachmentRepository, TagRepository tagRepository,
+                            TriggerExecutor triggerExecutor, AdvancedFilterResolver advancedFilterResolver, EntityManager entityManager) {
     this.ideaRepository = ideaRepository;
     this.objectStorage = objectStorage;
     this.attachmentRepository = attachmentRepository;
     this.tagRepository = tagRepository;
     this.triggerExecutor = triggerExecutor;
+    this.advancedFilterResolver = advancedFilterResolver;
+    this.entityManager = entityManager;
+  }
+
+  public PaginableRequest<List<FetchIdeaDto>> getAllIdeasByFilterQuery(Board board, User user, int page, int pageSize, String filterQuery, IdeaService.SortType sort) {
+    AdvancedFilterResolver.AdvancedFilters filters = advancedFilterResolver.resolveFilters(filterQuery);
+
+    String orderParams = " ORDER BY i.pinned DESC, " + sort.getOrderSqlPart();
+    Query query = entityManager.createQuery("SELECT i FROM Idea i WHERE i.board = :board " + filters.generateSqlQueryPart() + orderParams)
+            .setParameter("board", board)
+            .setHint("javax.persistence.fetchgraph", entityManager.getEntityGraph("Idea.fetch"));
+    Query queryTotal = entityManager.createQuery("SELECT COUNT(i.id) FROM Idea i WHERE i.board = :board " + filters.generateSqlQueryPart())
+            .setParameter("board", board);
+
+    if(filters.getByText() != null) {
+      query = query.setParameter("text", filters.getByText());
+      queryTotal = queryTotal.setParameter("text", filters.getByText());
+    }
+    if(filters.getByStatus() != null) {
+      query = query.setParameter("status", filters.getByStatus());
+      queryTotal = queryTotal.setParameter("status", filters.getByStatus());
+    }
+    if(filters.getByTags() != null) {
+      query = query.setParameter("tags", filters.getByTags());
+      queryTotal = queryTotal.setParameter("tags", filters.getByTags());
+    }
+    if(filters.getByVotersAmount() != null) {
+      query = query.setParameter("votersAmount", filters.getByVotersAmount().getRight());
+      queryTotal = queryTotal.setParameter("votersAmount", filters.getByVotersAmount().getRight());
+    }
+
+    query.setFirstResult(page * pageSize);
+    query.setMaxResults(pageSize);
+    List<Idea> ideaData = query.getResultList();
+
+    long countResult = (long) queryTotal.getSingleResult();
+    int totalPages = (int) (countResult / pageSize);
+
+    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideaData.stream()
+            .map(idea -> idea.toDto().withUser(idea, user)).collect(Collectors.toList()));
   }
 
   public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(Board board, User user, int page, int pageSize, IdeaService.FilterType filter, IdeaService.SortType sort) {
     //not using board.getIdeas() because it would load all, we need paged limited list
+    long queryTime = System.currentTimeMillis();
     Page<Idea> pageData;
     switch(filter.getType()) {
       case OPENED:
@@ -89,6 +136,7 @@ public class IdeaServiceCommons {
     }
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
+    System.out.println("query time " + (System.currentTimeMillis() - queryTime) + "ms");
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
             .map(idea -> idea.toDto().withUser(idea, user)).collect(Collectors.toList()));
   }
