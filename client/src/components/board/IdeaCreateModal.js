@@ -101,7 +101,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
         if (text === "") {
             return;
         }
-        setSearchTimeout(setTimeout(() => axios.get("/boards/" + discriminator + "/ideas?query=" + text).then(res => {
+        setSearchTimeout(setTimeout(() => axios.get("/boards/" + discriminator + "/ideas?filter=text:" + text).then(res => {
             const data = res.data.data;
             setSimilarIdeas(data.length);
         }), 500));
