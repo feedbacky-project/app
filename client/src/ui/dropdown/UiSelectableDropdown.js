@@ -55,7 +55,7 @@ const UiSelectableDropdown = (props) => {
     }
     return <Dropdown className={className} style={{zIndex: 1}}>
         {children}
-        <DropdownMenu alignRight>{values}</DropdownMenu>
+        <DropdownMenu>{values}</DropdownMenu>
     </Dropdown>
 };
 
