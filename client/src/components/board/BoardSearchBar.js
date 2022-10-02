@@ -3,8 +3,9 @@ import AdvancedFiltersModal from "components/commons/modal/AdvancedFiltersModal"
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
+import {FaCog} from "react-icons/fa";
 import tinycolor from "tinycolor2";
-import {UiBadge, UiThemeContext} from "ui";
+import {UiBadge, UiHorizontalRule, UiThemeContext} from "ui";
 import {UiDropdownElement, UiSelectableDropdown} from "ui/dropdown";
 import {UiFormControl} from "ui/form";
 import {UiCol} from "ui/grid";
@@ -58,7 +59,7 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     let filterCurrentValue = Object.values(filters.find(obj => {
         return Object.keys(obj)[0] === (user.localPreferences.ideas.filter || "status:OPENED")
     }) || filters[0])[0].name;
-    if(user.localPreferences.ideas.filter === "advanced") {
+    if (user.localPreferences.ideas.filter === "advanced") {
         filterCurrentValue = <UiBadge className={"d-block"} style={{border: "1px dashed " + getTheme().setAlpha(.25)}}>Advanced</UiBadge>;
     }
     const filterValues = filters.map(val => {
@@ -70,9 +71,15 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     });
     //insert after 3 default filters: open/close/all (and before any tags)
     filterValues.splice(3, 0,
-        <UiDropdownElement key={"advanced"} onClick={() => setAdvancedSettings(true)}>
-            <UiBadge className={"d-block"} style={{border: "1px dashed " + getTheme().setAlpha(.25)}}>Advanced</UiBadge>
-        </UiDropdownElement>
+        <React.Fragment>
+            <UiDropdownElement key={"advanced"} onClick={() => setAdvancedSettings(true)}>
+                <UiBadge className={"d-block"} style={{border: "1px dashed " + getTheme().setAlpha(.5), position: "relative"}}>
+                    Advanced
+                    <div style={{position: "absolute", right: "4px", bottom: "4px"}}><FaCog/></div>
+                </UiBadge>
+            </UiDropdownElement>
+            {tags.length > 0 && <UiHorizontalRule className={"my-1 mx-4"}/>}
+        </React.Fragment>
     );
     const sortCurrentValue = Object.values(sorts.find(obj => {
         return Object.keys(obj)[0] === (user.localPreferences.ideas.sort || "trending")

@@ -34,7 +34,7 @@ const SelectableDropdown = styled(UiClassicButton)`
 
 const UiSelectableDropdown = (props) => {
     const {darkMode, getTheme} = useContext(UiThemeContext);
-    const {id, className = null, toggleClassName = null, currentValue, label, toggleStyle = null, values} = props;
+    const {id, className = null, toggleClassName = null, currentValue, label, toggleStyle = null, style = null, values} = props;
     let color;
     let backgroundColor;
 
@@ -49,7 +49,7 @@ const UiSelectableDropdown = (props) => {
         color = getTheme();
         backgroundColor = "var(--secondary)";
     }
-    return <Dropdown className={className} style={{zIndex: 1}}>
+    return <Dropdown className={className} style={style}>
         <SelectableDropdown className={toggleClassName} style={{...toggleStyle, backgroundColor}} label={label} as={DropdownToggle} id={id} variant={""}>
             <span style={{color, marginRight: "0.2rem", display: "inline-block"}}>{currentValue}</span>
             <FaAngleDown style={{color: getTheme()}}/>

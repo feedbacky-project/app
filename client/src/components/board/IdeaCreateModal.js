@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import {BoardContext} from "context";
+import {AppContext, BoardContext} from "context";
 import React, {useContext, useRef, useState} from 'react';
 import TextareaAutosize from "react-autosize-textarea";
 import {FaExternalLinkAlt, FaRegImage} from "react-icons/fa";
@@ -26,6 +26,7 @@ const AttachmentButton = styled(UiClassicButton)`
 
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
     const {getTheme} = useContext(UiThemeContext);
+    const {user, onLocalPreferencesUpdate} = useContext(AppContext);
     const {discriminator, tags} = useContext(BoardContext).data;
     const [title, setTitle] = useState("");
     const [similarIdeas, setSimilarIdeas] = useState(0);
@@ -140,6 +141,7 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
                 <a href={"#search"} className={"small d-inline mt-1 ml-1 float-left text-black-75"} onClick={() => {
                     onHide();
                     setSearchQuery(title);
+                    onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: "status:ALL", advanced: null}});
                 }}>· <FaExternalLinkAlt className={"align-baseline pt-1"}/> {similarIdeas} Similar Ideas</a>
             }
             <small className={"d-inline mt-1 float-right text-black-60"}>

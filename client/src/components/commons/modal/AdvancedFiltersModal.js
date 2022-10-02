@@ -94,7 +94,7 @@ const AdvancedFiltersModal = ({isOpen, onHide, onSelect}) => {
             <UiCol xs={12} sm={6} className={"mt-2"}>
                 <UiFormLabel>By Status</UiFormLabel>
                 <UiCol xs={12} className={"d-inline-block px-0"}>
-                    <UiCol xs={12} className={"pr-sm-0 pr-2 px-0 d-inline-block"} style={{zIndex: 9999}}>
+                    <UiCol xs={12} className={"pr-sm-0 pr-2 px-0 d-inline-block"} style={{zIndex: 20}}>
                         <UiSelectableDropdown label={"Choose Status"} id={"status"} toggleClassName={"w-100"} className={"d-inline"} currentValue={statusCurrentValue} values={statusValues}
                                               toggleStyle={{minHeight: "36px"}}/>
                     </UiCol>
@@ -103,7 +103,7 @@ const AdvancedFiltersModal = ({isOpen, onHide, onSelect}) => {
             <UiCol xs={12} sm={6} className={"mt-2"}>
                 <UiFormLabel>By Tags</UiFormLabel>
                 <UiCol xs={12} className={"d-inline-block px-0"}>
-                    <UiCol xs={12} className={"pr-sm-0 pr-2 px-0 d-inline-block"} style={{zIndex: 9999}}>
+                    <UiCol xs={12} className={"pr-sm-0 pr-2 px-0 d-inline-block"} style={{zIndex: 15}}>
                         <UiFormSelect name={"tagSelector"} value={chosenTags.map(tag => ({value: tag.id, label: <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}))} isMulti options={tags.map(tag => ({value: tag.id, label: <UiBadge color={tinycolor(tag.color)}>{tag.name}</UiBadge>}))}
                                       onChange={onTagChange} placeholder={"Choose Tags"}
                                       filterOption={(candidate, input) => {
