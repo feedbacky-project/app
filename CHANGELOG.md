@@ -4,6 +4,7 @@
 * **[IMPROVEMENT]** Textarea in comments is now bigger (requested by [eartharoid](https://app.feedbacky.net/i/larger-comment-textarea.4451))
 * **[IMPROVEMENT]** Many textareas across the page can now be previewed with markdown (requested by [eartharoid](https://app.feedbacky.net/i/markdown-editor-improvements.4455))
 * **[FIX]** Markdown buttons overrode selected text on Firefox
+* **[FIX]** Minor annoying UI issues for mobile
 
 ### 1.0.0.RC.4 (15.07.2022)
 * **[FEATURE/QoL]** Added log-in intentions when not logged in (requested at [Feedbacky](https://app.feedbacky.net/i/log-in-intent.4385))
