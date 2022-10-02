@@ -34,27 +34,26 @@ const SelectableDropdown = styled(UiClassicButton)`
 
 const UiSelectableDropdown = (props) => {
     const {darkMode, getTheme} = useContext(UiThemeContext);
-    const {id, className = null, currentValue, label, values} = props;
-    let children;
+    const {id, className = null, toggleClassName = null, currentValue, label, toggleStyle = null, values} = props;
+    let color;
+    let backgroundColor;
 
     if (darkMode) {
-        let color = getTheme().lighten(10);
+        color = getTheme().lighten(10);
         //if still not readable, increase again
         if (tinycolor.readability(color, "#282828") < 2.5) {
             color = color.lighten(25);
         }
-        children = <SelectableDropdown label={label} as={DropdownToggle} id={id} variant={""} style={{backgroundColor: getTheme().setAlpha(.1)}}>
+        backgroundColor = getTheme().setAlpha(.1);
+    } else {
+        color = getTheme();
+        backgroundColor = "var(--secondary)";
+    }
+    return <Dropdown className={className} style={{zIndex: 1}}>
+        <SelectableDropdown className={toggleClassName} style={{...toggleStyle, backgroundColor}} label={label} as={DropdownToggle} id={id} variant={""}>
             <span style={{color, marginRight: "0.2rem", display: "inline-block"}}>{currentValue}</span>
             <FaAngleDown style={{color: getTheme()}}/>
         </SelectableDropdown>
-    } else {
-        children = <SelectableDropdown style={{backgroundColor: "var(--secondary)"}} label={label} as={DropdownToggle} id={id} variant={""}>
-            <span style={{color: getTheme(), marginRight: "0.2rem", display: "inline-block"}}>{currentValue}</span>
-            <FaAngleDown style={{color: getTheme()}}/>
-        </SelectableDropdown>
-    }
-    return <Dropdown className={className} style={{zIndex: 1}}>
-        {children}
         <DropdownMenu>{values}</DropdownMenu>
     </Dropdown>
 };

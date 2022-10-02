@@ -51,7 +51,7 @@ const App = ({appearanceSettings}) => {
     const {appearance, setAppearance, theme, setTheme, getTheme, onAppearanceToggle} = appearanceSettings;
     const [session, setSession] = useState(Cookies.get("FSID"));
     const [localPrefs, setLocalPrefs] = useState({
-        ideas: {filter: "opened", sort: "trending"},
+        ideas: {filter: "status:OPENED", sort: "trending"},
         comments: {sort: "newest"}, changelog: {sort: "newest"}
     });
     const [serviceData, setServiceData] = useState({loaded: false, data: [], error: false});

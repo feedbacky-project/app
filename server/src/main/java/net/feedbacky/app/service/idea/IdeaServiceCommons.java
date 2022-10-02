@@ -79,10 +79,10 @@ public class IdeaServiceCommons {
     AdvancedFilterResolver.AdvancedFilters filters = advancedFilterResolver.resolveFilters(filterQuery);
 
     String orderParams = " ORDER BY i.pinned DESC, " + sort.getOrderSqlPart();
-    Query query = entityManager.createQuery("SELECT i FROM Idea i WHERE i.board = :board " + filters.generateSqlQueryPart() + orderParams)
+    Query query = entityManager.createQuery("SELECT i FROM Idea i LEFT JOIN i.tags ideaTags WHERE i.board = :board " + filters.generateSqlQueryPart() + orderParams)
             .setParameter("board", board)
             .setHint("javax.persistence.fetchgraph", entityManager.getEntityGraph("Idea.fetch"));
-    Query queryTotal = entityManager.createQuery("SELECT COUNT(i.id) FROM Idea i WHERE i.board = :board " + filters.generateSqlQueryPart())
+    Query queryTotal = entityManager.createQuery("SELECT COUNT(i.id) FROM Idea i LEFT JOIN i.tags ideaTags WHERE i.board = :board " + filters.generateSqlQueryPart())
             .setParameter("board", board);
 
     if(filters.getByText() != null) {
@@ -137,33 +137,6 @@ public class IdeaServiceCommons {
     List<Idea> ideas = pageData.getContent();
     int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     System.out.println("query time " + (System.currentTimeMillis() - queryTime) + "ms");
-    return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
-            .map(idea -> idea.toDto().withUser(idea, user)).collect(Collectors.toList()));
-  }
-
-  public PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(Board board, User user, int page, int pageSize, String query, IdeaService.FilterType filter, IdeaService.SortType sort) {
-    Idea.IdeaStatus status = null;
-    switch(filter.getType()) {
-      case OPENED:
-        status = Idea.IdeaStatus.OPENED;
-        break;
-      case CLOSED:
-        status = Idea.IdeaStatus.CLOSED;
-        break;
-      case ALL:
-        break;
-      case TAG:
-        //unsupported
-        break;
-    }
-    Page<Idea> pageData;
-    if(status == null) {
-      pageData = ideaRepository.findByQuery(board, query, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
-    } else {
-      pageData = ideaRepository.findByQueryAndStatus(board, query, status, PageRequest.of(page, pageSize, SortFilterResolver.resolveIdeaSorting(sort)));
-    }
-    List<Idea> ideas = pageData.getContent();
-    int totalPages = pageData.getTotalElements() == 0 ? 0 : pageData.getTotalPages() - 1;
     return new PaginableRequest<>(new PaginableRequest.PageMetadata(page, totalPages, pageSize), ideas.stream()
             .map(idea -> idea.toDto().withUser(idea, user)).collect(Collectors.toList()));
   }

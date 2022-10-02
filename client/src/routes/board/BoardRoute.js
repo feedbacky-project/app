@@ -25,7 +25,7 @@ const BoardRoute = ({defaultReroute = null}) => {
         //reset search query for board switch
         setSearchQuery("");
         //reset invalid tags after board switch
-        onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: "open"}});
+        onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: "status:OPENED"}});
         if (location.state == null || location.state._boardData === undefined) {
             axios.get("/boards/" + (defaultReroute ? defaultReroute : id)).then(res => {
                 if (res.status !== 200) {

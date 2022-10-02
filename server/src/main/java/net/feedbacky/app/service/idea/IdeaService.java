@@ -24,10 +24,6 @@ public interface IdeaService {
 
   PaginableRequest<List<FetchIdeaDto>> getAllIdeasByFilterQuery(String discriminator, int page, int pageSize, String filterQuery, SortType sort, String anonymousId);
 
-  PaginableRequest<List<FetchIdeaDto>> getAllIdeas(String discriminator, int page, int pageSize, FilterType filter, SortType sort, String anonymousId);
-
-  PaginableRequest<List<FetchIdeaDto>> getAllIdeasContaining(String discriminator, int page, int pageSize, String query, FilterType filter, SortType sort, String anonymousId);
-
   FetchIdeaDto getOne(long id, String anonymousId);
 
   ResponseEntity<FetchIdeaDto> post(PostIdeaDto dto);

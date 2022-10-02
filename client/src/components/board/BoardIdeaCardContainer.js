@@ -70,9 +70,8 @@ const BoardIdeaCardContainer = ({id, searchQuery, setSearchQuery}) => {
         setIdeas({...ideas, data: ideas.data.filter(item => item.id !== id)});
     };
     const onLoadRequest = (override = false) => {
-        const withQuery = searchQuery === "" ? "" : "&query=" + searchQuery;
         const currentPage = override ? 0 : page;
-        return axios.get("/boards/" + id + "/ideas?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.ideas) + withQuery).then(res => {
+        return axios.get("/boards/" + id + "/ideas?page=" + currentPage + prepareFilterAndSortRequests(user.localPreferences.ideas, searchQuery)).then(res => {
             const data = res.data.data;
             data.forEach(element => element.tags.sort((a, b) => a.name.localeCompare(b.name)));
             if (override) {

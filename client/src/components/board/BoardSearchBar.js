@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
+import AdvancedFiltersModal from "components/commons/modal/AdvancedFiltersModal";
 import {AppContext, BoardContext} from "context";
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiThemeContext} from "ui";
@@ -29,17 +30,18 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     const {user, onLocalPreferencesUpdate} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
     const {tags, allIdeas, openedIdeas, closedIdeas} = useContext(BoardContext).data;
+    const [advancedSettings, setAdvancedSettings] = useState(false);
     const queryRef = React.useRef();
 
     if (searchQuery === "" && queryRef.current) {
         queryRef.current.value = "";
     }
     const filters = [
-        {opened: {name: "Opened", data: openedIdeas}},
-        {closed: {name: "Closed", data: closedIdeas}},
-        {all: {name: "All", data: allIdeas}}
+        {"status:OPENED": {name: "Opened", data: openedIdeas}},
+        {"status:CLOSED": {name: "Closed", data: closedIdeas}},
+        {"status:ALL": {name: "All", data: allIdeas}}
     ];
-    tags.forEach(tag => filters.push({["tag:" + tag.id]: {name: <UiBadge className={"d-block"} color={tinycolor(tag.color)}>{tag.name}</UiBadge>, data: null}}));
+    tags.forEach(tag => filters.push({["tags:" + tag.id]: {name: <UiBadge className={"d-block"} color={tinycolor(tag.color)}>{tag.name}</UiBadge>, data: null}}));
     const sorts = [
         {trending: "Trending"},
         {voters_desc: "Most Voted"},
@@ -53,16 +55,23 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
             return <UiBadge className={"float-right"}>{data}</UiBadge>
         }
     };
-    const filterCurrentValue = Object.values(filters.find(obj => {
-        return Object.keys(obj)[0] === (user.localPreferences.ideas.filter || "opened")
+    let filterCurrentValue = Object.values(filters.find(obj => {
+        return Object.keys(obj)[0] === (user.localPreferences.ideas.filter || "status:OPENED")
     }) || filters[0])[0].name;
+    if(user.localPreferences.ideas.filter === "advanced") {
+        filterCurrentValue = <UiBadge className={"d-block"} style={{border: "1px dashed " + getTheme().setAlpha(.25)}}>Advanced</UiBadge>;
+    }
     const filterValues = filters.map(val => {
         const key = Object.keys(val)[0];
         const value = Object.values(val)[0];
-        return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: key}})}>
+        return <UiDropdownElement key={key} onClick={() => onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: key, advanced: null}})}>
             <React.Fragment>{value.name} {getFilterBadge(value.data)}</React.Fragment>
         </UiDropdownElement>
     });
+    filterValues.push(<UiDropdownElement key={"advanced"} onClick={() => setAdvancedSettings(true)}>
+            <UiBadge className={"d-block"} style={{border: "1px dashed " + getTheme().setAlpha(.25)}}>Advanced</UiBadge>
+        </UiDropdownElement>
+    );
     const sortCurrentValue = Object.values(sorts.find(obj => {
         return Object.keys(obj)[0] === (user.localPreferences.ideas.sort || "trending")
     }));
@@ -75,7 +84,11 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => setSearchQuery(queryRef.current.value.substring(0, 40)), 500);
     };
+    const onAdvancedSelect = data => {
+        onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: "advanced", advanced: data}});
+    };
     return <React.Fragment>
+        <AdvancedFiltersModal onHide={() => setAdvancedSettings(false)} isOpen={advancedSettings} onSelect={onAdvancedSelect}/>
         <UiCol sm={8} className={"my-1"}>
             <span className={"align-middle"}>Filtering</span> {" "}
             <UiSelectableDropdown label={"Choose Filter"} id={"filter"} className={"d-inline mr-1"} currentValue={filterCurrentValue} values={filterValues}/>

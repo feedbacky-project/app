@@ -44,7 +44,7 @@ public class IdeaRestController {
     this.ideaService = ideaService;
   }
 
-  @GetMapping("v1/boards/{discriminator}/ideas/experimentalSearch")
+  @GetMapping("v1/boards/{discriminator}/ideas")
   public PaginableRequest<List<FetchIdeaDto>> getAllExperimental(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
                                                                  @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
     RequestParamsParser parser = new RequestParamsParser(requestParams);
@@ -57,36 +57,6 @@ public class IdeaRestController {
       }
     }
     return ideaService.getAllIdeasByFilterQuery(discriminator, parser.getPage(), parser.getPageSize(), filter, sortType, anonymousId);
-  }
-
-  @GetMapping("v1/boards/{discriminator}/ideas")
-  public PaginableRequest<List<FetchIdeaDto>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams,
-                                                          @RequestHeader(value = "X-Feedbacky-Anonymous-Id", required = false) String anonymousId) {
-    RequestParamsParser parser = new RequestParamsParser(requestParams);
-    IdeaService.FilterType filterType = IdeaService.FilterType.OPENED;
-    if(requestParams.containsKey("filter")) {
-      try {
-        String filterName = requestParams.get("filter").toUpperCase();
-        String[] filterData = filterName.split(":");
-        if(filterData.length == 2 && filterData[0].equals("TAG")) {
-          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.TAG, Long.parseLong(filterData[1]));
-        } else {
-          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.valueOf(requestParams.get("filter").toUpperCase()), null);
-        }
-      } catch(Exception ignoredInvalid) {
-      }
-    }
-    IdeaService.SortType sortType = IdeaService.SortType.TRENDING;
-    if(requestParams.containsKey("sort")) {
-      try {
-        sortType = IdeaService.SortType.valueOf(requestParams.get("sort").toUpperCase());
-      } catch(Exception ignoredInvalid) {
-      }
-    }
-    if(requestParams.containsKey("query")) {
-      return ideaService.getAllIdeasContaining(discriminator, parser.getPage(), parser.getPageSize(), requestParams.get("query"), filterType, sortType, anonymousId);
-    }
-    return ideaService.getAllIdeas(discriminator, parser.getPage(), parser.getPageSize(), filterType, sortType, anonymousId);
   }
 
   @GetMapping("v1/ideas/{id}")

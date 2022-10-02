@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,19 +45,8 @@ public class PublicIdeaRestController {
 
   @GetMapping("v1/public/boards/{discriminator}/ideas")
   public PublicApiRequest<PaginableRequest<List<FetchIdeaDto>>> getAllIdeas(@PathVariable String discriminator, @RequestParam Map<String, String> requestParams) {
-    IdeaService.FilterType filterType = IdeaService.FilterType.OPENED;
-    if(requestParams.containsKey("filter")) {
-      try {
-        String filterName = requestParams.get("filter").toUpperCase();
-        String[] filterData = filterName.split(":");
-        if(filterData.length == 2 && filterData[0].equals("TAG")) {
-          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.TAG, Long.parseLong(filterData[1]));
-        } else {
-          filterType = new IdeaService.FilterType(IdeaService.FilterType.Type.valueOf(requestParams.get("filter").toUpperCase()), null);
-        }
-      } catch(Exception ignoredInvalid) {
-      }
-    }
+    RequestParamsParser parser = new RequestParamsParser(requestParams);
+    String filter = requestParams.getOrDefault("filter", "");
     IdeaService.SortType sortType = IdeaService.SortType.TRENDING;
     if(requestParams.containsKey("sort")) {
       try {
@@ -64,8 +54,7 @@ public class PublicIdeaRestController {
       } catch(Exception ignoredInvalid) {
       }
     }
-    RequestParamsParser parser = new RequestParamsParser(requestParams);
-    return publicIdeaService.getAllIdeas(discriminator, parser.getPage(), parser.getPageSize(), filterType, sortType);
+    return publicIdeaService.getAllIdeas(discriminator, parser.getPage(), parser.getPageSize(), filter, sortType);
   }
 
   @GetMapping("v1/public/ideas/{id}")

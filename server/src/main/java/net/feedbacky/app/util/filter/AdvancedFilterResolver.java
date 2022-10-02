@@ -12,8 +12,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -47,7 +47,7 @@ public class AdvancedFilterResolver {
           break;
         case "tags":
           String[] separatedTags = dataPart[1].split(",");
-          List<Tag> tags = new ArrayList<>();
+          Set<Tag> tags = new HashSet<>();
           for(String tagData : separatedTags) {
             try {
               long tagId = Long.parseLong(tagData);
@@ -60,7 +60,7 @@ public class AdvancedFilterResolver {
           break;
         case "users":
           String[] separatedUsers = dataPart[1].split(",");
-          List<User> users = new ArrayList<>();
+          Set<User> users = new HashSet<>();
           for(String userData : separatedUsers) {
             try {
               long userId = Long.parseLong(userData);
@@ -99,8 +99,8 @@ public class AdvancedFilterResolver {
   public static class AdvancedFilters {
 
     private String byText;
-    private List<Tag> byTags;
-    private List<User> byUsers;
+    private Set<Tag> byTags;
+    private Set<User> byUsers;
     private Idea.IdeaStatus byStatus;
     private Pair<LogicalType, Integer> byVotersAmount;
 
@@ -119,7 +119,7 @@ public class AdvancedFilterResolver {
         if(!builder.toString().isEmpty()) {
           builder.append(" AND ");
         }
-        builder.append(" i.tags IN :tags");
+        builder.append(" ideaTags IN :tags");
       }
       if(byVotersAmount != null) {
         if(!builder.toString().isEmpty()) {
@@ -130,7 +130,7 @@ public class AdvancedFilterResolver {
       String searchParams = builder.toString();
       //don't include invalid empty SQL query
       if(searchParams.isEmpty()) {
-        searchParams = "";
+        return "";
       }
       return " AND " + searchParams;
     }

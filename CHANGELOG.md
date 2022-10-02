@@ -1,5 +1,6 @@
-### 1.0.0.RC.5 (31.08.2022 - 16.09.2022)
+### 1.0.0.RC.5 (31.08.2022 - 02.10.2022)
 * **[FEATURE]** Added `REACT_APP_DEFAULT_BOARD_REROUTE` env variable utilize Single Board Feature (requested at [Feedbacky](https://app.feedbacky.net/i/single-board-self-hosted-instance.3514))
+* **[FEATURE]** Advanced filters is now live in BETA stage (requested by [eartharoid](https://app.feedbacky.net/i/more-advanced-filters.4274))
 * **[IMPROVEMENT]** Textarea in comments is now bigger (requested by [eartharoid](https://app.feedbacky.net/i/larger-comment-textarea.4451))
 * **[IMPROVEMENT]** Many textareas across the page can now be previewed with markdown (requested by [eartharoid](https://app.feedbacky.net/i/markdown-editor-improvements.4455))
 * **[FIX]** Markdown buttons overrode selected text on Firefox

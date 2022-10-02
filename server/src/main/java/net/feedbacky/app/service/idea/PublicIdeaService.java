@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface PublicIdeaService {
 
-  PublicApiRequest<PaginableRequest<List<FetchIdeaDto>>> getAllIdeas(String discriminator, int page, int pageSize, IdeaService.FilterType filter, IdeaService.SortType sort);
+  PublicApiRequest<PaginableRequest<List<FetchIdeaDto>>> getAllIdeas(String discriminator, int page, int pageSize, String filterQuery, IdeaService.SortType sort);
 
   PublicApiRequest<FetchIdeaDto> getOne(long id);
 

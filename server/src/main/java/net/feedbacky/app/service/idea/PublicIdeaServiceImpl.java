@@ -47,13 +47,13 @@ public class PublicIdeaServiceImpl implements PublicIdeaService {
   }
 
   @Override
-  public PublicApiRequest<PaginableRequest<List<FetchIdeaDto>>> getAllIdeas(String discriminator, int page, int pageSize, IdeaService.FilterType filter, IdeaService.SortType sort) {
+  public PublicApiRequest<PaginableRequest<List<FetchIdeaDto>>> getAllIdeas(String discriminator, int page, int pageSize, String filterQuery, IdeaService.SortType sort) {
     Board board = boardRepository.findByDiscriminator(discriminator)
             .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format("Board {0} not found.", discriminator)));
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     publicRequestValidator.validateApiKeyFromRequest(request, board);
     User user = publicRequestValidator.getUserByTokenOnly(request);
-    return new PublicApiRequest<>(user == null ? null : user.getToken(), ideaServiceCommons.getAllIdeas(board, user, page, pageSize, filter, sort));
+    return new PublicApiRequest<>(user == null ? null : user.getToken(), ideaServiceCommons.getAllIdeasByFilterQuery(board, user, page, pageSize, filterQuery, sort));
   }
 
   @Override

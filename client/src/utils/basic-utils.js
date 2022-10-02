@@ -100,13 +100,38 @@ export const truncateText = (text, maxLength) => {
     return text.substring(0, maxLength) + "...";
 };
 
-export const prepareFilterAndSortRequests = (preferences) => {
+export const prepareFilterAndSortRequests = (preferences, query) => {
     let search = "";
     if (preferences.sort != null) {
         search += "&sort=" + preferences.sort;
     }
     if (preferences.filter != null) {
-        search += "&filter=" + preferences.filter;
+        if(preferences.filter === "advanced" && preferences.advanced) {
+            const advanced = preferences.advanced;
+            search += "&filter=";
+            advanced.text && (search += "text:" + advanced.text + ";");
+            if(advanced.tags && advanced.tags.length > 0) {
+                search += "tags:" + advanced.tags.map(t => t + ",");
+                //remove trailing , character
+                search = search.replace(/,\s*$/, "");
+                search += ";";
+            }
+            advanced.status && (search += "status:" + advanced.status + ";");
+            advanced.voters && (search += "voters:" + Object.keys(advanced.voters)[0].toUpperCase() + "," + Object.values(advanced.voters)[0]);
+
+            //remove trailing ; character
+            search = search.replace(/;\s*$/, "");
+        } else {
+            search += "&filter=" + preferences.filter;
+        }
+    }
+    if(query && query !== "") {
+        //advanced filters override query search
+        if(preferences.filter != null && preferences.filter !== "advanced") {
+            search += ";text:" + query;
+        } else {
+            search += "&filter=text:" + query;
+        }
     }
     return search;
 };
