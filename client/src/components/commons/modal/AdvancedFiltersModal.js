@@ -35,6 +35,7 @@ const AdvancedFiltersModal = ({isOpen, onHide, onSelect}) => {
             voters: {[votersAmount.selector]: votersAmount.amount}
         };
         onSelect(data);
+        onHide();
     };
     const getFilterBadge = (data) => {
         if (data || data === 0) {
