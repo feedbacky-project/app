@@ -67,6 +67,27 @@ const HiddenContent = styled.div`
   padding: .25rem .5rem;
 `;
 
+const Separator = styled.span`
+  display: inline;
+  margin-left: .25rem;
+  @media (max-width: 576px) {
+    & {
+      margin-left: 0;
+      display: none;
+    }
+  }
+`;
+
+const CommentDate = styled.small`
+  margin-top: auto;
+  margin-bottom: auto;
+  @media (max-width: 576px) {
+    & {
+      width: 100%;
+    }
+  }
+`;
+
 const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, onCommentUnreact, onSuspend, onReply, comments, parentData = null, stepSize = 0, replyToComment = null}) => {
     const {user} = useContext(AppContext);
     const {getTheme} = useContext(UiThemeContext);
@@ -88,11 +109,11 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     }, [editor.enabled]);
 
     const hasAnyVisibleChildren = (comment) => {
-        for(const c of comments) {
-            if(c.replyTo !== comment.id) {
+        for (const c of comments) {
+            if (c.replyTo !== comment.id) {
                 continue;
             }
-            if(c.user == null) {
+            if (c.user == null) {
                 return hasAnyVisibleChildren(c);
             } else {
                 return true;
@@ -112,7 +133,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     };
     //deleted comment is used for comment history purposes, should be only visible with a parent comment
     if (data.viewType === "DELETED") {
-        if(!hasAnyVisibleChildren(data)) {
+        if (!hasAnyVisibleChildren(data)) {
             return <React.Fragment/>
         }
         return <React.Fragment>
@@ -126,7 +147,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     }
     //internal comment with limited visibility is used for comment history purposes
     if (data.viewType === "INTERNAL" && data.user == null) {
-        if(!hasAnyVisibleChildren(data)) {
+        if (!hasAnyVisibleChildren(data)) {
             return <React.Fragment/>
         }
         return <React.Fragment>
@@ -172,7 +193,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         </React.Fragment>
     };
     const renderReplyVia = () => {
-        if(data.metadata.via) {
+        if (data.metadata.via) {
             return <small className={"ml-1 text-black-60 my-auto"}>via {data.metadata.via}</small>
         }
         return <React.Fragment/>
@@ -290,10 +311,10 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
     return <React.Fragment>
         <div className={"d-inline-flex my-2 text-black-75"}>
             <UiAvatar roundedCircle className={"mr-3"} size={26} user={data.user} style={{minWidth: "26px"}}/>
-            <div style={{display: "flex", margin: "auto 0"}}>
+            <div style={{display: "flex", margin: "auto 0", flexFlow: "wrap"}}>
                 <span>{parseComment(data.description, boardData.moderators, boardData.tags)}</span>
                 {renderReplyVia()}
-                <small className={"ml-1 text-black-60 my-auto"}> · <TimeAgo datetime={data.creationDate}/></small>
+                <CommentDate className={"text-black-60"}><Separator>·</Separator> <TimeAgo datetime={data.creationDate}/></CommentDate>
             </div>
         </div>
         <br/>
