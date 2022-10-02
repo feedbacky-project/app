@@ -68,7 +68,9 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
             <React.Fragment>{value.name} {getFilterBadge(value.data)}</React.Fragment>
         </UiDropdownElement>
     });
-    filterValues.push(<UiDropdownElement key={"advanced"} onClick={() => setAdvancedSettings(true)}>
+    //insert after 3 default filters: open/close/all (and before any tags)
+    filterValues.splice(3, 0,
+        <UiDropdownElement key={"advanced"} onClick={() => setAdvancedSettings(true)}>
             <UiBadge className={"d-block"} style={{border: "1px dashed " + getTheme().setAlpha(.25)}}>Advanced</UiBadge>
         </UiDropdownElement>
     );
