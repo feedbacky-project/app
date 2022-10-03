@@ -87,7 +87,7 @@ public class VoterServiceImpl implements VoterService {
         idea.setVoters(new HashSet<>());
         idea.setVotersAmount(0);
         idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.placeholders(user.convertToSpecialCommentMention());
+        commentBuilder = commentBuilder.placeholders(user.convertToSpecialCommentMention(), "all");
         break;
       case ANONYMOUS:
         Set<User> voters = idea.getVoters();
@@ -95,7 +95,7 @@ public class VoterServiceImpl implements VoterService {
         idea.setVoters(voters);
         idea.setVotersAmount(voters.size());
         idea = ideaRepository.save(idea);
-        commentBuilder = commentBuilder.placeholders(user.convertToSpecialCommentMention());
+        commentBuilder = commentBuilder.placeholders(user.convertToSpecialCommentMention(), "anonymous");
         break;
       default:
         throw new FeedbackyRestException(HttpStatus.BAD_REQUEST, "Invalid clear type provided.");

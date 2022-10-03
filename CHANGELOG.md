@@ -1,3 +1,6 @@
+### 1.0.0.RC.6 (3.10.2022)
+* **[IMPROVEMENT]** Badly designed vote reset modal adjusted (reported at [Feedbacky](https://app.feedbacky.net/i/badly-designed-vote-reset-modal.4431))
+
 ### 1.0.0.RC.5 (31.08.2022 - 02.10.2022)
 * **[FEATURE]** Added `REACT_APP_DEFAULT_BOARD_REROUTE` env variable utilize Single Board Feature (requested at [Feedbacky](https://app.feedbacky.net/i/single-board-self-hosted-instance.3514))
 * **[FEATURE]** Advanced filters is now live in BETA stage (requested by [eartharoid](https://app.feedbacky.net/i/more-advanced-filters.4274))
