@@ -1,4 +1,5 @@
 ### 1.0.0.RC.6 (3.10.2022)
+* ***[FEATURE/QoL]** Attachment now contains preview icon and attachment text is truncated if too long (requested at [Feedbacky](https://app.feedbacky.net/i/attachment-icon.4432))
 * **[IMPROVEMENT]** Badly designed vote reset modal adjusted (reported at [Feedbacky](https://app.feedbacky.net/i/badly-designed-vote-reset-modal.4431))
 
 ### 1.0.0.RC.5 (31.08.2022 - 02.10.2022)

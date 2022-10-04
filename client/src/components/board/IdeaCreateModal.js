@@ -24,6 +24,24 @@ const AttachmentButton = styled(UiClassicButton)`
   }
 `;
 
+const AttachmentName = styled.small`
+  display: inline;
+  width: 240px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: .25rem;
+  float: right;
+
+  @media (max-width: 576px) {
+    width: 120px;
+  }
+  @media (max-width: 370px) {
+    width: 90px;
+  }
+`;
+
 const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
     const {getTheme} = useContext(UiThemeContext);
     const {user, onLocalPreferencesUpdate} = useContext(AppContext);
@@ -76,8 +94,10 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
             <UiCol xs={"auto"} className={"d-inline-block px-0"}>
                 <AttachmentButton label={"Add Attachment"} variant={""} className={"m-0 p-0"}>
                     <input accept={"image/jpeg, image/png"} type={"file"} className={"d-none"} id={"attachmentUpload"} onChange={onAttachmentUpload}/>
-                    <label htmlFor={"attachmentUpload"} className={"mb-0"} style={{cursor: "pointer", height: 36, width: 36, color: "hsl(210, 11%, 15%)"}}>
-                        <FaRegImage className={"align-top"} style={{position: "relative", top: "50%", transform: "translateY(-50%)"}}/>
+                    <label htmlFor={"attachmentUpload"} className={"mb-0"} style={{display: "flex", cursor: "pointer", height: 36, width: 36, color: "hsl(210, 11%, 15%)"}}>
+                        {attachment ? <img alt={attachmentName} src={attachment} width={"24"} className={"m-auto"}/> :
+                            <FaRegImage className={"m-auto"}/>
+                        }
                     </label>
                 </AttachmentButton>
             </UiCol>
@@ -133,20 +153,26 @@ const IdeaCreateModal = ({isOpen, onHide, onIdeaCreation, setSearchQuery}) => {
                 </UiCol>
                 {renderAttachmentButton()}
             </UiCol>
-            <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingTitle"}>
-                50 Remaining
-            </small>
-            {
-                similarIdeas <= 0 ||
-                <a href={"#search"} className={"small d-inline mt-1 ml-1 float-left text-black-75"} onClick={() => {
-                    onHide();
-                    setSearchQuery(title);
-                    onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: "status:ALL", advanced: null}});
-                }}>· <FaExternalLinkAlt className={"align-baseline pt-1"}/> {similarIdeas} Similar Ideas</a>
-            }
-            <small className={"d-inline mt-1 float-right text-black-60"}>
-                {attachmentName}
-            </small>
+            <div>
+                <div>
+                    <small className={"d-inline mt-1 float-left text-black-60"} id={"remainingTitle"}>
+                        50 Remaining
+                    </small>
+                    {
+                        similarIdeas <= 0 ||
+                        <a href={"#search"} className={"small d-inline mt-1 ml-1 float-left text-black-75"} onClick={() => {
+                            onHide();
+                            setSearchQuery(title);
+                            onLocalPreferencesUpdate({...user.localPreferences, ideas: {...user.localPreferences.ideas, filter: "status:ALL", advanced: null}});
+                        }}>· <FaExternalLinkAlt className={"align-baseline pt-1"}/> {similarIdeas} Similar Ideas</a>
+                    }
+                </div>
+                <AttachmentName className={"text-black-60"}>
+                    {attachmentName}
+                </AttachmentName>
+            </div>
+
+
         </div>
         <br/>
         <div className={"my-2"}>
