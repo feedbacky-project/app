@@ -53,7 +53,7 @@ const MarkdownContainer = (props) => {
         replaced = replaced.replace(":@", "\uD83D\uDE21");
         return replaced;
     };
-    let html = parseEmojis(marked.parseInline(text, {breaks: true}));
+    let html = marked.parseInline(text, {breaks: true});
     if(stripped) {
         html = html.replace(/<br\s*\/?>/ig, " ").replace(/(&nbsp;|<([^>]+)>)/ig, "");
     }
@@ -61,7 +61,12 @@ const MarkdownContainer = (props) => {
         html = truncateText(html, truncate);
     }
     html = parseMentionsHtmlUnsafe(html, getTheme());
-    return <MarkdownBox theme={getTheme()} dangerouslySetInnerHTML={{__html: html}} {...otherProps}/>
+
+    //convert properly to avoid emotes issues
+    const span = document.createElement("span");
+    span.innerHTML = html;
+    const converted = parseEmojis(span.innerHTML);
+    return <MarkdownBox theme={getTheme()} dangerouslySetInnerHTML={{__html: converted}} {...otherProps}/>
 };
 
 export default MarkdownContainer;
