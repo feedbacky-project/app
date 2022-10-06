@@ -6,6 +6,7 @@ import IdeaInfoBox from "components/idea/IdeaInfoBox";
 import LoginModal from "components/LoginModal";
 import {AppContext, IdeaContext} from "context";
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import {useHotkeys} from "react-hotkeys-hook";
 import {FaExclamationCircle} from "react-icons/fa";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
@@ -13,7 +14,7 @@ import BoardContextedRouteUtil from "routes/utils/BoardContextedRouteUtil";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
 import {UiHorizontalRule, UiThemeContext} from "ui";
 import {UiCol, UiContainer, UiRow} from "ui/grid";
-import {convertIdeaToSlug} from "utils/basic-utils";
+import {convertIdeaToSlug, scrollIntoView} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
 
 const IdeaRoute = () => {
@@ -25,7 +26,7 @@ const IdeaRoute = () => {
         return id;
     };
     const {user} = useContext(AppContext);
-    const {onThemeChange} = useContext(UiThemeContext);
+    const {getTheme, onThemeChange} = useContext(UiThemeContext);
     const id = extractIdeaId(useParams().id);
     const location = useLocation();
     const [idea, setIdea] = useState({data: {}, loaded: false, error: false});
@@ -34,6 +35,80 @@ const IdeaRoute = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const discussionRef = useRef();
     const votersRef = useRef();
+    const focusComment = element => {
+        element.classList.add("hotkey-focused");
+        element.onblur = () => element.classList.remove("hotkey-focused");
+        scrollIntoView(element.id, false);
+    }
+    useHotkeys(",", e => {
+        //update css only when we use hotkey, don't update on each theme change in case of performance issues
+        [...document.styleSheets[0].cssRules].find(x => x.selectorText === '.hotkey-focused').style['outline'] = '2px dashed ' + getTheme().toString();
+
+        e.preventDefault();
+        const elements = document.querySelectorAll('*[id^="commentc_"]');
+        let focusUpdated = false;
+        elements.forEach((comment, i) => {
+            if (focusUpdated) {
+                return;
+            }
+            if (comment.classList.contains("hotkey-focused")) {
+                if (i >= 1) {
+                    comment.classList.remove("hotkey-focused");
+                    focusComment(elements[i - 1]);
+                }
+                focusUpdated = true;
+            }
+        });
+        if (!focusUpdated) {
+            focusComment(elements[0]);
+        }
+    }, [getTheme]);
+    useHotkeys(".", e => {
+        //update css only when we use hotkey, don't update on each theme change in case of performance issues
+        [...document.styleSheets[0].cssRules].find(x => x.selectorText === '.hotkey-focused').style['outline'] = '2px dashed ' + getTheme().toString();
+
+        e.preventDefault();
+        const elements = document.querySelectorAll('*[id^="commentc_"]');
+        let focusUpdated = false;
+        elements.forEach((comment, i) => {
+            if (focusUpdated) {
+                return;
+            }
+            if (comment.classList.contains("hotkey-focused")) {
+                if (i < elements.length - 1) {
+                    comment.classList.remove("hotkey-focused");
+                    focusComment(elements[i + 1]);
+                }
+                focusUpdated = true;
+            }
+        });
+        if (!focusUpdated) {
+            focusComment(elements[0]);
+        }
+    }, [getTheme]);
+    useHotkeys("left", e => {
+        if (!board.loaded) {
+            return;
+        }
+        e.preventDefault();
+        history.push("/b/" + board.data.discriminator);
+    }, [board]);
+    useHotkeys("r", e => {
+        const elements = document.getElementsByClassName("hotkey-focused");
+        if (elements.length === 0) {
+            return;
+        }
+        const comment = elements[0];
+        document.querySelector("#" + comment.id + " [data-id='reply']").click();
+    });
+    useHotkeys("v", e => {
+        e.preventDefault();
+        document.querySelector("[data-id='vote']").click();
+    });
+    useHotkeys("c", e => {
+        e.preventDefault();
+        document.querySelector("#commentMessage").focus();
+    });
     useTitle((idea.loaded && board.loaded) ? board.data.name + " | " + idea.data.title : "Loading...");
     const loadBoardDataCascade = (ideaData) => {
         if (board.loaded) {
@@ -74,11 +149,11 @@ const IdeaRoute = () => {
     }, [id]);
 
     const onStateChange = (stateType) => {
-        if(stateType === "discussion") {
+        if (stateType === "discussion") {
             discussionRef.current.onStateChange();
-        } else if(stateType === "voters") {
+        } else if (stateType === "voters") {
             votersRef.current.onStateChange();
-        } else if(stateType === "both") {
+        } else if (stateType === "both") {
             discussionRef.current.onStateChange();
             votersRef.current.onStateChange();
         }

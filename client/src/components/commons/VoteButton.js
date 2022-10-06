@@ -123,12 +123,12 @@ const VoteButton = ({idea, onVote, animationRef, className = ""}) => {
         });
     };
     if (!ideaData.upvoted) {
-        return <ToUpvoteBtn className={className} label={"Upvote"} onClick={doVote} variant={""}>
+        return <ToUpvoteBtn data-id={"vote"} className={className} label={"Upvote"} onClick={doVote} variant={""}>
             <ToUpvoteIcon className={"to-upvote"}/>
             <strong className={"d-block"}>{ideaData.votersAmount}</strong>
         </ToUpvoteBtn>
     } else {
-        return <VoteBtn className={className} label={"Downvote"} onClick={doVote} variant={""}>
+        return <VoteBtn data-id={"vote"} className={className} label={"Downvote"} onClick={doVote} variant={""}>
             <FiChevronsUp className={"upvoted"} style={{color}}/>
             <strong className={"d-block"} style={{color: color}}>{ideaData.votersAmount}</strong>
         </VoteBtn>

@@ -36,14 +36,14 @@ export const DropdownMenu = styled(Dropdown.Menu)`
 `;
 
 const UiDropdown = (props) => {
-    const {className = null, toggleClassName = null, menuClassName = null, toggle, label, children, style, menuStyle} = props;
+    const {className = null, toggleClassName = null, menuClassName = null, toggle, label, children, style, menuStyle, dataIdToggle, dataIdMenu} = props;
 
     return <Dropdown alignRight onClick={e => e.preventDefault()} className={className} style={style}>
         {/* dropdowns aren't accessible anyway, tabindex -1 removes them from tabbing order  */}
-        <DropdownToggle aria-label={label} tabIndex={-1} variant={""} className={toggleClassName}>
+        <DropdownToggle aria-label={label} tabIndex={-1} variant={""} className={toggleClassName} data-id={dataIdToggle}>
             {toggle}
         </DropdownToggle>
-        <DropdownMenu className={menuClassName} style={menuStyle}>
+        <DropdownMenu className={menuClassName} style={menuStyle} data-id={dataIdMenu}>
             {children}
         </DropdownMenu>
     </Dropdown>

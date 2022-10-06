@@ -3,6 +3,7 @@ import AdvancedFiltersModal from "components/commons/modal/AdvancedFiltersModal"
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from 'react';
 import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
+import {useHotkeys} from "react-hotkeys-hook";
 import {FaCog} from "react-icons/fa";
 import tinycolor from "tinycolor2";
 import {UiBadge, UiHorizontalRule, UiThemeContext} from "ui";
@@ -33,6 +34,13 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     const {tags, allIdeas, openedIdeas, closedIdeas} = useContext(BoardContext).data;
     const [advancedSettings, setAdvancedSettings] = useState(false);
     const queryRef = React.useRef();
+    useHotkeys("/", e => {
+        if(!queryRef.current) {
+            return;
+        }
+        e.preventDefault();
+        queryRef.current.focus();
+    });
 
     if (searchQuery === "" && queryRef.current) {
         queryRef.current.value = "";
@@ -71,8 +79,8 @@ const BoardSearchBar = ({searchQuery, setSearchQuery}) => {
     });
     //insert after 3 default filters: open/close/all (and before any tags)
     filterValues.splice(3, 0,
-        <React.Fragment>
-            <UiDropdownElement key={"advanced"} onClick={() => setAdvancedSettings(true)}>
+        <React.Fragment key={"advanced"}>
+            <UiDropdownElement  onClick={() => setAdvancedSettings(true)}>
                 <UiBadge className={"d-block"} style={{border: "1px dashed " + getTheme().setAlpha(.5), position: "relative"}}>
                     Advanced
                     <div style={{position: "absolute", right: "4px", bottom: "4px"}}><FaCog/></div>

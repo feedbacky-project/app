@@ -3,6 +3,7 @@ import IdeaCreateModal from "components/board/IdeaCreateModal";
 import MarkdownContainer from "components/commons/MarkdownContainer";
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
+import {useHotkeys} from "react-hotkeys-hook";
 import {FaAlignRight, FaPencilAlt} from "react-icons/fa";
 import {Link} from "react-router-dom";
 import {UiCard, UiHorizontalRule} from "ui";
@@ -17,6 +18,10 @@ const BoardInfoCard = ({onIdeaCreation, setSearchQuery}) => {
     const {user, loginIntent, setIntent, onIntentComplete} = useContext(AppContext);
     const {data, onNotLoggedClick} = useContext(BoardContext);
     const [open, setOpen] = useState(false);
+    useHotkeys("c", e => {
+       e.preventDefault();
+       setOpen(true);
+    });
     useEffect(() => {
         if(loginIntent === "IDEA_CREATE" && user.loggedIn) {
             setOpen(true);

@@ -128,7 +128,7 @@ const IdeaCard = ({ideaData, onIdeaDelete}) => {
             <span className={"my-sm-auto mr-sm-3 mr-2"}>
                 <VoteButton className={"pt-sm-1 pt-0 pl-sm-2 pl-0"} idea={idea} animationRef={cardRef} onVote={(upvoted, votersAmount) => setIdea({...idea, upvoted, votersAmount})}/>
             </span>
-            <CardLinkStyle as={Link} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
+            <CardLinkStyle data-id={"link"} as={Link} to={{pathname: "/i/" + convertIdeaToSlug(idea), state: {_ideaData: idea, _boardData: data}}}>
                 <div>
                     <div className={"d-inline"} style={{fontSize: `16px`}}>
                         {idea.open || <UiClassicIcon as={FaLock} className={"mr-1 move-top-2px"}/>}

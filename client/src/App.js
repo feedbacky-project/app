@@ -1,6 +1,7 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import {DARK_THEME_COLOR, LIGHT_THEME_COLOR} from "AppAppearance";
 import axios from "axios";
+import HotkeysModal from "components/commons/modal/HotkeysModal";
 import ComponentLoader from "components/ComponentLoader";
 import {AppContext} from "context";
 import Cookies from "js-cookie";
@@ -180,6 +181,7 @@ const App = ({appearanceSettings}) => {
                 defaultTheme: appearance.mode === "dark" ? DARK_THEME_COLOR : LIGHT_THEME_COLOR,
                 onThemeChange: onThemeChange,
             }}>
+                <HotkeysModal/>
                 <Suspense fallback={<LoadingRouteUtil/>}>
                     <Switch>
                         <Route exact path={"/"} component={ConditionalReroute}/>

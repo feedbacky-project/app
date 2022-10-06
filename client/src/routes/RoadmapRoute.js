@@ -5,6 +5,7 @@ import ComponentLoader from "components/ComponentLoader";
 import LoginModal from "components/LoginModal";
 import BoardRoadmapBox from "components/roadmap/BoardRoadmapBox";
 import {AppContext} from "context";
+import useBoardNavigationHotkeys from "hooks/use-board-navigation-hotkeys";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/fa";
 import {useHistory, useLocation, useParams} from "react-router-dom";
@@ -23,6 +24,7 @@ const RoadmapRoute = () => {
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [roadmap, setRoadmap] = useState({data: {}, loaded: false, error: false});
     const [open, setOpen] = useState(false);
+    useBoardNavigationHotkeys(id);
     useTitle(board.loaded ? board.data.name + " | Roadmap" : "Loading...");
     const resolvePassedData = () => {
         const state = location.state;

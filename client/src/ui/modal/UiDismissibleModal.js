@@ -22,6 +22,6 @@ UiDismissibleModal.propTypes = {
     id: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
     applyButton: PropTypes.element.isRequired,
 };

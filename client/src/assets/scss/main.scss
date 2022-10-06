@@ -65,3 +65,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.hotkey-focused a:focus {
+  outline: none;
+}

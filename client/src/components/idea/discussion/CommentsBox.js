@@ -19,6 +19,7 @@ const CommentContainer = styled.div`
   margin-bottom: .5rem;
   word-break: break-word;
   min-width: 55%;
+  border-radius: var(--border-radius);
 
   @media (max-width: 576px) {
     width: 100%;
@@ -230,7 +231,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         if (!user.loggedIn) {
             return <React.Fragment/>
         }
-        return <ReplyButton label={"Reply"} tiny onClick={() => onReply(data)}><FaReplyAll/></ReplyButton>
+        return <ReplyButton data-id={"reply"} label={"Reply"} tiny onClick={() => onReply(data)}><FaReplyAll/></ReplyButton>
     };
     const renderEditorMode = () => {
         return <React.Fragment>
@@ -282,7 +283,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
         const replyStyle = (data.replyTo != null && parentData != null) ? {paddingLeft: (stepRemSize * stepSize) + "rem"} : {};
         return <React.Fragment>
             {renderReplyData()}
-            <CommentComponent style={replyStyle}>
+            <CommentComponent id={"commentc_" + data.id} style={replyStyle}>
                 <UiAvatar roundedCircle className={"mr-3 mt-2"} size={26} user={data.user} style={{minWidth: "26px"}}/>
                 <div style={{width: "100%"}}>
                     {renderCommentUsername()}

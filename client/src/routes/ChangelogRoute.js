@@ -5,6 +5,7 @@ import BoardChangelogSearchBar from "components/changelog/BoardChangelogSearchBa
 import PageNavbar from "components/commons/PageNavbar";
 import LoginModal from "components/LoginModal";
 import {AppContext} from "context";
+import useBoardNavigationHotkeys from "hooks/use-board-navigation-hotkeys";
 import React, {useContext, useEffect, useState} from "react";
 import {FaExclamationCircle} from "react-icons/fa";
 import {useHistory, useLocation, useParams} from "react-router-dom";
@@ -22,6 +23,7 @@ const ChangelogRoute = () => {
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [searchQuery, setSearchQuery] = useState("");
     const [open, setOpen] = useState(false);
+    useBoardNavigationHotkeys(id);
     useTitle(board.loaded ? board.data.name + " | Changelog" : "Loading...");
     const resolvePassedData = () => {
         const state = location.state;

@@ -5,6 +5,7 @@ import BoardSearchBar from "components/board/BoardSearchBar";
 import PageNavbar from "components/commons/PageNavbar";
 import LoginModal from "components/LoginModal";
 import {AppContext} from "context";
+import useBoardNavigationHotkeys from "hooks/use-board-navigation-hotkeys";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaExclamationCircle} from "react-icons/fa";
 import {useLocation, useParams} from "react-router-dom";
@@ -21,6 +22,7 @@ const BoardRoute = ({defaultReroute = null}) => {
     const [modalOpen, setModalOpen] = useState(false);
     const location = useLocation();
     const {id} = useParams();
+    useBoardNavigationHotkeys(id);
     useEffect(() => {
         //reset search query for board switch
         setSearchQuery("");
