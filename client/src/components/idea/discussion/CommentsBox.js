@@ -193,12 +193,6 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             <small style={{fontWeight: "bold"}}><UiPrettyUsername user={data.user}/></small>
         </React.Fragment>
     };
-    const renderReplyVia = () => {
-        if (data.metadata.via) {
-            return <small className={"ml-1 text-black-60 my-auto"}>via {data.metadata.via}</small>
-        }
-        return <React.Fragment/>
-    };
     const renderEditButton = () => {
         if (data.user.id !== user.data.id) {
             return;
@@ -287,7 +281,7 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
                 <UiAvatar roundedCircle className={"mr-3 mt-2"} size={26} user={data.user} style={{minWidth: "26px"}}/>
                 <div style={{width: "100%"}}>
                     {renderCommentUsername()}
-                    {renderReplyVia()}
+                    {data.metadata.via && <small className={"ml-1 text-black-60 my-auto"}>via {data.metadata.via}</small>}
                     <small className={"text-black-60"}> · <TimeAgo datetime={data.creationDate}/></small>
                     {!data.edited || <small className={"text-black-60"}> · edited</small>}
                     {renderEditButton()}
@@ -314,8 +308,10 @@ const CommentsBox = ({data, onCommentUpdate, onCommentDelete, onCommentReact, on
             <UiAvatar roundedCircle className={"mr-3"} size={26} user={data.user} style={{minWidth: "26px"}}/>
             <div style={{display: "flex", margin: "auto 0", flexFlow: "wrap"}}>
                 <span>{parseComment(data.description, boardData.moderators, boardData.tags)}</span>
-                {renderReplyVia()}
-                <CommentDate className={"text-black-60"}><Separator>·</Separator> <TimeAgo datetime={data.creationDate}/></CommentDate>
+                <CommentDate className={"text-black-60"}>
+                    <Separator>·</Separator> <TimeAgo datetime={data.creationDate}/>
+                    {data.metadata.via && <span className={"ml-1 text-black-60 my-auto"}>· via {data.metadata.via}</span>}
+                </CommentDate>
             </div>
         </div>
         <br/>
