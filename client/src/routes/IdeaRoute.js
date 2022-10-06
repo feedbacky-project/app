@@ -109,6 +109,18 @@ const IdeaRoute = () => {
         e.preventDefault();
         document.querySelector("#commentMessage").focus();
     });
+    useHotkeys("m", e => {
+        if (!board.loaded || !board.data.moderators.find(mod => mod.userId === user.data.id)) {
+            return;
+        }
+        e.preventDefault();
+        const button = document.querySelector("[data-id='moderation-toggle']");
+        button.click();
+        setTimeout(() => {
+            const dropdown = document.querySelector("[data-id='moderation-menu'] > span");
+            dropdown.focus();
+        }, 200);
+    }, [board]);
     useTitle((idea.loaded && board.loaded) ? board.data.name + " | " + idea.data.title : "Loading...");
     const loadBoardDataCascade = (ideaData) => {
         if (board.loaded) {

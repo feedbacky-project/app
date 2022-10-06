@@ -40,6 +40,7 @@ const HotkeysModal = () => {
                 <div><Hotkey>,</Hotkey> or <Hotkey>.</Hotkey> - Focus Previous/Next Comment</div>
                 <div><Hotkey>R</Hotkey> - Reply to Focused Comment</div>
                 <div><Hotkey>V</Hotkey> - Toggle Vote of Idea</div>
+                <div><Hotkey>M</Hotkey> - Open Mod Actions of Idea</div>
                 <div><Hotkey>←</Hotkey> - Go Back to Board Page</div>
             </UiCol>
         </UiRow>
