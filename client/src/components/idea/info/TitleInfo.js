@@ -32,8 +32,8 @@ const TitleInfo = ({setModal, editor, setEditor, onStateChange}) => {
     }
     return <div className={"w-75"}>
         <div className={"w-100"}>
-            {ideaData.open || <FaLock className={"mr-1 my-auto"}/>}
-            {!ideaData.pinned || <FaThumbtack className={"mr-1 my-auto"} style={{transform: "rotate(30deg)"}}/>}
+            {ideaData.open || <FaLock className={"mr-1 my-auto"} style={{transform: "translateY(-3px)"}}/>}
+            {!ideaData.pinned || <FaThumbtack className={"mr-1 my-auto"} style={{transform: "translateY(-3px) rotate(30deg)"}}/>}
             {renderTitleEditor()}
             <div className={"d-inline-block"}>
                 <ModeratorActionsButton onStateChange={onStateChange}/>
