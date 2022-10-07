@@ -117,4 +117,8 @@ public class Board implements Serializable, Fetchable<FetchBoardDto> {
     return MailService.HOST_ADDRESS + "/b/" + discriminator;
   }
 
+  public String toAdminPanelViewLink() {
+    return MailService.HOST_ADDRESS + "/ba/" + discriminator;
+  }
+
 }

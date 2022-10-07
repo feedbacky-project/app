@@ -12,13 +12,13 @@ import net.feedbacky.app.data.trigger.TriggerExecutor;
 import net.feedbacky.app.data.user.User;
 import net.feedbacky.app.exception.FeedbackyRestException;
 import net.feedbacky.app.exception.types.InsufficientPermissionsException;
-import net.feedbacky.app.exception.types.InvalidAuthenticationException;
 import net.feedbacky.app.exception.types.ResourceNotFoundException;
 import net.feedbacky.app.repository.UserRepository;
 import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.service.ServiceUser;
 import net.feedbacky.app.service.board.integration.IntegrationService;
 import net.feedbacky.app.util.Base64Util;
+import net.feedbacky.app.util.NewBoardPopulator;
 import net.feedbacky.app.util.PaginableRequest;
 import net.feedbacky.app.util.mailservice.MailBuilder;
 import net.feedbacky.app.util.mailservice.MailHandler;
@@ -58,16 +58,18 @@ public class BoardServiceImpl implements BoardService {
   private final MailHandler mailHandler;
   private final TriggerExecutor triggerExecutor;
   private final IntegrationService integrationService;
+  private final NewBoardPopulator newBoardPopulator;
 
   @Autowired
   public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository, ObjectStorage objectStorage, MailHandler mailHandler,
-                          TriggerExecutor triggerExecutor, IntegrationService integrationService) {
+                          TriggerExecutor triggerExecutor, IntegrationService integrationService, NewBoardPopulator newBoardPopulator) {
     this.boardRepository = boardRepository;
     this.userRepository = userRepository;
     this.objectStorage = objectStorage;
     this.mailHandler = mailHandler;
     this.triggerExecutor = triggerExecutor;
     this.integrationService = integrationService;
+    this.newBoardPopulator = newBoardPopulator;
   }
 
   @Override
@@ -137,6 +139,7 @@ public class BoardServiceImpl implements BoardService {
     node.setUser(user);
     user.getPermissions().add(node);
     userRepository.save(user);
+    newBoardPopulator.doPopulateBoard(board);
     return ResponseEntity.status(HttpStatus.CREATED).body(board.toDto().withConfidentialData(board, true));
   }
 
