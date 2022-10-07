@@ -93,7 +93,7 @@ const renderCreateBoardSection = (context) => {
     if (!isServiceAdmin(context)) {
         return <React.Fragment/>
     }
-    return <UiDropdownElement as={Link} to={"/admin/create"}>
+    return <UiDropdownElement as={Link} to={"/create"}>
         <FaUserCog className={"mr-2 move-top-1px"}/>
         <strong>Create New Board</strong>
     </UiDropdownElement>
