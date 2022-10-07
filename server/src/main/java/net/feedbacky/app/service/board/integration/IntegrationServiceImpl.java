@@ -87,7 +87,7 @@ public class IntegrationServiceImpl implements IntegrationService {
     GitHub gitHub = new GitHubBuilder().withAppInstallationToken(integration.getApiKey()).build();
     validateKey(gitHub);
     GHRepository repository = gitHub.getRepository(json.get("repository").getAsString());
-    return repository.getIssues(GHIssueState.OPEN).stream().map(i -> new FetchGithubIssue().from(i)).collect(Collectors.toList());
+    return repository.getIssues(GHIssueState.OPEN).stream().filter(i -> !i.isPullRequest()).map(i -> new FetchGithubIssue().from(i)).collect(Collectors.toList());
   }
 
   @Override
