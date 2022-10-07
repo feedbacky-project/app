@@ -20,7 +20,7 @@ import {useTitle} from "utils/use-title";
 const ClickableButton = styled.div`
   cursor: pointer;
   transition: var(--hover-transition);
-  
+
   &:hover {
     background-color: ${props => props.theme} !important;
   }
@@ -57,7 +57,7 @@ const ModeratorsSubroute = () => {
         return <React.Fragment>
             <UiFormLabel as={UiCol} xs={12} className={"mb-0"}>Permissions Overview</UiFormLabel>
             <UiCol xs={12} sm={6} className={"mb-sm-2 mb-3"}>
-                <UiKeyboardInput>Owner & Administrator  Permissions</UiKeyboardInput>
+                <UiKeyboardInput>Owner & Administrator Permissions</UiKeyboardInput>
                 <ul className={"mb-0 pl-3"}>
                     <li>Delete Board <UiKeyboardInput>Owner Only</UiKeyboardInput></li>
                     <li>Promote and Demote Moderators <UiKeyboardInput>Owner Only</UiKeyboardInput></li>
@@ -142,10 +142,10 @@ const ModeratorsSubroute = () => {
         }
         if (mod.role.toLowerCase() === "moderator") {
             return <ClickableButton as={UiBadge} color={tinycolor("#00c851")} theme={tinycolor("#00c851").setAlpha(.5).toString()} className={"d-block my-1"}
-                                         onClick={() => setModal({open: true, type: "promote", data: mod.userId})}>Promote</ClickableButton>
+                                    onClick={() => setModal({open: true, type: "promote", data: mod.userId})}>Promote</ClickableButton>
         } else {
             return <ClickableButton as={UiBadge} color={tinycolor("#ff3547")} theme={tinycolor("#ff3547").setAlpha(.5).toString()} className={"d-block my-1"}
-                                         onClick={() => setModal({open: true, type: "demote", data: mod.userId})}>Demote</ClickableButton>
+                                    onClick={() => setModal({open: true, type: "demote", data: mod.userId})}>Demote</ClickableButton>
         }
     };
     const onPermissionsRevoke = () => {
@@ -170,24 +170,13 @@ const ModeratorsSubroute = () => {
             popupNotification("Invitation removed", getTheme());
         });
     };
-    const onPromotion = () => {
+    const onRoleChange = newRole => {
         return axios.patch("/boards/" + boardData.discriminator + "/moderators", {
-            userId: modal.data,
-            role: "administrator"
+            userId: modal.data, role: newRole
         }).then(res => {
             const updated = moderators.map(mod => mod.userId === modal.data ? {...mod, role: res.data.role} : mod);
             updateState({...boardData, moderators: updated});
-            popupNotification("Promoted to administrator.", getTheme());
-        });
-    };
-    const onDemotion = () => {
-        return axios.patch("/boards/" + boardData.discriminator + "/moderators", {
-            userId: modal.data,
-            role: "moderator"
-        }).then(res => {
-            const updated = moderators.map(mod => mod.userId === modal.data ? {...mod, role: res.data.role} : mod);
-            updateState({...boardData, moderators: updated});
-            popupNotification("Demoted to moderator.", getTheme());
+            popupNotification("Changed role to " + newRole, getTheme());
         });
     };
     return <UiCol xs={12}>
@@ -196,9 +185,9 @@ const ModeratorsSubroute = () => {
                               actionDescription={<div>User won't be able to accept this invitation anymore.</div>} Icon={FaTrash}/>
         <DangerousActionModal id={"revokeMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "revoke"} onAction={onPermissionsRevoke}
                               actionDescription={<div>User permissions to moderate the board will be <u>revoked</u>.</div>} actionButtonName={"Revoke"}/>
-        <DangerousActionModal id={"promoteMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "promote"} onAction={onPromotion}
+        <DangerousActionModal id={"promoteMod"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "promote"} onAction={() => onRoleChange("administrator")}
                               actionDescription={<div>Moderator will be promoted to administrator and will gain additional privileges.</div>} actionButtonName={"Promote"}/>
-        <DangerousActionModal id={"demoteAdm"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "demote"} onAction={onDemotion}
+        <DangerousActionModal id={"demoteAdm"} onHide={() => setModal({...modal, open: false})} isOpen={modal.open && modal.type === "demote"} onAction={() => onRoleChange("moderator")}
                               actionDescription={<div>Administrator will be demoted to moderator and will lose additional privileges.</div>} actionButtonName={"Demote"}/>
         <UiViewBox title={"Moderators Management"} description={"Manage your board moderators here."}>
             <React.Fragment>
