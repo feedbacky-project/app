@@ -185,7 +185,7 @@ const App = ({appearanceSettings}) => {
                 <Suspense fallback={<LoadingRouteUtil/>}>
                     <Switch>
                         <Route exact path={"/"} component={ConditionalReroute}/>
-                        <Route exact path={"/admin/create"} component={CreateBoardRoute}/>
+                        <Route exact path={"/create"} component={CreateBoardRoute}/>
                         <Route path={"/me/:section"} component={ProfileRoute}/>
                         <Route path={"/me/"} component={ProfileRoute}/>
                         <Route path={"/moderator_invitation/:code"} component={ModeratorInvitationRoute}/>
