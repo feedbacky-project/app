@@ -61,15 +61,16 @@ public class NewBoardPopulator {
             + "**TIP:** You can use *Markdown* and Emojis here :)");
     welcome.setCreator(admin);
     welcome.setPinned(true);
-    Set<User> voters = new HashSet<>();
-    voters.add(admin);
-    welcome.setVoters(voters);
     welcome.setStatus(Idea.IdeaStatus.OPENED);
     welcome.setMetadata("{}");
     Set<Tag> tags = new HashSet<>();
     tags.add(tag);
     welcome.setTags(tags);
     welcome.setAttachments(new HashSet<>());
+    welcome = ideaRepository.save(welcome);
+    Set<User> voters = new HashSet<>();
+    voters.add(admin);
+    welcome.setVoters(voters);
     ideaRepository.save(welcome);
     doPopulateComments(welcome, admin);
 
@@ -79,11 +80,12 @@ public class NewBoardPopulator {
     connect.setDescription("Enter the [Admin Panel](" + board.toAdminPanelViewLink() + ") and create **Social Links** that link to your Project, Discord server or Patreon page.\n"
             + "Invite **Moderators** to help you manage the board and configure **Integrations** to connect with other services you are using such as GitHub.");
     connect.setCreator(admin);
-    connect.setVoters(voters);
     connect.setStatus(Idea.IdeaStatus.OPENED);
     connect.setTags(new HashSet<>());
     connect.setAttachments(new HashSet<>());
     connect.setMetadata("{}");
+    connect = ideaRepository.save(connect);
+    connect.setVoters(voters);
     ideaRepository.save(connect);
   }
 
@@ -94,6 +96,7 @@ public class NewBoardPopulator {
     comment.setIdea(idea);
     comment.setReactions(new HashSet<>());
     comment.setMetadata("{}");
+    comment.setSpecialType(Comment.SpecialType.LEGACY);
     comment.setViewType(Comment.ViewType.PUBLIC);
     comment = commentRepository.save(comment);
 
@@ -104,8 +107,8 @@ public class NewBoardPopulator {
     reply.setIdea(idea);
     reply.setReactions(new HashSet<>());
     reply.setMetadata("{}");
-    reply = commentRepository.save(comment);
-    //now react because it is saved
+    reply.setSpecialType(Comment.SpecialType.LEGACY);
+
     Set<CommentReaction> reactions = new HashSet<>();
     CommentReaction reaction = new CommentReaction();
     reaction.setComment(reply);
@@ -113,12 +116,13 @@ public class NewBoardPopulator {
     reaction.setReactionId("like");
     reactions.add(reaction);
     reply.setReactions(reactions);
-    commentRepository.save(comment);
+    commentRepository.save(reply);
 
     Comment hidden = new Comment();
     hidden.setCreator(admin);
     hidden.setDescription("Want to note something hidden? Just click **Submit Internal** in commenting box to write private comment visible only for Moderators.");
     hidden.setViewType(Comment.ViewType.INTERNAL);
+    hidden.setSpecialType(Comment.SpecialType.LEGACY);
     hidden.setIdea(idea);
     hidden.setMetadata("{}");
     hidden.setReactions(new HashSet<>());
