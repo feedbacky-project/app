@@ -2,19 +2,19 @@ import React from "react";
 import {useHotkeys} from "react-hotkeys-hook";
 import {useHistory} from "react-router-dom";
 
-const useBoardNavigationHotkeys = id => {
+const useBoardNavigationHotkeys = () => {
     const history = useHistory();
     useHotkeys("shift+f", e => {
         e.preventDefault();
-        history.push("/b/" + id);
+        history.push("/");
     });
     useHotkeys("shift+c", e => {
         e.preventDefault();
-        history.push("/b/" + id + "/changelog");
+        history.push("/changelog");
     });
     useHotkeys("shift+r", e => {
         e.preventDefault();
-        history.push("/b/" + id + "/roadmap");
+        history.push("/roadmap");
     });
 };
 

@@ -12,11 +12,10 @@ import {BrowserRouter, Route, Switch, useHistory, useLocation} from "react-route
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
 import {UiThemeContext} from "ui";
-import {getCookieOrDefault, hideNotifications, popupError, popupWarning} from "utils/basic-utils";
+import {getCookieOrDefault, getTopDomainName, hideNotifications, popupError, popupWarning} from "utils/basic-utils";
 import {getEnvVar} from "utils/env-vars";
 import {retry} from "utils/lazy-init";
 
-const ConditionalReroute = lazy(() => retry(() => import("routes/ConditionalReroute")));
 const ProfileRoute = lazy(() => retry(() => import("routes/profile/ProfileRoute")));
 const CreateBoardRoute = lazy(() => retry(() => import("routes/board/creator/CreatorBoardRoute")));
 const ModeratorInvitationRoute = lazy(() => retry(() => import("routes/ModeratorInvitationRoute")));
@@ -173,6 +172,7 @@ const App = ({appearanceSettings}) => {
             appearance: appearance,
             setAppearance: setAppearance,
             hardResetData: hardResetData,
+            subdomain: getTopDomainName()
         }}>
             <UiThemeContext.Provider value={{
                 darkMode: appearance.mode === "dark",
@@ -184,15 +184,14 @@ const App = ({appearanceSettings}) => {
                 <HotkeysModal/>
                 <Suspense fallback={<LoadingRouteUtil/>}>
                     <Switch>
-                        <Route exact path={"/"} component={ConditionalReroute}/>
+                        <Route exact path={"/"} component={BoardRoute}/>
                         <Route exact path={"/create"} component={CreateBoardRoute}/>
                         <Route path={"/me/:section"} component={ProfileRoute}/>
                         <Route path={"/me/"} component={ProfileRoute}/>
                         <Route path={"/moderator_invitation/:code"} component={ModeratorInvitationRoute}/>
-                        <Route path={"/b/:id/roadmap"} component={RoadmapRoute}/>
-                        <Route path={"/b/:id/changelog"} component={ChangelogRoute}/>
-                        <Route path={"/b/:id"} component={BoardRoute}/>
-                        <Route path={"/ba/:id"} component={BoardAdminPanelRoute}/>
+                        <Route path={"/roadmap"} component={RoadmapRoute}/>
+                        <Route path={"/changelog"} component={ChangelogRoute}/>
+                        <Route path={"/admin/:id"} component={BoardAdminPanelRoute}/>
                         <Route path={"/i/:id"} component={IdeaRoute}/>
                         <Route path={"/unsubscribe/:id/:code"} component={NotificationUnsubscribeRoute}/>
                         <Route path={"/auth/:provider"} render={() => <LoginRoute onLogin={onLogin}/>}/>

@@ -3,6 +3,14 @@ import tinycolor from "tinycolor2";
 import {getEnvVar} from "utils/env-vars";
 import Snackbar from "utils/snackbar";
 
+export const getTopDomainName = () => {
+    if(process.env.NODE_ENV === "development") {
+        return "feedbacky-official";
+    }
+    const parts = window.location.hostname.split('.');
+    return parts.shift();
+};
+
 export const scrollIntoView = (id, pop = true) => {
     //kudos to https://stackoverflow.com/a/22480938/10156191
     const element = document.getElementById(id);

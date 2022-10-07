@@ -66,7 +66,7 @@ const BoardAdminPanelRoute = () => {
         return false;
     };
     if (!canView()) {
-        history.push("/b/" + id);
+        history.push("/");
         return <React.Fragment/>
     }
     const onWarn = () => console.warn("BoardAdminPanelRoute invalid onNotLoggedClick call");

@@ -16,7 +16,7 @@ const ModeratorInvitationRoute = () => {
                 popupWarning("Failed to validate invitation");
                 return;
             }
-            history.push("/b/" + res.data.discriminator);
+            history.push("/");
             popupNotification("Invitation accepted, you're a moderator now", getTheme());
         }).catch(() => history.push("/me"));
         // eslint-disable-next-line

@@ -18,7 +18,8 @@ const AppContext = React.createContext({
     defaultTheme: "#343a40",
     onThemeChange: () => void 0,
     hardResetData: () => void 0,
-    clientVersion: ""
+    clientVersion: "",
+    subdomain: "",
 });
 
 export {AppContext};

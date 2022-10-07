@@ -109,35 +109,35 @@ const PageNavbar = ({selectedNode, goBackVisible = false, onSidebarToggle = null
         return <React.Fragment/>
     };
     return <UiNavbar>
-        {goBackVisible && <GoBackButton theme={getTheme().toString()} to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}} aria-label={"Go Back"}>
+        {goBackVisible && <GoBackButton theme={getTheme().toString()} to={{pathname: "/", state: {_boardData: data}}} aria-label={"Go Back"}>
             <FaChevronLeft className={"ml-2"}/>
         </GoBackButton>}
         <UiContainer className={"d-md-flex d-block"}>
             {onSidebarToggle && sidebarToggleVisible && <ToggleContainer style={{marginRight: 0}}>
                 <FaBars style={{color: getTheme().toString(), cursor: "pointer"}} onClick={onSidebarToggle}/>
             </ToggleContainer>}
-            <UiNavbarBrand theme={getTheme().toString()} to={{pathname: selectedNode === "feedback" && !goBackVisible ? "/me" : "/b/" + data.discriminator, state: {_boardData: data}}}>
+            <UiNavbarBrand theme={getTheme().toString()} to={{pathname: selectedNode === "feedback" && !goBackVisible ? "/me" : "/", state: {_boardData: data}}}>
                 <img className={"mr-2"} src={data.logo} height={30} width={30} alt={"Board Logo"}/>
                 <span className={"align-bottom"}>{data.name}</span>
             </UiNavbarBrand>
             {renderLogIn(onNotLoggedClick, context, getTheme(), data)}
             <div className={"d-md-flex d-block my-md-0 my-2 order-md-1 order-2"} style={{fontWeight: "500", whiteSpace: "nowrap"}}>
                 {selectedNode === "admin" &&
-                <SelectedRoute to={{pathname: "/ba/" + data.discriminator, state: {_boardData: data}}}
+                <SelectedRoute to={{pathname: "/admin/" + data.discriminator, state: {_boardData: data}}}
                                theme={getTheme()} border={selectedNode === "admin" ? getTheme().setAlpha(.75) : undefined} aria-label={"Admin Panel"}>
                     <FaRegUser className={"mr-md-2 mr-0 mx-md-0 mx-1"}/>
                     <RouteName>Admin Panel</RouteName>
                 </SelectedRoute>
                 }
                 {selectedNode !== "admin" &&
-                <FeedbackComponent to={{pathname: "/b/" + data.discriminator, state: {_boardData: data}}}
+                <FeedbackComponent to={{pathname: "/", state: {_boardData: data}}}
                                    theme={getTheme()} border={selectedNode === "feedback" ? getTheme().setAlpha(.75) : undefined} aria-label={"Feedback"}>
                     <FaRegComment className={"mr-md-2 mr-0 mx-md-0 mx-1"}/>
                     <RouteName>Feedback</RouteName>
                 </FeedbackComponent>
                 }
                 {(data.roadmapEnabled && selectedNode !== "admin") &&
-                <RoadmapComponent to={{pathname: "/b/" + data.discriminator + "/roadmap", state: {_boardData: data}}}
+                <RoadmapComponent to={{pathname: "/roadmap", state: {_boardData: data}}}
                                   theme={getTheme()} border={selectedNode === "roadmap" ? getTheme().setAlpha(.75) : undefined} aria-label={"Roadmap"}>
                     <FaRegMap className={"mr-md-2 mr-0 mx-md-0 mx-1"}/>
                     <RouteName>Roadmap</RouteName>
@@ -145,7 +145,7 @@ const PageNavbar = ({selectedNode, goBackVisible = false, onSidebarToggle = null
                 }
                 {(data.changelogEnabled && selectedNode !== "admin") &&
                 <React.Fragment>
-                    <ChangelogComponent to={{pathname: "/b/" + data.discriminator + "/changelog", state: {_boardData: data}}}
+                    <ChangelogComponent to={{pathname: "/changelog", state: {_boardData: data}}}
                                         theme={getTheme()} border={selectedNode === "changelog" ? getTheme().setAlpha(.75) : undefined} aria-label={"Changelog"}>
                         <FaRegListAlt className={"mr-md-2 mr-0 mx-md-0 mx-1"}/>
                         <RouteName>Changelog</RouteName>

@@ -73,7 +73,7 @@ const ModeratorActionsButton = ({onIdeaDelete = () => void 0, onStateChange = ()
                 return;
             }
             popupNotification("Idea deleted", getTheme());
-            history.push("/b/" + ideaData.boardDiscriminator);
+            history.push("/");
             onIdeaDelete();
         });
     };

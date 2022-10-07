@@ -91,7 +91,7 @@ const IdeaRoute = () => {
             return;
         }
         e.preventDefault();
-        history.push("/b/" + board.data.discriminator);
+        history.push("/");
     }, [board]);
     useHotkeys("r", e => {
         const elements = document.getElementsByClassName("hotkey-focused");

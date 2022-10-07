@@ -15,15 +15,14 @@ import {UiContainer, UiRow} from "ui/grid";
 import {useTitle} from "utils/use-title";
 
 const ChangelogRoute = () => {
-    const {user} = useContext(AppContext);
+    const {user, subdomain} = useContext(AppContext);
     const {onThemeChange, defaultTheme} = useContext(UiThemeContext);
     const location = useLocation();
     const history = useHistory();
-    const {id} = useParams();
     const [board, setBoard] = useState({data: {}, loaded: false, error: false});
     const [searchQuery, setSearchQuery] = useState("");
     const [open, setOpen] = useState(false);
-    useBoardNavigationHotkeys(id);
+    useBoardNavigationHotkeys();
     useTitle(board.loaded ? board.data.name + " | Changelog" : "Loading...");
     const resolvePassedData = () => {
         const state = location.state;
@@ -41,7 +40,7 @@ const ChangelogRoute = () => {
                 return;
             }
         }
-        axios.get("/boards/" + id).then(res => {
+        axios.get("/boards/" + subdomain).then(res => {
             if (res.status !== 200) {
                 setBoard({...board, error: true});
                 return;
@@ -56,13 +55,13 @@ const ChangelogRoute = () => {
     }, [user.session]);
 
     if (board.loaded && !board.data.changelogEnabled) {
-        history.push("/b/" + id);
+        history.push("/");
         return <React.Fragment/>
     }
     const onNotLogged = () => setOpen(true);
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={open} image={board.data.logo}
-                    boardName={board.data.name} redirectUrl={"b/" + board.data.discriminator + "/changelog"}
+                    boardName={board.data.name} redirectUrl={"/changelog"}
                     onHide={() => setOpen(false)}/>
         <PageNavbar selectedNode={"changelog"}/>
         <UiContainer className={"pb-5"}>

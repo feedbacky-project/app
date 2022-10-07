@@ -66,7 +66,7 @@ const CreatorBoardRoute = () => {
                     return;
                 }
                 popupNotification("Board created", getTheme());
-                history.push("/b/" + settings.discriminator);
+                history.push("/");
             });
             return <UiLoadableButton label={"Create Board"} color={tinycolor("#00c851")} className={"ml-2"} onClick={onFinish}>Create Board</UiLoadableButton>
         }

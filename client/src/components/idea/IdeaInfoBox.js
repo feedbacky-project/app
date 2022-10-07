@@ -80,7 +80,7 @@ const IdeaInfoBox = forwardRef(({onStateChange}, ref) => {
                 popupError();
                 return;
             }
-            history.push("/b/" + ideaData.boardDiscriminator);
+            history.push("/");
             popupNotification("Idea deleted", getTheme());
         });
     };
