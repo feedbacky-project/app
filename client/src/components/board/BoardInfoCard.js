@@ -43,7 +43,7 @@ const BoardInfoCard = ({onIdeaCreation, setSearchQuery}) => {
         if (!contains) {
             return;
         }
-        return <UiButton label={"Edit Board"} as={Link} to={{pathname: "/ba/" + data.discriminator, state: {_boardData: data}}} className={"py-1 float-right"}>
+        return <UiButton label={"Edit Board"} as={Link} to={{pathname: "/admin", state: {_boardData: data}}} className={"py-1 float-right"}>
             Manage <FaAlignRight className={"ml-1 move-top-1px"}/>
         </UiButton>
     };

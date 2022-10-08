@@ -47,7 +47,7 @@ const BoardRoute = () => {
     useTitle(board.loaded ? board.data.name : "Loading...");
 
     return <BoardContextedRouteUtil board={board} setBoard={data => setBoard(data)} onNotLoggedClick={() => setModalOpen(true)} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
-        <LoginModal isOpen={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={"/"} onHide={() => setModalOpen(false)}/>
+        <LoginModal isOpen={modalOpen} image={board.data.logo} boardName={board.data.name} redirectUrl={board.data.viewLink} onHide={() => setModalOpen(false)}/>
         <PageNavbar selectedNode={"feedback"}/>
         <UiContainer className={"pb-5"}>
             <UiRow className={"pb-4"}>

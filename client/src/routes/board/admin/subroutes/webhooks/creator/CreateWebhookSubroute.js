@@ -56,7 +56,7 @@ const CreateWebhookSubroute = () => {
                         return;
                     }
                     popupNotification("Webhook added and sent sample response", getTheme());
-                    history.push("/ba/" + boardData.discriminator + "/webhooks");
+                    history.push("/admin/webhooks");
                 }).catch(() => setSettings({...settings, step: 3}));
             };
             return <UiLoadableButton label={"Finish"} color={tinycolor("#00c851")} className={"ml-2"} onClick={onFinish}>Finish</UiLoadableButton>

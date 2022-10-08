@@ -16,16 +16,7 @@ const LoginRoute = ({onLogin}) => {
     const [data, setData] = useState({loaded: false, error: false, status: 0});
     useTitle("Logging in...");
 
-    const state = qs.parse(location.search).state;
     const qsData = qs.parse(location.search);
-    const decodedState = JSON.parse(state);
-    if(decodedState.redirectRequired) {
-        //eg. replace app.feedbacky.net into myboard.feedbacky.net
-        //todo || "app" should be replaced with configured domain from env variable
-        const replaced = window.location.hostname.replace(getTopDomainName(), decodedState.target || "app");
-        window.location.replace(replaced + "?state=" + JSON.stringify({route: decodedState.route} + "&code=" + qsData.code));
-        return <React.Fragment/>
-    }
     const logIn = () => {
         if (data.loaded) {
             return;
@@ -40,10 +31,12 @@ const LoginRoute = ({onLogin}) => {
                 return;
             }
             const response = res.data;
-            Cookies.set("FSID", response.token, {expires: 30, sameSite: "strict"});
+            const mainDomain = window.location.hostname.replace(getTopDomainName(), "");
+            //feedback.feedbacky.net => .feedbacky.net (dot is required)
+            Cookies.set("FSID", response.token, {expires: 30, sameSite: "strict", domain: mainDomain});
             setData({...data, loaded: true});
             onLogin(response.token);
-            history.push(decodedState.route);
+            window.location.href = qsData.state;
         }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
     };
     if (data.error && data.status !== 403) {
@@ -53,9 +46,8 @@ const LoginRoute = ({onLogin}) => {
     }
     if (!data.loaded) {
         logIn();
-        return <LoadingRouteUtil/>
     }
-    return <Redirect from={"/auth/" + provider} to={decodedState.route}/>
+    return <LoadingRouteUtil/>
 };
 
 export default LoginRoute;

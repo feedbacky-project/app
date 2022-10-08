@@ -13,6 +13,7 @@ import net.feedbacky.app.data.board.moderator.Moderator;
 public class FetchUserPermissionDto implements FetchResponseDto<FetchUserPermissionDto, Moderator> {
 
   private String boardDiscriminator;
+  private String boardViewLink;
   private String boardName;
   private Moderator.Role role;
 
@@ -22,6 +23,7 @@ public class FetchUserPermissionDto implements FetchResponseDto<FetchUserPermiss
       return null;
     }
     this.boardDiscriminator = entity.getBoard().getDiscriminator();
+    this.boardViewLink = entity.getBoard().toViewLink();
     this.boardName = entity.getBoard().getName();
     this.role = entity.getRole();
     return this;

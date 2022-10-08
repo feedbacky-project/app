@@ -94,14 +94,13 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
         </div>
     };
     const header = <LoginHeader src={image} alt={"Avatar"} roundedCircle thumbnail/>;
-    const redirectData = {target: data != null ? data.discriminator : null, route: redirectUrl, redirectRequired: true};
     return <React.Fragment>
         <UiModal size={"sm"} dialogAs={CascadingModal} id={"loginModal"} isOpen={isOpen} onHide={onHide} header={header}>
             <ModalContent>
                 <div className={"mb-2"}>Sign in to <strong style={{color: getTheme()}}>{boardName}</strong> with</div>
                 {serviceData.loginProviders.map((data, i) => {
                     let provider = data;
-                    return <a key={i} href={provider.oauthLink + JSON.stringify(redirectData)} tabIndex={-1}>
+                    return <a key={i} href={provider.oauthLink + redirectUrl} tabIndex={-1}>
                         <UiClassicButton label={provider.name + " Log-in"} className={"m-1"} style={{color: "#fff", backgroundColor: provider.color}}>
                             <img alt={provider.name} src={provider.icon} width={16} height={16}/>
                         </UiClassicButton>

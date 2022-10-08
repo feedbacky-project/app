@@ -39,6 +39,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
   private boolean closedIdeasCommentingEnabled;
   private Date creationDate;
   private Date lastChangelogUpdate;
+  private String viewLink;
 
   private List<FetchSocialLinkDto> socialLinks;
   private List<FetchTagDto> tags;
@@ -79,6 +80,7 @@ public class FetchBoardDto implements FetchResponseDto<FetchBoardDto, Board> {
     this.closedIdeasCommentingEnabled = entity.isClosedIdeasCommentingEnabled();
     this.creationDate = entity.getCreationDate();
     this.lastChangelogUpdate = entity.getLastChangelogUpdate();
+    this.viewLink = entity.toViewLink();
     this.socialLinks = entity.getSocialLinks().stream().map(SocialLink::toDto).collect(Collectors.toList());
     this.tags = entity.getTags().stream().map(Tag::toDto).collect(Collectors.toList());
     this.moderators = entity.getModerators().stream().map(Moderator::toDto).collect(Collectors.toList());

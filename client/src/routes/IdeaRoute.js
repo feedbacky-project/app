@@ -184,7 +184,7 @@ const IdeaRoute = () => {
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged}>
         <IdeaContext.Provider value={{ideaData: idea.data, loaded: idea.loaded, error: idea.error, updateState: updateState, mentions: mentions}}>
             <LoginModal isOpen={modalOpen} onHide={() => setModalOpen(false)} image={board.data.logo} boardName={board.data.name}
-                        redirectUrl={"/i/" + convertIdeaToSlug(idea.data)}/>
+                        redirectUrl={board.data.viewLink + "/i/" + convertIdeaToSlug(idea.data)}/>
             <PageNavbar selectedNode={"feedback"} goBackVisible/>
             <UiContainer className={"pb-5"}>
                 <UiRow centered className={"my-4"}>

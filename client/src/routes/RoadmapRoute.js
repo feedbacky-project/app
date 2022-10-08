@@ -74,7 +74,7 @@ const RoadmapRoute = () => {
     const onNotLogged = () => setOpen(true);
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <LoginModal isOpen={open} image={board.data.logo}
-                    boardName={board.data.name} redirectUrl={"/roadmap"}
+                    boardName={board.data.name} redirectUrl={board.data.viewLink + "/roadmap"}
                     onHide={() => setOpen(false)}/>
         <PageNavbar selectedNode={"roadmap"}/>
         <UiContainer className={"pb-5"}>

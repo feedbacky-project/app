@@ -4,7 +4,6 @@ import {renderAdminSidebarRoutes, Sidebar as UiSidebar, SidebarIcon, SidebarTogg
 import {AppContext, BoardContext} from "context";
 import React, {useContext, useEffect, useState} from 'react';
 import {FaAt, FaChevronLeft, FaChevronRight, FaColumns, FaCubes, FaSlidersH, FaSort, FaTags, FaUserLock, FaUsersCog} from "react-icons/fa";
-import {Link} from "react-router-dom";
 import Sidebar from "react-sidebar";
 import {UiHorizontalRule, UiThemeContext} from "ui";
 import {UiDropdown, UiDropdownElement} from "ui/dropdown";
@@ -56,7 +55,7 @@ const AdminSidebar = ({currentNode, reRouteTo, children}) => {
                         <div className={"my-auto"}>
                             <UiDropdown label={"adminPanel"} toggleClassName={"ml-2 p-0"} toggle={<FaSort className={"text-black-60"}/>}>
                                 {context.user.data.permissions.map(data => {
-                                    return <UiDropdownElement key={data.boardDiscriminator} as={Link} to={"/ba/" + data.boardDiscriminator}>
+                                    return <UiDropdownElement key={data.boardDiscriminator} onClick={() => window.location.href = data.boardViewLink}>
                                         {data.boardName}
                                     </UiDropdownElement>
                                 })}

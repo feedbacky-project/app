@@ -114,11 +114,14 @@ public class Board implements Serializable, Fetchable<FetchBoardDto> {
   }
 
   public String toViewLink() {
-    return MailService.HOST_ADDRESS + "/b/" + discriminator;
+    String addr = System.getenv("SUBDOMAIN_ADDRESS");
+    //todo custom domain later
+    addr = addr.replace("{SUBDOMAIN}", discriminator);
+    return addr;
   }
 
   public String toAdminPanelViewLink() {
-    return MailService.HOST_ADDRESS + "/ba/" + discriminator;
+    return toViewLink() + "/admin";
   }
 
 }

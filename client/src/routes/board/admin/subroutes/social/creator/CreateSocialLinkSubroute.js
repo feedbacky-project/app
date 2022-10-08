@@ -54,7 +54,7 @@ const CreateSocialLinkSubroute = () => {
                     }
                     popupNotification("Social link added", getTheme());
                     history.push({
-                        pathname: "/ba/" + boardData.discriminator + "/social",
+                        pathname: "/admin/social",
                         state: null
                     });
                     const socialLinks = boardData.socialLinks.concat(res.data);
