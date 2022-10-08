@@ -44,7 +44,7 @@ const ProfileRoute = () => {
     return <BoardContextedRouteUtil board={board} setBoard={setBoard} onNotLoggedClick={onNotLogged} errorMessage={"Content Not Found"} errorIcon={FaExclamationCircle}>
         <PageNodesContext.Provider value={{setCurrentNode: setCurrentNode}}>
             <LoginModal isOpen={loginModalOpen} onHide={() => setLoginModalOpen(false)}
-                        image={ServiceLogo} boardName={getEnvVar("REACT_APP_SERVICE_NAME")} redirectUrl={"me"}/>
+                        image={ServiceLogo} boardName={getEnvVar("REACT_APP_SERVICE_NAME")} redirectUrl={"/me"}/>
             <ProfileNavbar onNotLoggedClick={() => setLoginModalOpen(true)}/>
             <UiContainer>
                 <UiRow centered className={"pb-5"}>

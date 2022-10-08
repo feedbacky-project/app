@@ -32,8 +32,8 @@ public class LoginServiceController {
   }
 
   @GetMapping("v1/service/magicLink")
-  public ResponseEntity handleLogin(@RequestParam(name = "email") String email) {
-    return loginService.handleMagicLinkRequest(email);
+  public ResponseEntity handleMagicLink(@RequestParam(name = "email") String email, @RequestParam(name = "source", required = false) String source) {
+    return loginService.handleMagicLinkRequest(email, source);
   }
 
 }

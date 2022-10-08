@@ -11,6 +11,6 @@ public interface LoginService {
 
   ResponseEntity handleLogin(String provider, String code);
 
-  ResponseEntity handleMagicLinkRequest(String email);
+  ResponseEntity handleMagicLinkRequest(String email, String source);
 
 }

@@ -1,6 +1,7 @@
 package net.feedbacky.app.service.login;
 
 import lombok.SneakyThrows;
+import net.feedbacky.app.data.board.Board;
 import net.feedbacky.app.data.user.ConnectedAccount;
 import net.feedbacky.app.data.user.MailPreferences;
 import net.feedbacky.app.data.user.User;
@@ -9,6 +10,7 @@ import net.feedbacky.app.exception.types.LoginFailedException;
 import net.feedbacky.app.login.LoginProvider;
 import net.feedbacky.app.login.LoginProviderRegistry;
 import net.feedbacky.app.repository.UserRepository;
+import net.feedbacky.app.repository.board.BoardRepository;
 import net.feedbacky.app.util.WebConnectionUtils;
 import net.feedbacky.app.util.jwt.JwtToken;
 import net.feedbacky.app.util.jwt.JwtTokenBuilder;
@@ -19,6 +21,7 @@ import net.feedbacky.app.util.mailservice.MailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.gson.JsonObject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,14 +60,16 @@ public class LoginServiceImpl implements LoginService {
   private final LoginProviderRegistry providerRegistry;
   private final UserRepository userRepository;
   private final MailHandler mailHandler;
+  private final BoardRepository boardRepository;
   private final boolean mailLoginEnabled = Boolean.parseBoolean(System.getenv("SETTINGS_MAIL_LOGIN_ENABLED"));
   private final Cache<String, String> magicLinksCache = Caffeine.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).build();
 
   @Autowired
-  public LoginServiceImpl(LoginProviderRegistry providerRegistry, UserRepository userRepository, MailHandler mailHandler) {
+  public LoginServiceImpl(LoginProviderRegistry providerRegistry, UserRepository userRepository, MailHandler mailHandler, BoardRepository boardRepository) {
     this.providerRegistry = providerRegistry;
     this.userRepository = userRepository;
     this.mailHandler = mailHandler;
+    this.boardRepository = boardRepository;
   }
 
   @Override
@@ -161,8 +166,9 @@ public class LoginServiceImpl implements LoginService {
     return user;
   }
 
+  @SneakyThrows
   @Override
-  public ResponseEntity handleMagicLinkRequest(String email) {
+  public ResponseEntity handleMagicLinkRequest(String email, String source) {
     if(!mailLoginEnabled) {
       throw new LoginFailedException("Sign in with 'Mail' is disabled.");
     }
@@ -173,9 +179,19 @@ public class LoginServiceImpl implements LoginService {
     User user = getOrCreateUser(email, nick, System.getenv("REACT_APP_DEFAULT_USER_AVATAR").replace("%nick%", nick));
     String code = RandomStringUtils.randomAlphanumeric(20);
     magicLinksCache.put(code, user.getEmail());
+    Optional<Board> optional = Optional.empty();
+    if(source != null) {
+      optional = boardRepository.findByDiscriminator(source);
+    }
+    String loginLink = MailService.HOST_ADDRESS + "/auth/mail?code={CODE}&state={STATE}";
+    loginLink = StringUtils.replace(loginLink, "{CODE}", code);
+    JsonObject json = new JsonObject();
+    json.addProperty("target", optional.map(Board::toViewLink).orElse(null));
+    json.addProperty("route", "%2F"); // '/' char
+    loginLink = StringUtils.replace(loginLink, "{STATE}", URLEncoder.encode(json.toString(), "UTF-8"));
     new MailBuilder().withTemplate(MailService.EmailTemplate.MAIL_LOGIN_ATTEMPT)
             .withRecipient(user)
-            .withCustomPlaceholder("${login.link}", MailService.HOST_ADDRESS + "/auth/mail?code=" + code + " &state=me")
+            .withCustomPlaceholder("${login.link}", loginLink)
             .sendMail(mailHandler.getMailService()).sync();
     return ResponseEntity.ok().build();
   }

@@ -6,6 +6,7 @@ import {FaTimes} from "react-icons/fa";
 import {Redirect, useHistory, useLocation, useParams} from "react-router-dom";
 import ErrorRoute from "routes/ErrorRoute";
 import LoadingRouteUtil from "routes/utils/LoadingRouteUtil";
+import {getTopDomainName} from "utils/basic-utils";
 import {useTitle} from "utils/use-title";
 
 const LoginRoute = ({onLogin}) => {
@@ -16,11 +17,19 @@ const LoginRoute = ({onLogin}) => {
     useTitle("Logging in...");
 
     const state = qs.parse(location.search).state;
+    const qsData = qs.parse(location.search);
+    const decodedState = JSON.parse(state);
+    if(decodedState.redirectRequired) {
+        //eg. replace app.feedbacky.net into myboard.feedbacky.net
+        //todo || "app" should be replaced with configured domain from env variable
+        const replaced = window.location.hostname.replace(getTopDomainName(), decodedState.target || "app");
+        window.location.replace(replaced + "?state=" + JSON.stringify({route: decodedState.route} + "&code=" + qsData.code));
+        return <React.Fragment/>
+    }
     const logIn = () => {
         if (data.loaded) {
             return;
         }
-        const qsData = qs.parse(location.search);
         if ("error" in qsData) {
             setData({...data, error: true});
         }
@@ -34,7 +43,7 @@ const LoginRoute = ({onLogin}) => {
             Cookies.set("FSID", response.token, {expires: 30, sameSite: "strict"});
             setData({...data, loaded: true});
             onLogin(response.token);
-            history.push("/" + state);
+            history.push(decodedState.route);
         }).catch(() => setData({...data, loaded: true, error: true, status: -1}));
     };
     if (data.error && data.status !== 403) {
@@ -46,7 +55,7 @@ const LoginRoute = ({onLogin}) => {
         logIn();
         return <LoadingRouteUtil/>
     }
-    return <Redirect from={"/auth/" + provider} to={"/" + state}/>
+    return <Redirect from={"/auth/" + provider} to={decodedState.route}/>
 };
 
 export default LoginRoute;

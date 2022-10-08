@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import {AppContext} from "context";
+import {AppContext, BoardContext} from "context";
 import React, {useContext, useState} from 'react';
 import {ModalDialog} from "react-bootstrap";
 import {UiThemeContext} from "ui";
@@ -62,12 +62,18 @@ const ModalContent = styled.div`
 
 const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
     const {serviceData} = useContext(AppContext);
+    const {data} = useContext(BoardContext);
     const {getTheme} = useContext(UiThemeContext);
     const [mail, setMail] = useState("");
 
     const onMailLogin = (email) => {
         popupNotification("Sending Log-in Link...", getTheme());
-        return axios.get("/service/magicLink?email=" + email).then(res => {
+        let magicLink = "/service/magicLink?email=" + email;
+        //nullable due to Profile Route being boardless in some cases
+        if(data) {
+            magicLink += "&source=" + data.discriminator;
+        }
+        return axios.get(magicLink).then(res => {
             if (res.status === 200) {
                 popupNotification("Check mailbox for Log-in Link.", getTheme());
             }
@@ -88,13 +94,14 @@ const LoginModal = ({isOpen, onHide, boardName, image, redirectUrl}) => {
         </div>
     };
     const header = <LoginHeader src={image} alt={"Avatar"} roundedCircle thumbnail/>;
+    const redirectData = {target: data != null ? data.discriminator : null, route: redirectUrl, redirectRequired: true};
     return <React.Fragment>
         <UiModal size={"sm"} dialogAs={CascadingModal} id={"loginModal"} isOpen={isOpen} onHide={onHide} header={header}>
             <ModalContent>
                 <div className={"mb-2"}>Sign in to <strong style={{color: getTheme()}}>{boardName}</strong> with</div>
                 {serviceData.loginProviders.map((data, i) => {
                     let provider = data;
-                    return <a key={i} href={provider.oauthLink + redirectUrl} tabIndex={-1}>
+                    return <a key={i} href={provider.oauthLink + JSON.stringify(redirectData)} tabIndex={-1}>
                         <UiClassicButton label={provider.name + " Log-in"} className={"m-1"} style={{color: "#fff", backgroundColor: provider.color}}>
                             <img alt={provider.name} src={provider.icon} width={16} height={16}/>
                         </UiClassicButton>
