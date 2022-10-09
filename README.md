@@ -39,11 +39,9 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
   <br />
     <a href="https://app.feedbacky.net/b/feedbacky-demo">Demo Board</a>
     ·
-    <a href="https://github.com/feedbacky-project/app/issues/new?assignees=&labels=bug&template=bug_report.yml">Bug Report</a>
+    <a href="https://app.feedbacky.net/b/feedbacky-official">Official Board</a> <i>(Feedback & Bug Report)</i>
     ·
-    <a href="https://app.feedbacky.net/b/feedbacky-official">Feedback</a>
-    ·
-    <a href="https://status.feedbacky.net">Status</a>
+    <a href="https://status.feedbacky.net">Uptime Status</a>
   </div>
 </div>
 
@@ -159,7 +157,7 @@ Section inspired by https://github.com/othneildrew/Best-README-Template!
 [releaseShield]: https://img.shields.io/github/v/release/feedbacky-project/app?include_prereleases&style=for-the-badge&labelColor=ecf0f1&color=007bff
 [releaseURL]: https://github.com/feedbacky-project/app/releases
 [licenseShield]: https://img.shields.io/github/license/feedbacky-project/app.svg?style=for-the-badge&labelColor=ecf0f1&color=007bff
-[licenseURL]: https://github.com/feedbacky-project/app/blob/master/LICENSE.txt
+[licenseURL]: https://github.com/feedbacky-project/app/blob/master/LICENSE.md
 [contribShield]: https://img.shields.io/github/contributors/feedbacky-project/app.svg?style=for-the-badge&labelColor=ecf0f1&color=007bff
 [contribURL]: https://github.com/feedbacky-project/app/graphs/contributors
 [discordShield]: https://img.shields.io/discord/614568773940150288?style=for-the-badge&logoColor=white&logo=Discord&labelColor=5865F2&color=5865F2
