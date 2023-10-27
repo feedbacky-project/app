@@ -166,7 +166,7 @@ public class IdeaServiceImpl implements IdeaService {
   }
 
   private void handleTitleUpdate(Idea idea, PatchIdeaDto dto, User user) {
-    if(dto.getTitle() == null) {
+    if(dto.getTitle() == null || dto.getTitle().equals(idea.getTitle())) {
       return;
     }
     long creationTimeDiffMillis = Math.abs(Calendar.getInstance().getTime().getTime() - idea.getCreationDate().getTime());
