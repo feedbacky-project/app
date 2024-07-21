@@ -2,5 +2,9 @@ client/node_modules
 client/build
 server/build
 server/.gradle
+client-v2/node_modules
+client-v2/build
+server-v2/build
+server-v2/.gradle
 /.idea
 *.iml

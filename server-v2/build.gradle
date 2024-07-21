@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'io.ebean' version '15.4.0'
+}
+
+group = 'net.feedbacky'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Main web framework, helpful annotations util and logger for framework
+    implementation 'io.javalin:javalin:6.2.0'
+    implementation 'io.javalin.community.routing:routing-core:6.2.0'
+    implementation 'io.javalin.community.routing:routing-annotated:6.2.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.11'
+    implementation 'ch.qos.logback:logback-classic:1.4.4'
+
+    // JSON mapper
+    implementation 'com.google.code.gson:gson:2.11.0'
+
+    // Database ORM - Ebean
+    implementation 'io.ebean:ebean-mysql:15.4.0'
+    // Caching Utility
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
+    // MySQL Driver
+    implementation 'mysql:mysql-connector-java:8.0.32'
+    // JWT Tokens for auth
+    implementation 'com.auth0:java-jwt:4.4.0'
+
+    // Lombok annotations utility
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+tasks.register('uberJar', Jar) {
+    archiveClassifier = 'uber'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+
+    manifest {
+        attributes 'Main-Class': 'net.feedbacky.app.Main'
+    }
+}

@@ -191,6 +191,7 @@ const App = ({appearanceSettings}) => {
                         <Route path={"/moderator_invitation/:code"} component={ModeratorInvitationRoute}/>
                         <Route path={"/roadmap"} component={RoadmapRoute}/>
                         <Route path={"/changelog"} component={ChangelogRoute}/>
+                        <Route path={"/admin"} component={BoardAdminPanelRoute}/>
                         <Route path={"/admin/:id"} component={BoardAdminPanelRoute}/>
                         <Route path={"/i/:id"} component={IdeaRoute}/>
                         <Route path={"/unsubscribe/:id/:code"} component={NotificationUnsubscribeRoute}/>

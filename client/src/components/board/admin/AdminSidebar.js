@@ -55,7 +55,7 @@ const AdminSidebar = ({currentNode, reRouteTo, children}) => {
                         <div className={"my-auto"}>
                             <UiDropdown label={"adminPanel"} toggleClassName={"ml-2 p-0"} toggle={<FaSort className={"text-black-60"}/>}>
                                 {context.user.data.permissions.map(data => {
-                                    return <UiDropdownElement key={data.boardDiscriminator} onClick={() => window.location.href = data.boardViewLink}>
+                                    return <UiDropdownElement key={data.boardDiscriminator} href={data.boardViewLink}>
                                         {data.boardName}
                                     </UiDropdownElement>
                                 })}

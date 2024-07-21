@@ -1,3 +1,6 @@
+### 2.0.0-alpha (21.07.2024)
+* **[FEATURE]** Started working on client-side and server-side recode
+
 ### 1.0.0.RC.6 (3.10.2022)
 * **[FEATURE/QoL]** Attachment now contains preview icon and attachment text is truncated if too long (requested at [Feedbacky](https://app.feedbacky.net/i/attachment-icon.4432))
 * **[FEATURE/QoL]** **[BETA]** Draft keyboard shortcuts feature is here (check out CTRL + K) (requested by [Matou0014](https://app.feedbacky.net/i/board-shortcuts.3216)) 

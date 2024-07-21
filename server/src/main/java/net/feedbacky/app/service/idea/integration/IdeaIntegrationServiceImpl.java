@@ -94,7 +94,7 @@ public class IdeaIntegrationServiceImpl implements IdeaIntegrationService {
       truncatedDescription += "...";
     }
     return "### Discussed at [" + idea.getBoard().getDiscriminator() + "#" + idea.getId() + "](" + idea.toViewLink() + ")\n"
-            + "<div type 'discussions-op-text'>\n\n"
+            + "<div type='discussions-op-text'>\n\n"
             + "<sup>Originally posted by **" + idea.getCreator().getUsername() + "** at " + sdf.format(idea.getCreationDate()) + "</sup>\n"
             + truncatedDescription + "\n"
             + "</div>";

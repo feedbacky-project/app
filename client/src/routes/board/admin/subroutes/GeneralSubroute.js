@@ -270,6 +270,7 @@ const GeneralSubroute = ({updateState}) => {
                         Your API key is <ApiKeyElement className={apiKeyBlurred ? "text-blurred" : "text-red"}>{boardData.apiKey}</ApiKeyElement>
                         <ApiKeyIcon className="ml-1" style={{cursor: "pointer"}} onClick={() => setApiKeyBlurred(!apiKeyBlurred)}/>.
                         Remember to keep it safe!<br/>
+                        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role*/}
                         <span><strong className="text-red" role={"button"} tabIndex={0} style={{cursor: "pointer"}} onClick={apiResetPrompt} onKeyPress={apiResetPrompt}>Click here</strong> to regenerate API key if it got compromised.</span>
                     </span>
                 </UiCol>
